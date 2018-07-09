@@ -1,0 +1,4 @@
+**/.pub/**
+**/.pub/transformers/manifest.txt
+**/pubspec.lock
+**/.packages
