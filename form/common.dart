@@ -12,10 +12,16 @@ class ParseResult<F> {
   List<ParsingError> _errors;
 
   ParseResult.failure(this._errors);
+
+  List<ParsingError> get errors => this._errors;
+  F get form => this._form;
+
+  bool hasErrors() => this._errors != null && this._errors.length > 0;
+
 }
 
 abstract class FormParser<F> {
-  ParsingResult<F> parse(Map rawForm);
+  ParseResult<F> parse(Map rawForm);
 }
 
 class QuoteForm {
@@ -25,7 +31,7 @@ class QuoteForm {
 }
 
 class QuoteFormParser extends FormParser<QuoteForm> {
-  ParsingResult<QuoteForm> parse(Map rawForm) {
+  ParseResult<QuoteForm> parse(Map rawForm) {
     Object textObj = rawForm["text"];
     if (textObj == null) {
       var errors = [new ParsingError("text", "Text cannot be empty")];
