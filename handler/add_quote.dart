@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import './common.dart';
 import '../service/quote_service.dart';
+import '../form/common.dart';
 
 class AddQuoteHandler extends Handler {
   QuotesService _quotesService;
@@ -13,13 +14,21 @@ class AddQuoteHandler extends Handler {
   }
 
   void execute(HttpRequest request) async {
+    String content = await request.transform(utf8.decoder).join();
+    var data = jsonDecode(content) as Map;
 
-        String content = await request.transform(utf8.decoder).join(); 
-        var data = jsonDecode(content) as Map; 
+    var parser = new QuoteFormParser();
+    var result = parser.parse(data);
 
-
-    request.response
-      ..write(data.toString())
-      ..close();
+    if (result.hasErrors()) {
+      // 400 bad request
+      request.response
+        ..write(JSON.encode(result.errors))
+        ..close();
+    } else {
+      request.response
+        ..write(JSON.encode(result.form))
+        ..close();
+    }
   }
 }
