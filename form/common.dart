@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class ParsingError {
   String _field, _message;
 
@@ -5,6 +7,18 @@ class ParsingError {
 
   String get field => this._field;
   String get message => this._message;
+
+ Map toJson() {
+    var map = new Map<String, Object>();
+    map["field"] = this.field;
+    map["message"] = this.message;
+    return map;
+  }
+
+  String toString() {
+    return JSON.encode(this);
+  }
+
 }
 
 class ParseResult<F> {
@@ -12,6 +26,7 @@ class ParseResult<F> {
   List<ParsingError> _errors;
 
   ParseResult.failure(this._errors);
+  ParseResult.success(this._form);
 
   List<ParsingError> get errors => this._errors;
   F get form => this._form;
@@ -24,20 +39,3 @@ abstract class FormParser<F> {
   ParseResult<F> parse(Map rawForm);
 }
 
-class QuoteForm {
-  String _text;
-
-  QuoteForm(this._text);
-}
-
-class QuoteFormParser extends FormParser<QuoteForm> {
-  ParseResult<QuoteForm> parse(Map rawForm) {
-    Object textObj = rawForm["text"];
-    if (textObj == null) {
-      var errors = [new ParsingError("text", "Text cannot be empty")];
-      return new ParseResult.failure(errors);
-    }
-
-    return null;
-  }
-}

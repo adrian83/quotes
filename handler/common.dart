@@ -13,4 +13,11 @@ abstract class Handler {
   }
 
   void execute(HttpRequest request);
+
+  HttpResponse jsonResponse(HttpRequest request) {
+    var response = request.response;
+    response.headers.contentType =
+        new ContentType("application", "json", charset: "utf-8");
+    return response;
+  }
 }

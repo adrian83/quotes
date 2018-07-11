@@ -5,6 +5,7 @@ import 'dart:convert';
 import './common.dart';
 import '../service/quote_service.dart';
 import '../form/common.dart';
+import '../form/quote.dart';
 
 class AddQuoteHandler extends Handler {
   QuotesService _quotesService;
@@ -22,11 +23,14 @@ class AddQuoteHandler extends Handler {
 
     if (result.hasErrors()) {
       // 400 bad request
-      request.response
+
+      var response = jsonResponse(request);
+      response
         ..write(JSON.encode(result.errors))
         ..close();
     } else {
-      request.response
+	          var response = jsonResponse(request);
+      response
         ..write(JSON.encode(result.form))
         ..close();
     }

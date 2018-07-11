@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 class Quote {
   Long id;
   String text;
