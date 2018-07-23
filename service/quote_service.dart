@@ -1,14 +1,16 @@
-
-
+import '../repository/quotes.dart';
 import '../domain/quote.dart';
 
 class QuotesService {
+  QuotesRepository repo;
 
+  QuotesService(this.repo);
 
-	List<Quote> findQuotes() {
-		return [new Quote(1, "quote 1"), new Quote(2, "quote 2")];
-	}
+  List<Quote> findQuotes() {
+    return repo.list();
+  }
 
-
+  Quote save(Quote quote){
+	return repo.save(quote);
+  }
 }
-

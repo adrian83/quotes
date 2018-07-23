@@ -7,6 +7,8 @@ class QuoteForm {
 
   QuoteForm(this._text);
 
+  String get txt => this._text;
+
   Map<String, Object> toJson() {
     var map = new Map<String, Object>();
     map["text"] = this._text;

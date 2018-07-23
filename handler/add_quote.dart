@@ -1,16 +1,15 @@
-import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
 import './common.dart';
 import '../service/quote_service.dart';
-import '../form/common.dart';
 import '../form/quote.dart';
+import '../domain/quote.dart';
 
 class AddQuoteHandler extends Handler {
   QuotesService _quotesService;
 
-  AddQuoteHandler(QuotesService quotesService) : super("/quotes", "POST") {
+  AddQuoteHandler(QuotesService quotesService) : super(r"/quotes[/]?", "POST") {
     this._quotesService = quotesService;
   }
 
@@ -22,17 +21,15 @@ class AddQuoteHandler extends Handler {
     var result = parser.parse(data);
 
     if (result.hasErrors()) {
-      // 400 bad request
-
-      var response = jsonResponse(request);
-      response
-        ..write(JSON.encode(result.errors))
-        ..close();
+      badRequest(result.errors, request);
     } else {
-	          var response = jsonResponse(request);
-      response
-        ..write(JSON.encode(result.form))
-        ..close();
+      var quote = formToQuote(result.form);
+      var saved = _quotesService.save(quote);
+      created(saved, request);
     }
+  }
+
+  Quote formToQuote(QuoteForm form) {
+    return new Quote(null, form.txt);
   }
 }
