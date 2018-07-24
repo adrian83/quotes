@@ -12,13 +12,17 @@ abstract class Handler {
   String get url => this._url;
 
   bool canHandle(String uri, String method) {
+    print("URI " + uri + " METHOD " + method);
+
     if (method != this._method) {
       return false;
     }
 
+    print("method ok");
+    print(this._url);
 //RegExp exp = new RegExp(r"/quotes/(\w+)[/]?");
-    RegExp exp = new RegExp(this._url);
-    return exp.hasMatch(url);
+     RegExp exp = new RegExp(this._url);
+    return exp.hasMatch(uri);
   }
 
   void execute(HttpRequest request);
@@ -42,4 +46,11 @@ abstract class Handler {
     resp.write(JSON.encode(body));
     resp.close();
   }
+
+
+
+
+
+
+
 }

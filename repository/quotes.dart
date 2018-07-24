@@ -19,9 +19,13 @@ class QuotesRepository {
     return quote;
   }
 
-  List<Quote> list(){
-return quotes;
+  List<Quote> list() {
+    return quotes;
   }
 
-
+  Quote update(Quote quote) {
+    quotes.removeWhere((e) => e.id == quote.id);
+    quotes.add(quote);
+    return quote;
+  }
 }

@@ -4,19 +4,21 @@ import 'dart:io';
 import './handler/common.dart';
 import './handler/list_quotes.dart';
 import './handler/add_quote.dart';
+import './handler/update_quote.dart';
+
 import './service/quote_service.dart';
 import './repository/quotes.dart';
 
 Future main() async {
-
-	QuotesRepository repository = new QuotesRepository();
+  QuotesRepository repository = new QuotesRepository();
 
   QuotesService quotesService = new QuotesService(repository);
 
   Handler listQuotes = new ListQuotesHandler(quotesService);
   Handler addQuote = new AddQuoteHandler(quotesService);
+  Handler updateQuote = new UpdateQuoteHandler(quotesService);
 
-  List<Handler> handlers = [listQuotes, addQuote];
+  List<Handler> handlers = [listQuotes, addQuote, updateQuote];
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 
@@ -27,7 +29,7 @@ Future main() async {
       if (handler.canHandle(request.uri.path, request.method)) {
         handler.execute(request);
         found = true;
-        continue;
+        break;
       }
     }
 

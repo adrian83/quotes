@@ -8,7 +8,7 @@ class ParsingError {
   String get field => this._field;
   String get message => this._message;
 
- Map toJson() {
+  Map toJson() {
     var map = new Map<String, Object>();
     map["field"] = this.field;
     map["message"] = this.message;
@@ -18,7 +18,6 @@ class ParsingError {
   String toString() {
     return JSON.encode(this);
   }
-
 }
 
 class ParseResult<F> {
@@ -32,10 +31,58 @@ class ParseResult<F> {
   F get form => this._form;
 
   bool hasErrors() => this._errors != null && this._errors.length > 0;
-
 }
 
 abstract class FormParser<F> {
   ParseResult<F> parse(Map rawForm);
 }
 
+class ParseElem<T> {
+  ParsingError error;
+  T value;
+  ParseElem.failure(this.error);
+  ParseElem.success(this.value);
+  bool hasError() {
+    return error != null;
+  }
+}
+
+class PathParseResult {
+  Map<String, String> params;
+
+  PathParseResult(this.params);
+
+  ParseElem<int> getInt(String name) {
+    var obj = params[name];
+    if (obj == null) {
+      var error = new ParsingError(name, "Cannot be empty");
+      return new ParseElem.failure(error);
+    }
+    try {
+      var value = int.parse(obj.toString());
+      return new ParseElem.success(value);
+    } on FormatException catch (e) {
+      var error = new ParsingError(name, "Invalid format");
+      return new ParseElem.failure(error);
+    }
+  }
+}
+
+class PathParser {
+  List<String> segments;
+
+  PathParser(this.segments);
+
+  PathParseResult parse(Map<String, int> desc) {
+	  print("Segments $segments");
+	  print("desc $desc");
+    var result = new Map<String, String>();
+    var size = segments.length;
+    desc.forEach((k, v) {
+      if (v < size) {
+        result[k] = segments[v];
+      }
+    });
+    return new PathParseResult(result);
+  }
+}

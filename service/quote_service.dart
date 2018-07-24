@@ -10,7 +10,11 @@ class QuotesService {
     return repo.list();
   }
 
-  Quote save(Quote quote){
-	return repo.save(quote);
+  Quote save(Quote quote) {
+    return repo.save(quote);
+  }
+
+  Quote update(Quote quote) {
+    return repo.update(quote);
   }
 }
