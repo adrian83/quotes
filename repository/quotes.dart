@@ -28,4 +28,12 @@ class QuotesRepository {
     quotes.add(quote);
     return quote;
   }
+
+  void delete(int quoteId) {
+    quotes.removeWhere((e) => e.id == quoteId);
+  }
+
+  Quote find(int quoteId) {
+    return quotes.firstWhere((e) => e.id == quoteId);
+  }
 }

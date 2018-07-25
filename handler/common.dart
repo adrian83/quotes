@@ -18,14 +18,15 @@ abstract class Handler {
       return false;
     }
 
-    print("method ok");
-    print(this._url);
-//RegExp exp = new RegExp(r"/quotes/(\w+)[/]?");
-     RegExp exp = new RegExp(this._url);
+    RegExp exp = new RegExp(this._url);
     return exp.hasMatch(uri);
   }
 
   void execute(HttpRequest request);
+
+  void notFound(HttpRequest request) {
+    write(null, HttpStatus.notFound, request);
+  }
 
   void badRequest(List<ParsingError> errors, HttpRequest request) {
     write(errors, HttpStatus.badRequest, request);
@@ -43,14 +44,9 @@ abstract class Handler {
     var resp = request.response;
     resp.headers.contentType = JSON_CONTENT;
     resp.statusCode = status;
-    resp.write(JSON.encode(body));
+    if (body != null) {
+      resp.write(JSON.encode(body));
+    }
     resp.close();
   }
-
-
-
-
-
-
-
 }

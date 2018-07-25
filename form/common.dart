@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 class ParsingError {
   String _field, _message;
 
@@ -13,10 +11,6 @@ class ParsingError {
     map["field"] = this.field;
     map["message"] = this.message;
     return map;
-  }
-
-  String toString() {
-    return JSON.encode(this);
   }
 }
 
@@ -40,11 +34,11 @@ abstract class FormParser<F> {
 class ParseElem<T> {
   ParsingError error;
   T value;
+
   ParseElem.failure(this.error);
   ParseElem.success(this.value);
-  bool hasError() {
-    return error != null;
-  }
+
+  bool hasError() => error != null;
 }
 
 class PathParseResult {
@@ -74,8 +68,6 @@ class PathParser {
   PathParser(this.segments);
 
   PathParseResult parse(Map<String, int> desc) {
-	  print("Segments $segments");
-	  print("desc $desc");
     var result = new Map<String, String>();
     var size = segments.length;
     desc.forEach((k, v) {

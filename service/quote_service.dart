@@ -17,4 +17,12 @@ class QuotesService {
   Quote update(Quote quote) {
     return repo.update(quote);
   }
+
+  void delete(int quoteId) {
+    repo.delete(quoteId);
+  }
+
+  Quote find(int quoteId) {
+    return repo.find(quoteId);
+  }
 }

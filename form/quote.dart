@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import './common.dart';
 
 class QuoteForm {
@@ -14,10 +12,6 @@ class QuoteForm {
     map["text"] = this._text;
     return map;
   }
-
-  String toString() {
-    return JSON.encode(this);
-  }
 }
 
 class QuoteFormParser extends FormParser<QuoteForm> {
@@ -27,7 +21,6 @@ class QuoteFormParser extends FormParser<QuoteForm> {
       var errors = [new ParsingError("text", "Text cannot be empty")];
       return new ParseResult.failure(errors);
     }
-
     return new ParseResult.success(new QuoteForm(textObj.toString()));
   }
 }

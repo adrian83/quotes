@@ -4,10 +4,10 @@ import './common.dart';
 import '../service/quote_service.dart';
 
 class ListQuotesHandler extends Handler {
-
   QuotesService _quotesService;
 
-  ListQuotesHandler(QuotesService quotesService) : super(r"/quotes[/]?", "GET") {
+  ListQuotesHandler(QuotesService quotesService)
+      : super(r"/quotes[/]?$", "GET") {
     this._quotesService = quotesService;
   }
 

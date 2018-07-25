@@ -5,20 +5,33 @@ import './handler/common.dart';
 import './handler/list_quotes.dart';
 import './handler/add_quote.dart';
 import './handler/update_quote.dart';
+import './handler/delete_quote.dart';
+import './handler/get_quote.dart';
+import './handler/not_found.dart';
 
 import './service/quote_service.dart';
 import './repository/quotes.dart';
 
 Future main() async {
-  QuotesRepository repository = new QuotesRepository();
+  var  repository = new QuotesRepository();
 
-  QuotesService quotesService = new QuotesService(repository);
+  var  quotesService = new QuotesService(repository);
 
-  Handler listQuotes = new ListQuotesHandler(quotesService);
-  Handler addQuote = new AddQuoteHandler(quotesService);
-  Handler updateQuote = new UpdateQuoteHandler(quotesService);
+  var notFoundHandler = new NotFoundHandler();
 
-  List<Handler> handlers = [listQuotes, addQuote, updateQuote];
+  var listQuotesHandler = new ListQuotesHandler(quotesService);
+  var addQuoteHandler = new AddQuoteHandler(quotesService);
+  var updateQuoteHandler = new UpdateQuoteHandler(quotesService);
+  var deleteQuoteHandler = new DeleteQuoteHandler(quotesService);
+  var getQuoteHandler = new GetQuoteHandler(quotesService);
+
+  var handlers = [
+    listQuotesHandler,
+    addQuoteHandler,
+    updateQuoteHandler,
+    deleteQuoteHandler,
+    getQuoteHandler
+  ];
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 
@@ -34,9 +47,7 @@ Future main() async {
     }
 
     if (!found) {
-      request.response
-        ..write('not found')
-        ..close();
+      notFoundHandler.execute(request);
     }
   }
 }
