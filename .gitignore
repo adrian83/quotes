@@ -4,3 +4,10 @@
 **/.packages
 
 .dart_tool
+
+
+**/build
+.dart_tool
+
+
+
