@@ -2,7 +2,8 @@ import 'dart:io';
 
 var contentTypes = {
   "html": new ContentType("text", "html", charset: "utf-8"),
-  "css": new ContentType("text", "css", charset: "utf-8")
+  "css": new ContentType("text", "css", charset: "utf-8"),
+  "js": new ContentType("application", "javascript", charset: "utf-8")
 };
 
 main() {
