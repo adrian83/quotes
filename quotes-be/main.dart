@@ -2,12 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import './handler/common.dart';
-import './handler/list_quotes.dart';
-import './handler/add_quote.dart';
-import './handler/update_quote.dart';
-import './handler/delete_quote.dart';
-import './handler/get_quote.dart';
 import './handler/not_found.dart';
+import './handler/quote/list_quotes.dart';
+import './handler/quote/add_quote.dart';
+import './handler/quote/update_quote.dart';
+import './handler/quote/delete_quote.dart';
+import './handler/quote/get_quote.dart';
 
 import './service/quote_service.dart';
 import './repository/quotes.dart';

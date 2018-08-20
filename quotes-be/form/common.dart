@@ -32,13 +32,16 @@ abstract class FormParser<F> {
 }
 
 class ParseElem<T> {
-  ParsingError error;
-  T value;
+  ParsingError _error;
+  T _value;
 
-  ParseElem.failure(this.error);
-  ParseElem.success(this.value);
+  ParseElem.failure(this._error);
+  ParseElem.success(this._value);
 
-  bool hasError() => error != null;
+
+  bool hasError() => _error != null;
+  T get value => _value;
+  ParsingError get error => _error;
 }
 
 class PathParseResult {
@@ -47,18 +50,26 @@ class PathParseResult {
   PathParseResult(this.params);
 
   ParseElem<int> getInt(String name) {
-    var obj = params[name];
-    if (obj == null) {
-      var error = new ParsingError(name, "Cannot be empty");
-      return new ParseElem.failure(error);
+    ParseElem<String> parsedStr = getString(name);
+    if(parsedStr.hasError()) {
+        return new ParseElem.failure(parsedStr.error);
     }
     try {
-      var value = int.parse(obj.toString());
+      var value = int.parse(parsedStr.value);
       return new ParseElem.success(value);
     } on FormatException catch (e) {
       var error = new ParsingError(name, "Invalid format");
       return new ParseElem.failure(error);
     }
+  }
+
+  ParseElem<String> getString(String name) {
+    var obj = params[name];
+    if (obj == null) {
+      var error = new ParsingError(name, "Cannot be empty");
+      return new ParseElem.failure(error);
+    }
+    return new ParseElem.success(obj.toString());
   }
 }
 

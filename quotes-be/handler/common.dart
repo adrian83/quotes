@@ -1,25 +1,29 @@
 import 'dart:io';
 import 'dart:convert';
+
 import '../form/common.dart';
 
 abstract class Handler {
   var JSON_CONTENT = new ContentType("application", "json", charset: "utf-8");
 
-  String _url, _method;
+  String _method;
+  RegExp _exp;
 
-  Handler(this._url, this._method);
+  Handler(String url, this._method){
+      _exp = new RegExp(url);
+  }
 
-  String get url => this._url;
+  ParseResult<F> parseForm<F>(HttpRequest request, FormParser<F> parser) async {
+    String content = await request.transform(utf8.decoder).join();
+    var data = jsonDecode(content) as Map;
+    return parser.parse(data);
+  }
 
   bool canHandle(String uri, String method) {
-    print("URI " + uri + " METHOD " + method);
-
     if (method != this._method) {
       return false;
     }
-
-    RegExp exp = new RegExp(this._url);
-    return exp.hasMatch(uri);
+    return _exp.hasMatch(uri);
   }
 
   void execute(HttpRequest request);
@@ -45,7 +49,7 @@ abstract class Handler {
     resp.headers.contentType = JSON_CONTENT;
     resp.statusCode = status;
     if (body != null) {
-      resp.write(JSON.encode(body));
+      resp.write(jsonEncode(body));
     }
     resp.close();
   }

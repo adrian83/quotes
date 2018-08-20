@@ -1,7 +1,7 @@
 name: quotes
-description: simple crud app 
+description: simple crud app
 version: 0.0.1
 environment:
   sdk: '>=1.2.0'
 dependencies:
-  sqlite: ^0.3.0
+  uuid: ^1.0.3
