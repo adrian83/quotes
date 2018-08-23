@@ -1,17 +1,48 @@
 import 'dart:io';
 import 'dart:convert';
 
-import '../form/common.dart';
+import '../domain/common/form.dart';
 
 abstract class Handler {
   var JSON_CONTENT = new ContentType("application", "json", charset: "utf-8");
 
-  String _method;
+  String _url, _method;
   RegExp _exp;
 
-  Handler(String url, this._method){
-      _exp = new RegExp(url);
+  Map<String, int> params = new Map<String, int>();
+
+  Handler(this._url, this._method){
+      var urlPatterns = _transoformURI(this._url);
+      print("Url: $_url, RegExp: $urlPatterns");
+      _exp = new RegExp(urlPatterns);
   }
+
+  String _transoformURI(String urlPatterns) {
+      var elems = urlPatterns.split("/");
+      var result = "";
+      for (var i=0; i<elems.length; i++) {
+          var e = elems[i];
+        if(e.startsWith("{") && e.endsWith("}")) {
+          result += r"/([a-z-A-Z0-9]+)";
+
+          var key = e.substring(1, e.length-1);
+          params[key] = i-1;
+
+        } else if(e != ""){
+          result += "/" + e;
+        }
+      }
+
+      result += r"[/]?$";
+      return result;
+  }
+
+PathParseResult parsePath(List<String> segments) {
+    var pathParser = new PathParser(segments);
+    var pathResult = pathParser.parse(params);
+    return pathResult;
+}
+
 
   ParseResult<F> parseForm<F>(HttpRequest request, FormParser<F> parser) async {
     String content = await request.transform(utf8.decoder).join();
@@ -23,6 +54,7 @@ abstract class Handler {
     if (method != this._method) {
       return false;
     }
+    print(uri);
     return _exp.hasMatch(uri);
   }
 

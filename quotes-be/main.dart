@@ -9,29 +9,92 @@ import './handler/quote/update_quote.dart';
 import './handler/quote/delete_quote.dart';
 import './handler/quote/get_quote.dart';
 
-import './service/quote_service.dart';
-import './repository/quotes.dart';
+import './handler/author/list_authors.dart';
+import './handler/author/add_author.dart';
+import './handler/author/update_author.dart';
+import './handler/author/get_author.dart';
+import './handler/author/delete_author.dart';
+
+import './handler/book/list_books.dart';
+import './handler/book/add_book.dart';
+import './handler/book/delete_book.dart';
+import './handler/book/get_book.dart';
+import './handler/book/update_book.dart';
+
+import './domain/author/model.dart';
+import './domain/author/service.dart';
+import './domain/author/repository.dart';
+
+import './domain/quote/model.dart';
+import './domain/quote/service.dart';
+import './domain/quote/repository.dart';
+
+import './domain/book/model.dart';
+import './domain/book/service.dart';
+import './domain/book/repository.dart';
+
 
 Future main() async {
-  var  repository = new QuotesRepository();
 
-  var  quotesService = new QuotesService(repository);
+  var  quoteRepository = new QuotesRepository();
+  var  quotesService = new QuotesService(quoteRepository);
+
+  var  authorRepository = new AuthorRepository();
+  var  authorService = new AuthorService(authorRepository);
+
+  var  bookRepository = new BookRepository();
+  var  bookService = new BookService(bookRepository);
 
   var notFoundHandler = new NotFoundHandler();
 
-  var listQuotesHandler = new ListQuotesHandler(quotesService);
+  var addAuthorHandler = new AddAuthorHandler(authorService);
+  var listAuthorsHandler = new ListAuthorsHandler(authorService);
+  var getAuthorHandler = new GetAuthorHandler(authorService);
+  var updateAuthorHandler = new UpdateAuthorHandler(authorService);
+  var deleteAuthorHandler = new DeleteAuthorHandler(authorService);
+
+  var addBookHandler = new AddBookHandler(bookService);
+  var listBooksHandler = new ListBooksHandler(bookService);
+  var getBookHandler = new GetBookHandler(bookService);
+  var updateBookHandler = new UpdateBookHandler(bookService);
+  var deleteBookHandler = new DeleteBookHandler(bookService);
+  
   var addQuoteHandler = new AddQuoteHandler(quotesService);
+  var listQuotesHandler = new ListQuotesHandler(quotesService);
+  var getQuoteHandler = new GetQuoteHandler(quotesService);
   var updateQuoteHandler = new UpdateQuoteHandler(quotesService);
   var deleteQuoteHandler = new DeleteQuoteHandler(quotesService);
-  var getQuoteHandler = new GetQuoteHandler(quotesService);
+
 
   var handlers = [
-    listQuotesHandler,
-    addQuoteHandler,
-    updateQuoteHandler,
-    deleteQuoteHandler,
-    getQuoteHandler
+      addAuthorHandler,
+      getAuthorHandler,
+      updateAuthorHandler,
+      deleteAuthorHandler,
+      listAuthorsHandler,
+
+      addBookHandler,
+      getBookHandler,
+      updateBookHandler,
+      deleteBookHandler,
+      listBooksHandler,
+
+      addQuoteHandler,
+      getQuoteHandler,
+      updateQuoteHandler,
+      deleteQuoteHandler,
+      listQuotesHandler
   ];
+
+  Author a1 = authorRepository.save(new Author(null, "Adam Mickiewicz"));
+
+  Book b1 = bookRepository.save(new Book(null, "Dziady", a1.id));
+  Book b2 = bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
+
+  Quote q1 = quoteRepository.save(new Quote(null, "Ciemno wszedzie, glucho wszedzie...", a1.id, b1.id));
+
+
+
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 

@@ -1,17 +1,17 @@
 import 'dart:io';
 
 import './../common.dart';
-import '../../domain/quote/service.dart';
+import '../../domain/book/service.dart';
 import '../../domain/common/form.dart';
 
-class ListQuotesHandler extends Handler {
-  final _URL = r"/authors/{authorId}/books/{bookId}/quotes";
+class DeleteBookHandler extends Handler {
+  final _URL = r"/authors/{authorId}/books/{bookId}";
 
-  QuotesService _quotesService;
+  BookService _bookService;
 
-  ListQuotesHandler(this._quotesService) : super(_URL, "GET") {}
+  DeleteBookHandler(this._bookService) : super(_URL, "DELETE");
 
-  void execute(HttpRequest request) {
+  void execute(HttpRequest request) async {
     var pathParsed = parsePath(request.requestedUri.pathSegments);
     var authorIdOrErr = pathParsed.getString("authorId");
     var bookIdOrErr = pathParsed.getString("bookId");
@@ -22,7 +22,7 @@ class ListQuotesHandler extends Handler {
       return;
     }
 
-    var quotes = _quotesService.findQuotes(authorIdOrErr.value, bookIdOrErr.value);
-    ok(quotes, request);
+    _bookService.delete(authorIdOrErr.value, bookIdOrErr.value);
+    ok(null, request);
   }
 }

@@ -42,6 +42,17 @@ class ParseElem<T> {
   bool hasError() => _error != null;
   T get value => _value;
   ParsingError get error => _error;
+
+  static List<ParsingError> errors(List<ParseElem> elems) {
+    List<ParsingError> errors = [];
+    for(var e in elems){
+        if(e.hasError()) {
+          errors.add(e.error);
+        }
+    }
+    return errors;
+  }
+
 }
 
 class PathParseResult {

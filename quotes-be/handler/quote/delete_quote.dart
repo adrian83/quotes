@@ -1,27 +1,29 @@
 import 'dart:io';
 
 import './../common.dart';
-import '../../service/quote_service.dart';
-import '../../form/common.dart';
+import '../../domain/quote/service.dart';
+import '../../domain/common/form.dart';
 
 class DeleteQuoteHandler extends Handler {
-  final _URL = r"/quotes/(\w+)[/]?";
+  final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
 
   QuotesService _quotesService;
 
   DeleteQuoteHandler(this._quotesService) : super(_URL, "DELETE");
 
   void execute(HttpRequest request) async {
-    var pathParser = new PathParser(request.requestedUri.pathSegments);
-    var pathResult = pathParser.parse({"quoteId": 1});
-    var idOrErr = pathResult.getString("quoteId");
+    var pathParsed = parsePath(request.requestedUri.pathSegments);
+    var authorIdOrErr = pathParsed.getString("authorId");
+    var bookIdOrErr = pathParsed.getString("bookId");
+    var quoteIdOrErr = pathParsed.getString("quoteId");
 
-    if (idOrErr.hasError()) {
-      badRequest([idOrErr.error], request);
+    var errors = ParseElem.errors([authorIdOrErr, bookIdOrErr, quoteIdOrErr]);
+    if (errors.length > 0) {
+      badRequest(errors, request);
       return;
     }
 
-    _quotesService.delete(idOrErr.value);
+    _quotesService.delete(authorIdOrErr.value, bookIdOrErr.value, quoteIdOrErr.value);
     ok(null, request);
   }
 }

@@ -2,30 +2,31 @@ import 'dart:io';
 import 'dart:convert';
 
 import './../common.dart';
-import '../../service/quote_service.dart';
-import '../../form/quote.dart';
-import '../../form/common.dart';
-import '../../domain/quote.dart';
+import '../../domain/quote/service.dart';
+import '../../domain/quote/form.dart';
+import '../../domain/common/form.dart';
+import '../../domain/quote/model.dart';
 
 class GetQuoteHandler extends Handler {
-  final _URL = r"/quotes/(\w+)[/]?";
+  final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
 
   QuotesService _quotesService;
 
   GetQuoteHandler(this._quotesService) : super(_URL, "GET");
 
   void execute(HttpRequest request) async {
-    var pathParser = new PathParser(request.requestedUri.pathSegments);
-    var pathResult = pathParser.parse({"quoteId": 1});
-    var idOrErr = pathResult.getString("quoteId");
+    var pathParsed = parsePath(request.requestedUri.pathSegments);
+    var authorIdOrErr = pathParsed.getString("authorId");
+    var bookIdOrErr = pathParsed.getString("bookId");
+    var quoteIdOrErr = pathParsed.getString("quoteId");
 
-    if (idOrErr.hasError()) {
-      badRequest([idOrErr.error], request);
+    var errors = ParseElem.errors([authorIdOrErr, bookIdOrErr, quoteIdOrErr]);
+    if (errors.length > 0) {
+      badRequest(errors, request);
       return;
     }
 
-    var quote = _quotesService.find(idOrErr.value);
-
+    var quote = _quotesService.find(authorIdOrErr.value, bookIdOrErr.value, quoteIdOrErr.value);
     if (quote == null) {
       notFound(request);
       return;
