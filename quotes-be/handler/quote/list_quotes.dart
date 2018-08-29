@@ -5,7 +5,7 @@ import '../../domain/quote/service.dart';
 import '../../domain/common/form.dart';
 
 class ListQuotesHandler extends Handler {
-  final _URL = r"/authors/{authorId}/books/{bookId}/quotes";
+  static final _URL = r"/authors/{authorId}/books/{bookId}/quotes";
 
   QuotesService _quotesService;
 

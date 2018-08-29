@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 
 import './../common.dart';
 import '../../domain/quote/service.dart';
@@ -8,7 +7,7 @@ import '../../domain/common/form.dart';
 import '../../domain/quote/model.dart';
 
 class UpdateQuoteHandler extends Handler {
-  final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
+  static final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
 
   QuotesService _quotesService;
 

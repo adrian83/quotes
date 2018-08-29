@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 
 import './../common.dart';
 import '../../domain/author/service.dart';
@@ -7,7 +6,7 @@ import '../../domain/author/form.dart';
 import '../../domain/author/model.dart';
 
 class AddAuthorHandler extends Handler {
-  final _URL = r"/authors";
+  static final _URL = r"/authors";
 
   AuthorService _authorService;
 

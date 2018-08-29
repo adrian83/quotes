@@ -4,7 +4,7 @@ import './../common.dart';
 import '../../domain/book/service.dart';
 
 class ListBooksHandler extends Handler {
-  final _URL = r"/authors/{authorId}/books";
+  static final _URL = r"/authors/{authorId}/books";
 
   BookService _bookService;
 

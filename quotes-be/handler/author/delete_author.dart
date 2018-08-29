@@ -2,10 +2,9 @@ import 'dart:io';
 
 import './../common.dart';
 import '../../domain/author/service.dart';
-import '../../domain/common/form.dart';
 
 class DeleteAuthorHandler extends Handler {
-  final _URL = r"/authors/{authorId}";
+  static final _URL = r"/authors/{authorId}";
 
   AuthorService _authorService;
 

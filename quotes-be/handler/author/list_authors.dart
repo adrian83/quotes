@@ -4,7 +4,7 @@ import './../common.dart';
 import '../../domain/author/service.dart';
 
 class ListAuthorsHandler extends Handler {
-  final _URL = r"/authors";
+  static final _URL = r"/authors";
 
   AuthorService _authorService;
 

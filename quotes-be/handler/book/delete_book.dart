@@ -5,7 +5,7 @@ import '../../domain/book/service.dart';
 import '../../domain/common/form.dart';
 
 class DeleteBookHandler extends Handler {
-  final _URL = r"/authors/{authorId}/books/{bookId}";
+  static final _URL = r"/authors/{authorId}/books/{bookId}";
 
   BookService _bookService;
 

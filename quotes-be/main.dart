@@ -58,7 +58,7 @@ Future main() async {
   var getBookHandler = new GetBookHandler(bookService);
   var updateBookHandler = new UpdateBookHandler(bookService);
   var deleteBookHandler = new DeleteBookHandler(bookService);
-  
+
   var addQuoteHandler = new AddQuoteHandler(quotesService);
   var listQuotesHandler = new ListQuotesHandler(quotesService);
   var getQuoteHandler = new GetQuoteHandler(quotesService);

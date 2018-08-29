@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:convert';
 
 import './../common.dart';
 import '../../domain/book/service.dart';
@@ -7,7 +6,7 @@ import '../../domain/book/form.dart';
 import '../../domain/book/model.dart';
 
 class AddBookHandler extends Handler {
-  final _URL = r"/authors/{authorId}/books";
+  static final _URL = r"/authors/{authorId}/books";
 
   BookService _bookService;
 

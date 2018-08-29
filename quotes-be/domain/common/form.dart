@@ -69,6 +69,7 @@ class PathParseResult {
       var value = int.parse(parsedStr.value);
       return new ParseElem.success(value);
     } on FormatException catch (e) {
+      print(e);
       var error = new ParsingError(name, "Invalid format");
       return new ParseElem.failure(error);
     }

@@ -5,7 +5,7 @@ import '../../domain/quote/service.dart';
 import '../../domain/common/form.dart';
 
 class DeleteQuoteHandler extends Handler {
-  final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
+  static final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
 
   QuotesService _quotesService;
 
