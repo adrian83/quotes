@@ -1,16 +1,15 @@
 // #docregion initial
 @TestOn('browser')
 import 'package:angular_test/angular_test.dart';
-import './lib/app_component.dart';
+import 'package:quotes_fe/app_component.dart';
 // #docregion test-bed-and-fixture
-import './lib//app_component.template.dart' as ng;
+import 'package:quotes_fe/app_component.template.dart' as ng;
 // #enddocregion test-bed-and-fixture
 import 'package:test/test.dart';
 
 // #docregion test-bed-and-fixture
 void main() {
-  final testBed =
-      NgTestBed.forComponent<AppComponent>(ng.AppComponentNgFactory);
+  final testBed = NgTestBed.forComponent<AppComponent>(ng.AppComponentNgFactory);
   NgTestFixture<AppComponent> fixture;
   // #enddocregion test-bed-and-fixture
   setUp(() async {
