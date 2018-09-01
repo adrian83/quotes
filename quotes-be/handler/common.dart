@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:async';
 
 import '../domain/common/form.dart';
 
@@ -44,7 +45,7 @@ PathParseResult parsePath(List<String> segments) {
 }
 
 
-  ParseResult<F> parseForm<F>(HttpRequest request, FormParser<F> parser) async {
+  Future<ParseResult<F>> parseForm<F>(HttpRequest request, FormParser<F> parser) async {
     String content = await request.transform(utf8.decoder).join();
     var data = jsonDecode(content) as Map;
     return parser.parse(data);
@@ -79,6 +80,12 @@ PathParseResult parsePath(List<String> segments) {
   void write(Object body, int status, HttpRequest request) {
     var resp = request.response;
     resp.headers.contentType = JSON_CONTENT;
+
+    // cors
+    resp.headers.set("Access-Control-Allow-Origin", "*");
+    resp.headers.set("Access-Control-Allow-Headers","origin, content-type, accept, authorization");
+    resp.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+
     resp.statusCode = status;
     if (body != null) {
       resp.write(jsonEncode(body));
