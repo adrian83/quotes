@@ -8,7 +8,7 @@ import 'routes.dart';
 @Component(
   selector: 'my-app',
   templateUrl: 'app_component.template.html',
-  directives: const [routerDirectives],
+  directives: const [coreDirectives, routerDirectives],
   exports: [RoutePaths, Routes],
   providers: [ClassProvider(BrowserClient)],
 )

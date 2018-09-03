@@ -87,6 +87,7 @@ Future main() async {
   ];
 
   Author a1 = authorRepository.save(new Author(null, "Adam Mickiewicz"));
+  Author a2 = authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
 
   Book b1 = bookRepository.save(new Book(null, "Dziady", a1.id));
   Book b2 = bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
