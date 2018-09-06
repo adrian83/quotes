@@ -1,11 +1,11 @@
-import 'package:angular/angular.dart';
-import 'package:angular_router/angular_router.dart';
 import 'dart:async';
 
-import 'route_paths.dart';
+import 'package:angular/angular.dart';
+import 'package:angular_router/angular_router.dart';
 
-import 'domain/author/service.dart';
-import 'domain/author/model.dart';
+import '../../route_paths.dart';
+import '../../domain/author/service.dart';
+import '../../domain/author/model.dart';
 
 @Component(
   selector: 'list-authors',
@@ -14,10 +14,10 @@ import 'domain/author/model.dart';
   directives: const [coreDirectives],
 )
 class ListAuthorsComponent implements OnInit {
+  
  final AuthorService _authorService;
  final Router _router;
 
-  var name = 'Angular';
   List<Author> authors = [];
   String errorMessage;
 
@@ -34,12 +34,15 @@ class ListAuthorsComponent implements OnInit {
     }
   }
 
-  void onSelect(Author author) => _gotoDetail(author.id);
+  void onSelect(Author author) => _router.navigate(_detailsUrl(author.id));
 
-  String _authorUrl(String id) =>
-      RoutePaths.author.toUrl(parameters: {authorIdParam: '$id'});
+  void edit(Author author) => _router.navigate(_editionUrl(author.id));
 
-  Future<NavigationResult> _gotoDetail(String id) =>
-      _router.navigate(_authorUrl(id));
+  String _detailsUrl(String id) => RoutePaths.showAuthor.toUrl(parameters: {authorIdParam: '$id'});
+
+  String _editionUrl(String id) => RoutePaths.editAuthor.toUrl(parameters: {authorIdParam: '$id'});
+
+
+
 
 }

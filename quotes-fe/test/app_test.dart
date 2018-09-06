@@ -22,10 +22,12 @@ void main() {
   });
   // #enddocregion default-test, initial
   // #docregion more-tests
+  /*
   test('Greet world', () async {
     await fixture.update((c) => c.name = 'World');
     expect(fixture.text, 'Hello World');
   });
+  */
   test('Greet world HTML', () {
     final html = fixture.rootElement.innerHtml;
     expect(html, '<h1>Hello Angular</h1>');

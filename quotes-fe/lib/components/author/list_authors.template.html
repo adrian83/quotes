@@ -1,0 +1,7 @@
+<h1>authors</h1>
+
+<div *ngFor="let author of authors" >
+  <span (click)="onSelect(author)">{{author.name}}</span>
+  <br/>
+  <span (click)="edit(author)">edit</span>
+</div>

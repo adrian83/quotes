@@ -13,6 +13,4 @@ import 'routes.dart';
   providers: [ClassProvider(BrowserClient)],
 )
 
-class AppComponent {
-  var name = 'Angular';
-}
+class AppComponent {}

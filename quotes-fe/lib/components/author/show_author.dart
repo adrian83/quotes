@@ -1,12 +1,9 @@
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 
-import 'dart:async';
-
-import 'routes.dart';
-
-import 'domain/author/service.dart';
-import 'domain/author/model.dart';
+import '../../routes.dart';
+import '../../domain/author/service.dart';
+import '../../domain/author/model.dart';
 
 @Component(
   selector: 'show-author',
@@ -15,14 +12,13 @@ import 'domain/author/model.dart';
   directives: const [coreDirectives],
 )
 class ShowAuthorComponent implements OnActivate {
- final AuthorService _authorService;
- final Location _location;
 
-  var name = 'Angular';
+ final AuthorService _authorService;
+
   Author author = new Author(null, "");
   String errorMessage;
 
-  ShowAuthorComponent(this._authorService, this._location);
+  ShowAuthorComponent(this._authorService);
 
   @override
   void onActivate(_, RouterState current) async {

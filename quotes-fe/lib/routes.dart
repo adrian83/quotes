@@ -1,26 +1,30 @@
 import 'package:angular_router/angular_router.dart';
 
 import 'route_paths.dart';
-import 'list_authors.template.dart' as list_authors_template;
-import 'show_author.template.dart' as show_author_template;
+import 'components/author/list_authors.template.dart' as list_authors_template;
+import 'components/author/show_author.template.dart' as show_author_template;
+import 'components/author/edit_author.template.dart' as edit_author_template;
 
 export 'route_paths.dart';
 
-
-
 class Routes {
 
-  static final authors = RouteDefinition(
-    routePath: RoutePaths.authors,
+  static final listAuthors = RouteDefinition(
+    routePath: RoutePaths.listAuthors,
     component: list_authors_template.ListAuthorsComponentNgFactory,
   );
 
   static final showAuthor = RouteDefinition(
-    routePath: RoutePaths.author,
+    routePath: RoutePaths.showAuthor,
     component: show_author_template.ShowAuthorComponentNgFactory,
   );
 
+  static final editAuthor = RouteDefinition(
+    routePath: RoutePaths.editAuthor,
+    component: edit_author_template.EditAuthorComponentNgFactory,
+  );
+
   static final all = <RouteDefinition>[
-    authors, showAuthor,
+    listAuthors, showAuthor, editAuthor
   ];
 }
