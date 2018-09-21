@@ -6,6 +6,7 @@ import 'package:angular_router/angular_router.dart';
 import '../../route_paths.dart';
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
+import '../../domain/common/page.dart';
 
 @Component(
   selector: 'list-authors',
@@ -14,11 +15,12 @@ import '../../domain/author/model.dart';
   directives: const [coreDirectives],
 )
 class ListAuthorsComponent implements OnInit {
-  
+
  final AuthorService _authorService;
  final Router _router;
 
-  List<Author> authors = [];
+PageRequest _initRequest = new PageRequest(3, 0);
+  AuthorsPage authorsPage = new AuthorsPage(new PageInfo(0, 0, 0), new List<Author>());
   String errorMessage;
 
   ListAuthorsComponent(this._authorService, this._router);
@@ -27,11 +29,14 @@ class ListAuthorsComponent implements OnInit {
   void ngOnInit() => _getAuthors();
 
   Future<void> _getAuthors() async {
+
     try {
-      authors = await _authorService.getAll();
+      authorsPage = await _authorService.list(_initRequest);
+      //print(authorsPage2);
     } catch (e) {
       errorMessage = e.toString();
     }
+
   }
 
   void onSelect(Author author) => _router.navigate(_detailsUrl(author.id));

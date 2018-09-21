@@ -1,29 +1,12 @@
 import 'dart:convert';
 
-class Entity {
-  String _id;
-
-  Entity(this._id);
-
-  String get id => _id;
-
-  void set id(String id) {
-    this._id = id;
-  }
-
-  Map toJson() {
-    var map = new Map<String, Object>();
-    map["id"] = this.id;
-    return map;
-  }
-
-  String toString() => jsonEncode(this);
-}
-
 class PageInfo {
   int _limit, _offset, _total;
 
   PageInfo(this._limit, this._offset, this._total);
+
+  factory PageInfo.fromJson(Map<String, dynamic> json) =>
+      new PageInfo(json['limit'], json['offset'], json['total']);
 
   int get limit => _limit;
   int get offset => _offset;
@@ -40,21 +23,26 @@ class PageInfo {
   String toString() => jsonEncode(this);
 }
 
-class Page<T extends Entity> {
+class Page<T> {
   PageInfo _info;
   List<T> _elements;
 
   Page(this._info, this._elements);
 
   List<T> get elements => _elements;
+  PageInfo get info => _info;
+  bool get empty => this._elements == null || this._elements.length == 0;
 
-  Map toJson() {
+  String toString() => jsonEncode(this);
+}
 
-    var map = new Map<String, Object>();
-    map["info"] = this._info.toJson();
-    map["elements"] = this.elements.map((e) => e.toJson()).toList();
-    return map;
-  }
+class PageRequest {
+  int _limit, _offset;
+
+  PageRequest(this._limit, this._offset);
+
+  int get limit => this._limit;
+  int get offset => this._offset;
 
   String toString() => jsonEncode(this);
 }

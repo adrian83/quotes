@@ -7,10 +7,11 @@ var contentTypes = {
 };
 
 main() {
-  HttpServer.bind(InternetAddress.ANY_IP_V6, 8080).then((server) {
+  HttpServer.bind(InternetAddress.anyIPv6, 8080).then((server) {
     server.listen((HttpRequest request) {
       try {
         String filePath = request.uri.path;
+        print(filePath);
         if (filePath == "/") {
           filePath = "/index.html";
         }

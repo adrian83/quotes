@@ -25,7 +25,7 @@ class ShowAuthorComponent implements OnActivate {
     print(current);
     final id = current.parameters[authorIdParam];
     print(id);
-    this.author = await _authorService.getById(id);
+    this.author = await _authorService.get(id);
   }
 
 

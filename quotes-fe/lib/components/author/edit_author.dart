@@ -12,7 +12,7 @@ import '../../domain/author/model.dart';
   directives: const [coreDirectives],
 )
 class EditAuthorComponent implements OnActivate {
-  
+
  final AuthorService _authorService;
 
   var name = 'Angular';
@@ -26,7 +26,7 @@ class EditAuthorComponent implements OnActivate {
     print(current);
     final id = current.parameters[authorIdParam];
     print(id);
-    this.author = await _authorService.getById(id);
+    this.author = await _authorService.get(id);
   }
 
 

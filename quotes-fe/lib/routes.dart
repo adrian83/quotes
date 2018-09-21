@@ -4,6 +4,7 @@ import 'route_paths.dart';
 import 'components/author/list_authors.template.dart' as list_authors_template;
 import 'components/author/show_author.template.dart' as show_author_template;
 import 'components/author/edit_author.template.dart' as edit_author_template;
+import 'info.template.dart' as info_template;
 
 export 'route_paths.dart';
 
@@ -24,7 +25,12 @@ class Routes {
     component: edit_author_template.EditAuthorComponentNgFactory,
   );
 
+  static final info = RouteDefinition(
+    routePath: RoutePaths.info,
+    component: info_template.InfoComponentNgFactory,
+  );
+
   static final all = <RouteDefinition>[
-    listAuthors, showAuthor, editAuthor
+    listAuthors, showAuthor, editAuthor, info
   ];
 }

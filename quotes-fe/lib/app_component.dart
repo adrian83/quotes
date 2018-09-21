@@ -13,4 +13,10 @@ import 'routes.dart';
   providers: [ClassProvider(BrowserClient)],
 )
 
-class AppComponent {}
+class AppComponent {
+
+AppComponent(){
+  print("start");
+}
+
+}
