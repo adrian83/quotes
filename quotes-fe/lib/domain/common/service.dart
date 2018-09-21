@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 
 import './errors.dart';
+import './page.dart';
 
 class Service<T> {
   static final Logger LOGGER = new Logger('Service');
@@ -16,12 +17,14 @@ class Service<T> {
   Service(this.http);
 
   Future<Map<String, dynamic>> createEntity(String url, T entity) async {
-    var response = await http.post(url, headers: _headers, body: jsonEncode(entity));
+    var response =
+        await http.post(url, headers: _headers, body: jsonEncode(entity));
     return _handleErrors(response);
   }
 
   Future<Map<String, dynamic>> updateEntity(String url, T entity) async {
-    var response = await http.put(url, headers: _headers, body: jsonEncode(entity));
+    var response =
+        await http.put(url, headers: _headers, body: jsonEncode(entity));
     return _handleErrors(response);
   }
 
@@ -32,7 +35,9 @@ class Service<T> {
 
   Future<Map<String, dynamic>> deleteEntity(String url) async {
     var response = await http.delete(url);
-    return response.statusCode == 200 ? new Map<String, dynamic>() : _handleErrors(response);
+    return response.statusCode == 200
+        ? new Map<String, dynamic>()
+        : _handleErrors(response);
   }
 
   Map<String, dynamic> _handleErrors(response) {
@@ -51,4 +56,10 @@ class Service<T> {
   String updateUrl(String api, String url, String id) => getUrl(api, url, id);
   String deleteUrl(String api, String url, String id) => getUrl(api, url, id);
 
+  String pageRequestToUrlParams(PageRequest request) {
+    var params = new List<String>();
+    params.add("limit=${request.limit}");
+    params.add("offset=${request.offset}");
+    return params.join("&");
+  }
 }

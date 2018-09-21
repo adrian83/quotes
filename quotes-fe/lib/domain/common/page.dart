@@ -1,59 +1,48 @@
-final String PAGE = "page";
-final String SIZE = "size";
-final String TOTAL = "total";
+import 'dart:convert';
+
+class PageInfo {
+  int _limit, _offset, _total;
+
+  PageInfo(this._limit, this._offset, this._total);
+
+  factory PageInfo.fromJson(Map<String, dynamic> json) =>
+      new PageInfo(json['limit'], json['offset'], json['total']);
+
+  int get limit => _limit;
+  int get offset => _offset;
+  int get total => _total;
+
+  Map toJson() {
+    var map = new Map<String, Object>();
+    map["limit"] = this.limit;
+    map["offset"] = this.offset;
+    map["total"] = this.total;
+    return map;
+  }
+
+  String toString() => jsonEncode(this);
+}
 
 class Page<T> {
-
-  int _total;
-  int _size;
-  int _current;
+  PageInfo _info;
   List<T> _elements;
 
-  Page(this._current, this._total, this._size, this._elements);
+  Page(this._info, this._elements);
 
-  List<T> get elements => this._elements;
-  int get size => this._size;
-  int get total => this._total;
-  int get current => this._current;
+  List<T> get elements => _elements;
+  PageInfo get info => _info;
+  bool get empty => this._elements == null || this._elements.length == 0;
 
-  bool get hasPrev => this._current > 0;
-  bool get isEmpty => this._elements == null || this._elements.length == 0;
-
-
-  String toString() {
-    return "Page { current: $_current, total: $_total, size: $_size, elements: $_elements }";
-  }
+  String toString() => jsonEncode(this);
 }
 
 class PageRequest {
+  int _limit, _offset;
 
-  static final DEFAULT_PAGE_SIZE = 5;
+  PageRequest(this._limit, this._offset);
 
-  int _page = 0;
-  int _size = 5;
-  String _phrase = "";
-  String _sort = "";
+  int get limit => this._limit;
+  int get offset => this._offset;
 
-  PageRequest(this._page, this._phrase, [this._size, this._sort]);
-
-  int get page => this._page == null ? 0 : this._page;
-  int get size => this._size == null ? 0 : this._size;
-  String get phrase => this._phrase == null ? "" : this._phrase;
-  String get sort => this._sort == null ? "" : this._sort;
-
-  String asGetParams(){
-    var params = new List<String>();
-    params.add(_page == null || _page == 0 ? null : "$PAGE=$_page");
-    params.add(_size == null || _size == 0 ? "$SIZE=$DEFAULT_PAGE_SIZE" : "$SIZE=$_size");
-    params.add(_phrase == null || _phrase.isEmpty ? null : "phrase=$_phrase");
-    params.add(_sort == null || _sort.isEmpty ? null : "sort=$_sort");
-
-    params.removeWhere((e) => e == null);
-
-    return params.join("&");
-  }
-
-  String toString() {
-    return "PageRequest { page: $_page, phrase: $_phrase, size: $_size, sort: $_sort }";
-  }
+  String toString() => jsonEncode(this);
 }

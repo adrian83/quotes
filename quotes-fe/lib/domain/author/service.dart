@@ -19,7 +19,7 @@ static final String _authors = "authors";
 
   Future<AuthorsPage> list(PageRequest request) async {
     //LOGGER.info("Get authors. Request params: $request");
-    var url = listUrl(_host, _authors, request.asGetParams());
+    var url = listUrl(_host, _authors, this.pageRequestToUrlParams(request));
     var jsonPage = await getEntity(url);
     return new AuthorsPage.fromJson(jsonPage);
   }

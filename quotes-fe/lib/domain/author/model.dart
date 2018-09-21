@@ -13,15 +13,12 @@ class Author {
 }
 
 class AuthorsPage extends Page<Author> {
-  AuthorsPage(int current, int total, int size, List<Author> elements)
-      : super(current, total, size, elements);
+  AuthorsPage(PageInfo info, List<Author> elements) : super(info, elements);
 
   factory AuthorsPage.fromJson(Map<String, dynamic> json) {
-    var authorsJson = json['authors'];
-    List<Author> authors = authorsJson == null
-        ? new List<Author>()
-        : authorsJson.map((j) => new Author.fromJson(j));
-
-    return new AuthorsPage(json[PAGE], json[TOTAL], json[SIZE], authors);
+    var authors =
+        (json['elements'] as List).map((j) => new Author.fromJson(j)).toList();
+    var info = PageInfo.fromJson(json['info']);
+    return new AuthorsPage(info, authors);
   }
 }

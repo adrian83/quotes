@@ -11,7 +11,7 @@ class ListAuthorsHandler extends Handler {
   ListAuthorsHandler(this._authorService) : super(_URL, "GET") {}
 
   void execute(HttpRequest request) {
-    var quotes = _authorService.findAuthors();
-    ok(quotes, request);
+    var authors = _authorService.findAuthors();
+    ok(authors, request);
   }
 }

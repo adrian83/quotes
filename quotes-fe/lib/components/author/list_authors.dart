@@ -19,7 +19,8 @@ class ListAuthorsComponent implements OnInit {
  final AuthorService _authorService;
  final Router _router;
 
-  List<Author> authors = [];
+PageRequest _initRequest = new PageRequest(3, 0);
+  AuthorsPage authorsPage = new AuthorsPage(new PageInfo(0, 0, 0), new List<Author>());
   String errorMessage;
 
   ListAuthorsComponent(this._authorService, this._router);
@@ -28,12 +29,10 @@ class ListAuthorsComponent implements OnInit {
   void ngOnInit() => _getAuthors();
 
   Future<void> _getAuthors() async {
-    print("ListAuthorsComponent");
 
     try {
-      var request = new PageRequest(0, null);
-      var authorsPage = await _authorService.list(request);
-      authors = authorsPage.elements;
+      authorsPage = await _authorService.list(_initRequest);
+      //print(authorsPage2);
     } catch (e) {
       errorMessage = e.toString();
     }

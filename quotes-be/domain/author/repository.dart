@@ -1,5 +1,6 @@
 import 'package:uuid/uuid.dart';
 import 'model.dart';
+import '../common/model.dart';
 
 class AuthorRepository {
   List<Author> authors = new List<Author>();
@@ -10,7 +11,12 @@ class AuthorRepository {
     return author;
   }
 
-  List<Author> list() => authors;
+  Page<Author> list() {
+    var l = authors.length;
+    var info = new PageInfo(l, 0, l);
+    return new Page<Author>(info, authors);
+  }
+  
   Author find(String authorId) => authors.firstWhere((e) => e.id == authorId);
 
   Author update(Author author) {
