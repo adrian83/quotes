@@ -12,6 +12,18 @@ class PageInfo {
   int get offset => _offset;
   int get total => _total;
 
+  void set offset(int val){
+    _offset = val;
+  }
+
+  void set limit(int val){
+    _limit = val;
+  }
+
+  void set total(int val){
+    _total = val;
+  }
+
   Map toJson() {
     var map = new Map<String, Object>();
     map["limit"] = this.limit;

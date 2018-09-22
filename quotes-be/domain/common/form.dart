@@ -55,6 +55,40 @@ class ParseElem<T> {
 
 }
 
+class UrlParams {
+  Map<String, String> params;
+
+  UrlParams(this.params);
+
+  ParseElem<int> getIntOrElse(String name, int defaultVal) {
+    var obj = params[name];
+    if (obj == null) {
+      return new ParseElem.success(defaultVal);
+    }
+    ParseElem<String> parsedStr = getString(name);
+    if(parsedStr.hasError()) {
+        return new ParseElem.failure(parsedStr.error);
+    }
+    try {
+      var value = int.parse(parsedStr.value);
+      return new ParseElem.success(value);
+    } on FormatException catch (e) {
+      print(e);
+      var error = new ParsingError(name, "Invalid format");
+      return new ParseElem.failure(error);
+    }
+  }
+
+  ParseElem<String> getString(String name) {
+    var obj = params[name];
+    if (obj == null) {
+      var error = new ParsingError(name, "Cannot be empty");
+      return new ParseElem.failure(error);
+    }
+    return new ParseElem.success(obj.toString());
+  }
+}
+
 class PathParseResult {
   Map<String, String> params;
 

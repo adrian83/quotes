@@ -20,6 +20,15 @@ class Entity {
   String toString() => jsonEncode(this);
 }
 
+class PageRequest {
+  int _limit, _offset;
+
+  PageRequest(this._limit, this._offset);
+
+  int get limit => _limit;
+  int get offset => _offset;
+}
+
 class PageInfo {
   int _limit, _offset, _total;
 
@@ -49,7 +58,6 @@ class Page<T extends Entity> {
   List<T> get elements => _elements;
 
   Map toJson() {
-
     var map = new Map<String, Object>();
     map["info"] = this._info.toJson();
     map["elements"] = this.elements.map((e) => e.toJson()).toList();

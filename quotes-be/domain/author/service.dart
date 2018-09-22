@@ -7,7 +7,7 @@ class AuthorService {
 
   AuthorService(this._authorRepository);
 
-  Page<Author> findAuthors() => _authorRepository.list();
+  Page<Author> findAuthors(PageRequest request) => _authorRepository.list(request);
   Author save(Author author) => _authorRepository.save(author);
   Author update(Author author) => _authorRepository.update(author);
   Author find(String authorId) => _authorRepository.find(authorId);

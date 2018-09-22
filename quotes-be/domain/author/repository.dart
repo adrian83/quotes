@@ -11,12 +11,14 @@ class AuthorRepository {
     return author;
   }
 
-  Page<Author> list() {
+  Page<Author> list(PageRequest request) {
+
+    var athrs = authors.skip(request.offset).take(request.limit).toList();
     var l = authors.length;
-    var info = new PageInfo(l, 0, l);
-    return new Page<Author>(info, authors);
+    var info = new PageInfo(request.limit, request.offset, l);
+    return new Page<Author>(info, athrs);
   }
-  
+
   Author find(String authorId) => authors.firstWhere((e) => e.id == authorId);
 
   Author update(Author author) {

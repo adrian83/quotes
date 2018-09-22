@@ -47,11 +47,13 @@ class Pagination implements OnInit {
   }
 
   int _pagesCount() {
+    LOGGER.info("Page: total ${page.total} limit ${page.limit} g");
     var count = this.page == null ? 0 : (page.total / page.limit);
     return count.isNaN ? 0 : count.ceil();
   }
 
   int _currentPage() {
+
     var current = this.page == null ? 0 : (page.offset / page.limit);
     return current.isNaN ? 0 : current.ceil();
   }
@@ -66,7 +68,7 @@ class Pagination implements OnInit {
     var current = _currentPage();
     var pages = _pagesCount();
 
-    LOGGER.info("Page: $page");
+    LOGGER.info("Page: current $current pages $pages");
 
     links.add(new PageLink("<<", current == 0 || pages == 0, false, current - 1));
 

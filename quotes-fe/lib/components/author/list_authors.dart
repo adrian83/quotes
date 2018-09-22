@@ -24,7 +24,7 @@ class ListAuthorsComponent extends PageSwitcher implements OnInit {
  static final int pageSize = 3;
 
   PageRequest _initRequest = new PageRequest(pageSize, 0);
-  PageInfo pageInfo = new PageInfo(2, 4, 9);
+  PageInfo pageInfo = new PageInfo(0, 0, 0);
   AuthorsPage authorsPage;
   String errorMessage;
 
@@ -38,6 +38,10 @@ class ListAuthorsComponent extends PageSwitcher implements OnInit {
   Future<void> _getAuthors() async {
     try {
       authorsPage = await _authorService.list(_initRequest);
+      print("offset ${authorsPage.info.offset} limit ${authorsPage.info.limit} total ${authorsPage.info.total}");
+      pageInfo.limit = authorsPage.info.limit;
+      pageInfo.offset = authorsPage.info.offset;
+      pageInfo.total = authorsPage.info.total;
       //print(authorsPage2);
     } catch (e) {
       errorMessage = e.toString();
@@ -53,6 +57,9 @@ class ListAuthorsComponent extends PageSwitcher implements OnInit {
 _initRequest = new PageRequest(pageSize, pageSize*pageNumber);
 try {
   authorsPage = await _authorService.list(_initRequest);
+  pageInfo.limit = authorsPage.info.limit;
+  pageInfo.offset = authorsPage.info.offset;
+  pageInfo.total = authorsPage.info.total;
   //print(authorsPage2);
 } catch (e) {
   errorMessage = e.toString();

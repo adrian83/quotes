@@ -88,6 +88,11 @@ Future main() async {
 
   Author a1 = authorRepository.save(new Author(null, "Adam Mickiewicz"));
   Author a2 = authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
+  Author a3 = authorRepository.save(new Author(null, "Henryk Sienkiewicz2"));
+  Author a4 = authorRepository.save(new Author(null, "Henryk Sienkiewicz3"));
+  Author a5 = authorRepository.save(new Author(null, "Henryk Sienkiewicz4"));
+  Author a6 = authorRepository.save(new Author(null, "Henryk Sienkiewicz5"));
+  Author a7 = authorRepository.save(new Author(null, "Henryk Sienkiewicz6"));
 
   Book b1 = bookRepository.save(new Book(null, "Dziady", a1.id));
   Book b2 = bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
