@@ -3,6 +3,8 @@ import 'package:angular_router/angular_router.dart';
 
 import 'package:http/browser_client.dart';
 
+import 'package:logging/logging.dart';
+
 import 'routes.dart';
 
 @Component(
@@ -12,11 +14,13 @@ import 'routes.dart';
   exports: [RoutePaths, Routes],
   providers: [ClassProvider(BrowserClient)],
 )
-
 class AppComponent {
+  AppComponent() {
 
-AppComponent(){
-  print("start");
-}
-
+    Logger.root.level = Level.ALL;
+    Logger.root.onRecord.listen((LogRecord rec) {
+      print(
+          '${rec.loggerName}: ${rec.level.name}: ${rec.time}: ${rec.message}');
+    });
+  }
 }
