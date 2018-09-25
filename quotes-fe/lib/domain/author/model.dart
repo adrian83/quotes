@@ -15,6 +15,8 @@ class Author {
 class AuthorsPage extends Page<Author> {
   AuthorsPage(PageInfo info, List<Author> elements) : super(info, elements);
 
+  AuthorsPage.empty() : super(new PageInfo(0, 0, 0), new List<Author>());
+
   factory AuthorsPage.fromJson(Map<String, dynamic> json) {
     var authors =
         (json['elements'] as List).map((j) => new Author.fromJson(j)).toList();

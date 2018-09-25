@@ -4,6 +4,8 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
 
+import 'package:logging/logging.dart';
+
 import '../../route_paths.dart';
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
@@ -18,53 +20,40 @@ import '../common/pagination.dart';
   directives: const [coreDirectives, formDirectives, Pagination],
 )
 class ListAuthorsComponent extends PageSwitcher implements OnInit {
+static final Logger LOGGER = new Logger('ListAuthorsComponent');
+
+  static final int pageSize = 3;
+
   final AuthorService _authorService;
   final Router _router;
 
- static final int pageSize = 3;
-
-  PageRequest _initRequest = new PageRequest(pageSize, 0);
-  PageInfo pageInfo = new PageInfo(0, 0, 0);
-  AuthorsPage authorsPage;
+  AuthorsPage authorsPage = new AuthorsPage.empty();
   String errorMessage;
 
-  ListAuthorsComponent(this._authorService, this._router){
-    authorsPage = new AuthorsPage(pageInfo, new List<Author>());
-  }
+  ListAuthorsComponent(this._authorService, this._router);
 
   @override
   void ngOnInit() => _getAuthors();
 
   Future<void> _getAuthors() async {
-    try {
-      authorsPage = await _authorService.list(_initRequest);
-      print("offset ${authorsPage.info.offset} limit ${authorsPage.info.limit} total ${authorsPage.info.total}");
-      pageInfo.limit = authorsPage.info.limit;
-      pageInfo.offset = authorsPage.info.offset;
-      pageInfo.total = authorsPage.info.total;
-      //print(authorsPage2);
-    } catch (e) {
-      errorMessage = e.toString();
-    }
+    fetchPage(0);
   }
 
   PageSwitcher get switcher => this;
 
   @override
   void change(int pageNumber) async {
-    print("Page changed $pageNumber");
+    fetchPage(pageNumber);
+  }
 
-_initRequest = new PageRequest(pageSize, pageSize*pageNumber);
-try {
-  authorsPage = await _authorService.list(_initRequest);
-  pageInfo.limit = authorsPage.info.limit;
-  pageInfo.offset = authorsPage.info.offset;
-  pageInfo.total = authorsPage.info.total;
-  //print(authorsPage2);
-} catch (e) {
-  errorMessage = e.toString();
-}
-
+  void fetchPage(int pageNumber) async {
+    try {
+      var pageReq = new PageRequest(pageSize, 0);
+      authorsPage = await _authorService.list(pageReq);
+    } catch (e) {
+      LOGGER.warning("Error while getting page of authors. Page number: $pageNumber, error: $e");
+      errorMessage = e.toString();
+    }
   }
 
   void onSelect(Author author) => _router.navigate(_detailsUrl(author.id));
@@ -76,6 +65,4 @@ try {
 
   String _editionUrl(String id) =>
       RoutePaths.editAuthor.toUrl(parameters: {authorIdParam: '$id'});
-
-
 }

@@ -42,18 +42,15 @@ class Pagination implements OnInit {
   }
 
   void changePage(int page) {
-    //LOGGER.info("Change to page $page");
     switcher.change(page);
   }
 
   int _pagesCount() {
-    LOGGER.info("Page: total ${page.total} limit ${page.limit} g");
     var count = this.page == null ? 0 : (page.total / page.limit);
     return count.isNaN ? 0 : count.ceil();
   }
 
   int _currentPage() {
-
     var current = this.page == null ? 0 : (page.offset / page.limit);
     return current.isNaN ? 0 : current.ceil();
   }
@@ -68,16 +65,16 @@ class Pagination implements OnInit {
     var current = _currentPage();
     var pages = _pagesCount();
 
-    LOGGER.info("Page: current $current pages $pages");
-
-    links.add(new PageLink("<<", current == 0 || pages == 0, false, current - 1));
+    links.add(
+        new PageLink("<<", current == 0 || pages == 0, false, current - 1));
 
     for (var i = 0; i < pages; i++) {
       PageLink li = new PageLink((i + 1).toString(), false, current == i, i);
       links.add(li);
     }
 
-    links.add(new PageLink(">>", (current == (pages - 1)) || pages == 0, false, current + 1));
+    links.add(new PageLink(
+        ">>", (current == (pages - 1)) || pages == 0, false, current + 1));
     return links;
   }
 }

@@ -17,14 +17,14 @@ class Service<T> {
   Service(this.http);
 
   Future<Map<String, dynamic>> createEntity(String url, T entity) async {
-    var response =
-        await http.post(url, headers: _headers, body: jsonEncode(entity));
+    var jsonBody = jsonEncode(entity);
+    var response = await http.post(url, headers: _headers, body: jsonBody);
     return _handleErrors(response);
   }
 
   Future<Map<String, dynamic>> updateEntity(String url, T entity) async {
-    var response =
-        await http.put(url, headers: _headers, body: jsonEncode(entity));
+    var jsonBody = jsonEncode(entity);
+    var response = await http.put(url, headers: _headers, body: jsonBody);
     return _handleErrors(response);
   }
 

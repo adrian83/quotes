@@ -22,9 +22,7 @@ class ShowAuthorComponent implements OnActivate {
 
   @override
   void onActivate(_, RouterState current) async {
-    print(current);
     final id = current.parameters[authorIdParam];
-    print(id);
     this.author = await _authorService.get(id);
   }
 

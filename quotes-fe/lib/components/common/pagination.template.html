@@ -1,3 +1,4 @@
+
 <nav>
   <ul class="pagination">
     <li class="page-item"
@@ -5,9 +6,12 @@
         [class.disabled]="lnk.disabled"
         [class.active]="lnk.current"
         *ngFor="let lnk of links">
+
       <span class="page-link"
             (click)="changePage(lnk.page);">
+
         {{ lnk.label }}
+
         <span *ngIf="lnk.current"
               class="sr-only">
           (current)
