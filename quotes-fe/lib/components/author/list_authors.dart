@@ -42,7 +42,6 @@ class ListAuthorsComponent extends PageSwitcher
   final Router _router;
 
   AuthorsPage authorsPage = new AuthorsPage.empty();
-  String errorMessage;
 
   ListAuthorsComponent(this._authorService, this._router);
 
