@@ -11,16 +11,30 @@ import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
 import '../../domain/common/page.dart';
 
+import '../common/error_handler.dart';
+
 import '../common/pagination.dart';
+import '../common/error.dart';
+import '../common/info.dart';
+import '../common/validation.dart';
 
 @Component(
   selector: 'list-authors',
   templateUrl: 'list_authors.template.html',
   providers: [ClassProvider(AuthorService)],
-  directives: const [coreDirectives, formDirectives, Pagination],
+  directives: const [
+    coreDirectives,
+    formDirectives,
+    Pagination,
+    ValidationErrorsComponent,
+    ServerErrorsComponent,
+    InfoComponent
+  ],
 )
-class ListAuthorsComponent extends PageSwitcher implements OnInit {
-static final Logger LOGGER = new Logger('ListAuthorsComponent');
+class ListAuthorsComponent extends PageSwitcher
+    with ErrorHandler
+    implements OnInit {
+  static final Logger LOGGER = new Logger('ListAuthorsComponent');
 
   static final int pageSize = 3;
 
@@ -47,13 +61,9 @@ static final Logger LOGGER = new Logger('ListAuthorsComponent');
   }
 
   void fetchPage(int pageNumber) async {
-    try {
-      var pageReq = new PageRequest(pageSize, 0);
-      authorsPage = await _authorService.list(pageReq);
-    } catch (e) {
-      LOGGER.warning("Error while getting page of authors. Page number: $pageNumber, error: $e");
-      errorMessage = e.toString();
-    }
+    _authorService
+        .list(new PageRequest(pageSize, pageNumber*pageSize))
+        .then((p) => this.authorsPage = p, onError: handleError);
   }
 
   void onSelect(Author author) => _router.navigate(_detailsUrl(author.id));
