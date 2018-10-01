@@ -42,7 +42,11 @@ class Pagination implements OnInit {
   }
 
   void changePage(int page) {
-    switcher.change(page);
+    var pages = _pagesCount();
+    LOGGER.info("Pages: $pages, page: $page");
+    if (page >= 0 && page < pages) {
+      switcher.change(page);
+    }
   }
 
   int _pagesCount() {

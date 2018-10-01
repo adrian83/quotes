@@ -5,30 +5,33 @@ import '../../routes.dart';
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
 
+import '../common/error_handler.dart';
+
+import '../common/error.dart';
+import '../common/info.dart';
+import '../common/validation.dart';
+
 @Component(
   selector: 'edit-author',
   templateUrl: 'edit_author.template.html',
   providers: [ClassProvider(AuthorService)],
-  directives: const [coreDirectives],
+  directives: const [
+    coreDirectives,
+    ValidationErrorsComponent,
+    ServerErrorsComponent,
+    InfoComponent
+  ],
 )
-class EditAuthorComponent implements OnActivate {
+class EditAuthorComponent extends ErrorHandler implements OnActivate {
+  final AuthorService _authorService;
 
- final AuthorService _authorService;
-
-  var name = 'Angular';
   Author author = new Author(null, "");
-  String errorMessage;
 
   EditAuthorComponent(this._authorService);
 
   @override
   void onActivate(_, RouterState current) async {
-    print(current);
     final id = current.parameters[authorIdParam];
-    print(id);
-    this.author = await _authorService.get(id);
+    _authorService.get(id).then((a) => this.author = a, onError: handleError);
   }
-
-
-
 }

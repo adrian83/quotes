@@ -1,6 +1,8 @@
 <h1>authors</h1>
 
-<div>{{errorMessage}}</div>
+<info-messages [info]="info"></info-messages>
+<validation-errors [errors]="validationErrors"></validation-errors>
+<server-errors [error]="serverError"></server-errors>
 
 <div *ngFor="let author of authorsPage.elements" >
   <span (click)="onSelect(author)">{{author.name}}</span>
