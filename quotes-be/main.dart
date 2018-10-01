@@ -36,10 +36,16 @@ import './domain/book/repository.dart';
 
 Future main() async {
 
+  var host = "localhost";
+  var port = 32769;
+  var indexName = "test_index2";
+
+
   var  quoteRepository = new QuotesRepository();
   var  quotesService = new QuotesService(quoteRepository);
 
-  var  authorRepository = new AuthorRepository();
+
+  var  authorRepository = new AuthorRepository(host, port, indexName);
   var  authorService = new AuthorService(authorRepository);
 
   var  bookRepository = new BookRepository();
@@ -86,13 +92,13 @@ Future main() async {
       listQuotesHandler
   ];
 
-  Author a1 = authorRepository.save(new Author(null, "Adam Mickiewicz"));
-  Author a2 = authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
-  Author a3 = authorRepository.save(new Author(null, "Henryk Sienkiewicz2"));
-  Author a4 = authorRepository.save(new Author(null, "Henryk Sienkiewicz3"));
-  Author a5 = authorRepository.save(new Author(null, "Henryk Sienkiewicz4"));
-  Author a6 = authorRepository.save(new Author(null, "Henryk Sienkiewicz5"));
-  Author a7 = authorRepository.save(new Author(null, "Henryk Sienkiewicz6"));
+  Author a1 = await authorRepository.save(new Author(null, "Adam Mickiewicz"));
+  Author a2 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
+  Author a3 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz2"));
+  Author a4 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz3"));
+  Author a5 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz4"));
+  Author a6 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz5"));
+  Author a7 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz6"));
 
   Book b1 = bookRepository.save(new Book(null, "Dziady", a1.id));
   Book b2 = bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));

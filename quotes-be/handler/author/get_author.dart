@@ -19,7 +19,7 @@ class GetAuthorHandler extends Handler {
       return;
     }
 
-    var quote = _authorService.find(idOrErr.value);
+    var quote = await _authorService.find(idOrErr.value);
     if (quote == null) {
       notFound(request);
       return;

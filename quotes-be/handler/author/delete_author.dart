@@ -18,7 +18,7 @@ class DeleteAuthorHandler extends Handler {
       return;
     }
 
-    _authorService.delete(idOrErr.value);
+    await _authorService.delete(idOrErr.value);
     ok(null, request);
   }
 }

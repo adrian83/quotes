@@ -1,11 +1,15 @@
 import 'dart:convert';
 
-class Entity {
+import '../../store/document.dart';
+
+class Entity extends ESDocument {
   String _id;
 
   Entity(this._id);
 
   String get id => _id;
+
+  String getId() => id;
 
   void set id(String id) {
     this._id = id;

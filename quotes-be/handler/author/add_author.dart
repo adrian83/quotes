@@ -20,7 +20,7 @@ class AddAuthorHandler extends Handler {
     }
 
     var author = formToAuthor(result.form);
-    var saved = _authorService.save(author);
+    var saved = await _authorService.save(author);
     created(saved, request);
   }
 

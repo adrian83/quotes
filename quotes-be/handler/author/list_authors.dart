@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import './../common.dart';
 import '../../domain/author/service.dart';
 
@@ -13,7 +12,7 @@ class ListAuthorsHandler extends Handler {
 
   ListAuthorsHandler(this._authorService) : super(_URL, "GET") {}
 
-  void execute(HttpRequest request) {
+  void execute(HttpRequest request) async {
     var params = new UrlParams(request.requestedUri.queryParameters);
 
     var limit = params.getIntOrElse("limit", 2);
@@ -30,7 +29,7 @@ class ListAuthorsHandler extends Handler {
 
     var req = new PageRequest(limit.value, offset.value);
 
-    var authors = _authorService.findAuthors(req);
+    var authors = await _authorService.findAuthors(req);
     ok(authors, request);
   }
 }
