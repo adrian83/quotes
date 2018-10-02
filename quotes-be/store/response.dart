@@ -1,3 +1,5 @@
+
+
 class BasicResult {
   String _index, _type, _id;
 
@@ -26,6 +28,7 @@ class IndexResult extends BasicResult {
       json['_version']);
 
   String get result => _result;
+
 }
 
 class UpdateResult extends IndexResult {
