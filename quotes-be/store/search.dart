@@ -23,14 +23,12 @@ class SearchRequest {
     _query = new SearchQuery.all();
   }
 
-  SearchRequest withSize(int size) {
-    _size = size;
-    return this;
+  void set from(int f){
+    _from = f;
   }
 
-  SearchRequest withFrom(int from) {
-    _from = from;
-    return this;
+  void set size(int s){
+    _size = s;
   }
 
   Map toJson() {
@@ -41,12 +39,3 @@ class SearchRequest {
     return map;
   }
 }
-
-/*
-{
-  "from" : 0, "size" : 10,
-    "query" : {
-        "match_all" : {}
-    },
-
-}*/

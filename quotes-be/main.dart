@@ -33,6 +33,7 @@ import './domain/book/model.dart';
 import './domain/book/service.dart';
 import './domain/book/repository.dart';
 
+import 'store/elasticsearch_store.dart';
 
 Future main() async {
 
@@ -40,12 +41,15 @@ Future main() async {
   var port = 32769;
   var indexName = "test_index2";
 
+  HttpClient client = new HttpClient();
+
+  var authorEsStore = new ESStore<Author>(client, host, port, indexName);
+
 
   var  quoteRepository = new QuotesRepository();
   var  quotesService = new QuotesService(quoteRepository);
 
-
-  var  authorRepository = new AuthorRepository(host, port, indexName);
+  var  authorRepository = new AuthorRepository(authorEsStore);
   var  authorService = new AuthorService(authorRepository);
 
   var  bookRepository = new BookRepository();

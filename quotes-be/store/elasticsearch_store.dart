@@ -6,99 +6,87 @@ import './document.dart';
 import './response.dart';
 import './search.dart';
 
+typedef Decode<T> = T Function(Map<String, dynamic> json);
+
 class ESStore<T extends ESDocument> {
-  String _host, _index;
+  HttpClient _client;
+  String _host, _index, _protocol = "http";
   int _port;
 
-  ESStore(this._host, this._port, this._index);
+  String _indexUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
+  String _getUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
+  String _updateUri(String id) =>
+      "$_protocol://$_host:$_port/$_index/doc/$id/update";
+  String _deleteUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
+  String _searchUri() => "$_protocol://$_host:$_port/$_index/_search";
+
+  static final Decode<IndexResult> _indexResDecoder =
+      (Map<String, dynamic> json) => new IndexResult.fromJson(json);
+  static final Decode<UpdateResult> _updateResDecoder =
+      (Map<String, dynamic> json) => new UpdateResult.fromJson(json);
+  static final Decode<GetResult> _getResDecoder =
+      (Map<String, dynamic> json) => new GetResult.fromJson(json);
+  static final Decode<DeleteResult> _deleteResDecoder =
+      (Map<String, dynamic> json) => new DeleteResult.fromJson(json);
+  static final Decode<SearchResult> _searchResDecoder =
+      (Map<String, dynamic> json) => new SearchResult.fromJson(json);
+
+  ESStore(this._client, this._host, this._port, this._index);
 
   Future<IndexResult> index(T doc) async {
-    var jsonBody = jsonEncode(doc);
-
-    var path = "$_index/doc/${doc.getId()}";
-
-    HttpClientRequest request = await HttpClient().post(_host, _port, path)
-      ..headers.contentType = ContentType.json
-      ..write(jsonBody);
-
-    HttpClientResponse response = await request.close();
-    var s = await response.transform(utf8.decoder).join();
-    print(jsonDecode(s));
-
-    var t = new IndexResult.fromJson(jsonDecode(s));
-    print(t);
-
-    return t;
+    return _client
+        .postUrl(Uri.parse(_indexUri(doc.getId())))
+        .then((HttpClientRequest req) async =>
+            await withBody(req, jsonEncode(doc)))
+        .then((HttpClientResponse resp) async =>
+            await decode(resp, _indexResDecoder));
   }
 
-  Future<UpdateResult> updateDocument(T doc) async {
-
-    var jsonBody = jsonEncode(new UpdateDoc(doc));
-
-    var path = "$_index/doc/${doc.getId()}/update";
-
-    HttpClientRequest request = await HttpClient().put(_host, _port, path)
-      ..headers.contentType = ContentType.json
-      ..write(jsonBody);
-
-    HttpClientResponse response = await request.close();
-    var s = await response.transform(utf8.decoder).join();
-    print(jsonDecode(s));
-
-    var t = new UpdateResult.fromJson(jsonDecode(s));
-    print(t);
-
-    return t;
+  Future<UpdateResult> update(T doc) async {
+    return _client
+        .putUrl(Uri.parse(_updateUri(doc.getId())))
+        .then((HttpClientRequest req) async =>
+            await withBody(req, jsonEncode(doc)))
+        .then((HttpClientResponse resp) async =>
+            await decode(resp, _updateResDecoder));
   }
 
   Future<GetResult> get(String id) async {
-    var path = "$_index/doc/$id";
-
-    HttpClientRequest request = await HttpClient().get(_host, _port, path);
-
-    HttpClientResponse response = await request.close();
-    var s = await response.transform(utf8.decoder).join();
-    print(jsonDecode(s));
-
-    var t = new GetResult.fromJson(jsonDecode(s));
-    print(t);
-
-    return t;
+    return _client
+        .getUrl(Uri.parse(_getUri(id)))
+        .then((HttpClientRequest req) async => await req.close())
+        .then((HttpClientResponse resp) async =>
+            await decode(resp, _getResDecoder));
   }
 
-  Future<DeleteResult> deleteDocument(String id) async {
-    var path = "$_index/doc/$id";
-
-    HttpClientRequest request = await HttpClient().delete(_host, _port, path);
-
-    HttpClientResponse response = await request.close();
-    var s = await response.transform(utf8.decoder).join();
-    print(jsonDecode(s));
-
-    var t = new DeleteResult.fromJson(jsonDecode(s));
-    print(t);
-
-    return t;
+  Future<DeleteResult> delete(String id) async {
+    return _client
+        .deleteUrl(Uri.parse(_deleteUri(id)))
+        .then((HttpClientRequest req) async => await req.close())
+        .then((HttpClientResponse resp) async =>
+            await decode(resp, _deleteResDecoder));
   }
 
-  Future<SearchResult> listDocuments(int from, int size) async {
-    var req = new SearchRequest.all().withSize(size).withFrom(from);
+  Future<SearchResult> list(SearchRequest searchRequest) async {
+    return _client
+        .postUrl(Uri.parse(_searchUri()))
+        .then((HttpClientRequest req) async =>
+            await withBody(req, jsonEncode(searchRequest)))
+        .then((HttpClientResponse resp) async =>
+            await decode(resp, _searchResDecoder));
+  }
 
-    var jsonBody = jsonEncode(req);
+  Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) async {
+    var s = await response.transform(utf8.decoder).join();
+    print(jsonDecode(s));
+    return decode(jsonDecode(s));
+  }
 
-    var path = "$_index/_search";
-
-    HttpClientRequest request = await HttpClient().post(_host, _port, path)
+  Future<HttpClientResponse> withBody(
+      HttpClientRequest request, String body) async {
+    request
       ..headers.contentType = ContentType.json
-      ..write(jsonBody);
-
-    HttpClientResponse response = await request.close();
-    var s = await response.transform(utf8.decoder).join();
-    print(jsonDecode(s));
-
-    var t = new SearchResult.fromJson(jsonDecode(s));
-    print(t);
-
-    return t;
+      ..write(body);
+    return request.close();
   }
 }

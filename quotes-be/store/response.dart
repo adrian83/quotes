@@ -67,7 +67,7 @@ class GetResult extends BasicResult {
       json['_id'],
       json['_version'],
       json['found'],
-      json['source']);
+      json['_source']);
 
   Map<String, dynamic> get source => _source;
   bool get found => _found;
