@@ -2,6 +2,6 @@
   "elasticsearch": {
     "host": "localhost",
     "port": 9200,
-    "index": "quotes3"
+    "index": "quotes7"
   }
 }

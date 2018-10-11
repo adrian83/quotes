@@ -27,7 +27,7 @@ class Config {
   Config(this._elasticsearch);
 
   factory Config.fromJson(Map<String, dynamic> json) =>
-      new Config(json['elasticsearch']);
+      new Config(new ElasticsearchConfig.fromJson(json['elasticsearch']));
 
   ElasticsearchConfig get elasticsearch => _elasticsearch;
 }

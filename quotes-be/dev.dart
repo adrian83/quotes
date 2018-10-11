@@ -7,6 +7,20 @@ const elasticsearchVersion = "6.4.2";
 const configPath = "./config/local.json";
 const mappingsPath = "./config/es_mapping.json";
 
+const String runDocker = 'run-docker';
+const String runInfrastructure = 'run-infra';
+const String initElasticsearch = 'es-init';
+
+void printMenu() {
+  print("");
+  print("------------ MENU ------------");
+  print("$runDocker - runs docker daemon (systemd)");
+  print(
+      "$runInfrastructure - runs infrastructure (docker image with elasticsearch:$elasticsearchVersion)");
+  print("$initElasticsearch - creates index and uploads mappings");
+  print("");
+}
+
 class Command {
   String _app;
   List<String> _params;
@@ -14,35 +28,44 @@ class Command {
   Command(this._app, this._params);
 
   Future<void> exec() async {
-    Process.run(_app, _params).then((ProcessResult results) {
+    var cmd = "$_app ${_params.join(' ')}";
+    print("Starting: $cmd");
+    await Process.run(_app, _params).then((ProcessResult results) {
       print(results.stdout);
-    });
+    }).whenComplete(() => print("Executed: $cmd"));
   }
-}
-
-void printMenu() {
-  print("---- menu -----");
 }
 
 Future<bool> createIndex(
     ElasticsearchConfig esConfig, String mappingsPath) async {
-  var mappings = await new File(mappingsPath).readAsString();
-  HttpClientRequest request =
-      await HttpClient().put(esConfig.host, esConfig.port, esConfig.index)
-        ..headers.contentType = ContentType.json
-        ..write(mappings);
-  HttpClientResponse response = await request.close();
-  return response.statusCode == 200;
+  String mappings = await File(mappingsPath).readAsString();
+  return HttpClient()
+      .put(esConfig.host, esConfig.port, esConfig.index)
+      .then((req) {
+        return req
+          ..headers.contentType = ContentType.json
+          ..write(mappings);
+      })
+      .then((req) => req.close())
+      .then((resp) {
+        var ok = resp.statusCode == 200;
+        print("Index created: $ok");
+        return ok;
+      });
 }
 
 Future<bool> indexExists(ElasticsearchConfig esConfig) async {
-  HttpClientRequest request =
-      await HttpClient().head(esConfig.host, esConfig.port, esConfig.index);
-  HttpClientResponse response = await request.close();
-  return response.statusCode == 200;
+  return HttpClient()
+      .head(esConfig.host, esConfig.port, esConfig.index)
+      .then((req) => req.close())
+      .then((resp) {
+    var ok = resp.statusCode == 200;
+    print("Index exists: $ok");
+    return ok;
+  });
 }
 
-main(List<String> args) async {
+void main(List<String> args) async {
   if (args.length == 0) {
     printMenu();
     return;
@@ -50,51 +73,37 @@ main(List<String> args) async {
 
   String cmd = args[0];
   switch (cmd) {
-    case 'run-docker':
+    case runDocker:
       await new Command("systemctl", ["start", "docker"]).exec();
       break;
-    case 'run-infra':
+
+    case runInfrastructure:
+      Config config = await readConfig(configPath);
       await new Command("docker", [
         "pull",
         "docker.elastic.co/elasticsearch/elasticsearch:$elasticsearchVersion"
-      ]).exec();
-      await new Command("docker", [
-        "run",
-        "-d",
-        "docker.elastic.co/elasticsearch/elasticsearch:$elasticsearchVersion"
-      ]).exec();
-      break;
-    case 'es-init':
+      ])
+          .exec()
+          .then((v) async => await new Command("docker", [
+                "run",
+                "-p",
+                "9200:${config.elasticsearch.port}",
+                "-d",
+                "docker.elastic.co/elasticsearch/elasticsearch:$elasticsearchVersion"
+              ]).exec());
 
+      break;
+
+    case initElasticsearch:
       Config config = await readConfig(configPath);
-      var exists = await indexExists(config.elasticsearch);
-      if (!exists) {
-        await createIndex(config.elasticsearch, mappingsPath);
-      }
-
-      break;
-    case 'DENIED':
-      print(args);
-      break;
-    case 'OPEN':
-      print(args);
+      await indexExists(config.elasticsearch).then((exists) async => exists
+          ? true
+          : await createIndex(config.elasticsearch, mappingsPath));
       break;
     default:
       printMenu();
       return;
   }
 
-//systemctl start docker
-//docker pull docker.elastic.co/elasticsearch/elasticsearch:6.4.2
-//  docker run -d docker.elastic.co/elasticsearch/elasticsearch:6.4.2
-
-  // List all files in the current directory in UNIX-like systems.
-  //Process.run('ls', ['-l']).then((ProcessResult results) {
-  //  print(results.stdout);
-//  });
-
-//var commands = [
-//  new Command("systemctl", ["start", "docker"]),
-//  new Command("systemctl", ["start", "docker"]),
-//]
+  exit(1);
 }

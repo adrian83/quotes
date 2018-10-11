@@ -35,15 +35,24 @@ import './domain/book/repository.dart';
 
 import 'store/elasticsearch_store.dart';
 
-Future main() async {
+import 'config/config.dart';
 
-  var host = "localhost";
-  var port = 32769;
-  var indexName = "test_index2";
+Future main(List<String> args) async {
+
+  if (args.length == 0) {
+    print("Please provide config location as a first command parameter");
+    exit(1);
+  }
+
+  String configLocation = args[0];
+  Config config = await readConfig(configLocation);
+
+
 
   HttpClient client = new HttpClient();
 
-  var authorEsStore = new ESStore<Author>(client, host, port, indexName);
+  var esConfig = config.elasticsearch;
+  var authorEsStore = new ESStore<Author>(client, esConfig.host, esConfig.port, esConfig.index);
 
 
   var  quoteRepository = new QuotesRepository();
