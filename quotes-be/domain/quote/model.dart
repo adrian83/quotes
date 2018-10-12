@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import '../common/model.dart';
 
 class Quote extends Entity {

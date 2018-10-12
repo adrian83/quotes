@@ -3,7 +3,7 @@ import 'dart:async';
 
 import 'config/config.dart';
 
-const elasticsearchVersion = "6.4.2";
+const elasticsearchVersion = "6.4.1";
 const configPath = "./config/local.json";
 const mappingsPath = "./config/es_mapping.json";
 
@@ -27,12 +27,12 @@ class Command {
 
   Command(this._app, this._params);
 
-  Future<void> exec() async {
+  void exec() {
     var cmd = "$_app ${_params.join(' ')}";
     print("Starting: $cmd");
-    await Process.run(_app, _params).then((ProcessResult results) {
-      print(results.stdout);
-    }).whenComplete(() => print("Executed: $cmd"));
+    ProcessResult result = Process.runSync(_app, _params);
+    print("STDOUT: \n ${result.stdout}");
+    print("Executed: $cmd");
   }
 }
 
@@ -78,19 +78,27 @@ void main(List<String> args) async {
       break;
 
     case runInfrastructure:
-      Config config = await readConfig(configPath);
-      await new Command("docker", [
+      //Config config = await readConfig(configPath);
+/*
+      new Command("docker", [
         "pull",
         "docker.elastic.co/elasticsearch/elasticsearch:$elasticsearchVersion"
-      ])
-          .exec()
-          .then((v) async => await new Command("docker", [
-                "run",
-                "-p",
-                "9200:${config.elasticsearch.port}",
-                "-d",
-                "docker.elastic.co/elasticsearch/elasticsearch:$elasticsearchVersion"
-              ]).exec());
+      ]).exec();
+*/
+// docker run -d --name elasticsearch3 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:6.4.1
+      new Command("docker", [
+        "run",
+        "-d",
+        "--name",
+        "es",
+        "-p",
+        "9200:9200",
+        "-p",
+        "9300:9300",
+        "-e",
+        "\"discovery.type=single-node\"",
+        "elasticsearch:$elasticsearchVersion"
+      ]).exec();
 
       break;
 
@@ -105,5 +113,5 @@ void main(List<String> args) async {
       return;
   }
 
-  exit(1);
+  //exit(1);
 }

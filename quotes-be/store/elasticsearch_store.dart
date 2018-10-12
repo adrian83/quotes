@@ -5,6 +5,7 @@ import 'dart:convert';
 import './document.dart';
 import './response.dart';
 import './search.dart';
+import './exception.dart';
 
 typedef Decode<T> = T Function(Map<String, dynamic> json);
 
@@ -15,10 +16,9 @@ class ESStore<T extends ESDocument> {
 
   String _indexUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
   String _getUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
-  String _updateUri(String id) =>
-      "$_protocol://$_host:$_port/$_index/doc/$id/update";
   String _deleteUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
   String _searchUri() => "$_protocol://$_host:$_port/$_index/_search";
+  String _updateUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id/update";
 
   static final Decode<IndexResult> _indexResDecoder =
       (Map<String, dynamic> json) => new IndexResult.fromJson(json);
@@ -39,7 +39,10 @@ class ESStore<T extends ESDocument> {
         .then((HttpClientRequest req) async =>
             await withBody(req, jsonEncode(doc)))
         .then((HttpClientResponse resp) async =>
-            await decode(resp, _indexResDecoder));
+            await decode(resp, _indexResDecoder).then((ir) {
+              if (ir.result != created) throw new SaveFailedException();
+              return ir;
+            }));
   }
 
   Future<UpdateResult> update(T doc) async {
@@ -48,7 +51,10 @@ class ESStore<T extends ESDocument> {
         .then((HttpClientRequest req) async =>
             await withBody(req, jsonEncode(doc)))
         .then((HttpClientResponse resp) async =>
-            await decode(resp, _updateResDecoder));
+            await decode(resp, _updateResDecoder).then((ur){
+              if (ur.result != updated) throw new SaveFailedException();
+              return ur;
+            }));
   }
 
   Future<GetResult> get(String id) async {

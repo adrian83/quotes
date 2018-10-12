@@ -1,4 +1,7 @@
 
+const noop = "noop";
+const created = "created";
+const updated = "updated";
 
 class BasicResult {
   String _index, _type, _id;

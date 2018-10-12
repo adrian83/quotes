@@ -13,10 +13,9 @@ class AuthorRepository {
 
   AuthorRepository(this._store);
 
-  Future<Author> save(Author author) async {
+  Future<Author> save(Author author) {
     author.id = new Uuid().v4();
-    await _store.index(author);
-    return author;
+    return _store.index(author).then((_) => author);
   }
 
   Future<Page<Author>> list(PageRequest request) async {
@@ -31,13 +30,11 @@ class AuthorRepository {
     return new Page<Author>(info, athrs);
   }
 
-  Future<Author> find(String authorId) async => await _store.get(authorId).then((gr) => Author.fromJson(gr.source));
+  Future<Author> find(String authorId) async =>
+      _store.get(authorId).then((gr) => Author.fromJson(gr.source));
 
-  Future<Author> update(Author author) async {
-    await _store.update(author);
-    return author;
-  }
+  Future<Author> update(Author author) =>
+      _store.update(author).then((_) => author);
 
-  Future<void> delete(String authorId) async => _store.delete(authorId);
-
+  Future<void> delete(String authorId) => _store.delete(authorId);
 }

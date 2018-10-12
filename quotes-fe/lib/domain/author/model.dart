@@ -8,8 +8,19 @@ class Author {
   String get id => _id;
   String get name => _name;
 
+  void set name(String name) {
+    this._name = name;
+  }
+
   factory Author.fromJson(Map<String, dynamic> author) =>
       new Author(author['id'], author['name']);
+
+  Map toJson() {
+    var map = new Map<String, Object>();
+    map["id"] = _id;
+    map["name"] = _name;
+    return map;
+  }
 }
 
 class AuthorsPage extends Page<Author> {

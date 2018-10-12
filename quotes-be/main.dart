@@ -3,6 +3,7 @@ import 'dart:io';
 
 import './handler/common.dart';
 import './handler/not_found.dart';
+import './handler/options.dart';
 import './handler/quote/list_quotes.dart';
 import './handler/quote/add_quote.dart';
 import './handler/quote/update_quote.dart';
@@ -38,7 +39,6 @@ import 'store/elasticsearch_store.dart';
 import 'config/config.dart';
 
 Future main(List<String> args) async {
-
   if (args.length == 0) {
     print("Please provide config location as a first command parameter");
     exit(1);
@@ -47,24 +47,23 @@ Future main(List<String> args) async {
   String configLocation = args[0];
   Config config = await readConfig(configLocation);
 
-
-
   HttpClient client = new HttpClient();
 
   var esConfig = config.elasticsearch;
-  var authorEsStore = new ESStore<Author>(client, esConfig.host, esConfig.port, esConfig.index);
+  var authorEsStore =
+      new ESStore<Author>(client, esConfig.host, esConfig.port, esConfig.index);
 
+  var quoteRepository = new QuotesRepository();
+  var quotesService = new QuotesService(quoteRepository);
 
-  var  quoteRepository = new QuotesRepository();
-  var  quotesService = new QuotesService(quoteRepository);
+  var authorRepository = new AuthorRepository(authorEsStore);
+  var authorService = new AuthorService(authorRepository);
 
-  var  authorRepository = new AuthorRepository(authorEsStore);
-  var  authorService = new AuthorService(authorRepository);
-
-  var  bookRepository = new BookRepository();
-  var  bookService = new BookService(bookRepository);
+  var bookRepository = new BookRepository();
+  var bookService = new BookService(bookRepository);
 
   var notFoundHandler = new NotFoundHandler();
+  var optionsHandler = new OptionsHandler();
 
   var addAuthorHandler = new AddAuthorHandler(authorService);
   var listAuthorsHandler = new ListAuthorsHandler(authorService);
@@ -84,42 +83,43 @@ Future main(List<String> args) async {
   var updateQuoteHandler = new UpdateQuoteHandler(quotesService);
   var deleteQuoteHandler = new DeleteQuoteHandler(quotesService);
 
-
   var handlers = [
-      addAuthorHandler,
-      getAuthorHandler,
-      updateAuthorHandler,
-      deleteAuthorHandler,
-      listAuthorsHandler,
-
-      addBookHandler,
-      getBookHandler,
-      updateBookHandler,
-      deleteBookHandler,
-      listBooksHandler,
-
-      addQuoteHandler,
-      getQuoteHandler,
-      updateQuoteHandler,
-      deleteQuoteHandler,
-      listQuotesHandler
+    addAuthorHandler,
+    getAuthorHandler,
+    updateAuthorHandler,
+    deleteAuthorHandler,
+    listAuthorsHandler,
+    addBookHandler,
+    getBookHandler,
+    updateBookHandler,
+    deleteBookHandler,
+    listBooksHandler,
+    addQuoteHandler,
+    getQuoteHandler,
+    updateQuoteHandler,
+    deleteQuoteHandler,
+    listQuotesHandler
   ];
 
   Author a1 = await authorRepository.save(new Author(null, "Adam Mickiewicz"));
-  Author a2 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
-  Author a3 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz2"));
-  Author a4 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz3"));
-  Author a5 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz4"));
-  Author a6 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz5"));
-  Author a7 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz6"));
+
+      await authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
+
+      await authorRepository.save(new Author(null, "Henryk Sienkiewicz2"));
+
+      await authorRepository.save(new Author(null, "Henryk Sienkiewicz3"));
+
+      await authorRepository.save(new Author(null, "Henryk Sienkiewicz4"));
+
+      await authorRepository.save(new Author(null, "Henryk Sienkiewicz5"));
+
+      await authorRepository.save(new Author(null, "Henryk Sienkiewicz6"));
 
   Book b1 = bookRepository.save(new Book(null, "Dziady", a1.id));
-  Book b2 = bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
+  bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
 
-  Quote q1 = quoteRepository.save(new Quote(null, "Ciemno wszedzie, glucho wszedzie...", a1.id, b1.id));
-
-
-
+   quoteRepository.save(
+      new Quote(null, "Ciemno wszedzie, glucho wszedzie...", a1.id, b1.id));
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 
@@ -132,6 +132,11 @@ Future main(List<String> args) async {
         found = true;
         break;
       }
+    }
+
+    if (request.method == "OPTIONS") {
+      optionsHandler.execute(request);
+      continue;
     }
 
     if (!found) {

@@ -5,7 +5,7 @@ abstract class ESDocument {
 }
 
 class UpdateDoc {
-  bool _docAsUpsert = true;
+  bool _docAsUpsert = true, _detectNoop = false;
   ESDocument _doc;
 
   UpdateDoc(this._doc);
@@ -14,6 +14,7 @@ class UpdateDoc {
     var map = new Map<String, Object>();
     map["doc"] = _doc.toJson();
     map["doc_as_upsert"] = _docAsUpsert;
+    map["detect_noop"] = _detectNoop;
     return map;
   }
 
