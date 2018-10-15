@@ -12,11 +12,12 @@ class InfoComponent implements OnInit {
   static final Logger LOGGER = new Logger('InfoComponent');
 
   @Input()
-  List<String> info;
+  List<String> info = ["this is testttt"];
 
   Future<Null> ngOnInit() async {
     LOGGER.info("InfoComponent initialized. Info: $info");
   }
+
 
   void hideInfo(String msg) {
     new Future.delayed(new Duration(milliseconds: 300), () {

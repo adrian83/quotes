@@ -43,3 +43,5 @@ class ValidationErrors implements Exception {
     return "ValidationErrors { validationErrors=[$s] }";
   }
 }
+
+class NotFoundError implements Exception {}

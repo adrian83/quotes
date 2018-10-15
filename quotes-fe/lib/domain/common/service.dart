@@ -41,11 +41,15 @@ class Service<T> {
   }
 
   Map<String, dynamic> _handleErrors(response) {
+    if (response.statusCode == 404) {
+      throw NotFoundError();
+    }
+
     var json = jsonDecode(response.body);
     if (response.statusCode == 400) {
-      throw new ValidationErrors.fromJson(json);
+      throw ValidationErrors.fromJson(json);
     } else if (response.statusCode == 500) {
-      throw new ServerError.fromJson(json);
+      throw ServerError.fromJson(json);
     }
     return json;
   }

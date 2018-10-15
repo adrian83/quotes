@@ -5,7 +5,7 @@ import 'dart:convert';
 import './document.dart';
 import './response.dart';
 import './search.dart';
-import './exception.dart';
+import '../domain/common/exception.dart';
 
 typedef Decode<T> = T Function(Map<String, dynamic> json);
 
@@ -40,7 +40,7 @@ class ESStore<T extends ESDocument> {
             await withBody(req, jsonEncode(doc)))
         .then((HttpClientResponse resp) async =>
             await decode(resp, _indexResDecoder).then((ir) {
-              if (ir.result != created) throw new SaveFailedException();
+              if (ir.result != created) throw SaveFailedException();
               return ir;
             }));
   }
@@ -52,7 +52,7 @@ class ESStore<T extends ESDocument> {
             await withBody(req, jsonEncode(doc)))
         .then((HttpClientResponse resp) async =>
             await decode(resp, _updateResDecoder).then((ur){
-              if (ur.result != updated) throw new SaveFailedException();
+              if (ur.result != updated) throw UpdateFailedException();
               return ur;
             }));
   }
@@ -62,7 +62,10 @@ class ESStore<T extends ESDocument> {
         .getUrl(Uri.parse(_getUri(id)))
         .then((HttpClientRequest req) async => await req.close())
         .then((HttpClientResponse resp) async =>
-            await decode(resp, _getResDecoder));
+            await decode(resp, _getResDecoder)).then((gr){
+              if(!gr.found) throw FindFailedException();
+              return gr;
+            });
   }
 
   Future<DeleteResult> delete(String id) async {

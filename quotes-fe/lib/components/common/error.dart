@@ -4,7 +4,7 @@ import 'package:angular/angular.dart';
 
 import 'package:logging/logging.dart';
 
-import '../../common/errors.dart';
+import '../../domain/common/errors.dart';
 
 
 @Component(

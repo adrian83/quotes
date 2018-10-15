@@ -1,4 +1,4 @@
-import '../../common/errors.dart';
+import '../../domain/common/errors.dart';
 
 import 'package:logging/logging.dart';
 
@@ -10,6 +10,7 @@ class ErrorHandler {
   List<String> _info = new List<String>();
 
   void handleError(e) {
+    LOGGER.info("Handle error: $e");
     if (e is ValidationErrors) {
       cleanValidationErrors();
       this.validationErrors = e.validationErrors;
@@ -19,7 +20,12 @@ class ErrorHandler {
       this._serverError = e;
       LOGGER.info("Server error: $_serverError");
       return;
+    } else if (e is NotFoundError) {
+      this._serverError = ServerError("not found");
+      LOGGER.info("Not Found error: $_serverError");
+      return;
     }
+
 
     LOGGER.info("Errors: $e");
   }
@@ -41,6 +47,7 @@ class ErrorHandler {
   List<String> get info => _info;
 
   void showInfo(String msg) {
+    LOGGER.info("show info: $msg");
     _info.add(msg);
   }
 

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 
 import '../domain/common/form.dart';
+import '../domain/common/exception.dart';
 
 abstract class Handler {
   var JSON_CONTENT = new ContentType("application", "json", charset: "utf-8");
@@ -12,40 +13,39 @@ abstract class Handler {
 
   Map<String, int> params = new Map<String, int>();
 
-  Handler(this._url, this._method){
-      var urlPatterns = _transoformURI(this._url);
-      print("Url: $_url, RegExp: $urlPatterns");
-      _exp = new RegExp(urlPatterns);
+  Handler(this._url, this._method) {
+    var urlPatterns = _transoformURI(this._url);
+    print("Url: $_url, RegExp: $urlPatterns");
+    _exp = new RegExp(urlPatterns);
   }
 
   String _transoformURI(String urlPatterns) {
-      var elems = urlPatterns.split("/");
-      var result = "";
-      for (var i=0; i<elems.length; i++) {
-          var e = elems[i];
-        if(e.startsWith("{") && e.endsWith("}")) {
-          result += r"/([a-z-A-Z0-9]+)";
+    var elems = urlPatterns.split("/");
+    var result = "";
+    for (var i = 0; i < elems.length; i++) {
+      var e = elems[i];
+      if (e.startsWith("{") && e.endsWith("}")) {
+        result += r"/([a-z-A-Z0-9]+)";
 
-          var key = e.substring(1, e.length-1);
-          params[key] = i-1;
-
-        } else if(e != ""){
-          result += "/" + e;
-        }
+        var key = e.substring(1, e.length - 1);
+        params[key] = i - 1;
+      } else if (e != "") {
+        result += "/" + e;
       }
+    }
 
-      result += r"[/]?$";
-      return result;
+    result += r"[/]?$";
+    return result;
   }
 
-PathParseResult parsePath(List<String> segments) {
+  PathParseResult parsePath(List<String> segments) {
     var pathParser = new PathParser(segments);
     var pathResult = pathParser.parse(params);
     return pathResult;
-}
+  }
 
-
-  Future<ParseResult<F>> parseForm<F>(HttpRequest request, FormParser<F> parser) async {
+  Future<ParseResult<F>> parseForm<F>(
+      HttpRequest request, FormParser<F> parser) async {
     String content = await request.transform(utf8.decoder).join();
     var data = jsonDecode(content) as Map;
     return parser.parse(data);
@@ -59,7 +59,25 @@ PathParseResult parsePath(List<String> segments) {
     return _exp.hasMatch(uri);
   }
 
+  void handleErrors(Exception ex, HttpRequest request) {
+    if (ex is SaveFailedException) {
+      serverError("cannot save entity", request);
+    } else if (ex is UpdateFailedException) {
+      serverError("cannot update entity", request);
+    } else if (ex is FindFailedException) {
+      notFound(request);
+    } else if (ex is InvalidDataException) {
+      badRequest(ex.errors, request);
+    } else {
+      serverError("unknown error", request);
+    }
+  }
+
   void execute(HttpRequest request);
+
+  void serverError(String msg, HttpRequest request) {
+    write(msg, HttpStatus.internalServerError, request);
+  }
 
   void notFound(HttpRequest request) {
     write(null, HttpStatus.notFound, request);
@@ -83,8 +101,10 @@ PathParseResult parsePath(List<String> segments) {
 
     // cors
     resp.headers.set("Access-Control-Allow-Origin", "*");
-    resp.headers.set("Access-Control-Allow-Headers","origin, content-type, accept, authorization");
-    resp.headers.set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+    resp.headers.set("Access-Control-Allow-Headers",
+        "origin, content-type, accept, authorization");
+    resp.headers.set("Access-Control-Allow-Methods",
+        "GET, POST, PUT, DELETE, OPTIONS, HEAD");
 
     resp.statusCode = status;
     if (body != null) {

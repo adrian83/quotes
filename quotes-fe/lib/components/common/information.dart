@@ -4,7 +4,7 @@ import 'package:angular/angular.dart';
 
 import 'package:logging/logging.dart';
 
-import '../../common/errors.dart';
+import '../../domain/common/errors.dart';
 
 @Component(
     selector: 'info-messages',
@@ -14,7 +14,7 @@ class InformationComponent implements OnInit {
   static final Logger LOGGER = new Logger('InformationComponent');
 
   @Input()
-  List<String> info;
+  List<String> info = ["this is test"];
 
   @Input()
   ServerError error;

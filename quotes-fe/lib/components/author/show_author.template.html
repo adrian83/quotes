@@ -4,4 +4,13 @@
 <validation-errors [errors]="validationErrors"></validation-errors>
 <server-errors [error]="serverError"></server-errors>
 
+<div
+     *ngFor="let i of info">
+
+
+
+info:  {{ i }}
+
+</div>
+
 <div>Name: {{author.name}}</div>
