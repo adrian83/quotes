@@ -37,6 +37,7 @@ class ListAuthorsComponent extends PageSwitcher
   static final Logger LOGGER = new Logger('ListAuthorsComponent');
 
   static final int pageSize = 3;
+  int _page = 0;
 
   final AuthorService _authorService;
   final Router _router;
@@ -49,25 +50,34 @@ class ListAuthorsComponent extends PageSwitcher
   void ngOnInit() => _getAuthors();
 
   Future<void> _getAuthors() async {
-    fetchPage(0);
+    fetchPage(_page);
   }
 
   PageSwitcher get switcher => this;
 
   @override
   void change(int pageNumber) async {
-    fetchPage(pageNumber);
+    _page = pageNumber;
+    fetchPage(_page);
   }
 
   void fetchPage(int pageNumber) async {
     _authorService
-        .list(new PageRequest(pageSize, pageNumber*pageSize))
+        .list(new PageRequest(pageSize, pageNumber * pageSize))
         .then((p) => this.authorsPage = p, onError: handleError);
   }
 
   void onSelect(Author author) => _router.navigate(_detailsUrl(author.id));
 
   void edit(Author author) => _router.navigate(_editionUrl(author.id));
+
+  void delete(Author author) async {
+    await _authorService
+        .delete(author.id)
+        .then((_) => showInfo("Author removed"))
+        .then((_) => fetchPage(_page))
+        .catchError(handleError);
+  }
 
   String _detailsUrl(String id) =>
       RoutePaths.showAuthor.toUrl(parameters: {authorIdParam: '$id'});

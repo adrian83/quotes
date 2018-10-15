@@ -15,26 +15,15 @@ class AddAuthorHandler extends Handler {
   AddAuthorHandler(this._authorService) : super(_URL, "POST");
 
   void execute(HttpRequest request) async {
- parseForm(request, new AuthorFormParser()).then((result){
-  if(result.hasErrors()) throw InvalidDataException(result.errors);
-  return formToAuthor(result.form);
-}).then((author) async {
-  return await _authorService.save(author).then(
-      (author) => created(author, request),
-      onError: (e) => handleErrors(e, request));
-})
-.catchError((e) => handleErrors(e, request));
-
-/*
-    var result = await parseForm(request, new AuthorFormParser());
-    if (result.hasErrors()) {
-      badRequest(result.errors, request);
-      return;
-    }
-
-    var author = formToAuthor(result.form);
-    return
-    */
+    parseForm(request, new AuthorFormParser())
+        .then((result) {
+          if (result.hasErrors()) throw InvalidDataException(result.errors);
+          return formToAuthor(result.form);
+        })
+        .then((author) async => await _authorService.save(author).then(
+            (author) => created(author, request),
+            onError: (e) => handleErrors(e, request)))
+        .catchError((e) => handleErrors(e, request));
   }
 
   Author formToAuthor(AuthorForm form) {

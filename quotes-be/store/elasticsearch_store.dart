@@ -18,7 +18,7 @@ class ESStore<T extends ESDocument> {
   String _getUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
   String _deleteUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
   String _searchUri() => "$_protocol://$_host:$_port/$_index/_search";
-  String _updateUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id/update";
+  String _updateUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id/_update";
 
   static final Decode<IndexResult> _indexResDecoder =
       (Map<String, dynamic> json) => new IndexResult.fromJson(json);
@@ -47,9 +47,9 @@ class ESStore<T extends ESDocument> {
 
   Future<UpdateResult> update(T doc) async {
     return _client
-        .putUrl(Uri.parse(_updateUri(doc.getId())))
+        .postUrl(Uri.parse(_updateUri(doc.getId())))
         .then((HttpClientRequest req) async =>
-            await withBody(req, jsonEncode(doc)))
+            await withBody(req, jsonEncode(UpdateDoc(doc))))
         .then((HttpClientResponse resp) async =>
             await decode(resp, _updateResDecoder).then((ur){
               if (ur.result != updated) throw UpdateFailedException();

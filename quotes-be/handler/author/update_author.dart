@@ -27,8 +27,10 @@ class UpdateAuthorHandler extends Handler {
     }
 
     var quote = formToAuthor(parsedForm.form, idOrErr.value);
-    var saved = await _authorService.update(quote);
-    ok(saved, request);
+    await _authorService
+        .update(quote)
+        .then((author) => ok(author, request))
+        .catchError((e) => handleErrors(e, request));
   }
 
   Author formToAuthor(AuthorForm form, String authorId) {

@@ -1,5 +1,6 @@
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
+import 'package:angular_forms/angular_forms.dart';
 
 import '../../routes.dart';
 import '../../domain/author/service.dart';
@@ -17,6 +18,7 @@ import '../common/validation.dart';
   providers: [ClassProvider(AuthorService)],
   directives: const [
     coreDirectives,
+    formDirectives,
     ValidationErrorsComponent,
     ServerErrorsComponent,
     InfoComponent
@@ -32,6 +34,15 @@ class EditAuthorComponent extends ErrorHandler implements OnActivate {
   @override
   void onActivate(_, RouterState current) async {
     final id = current.parameters[authorIdParam];
-    _authorService.get(id).then((a) => this.author = a, onError: handleError);
+    await _authorService
+        .get(id)
+        .then((a) => this.author = a, onError: handleError);
+  }
+
+  void update() async {
+    await _authorService
+        .update(author)
+        .then((author) => showInfo("Author '${author.name}' updated"))
+        .catchError(handleError);
   }
 }
