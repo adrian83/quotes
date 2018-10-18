@@ -34,4 +34,5 @@ class AuthorsPage extends Page<Author> {
     var info = PageInfo.fromJson(json['info']);
     return new AuthorsPage(info, authors);
   }
+
 }

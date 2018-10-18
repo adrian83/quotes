@@ -49,9 +49,7 @@ class ListAuthorsComponent extends PageSwitcher
   @override
   void ngOnInit() => _getAuthors();
 
-  Future<void> _getAuthors() async {
-    fetchPage(_page);
-  }
+  Future<void> _getAuthors() async => fetchPage(_page);
 
   PageSwitcher get switcher => this;
 
@@ -62,20 +60,31 @@ class ListAuthorsComponent extends PageSwitcher
   }
 
   void fetchPage(int pageNumber) async {
+    _page = pageNumber;
     _authorService
-        .list(new PageRequest(pageSize, pageNumber * pageSize))
-        .then((p) => this.authorsPage = p, onError: handleError);
+        .list(new PageRequest(pageSize, _page * pageSize))
+        .then((p) => this.authorsPage = p, onError: handleError)
+        .whenComplete(() {
+      if (_page != 0 && authorsPage.empty) fetchPage(0);
+    });
   }
 
-  void onSelect(Author author) => _router.navigate(_detailsUrl(author.id));
+  void details(Author author) => _router.navigate(_detailsUrl(author.id));
 
   void edit(Author author) => _router.navigate(_editionUrl(author.id));
 
   void delete(Author author) async {
+    var nextPage = await _authorService.list(new PageRequest(pageSize, (_page+1) * pageSize));
     await _authorService
         .delete(author.id)
+        .then((id) => authorsPage.elements.removeWhere((a) => a.id == id))
         .then((_) => showInfo("Author removed"))
-        .then((_) => fetchPage(_page))
+        .then((_) {
+          if(!nextPage.empty) {
+            authorsPage.elements.add(nextPage.elements[0]);
+          }
+          authorsPage.info.total -= 1;
+        })
         .catchError(handleError);
   }
 

@@ -45,11 +45,11 @@ static final String _authors = "authors";
     return new Author.fromJson(json);
   }
 
-  Future<Null> delete(String id) async {
+  Future<String> delete(String id) async {
     //LOGGER.info("Delete author with id: $id");
     var url = deleteUrl(_host, _authors, id);
     //LOGGER.info("Url : $url");
-    await deleteEntity(url);
+    return await deleteEntity(url).then((_) => id);
   }
 
 }

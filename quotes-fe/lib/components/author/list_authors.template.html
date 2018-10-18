@@ -5,7 +5,7 @@
 <server-errors [error]="serverError"></server-errors>
 
 <div *ngFor="let author of authorsPage.elements" >
-  <span (click)="onSelect(author)">{{author.name}}</span>
+  <span (click)="details(author)">{{author.name}}</span>
   <br/>
   <span (click)="edit(author)">edit</span>&nbsp;&nbsp;<span (click)="delete(author)">delete</span>
 </div>
