@@ -1,15 +1,23 @@
 <h1>authors</h1>
+<br/><br/>
 
 <info-messages [info]="info"></info-messages>
 <validation-errors [errors]="validationErrors"></validation-errors>
 <server-errors [error]="serverError"></server-errors>
 
-<div *ngFor="let author of authorsPage.elements" >
-  <span (click)="details(author)">{{author.name}}</span>
-  <br/>
-  <span (click)="edit(author)">edit</span>&nbsp;&nbsp;<span (click)="delete(author)">delete</span>
-</div>
 
-<div>
+<ul class="list-group list-group-flush">
+  <li class="list-group-item" *ngFor="let author of authorsPage.elements">
+    <h4 (click)="details(author)" style="cursor:pointer;">{{author.name}}</h4>
+    
+    <i class="fas fa-trash pull-right" (click)="delete(author)" style="cursor:pointer;"></i>
+    <i class="fas fa-marker pull-right" (click)="edit(author)" style="margin-right:5px; cursor:pointer;"></i>
+    
+    <div>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </div>
+  </li>
+</ul>
+
+
+<div> 
   <pagination [page]="authorsPage.info" [switcher]="switcher"></pagination>
 </div>

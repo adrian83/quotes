@@ -1,13 +1,14 @@
 import '../../domain/common/errors.dart';
 
 import 'package:logging/logging.dart';
+import './info.dart';
 
 class ErrorHandler {
   static final Logger LOGGER = new Logger('ErrorHandler');
 
   List<ValidationError> _validationErrors;
   ServerError _serverError;
-  List<String> _info = new List<String>();
+  List<Info> _info = new List<Info>();
 
   void handleError(e) {
     LOGGER.info("Handle error: $e");
@@ -44,11 +45,11 @@ class ErrorHandler {
     this._validationErrors = new List<ValidationError>();
   }
 
-  List<String> get info => _info;
+  List<Info> get info => _info;
 
   void showInfo(String msg) {
     LOGGER.info("show info: $msg");
-    _info.add(msg);
+    _info.add(Info(msg));
   }
 
 }

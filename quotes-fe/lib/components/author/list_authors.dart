@@ -84,6 +84,9 @@ class ListAuthorsComponent extends PageSwitcher
             authorsPage.elements.add(nextPage.elements[0]);
           }
           authorsPage.info.total -= 1;
+          if(authorsPage.empty) {
+            fetchPage(0);
+          }
         })
         .catchError(handleError);
   }
