@@ -1,35 +1,42 @@
+import 'dart:async';
+
 import 'package:uuid/uuid.dart';
 import 'model.dart';
 
+import '../common/model.dart';
+
+import '../../store/elasticsearch_store.dart';
+import '../../store/search.dart';
+
 class BookRepository {
+  ESStore<Book> _store;
+
+  BookRepository(this._store);
+
   List<Book> books = new List<Book>();
 
-  Book save(Book book) {
+  Future<Book> save(Book book) async {
     book.id = new Uuid().v4();
-    books.add(book);
-    return book;
+    return _store.index(book).then((_) => book);
   }
 
-  List<Book> list() => books;
-  Book find(String authorId, String bookId) => books.firstWhere((e) => findByIds(e, authorId, bookId));
-  List<Book> findByAuthor(String authorId) => books.where((b) => b.authorId == authorId).toList();
+  Future<Page<Book>> list(PageRequest request) async {
+    var req = new SearchRequest.all()
+      ..size = request.limit
+      ..from = request.offset;
 
-  Book update(Book book) {
-    var b = find(book.authorId, book.id);
-    if(b == null) {
-        return null;
-    }
-    books.removeWhere((e) => e.id == book.id);
-    books.add(book);
-    return book;
+    var resp = await _store.list(req);
+
+    var books = resp.hits.hits.map((d) => Book.fromJson(d.source)).toList();
+    var info = new PageInfo(request.limit, request.offset, resp.hits.total);
+    return new Page<Book>(info, books);
   }
 
-  void delete(String authorId, String bookId) {
-    books.removeWhere((e) => findByIds(e, authorId, bookId));
-  }
+  Future<Book> find(String bookId) async =>
+      _store.get(bookId).then((gr) => Book.fromJson(gr.source));
 
-  bool findByIds(Book book, String authorId, String bookId) {
-      return book.authorId == authorId && book.id == bookId;
-  }
+  Future<Book> update(Book book) =>
+      _store.update(book).then((_) => book);
 
+  Future<void> delete(String bookId) => _store.delete(bookId);
 }

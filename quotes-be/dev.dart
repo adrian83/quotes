@@ -36,34 +36,9 @@ class Command {
   }
 }
 
-Future<bool> createIndex(
-    ElasticsearchConfig esConfig, String mappingsPath) async {
-  String mappings = await File(mappingsPath).readAsString();
-  return HttpClient()
-      .put(esConfig.host, esConfig.port, esConfig.index)
-      .then((req) {
-        return req
-          ..headers.contentType = ContentType.json
-          ..write(mappings);
-      })
-      .then((req) => req.close())
-      .then((resp) {
-        var ok = resp.statusCode == 200;
-        print("Index created: $ok");
-        return ok;
-      });
-}
 
-Future<bool> indexExists(ElasticsearchConfig esConfig) async {
-  return HttpClient()
-      .head(esConfig.host, esConfig.port, esConfig.index)
-      .then((req) => req.close())
-      .then((resp) {
-    var ok = resp.statusCode == 200;
-    print("Index exists: $ok");
-    return ok;
-  });
-}
+
+
 
 void main(List<String> args) async {
   if (args.length == 0) {
@@ -104,9 +79,7 @@ void main(List<String> args) async {
 
     case initElasticsearch:
       Config config = await readConfig(configPath);
-      await indexExists(config.elasticsearch).then((exists) async => exists
-          ? true
-          : await createIndex(config.elasticsearch, mappingsPath));
+
       break;
     default:
       printMenu();

@@ -11,14 +11,14 @@ typedef Decode<T> = T Function(Map<String, dynamic> json);
 
 class ESStore<T extends ESDocument> {
   HttpClient _client;
-  String _host, _index, _protocol = "http";
+  String _host, _index, _protocol = "http", _type = "doc";
   int _port;
 
-  String _indexUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
-  String _getUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
-  String _deleteUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id";
-  String _searchUri() => "$_protocol://$_host:$_port/$_index/_search";
-  String _updateUri(String id) => "$_protocol://$_host:$_port/$_index/doc/$id/_update";
+  String _indexUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id";
+  String _getUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id";
+  String _deleteUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id";
+  String _searchUri() => "$_protocol://$_host:$_port/$_index/$_type/_search";
+  String _updateUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id/_update";
 
   static final Decode<IndexResult> _indexResDecoder =
       (Map<String, dynamic> json) => new IndexResult.fromJson(json);

@@ -50,8 +50,11 @@ Future main(List<String> args) async {
   HttpClient client = new HttpClient();
 
   var esConfig = config.elasticsearch;
-  var authorEsStore =
-      new ESStore<Author>(client, esConfig.host, esConfig.port, esConfig.index);
+  var authorEsStore = new ESStore<Author>(
+      client, esConfig.host, esConfig.port, esConfig.authorsIndex);
+
+  var bookEsStore = new ESStore<Book>(
+      client, esConfig.host, esConfig.port, esConfig.booksIndex);
 
   var quoteRepository = new QuotesRepository();
   var quotesService = new QuotesService(quoteRepository);
@@ -59,7 +62,7 @@ Future main(List<String> args) async {
   var authorRepository = new AuthorRepository(authorEsStore);
   var authorService = new AuthorService(authorRepository);
 
-  var bookRepository = new BookRepository();
+  var bookRepository = new BookRepository(bookEsStore);
   var bookService = new BookService(bookRepository);
 
   var notFoundHandler = new NotFoundHandler();
@@ -103,22 +106,22 @@ Future main(List<String> args) async {
 
   Author a1 = await authorRepository.save(new Author(null, "Adam Mickiewicz"));
 
-      await authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
+  await authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
 
-      await authorRepository.save(new Author(null, "Henryk Sienkiewicz2"));
+  await authorRepository.save(new Author(null, "Henryk Sienkiewicz2"));
 
-      await authorRepository.save(new Author(null, "Henryk Sienkiewicz3"));
+  await authorRepository.save(new Author(null, "Henryk Sienkiewicz3"));
 
-      await authorRepository.save(new Author(null, "Henryk Sienkiewicz4"));
+  await authorRepository.save(new Author(null, "Henryk Sienkiewicz4"));
 
-      await authorRepository.save(new Author(null, "Henryk Sienkiewicz5"));
+  await authorRepository.save(new Author(null, "Henryk Sienkiewicz5"));
 
-      await authorRepository.save(new Author(null, "Henryk Sienkiewicz6"));
+  await authorRepository.save(new Author(null, "Henryk Sienkiewicz6"));
 
-  Book b1 = bookRepository.save(new Book(null, "Dziady", a1.id));
-  bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
+  Book b1 = await bookRepository.save(new Book(null, "Dziady", a1.id));
+  Book b2 = await bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
 
-   quoteRepository.save(
+  quoteRepository.save(
       new Quote(null, "Ciemno wszedzie, glucho wszedzie...", a1.id, b1.id));
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);

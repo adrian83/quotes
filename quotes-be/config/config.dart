@@ -2,16 +2,17 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 class ElasticsearchConfig {
-  String _host, _index;
+  String _host, _authorsIndex, _booksIndex;
   int _port;
 
-  ElasticsearchConfig(this._host, this._port, this._index);
+  ElasticsearchConfig(this._host, this._port, this._authorsIndex, this._booksIndex);
 
   factory ElasticsearchConfig.fromJson(Map<String, dynamic> json) =>
-      new ElasticsearchConfig(json['host'], json['port'], json['index']);
+      new ElasticsearchConfig(json['host'], json['port'], json['authorsIndex'], json['booksIndex']);
 
   String get host => _host;
-  String get index => _index;
+  String get authorsIndex => _authorsIndex;
+  String get booksIndex => _booksIndex;
   int get port => _port;
 }
 

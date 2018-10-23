@@ -25,9 +25,9 @@ class AuthorRepository {
 
     var resp = await _store.list(req);
 
-    var athrs = resp.hits.hits.map((d) => Author.fromJson(d.source)).toList();
+    var authors = resp.hits.hits.map((d) => Author.fromJson(d.source)).toList();
     var info = new PageInfo(request.limit, request.offset, resp.hits.total);
-    return new Page<Author>(info, athrs);
+    return new Page<Author>(info, authors);
   }
 
   Future<Author> find(String authorId) async =>
