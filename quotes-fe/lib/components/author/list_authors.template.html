@@ -7,7 +7,7 @@
 
 
 <ul class="list-group list-group-flush">
-  <li class="list-group-item" *ngFor="let author of authorsPage.elements">
+  <li class="list-group-item" *ngFor="let author of page.elements">
     <h4 (click)="details(author)" style="cursor:pointer;">{{author.name}}</h4>
     
     <i class="fas fa-trash pull-right" (click)="delete(author)" style="cursor:pointer;"></i>
@@ -19,5 +19,5 @@
 
 
 <div> 
-  <pagination [page]="authorsPage.info" [switcher]="switcher"></pagination>
+  <pagination [page]="page.info" [switcher]="switcher"></pagination>
 </div>

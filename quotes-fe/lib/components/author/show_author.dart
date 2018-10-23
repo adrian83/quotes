@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 
@@ -25,19 +27,20 @@ import '../common/validation.dart';
   ],
 )
 class ShowAuthorComponent extends ErrorHandler implements OnActivate {
-  static final Logger LOGGER = new Logger('ShowAuthorComponent');
+  static final Logger logger = new Logger('ShowAuthorComponent');
 
   final AuthorService _authorService;
 
-  Author author = new Author(null, "");
-
+  Author _author = new Author(null, "");
 
   ShowAuthorComponent(this._authorService);
 
+  Author get author => _author;
+
   @override
-  void onActivate(_, RouterState current) async {
-    final id = current.parameters[authorIdParam];
-    LOGGER.info("Show author with id: $id");
-    _authorService.get(id).then((a) => this.author = a, onError: handleError);
+  Future<void> onActivate(_, RouterState current) async {
+    var id = current.parameters[authorIdParam];
+    logger.info("Show author with id: $id");
+    _author = await _authorService.get(id).catchError(handleError);
   }
 }

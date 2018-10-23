@@ -34,60 +34,53 @@ import '../common/validation.dart';
 class ListAuthorsComponent extends PageSwitcher
     with ErrorHandler
     implements OnInit {
-  static final Logger LOGGER = new Logger('ListAuthorsComponent');
+  static final Logger logger = new Logger('ListAuthorsComponent');
 
   static final int pageSize = 3;
-  int _page = 0;
 
   final AuthorService _authorService;
   final Router _router;
 
-  AuthorsPage authorsPage = new AuthorsPage.empty();
+  AuthorsPage _authorsPage = new AuthorsPage.empty();
 
   ListAuthorsComponent(this._authorService, this._router);
 
   @override
-  void ngOnInit() => _getAuthors();
-
-  Future<void> _getAuthors() async => fetchPage(_page);
-
-  PageSwitcher get switcher => this;
+  void ngOnInit() => _fetchFirstPage();
 
   @override
-  void change(int pageNumber) async {
-    _page = pageNumber;
-    fetchPage(_page);
+  void change(int pageNumber) => _fetchPage(pageNumber);
+
+  PageSwitcher get switcher => this;
+  AuthorsPage get page => _authorsPage;
+
+  Future<void> _fetchFirstPage() => _fetchPage(0);
+
+  Future<void> _fetchPage(int pageNumber) async {
+    logger.info("Fething authors page with index: $pageNumber");
+    _authorsPage = await _authorService
+        .list(new PageRequest(pageSize, pageNumber * pageSize))
+        .catchError(handleError);
   }
 
-  void fetchPage(int pageNumber) async {
-    _page = pageNumber;
-    _authorService
-        .list(new PageRequest(pageSize, _page * pageSize))
-        .then((p) => this.authorsPage = p, onError: handleError)
-        .whenComplete(() {
-      if (_page != 0 && authorsPage.empty) fetchPage(0);
-    });
-  }
+  Future<void> delete(Author author) async {
+    logger.info("Deleting author: $author");
+    var nextPage = await _authorService.list(
+        new PageRequest(pageSize, (_authorsPage.info.curent + 1) * pageSize));
 
-  void details(Author author) => _router.navigate(_detailsUrl(author.id));
-
-  void edit(Author author) => _router.navigate(_editionUrl(author.id));
-
-  void delete(Author author) async {
-    var nextPage = await _authorService.list(new PageRequest(pageSize, (_page+1) * pageSize));
-    await _authorService
+    return _authorService
         .delete(author.id)
-        .then((id) => authorsPage.elements.removeWhere((a) => a.id == id))
-        .then((_) => showInfo("Author removed"))
-        .then((_) {
-          if(!nextPage.empty) {
-            authorsPage.elements.add(nextPage.elements[0]);
-          }
-          authorsPage.info.total -= 1;
-          if(authorsPage.empty) {
-            fetchPage(0);
-          }
+        .then((id) {
+          var author = _authorsPage.elements.firstWhere((a) => a.id == id);
+          showInfo("Author '${author.name}' removed");
+          return id;
         })
+        .then((id) => _authorsPage.elements.removeWhere((a) => a.id == id))
+        .then((_) => _authorsPage.info.total -= 1)
+        .then((_) => nextPage.empty
+            ? null
+            : _authorsPage.elements.add(nextPage.elements[0]))
+        .then((_) => _authorsPage.empty ? _fetchPage(0) : null)
         .catchError(handleError);
   }
 
@@ -96,4 +89,8 @@ class ListAuthorsComponent extends PageSwitcher
 
   String _editionUrl(String id) =>
       RoutePaths.editAuthor.toUrl(parameters: {authorIdParam: '$id'});
+
+  void details(Author author) => _router.navigate(_detailsUrl(author.id));
+
+  void edit(Author author) => _router.navigate(_editionUrl(author.id));
 }

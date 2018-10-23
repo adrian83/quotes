@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
@@ -27,20 +29,20 @@ import '../common/validation.dart';
 class EditAuthorComponent extends ErrorHandler implements OnActivate {
   final AuthorService _authorService;
 
-  Author author = new Author(null, "");
+  Author _author = new Author(null, "");
 
   EditAuthorComponent(this._authorService);
 
+  Author get author => _author;
+
   @override
-  void onActivate(_, RouterState current) async {
+  Future<void> onActivate(_, RouterState current) async {
     final id = current.parameters[authorIdParam];
-    await _authorService
-        .get(id)
-        .then((a) => this.author = a, onError: handleError);
+    _author = await _authorService.get(id).catchError(handleError);
   }
 
-  void update() async {
-    await _authorService
+  Future<void> update() {
+    return _authorService
         .update(author)
         .then((author) => showInfo("Author '${author.name}' updated"))
         .catchError(handleError);

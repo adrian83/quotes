@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
@@ -29,21 +31,19 @@ class NewAuthorComponent extends ErrorHandler implements OnActivate {
 
   final Router _router;
 
-  Author author = new Author(null, "");
+  Author _author = new Author(null, "");
 
   NewAuthorComponent(this._authorService, this._router);
 
   @override
   void onActivate(_, RouterState current) async {}
 
-  void save() {
-    _authorService
+  Author get author => _author;
+
+  Future<void> save() async {
+    _author = await _authorService
         .create(author)
-        .then((a) => onSelect(a), onError: handleError);
+        .catchError(handleError);
   }
 
-  void onSelect(Author author) => _router.navigate(_detailsUrl(author.id));
-
-  String _detailsUrl(String id) =>
-      RoutePaths.showAuthor.toUrl(parameters: {authorIdParam: '$id'});
 }

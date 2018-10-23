@@ -11,6 +11,10 @@ class PageInfo {
   int get limit => _limit;
   int get offset => _offset;
   int get total => _total;
+  int get curent {
+    var current = offset / limit;
+    return current.isNaN ? 0 : current.ceil();
+  } 
 
   void set offset(int val){
     _offset = val;
