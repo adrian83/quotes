@@ -22,12 +22,9 @@ class GetBookHandler extends Handler {
       return;
     }
 
-    var quote = _bookService.find(authorIdOrErr.value, bookIdOrErr.value);
-    if (quote == null) {
-      notFound(request);
-      return;
-    }
-
-    ok(quote, request);
+    await _bookService
+        .find(bookIdOrErr.value)
+        .then((book) => ok(book, request))
+        .catchError((e) => handleErrors(e, request));
   }
 }

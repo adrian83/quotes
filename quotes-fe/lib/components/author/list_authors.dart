@@ -36,7 +36,7 @@ class ListAuthorsComponent extends PageSwitcher
     implements OnInit {
   static final Logger logger = new Logger('ListAuthorsComponent');
 
-  static final int pageSize = 3;
+  static final int pageSize = 2;
 
   final AuthorService _authorService;
   final Router _router;

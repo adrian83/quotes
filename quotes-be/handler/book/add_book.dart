@@ -27,8 +27,10 @@ class AddBookHandler extends Handler {
     }
 
     var book = formToBook(result.form, idOrErr.value);
-    var saved = _bookService.save(book);
-    created(saved, request);
+    await _bookService
+        .save(book)
+        .then((b) => created(b, request))
+        .catchError((e) => handleErrors(e, request));
   }
 
   Book formToBook(BookForm form, String authorId) {

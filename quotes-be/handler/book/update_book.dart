@@ -29,9 +29,12 @@ class UpdateBookHandler extends Handler {
       return;
     }
 
-    var quote = formToBook(parsedForm.form, authorIdOrErr.value, bookIdOrErr.value);
-    var saved = _bookService.update(quote);
-    ok(saved, request);
+    var quote =
+        formToBook(parsedForm.form, authorIdOrErr.value, bookIdOrErr.value);
+    await _bookService
+        .update(quote)
+        .then((b) => ok(b, request))
+        .catchError((e) => handleErrors(e, request));
   }
 
   Book formToBook(BookForm form, String authorId, String bookId) {

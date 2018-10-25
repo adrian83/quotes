@@ -26,7 +26,7 @@ import './domain/author/model.dart';
 import './domain/author/service.dart';
 import './domain/author/repository.dart';
 
-import './domain/quote/model.dart';
+//import './domain/quote/model.dart';
 import './domain/quote/service.dart';
 import './domain/quote/repository.dart';
 
@@ -105,24 +105,24 @@ Future main(List<String> args) async {
   ];
 
   Author a1 = await authorRepository.save(new Author(null, "Adam Mickiewicz"));
+  Author a2 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
+  Author a3 = await authorRepository.save(new Author(null, "Shakespear"));
 
-  await authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
 
-  await authorRepository.save(new Author(null, "Henryk Sienkiewicz2"));
+   await bookRepository.save(new Book(null, "Dziady", a1.id));
+   await bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
+   await bookRepository.save(new Book(null, "Switez", a1.id));
 
-  await authorRepository.save(new Author(null, "Henryk Sienkiewicz3"));
+   await bookRepository.save(new Book(null, "Balladyna", a2.id));
+   await bookRepository.save(new Book(null, "Beniowski", a2.id));
+   await bookRepository.save(new Book(null, "Kordian", a2.id));
 
-  await authorRepository.save(new Author(null, "Henryk Sienkiewicz4"));
+   await bookRepository.save(new Book(null, "Hamlet", a3.id));
+   await bookRepository.save(new Book(null, "Makbet", a3.id));
+   await bookRepository.save(new Book(null, "Burza", a3.id));
 
-  await authorRepository.save(new Author(null, "Henryk Sienkiewicz5"));
-
-  await authorRepository.save(new Author(null, "Henryk Sienkiewicz6"));
-
-  Book b1 = await bookRepository.save(new Book(null, "Dziady", a1.id));
-  Book b2 = await bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
-
-  quoteRepository.save(
-      new Quote(null, "Ciemno wszedzie, glucho wszedzie...", a1.id, b1.id));
+  //quoteRepository.save(
+  //    new Quote(null, "Ciemno wszedzie, glucho wszedzie...", a1.id, b1.id));
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 

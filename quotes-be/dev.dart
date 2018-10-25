@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:async';
 
 import 'config/config.dart';
 
@@ -9,7 +8,6 @@ const mappingsPath = "./config/es_mapping.json";
 
 const String runDocker = 'run-docker';
 const String runInfrastructure = 'run-infra';
-const String initElasticsearch = 'es-init';
 
 void printMenu() {
   print("");
@@ -17,7 +15,6 @@ void printMenu() {
   print("$runDocker - runs docker daemon (systemd)");
   print(
       "$runInfrastructure - runs infrastructure (docker image with elasticsearch:$elasticsearchVersion)");
-  print("$initElasticsearch - creates index and uploads mappings");
   print("");
 }
 
@@ -36,10 +33,6 @@ class Command {
   }
 }
 
-
-
-
-
 void main(List<String> args) async {
   if (args.length == 0) {
     printMenu();
@@ -53,21 +46,14 @@ void main(List<String> args) async {
       break;
 
     case runInfrastructure:
-      //Config config = await readConfig(configPath);
-/*
-      new Command("docker", [
-        "pull",
-        "docker.elastic.co/elasticsearch/elasticsearch:$elasticsearchVersion"
-      ]).exec();
-*/
+      Config config = await readConfig(configPath);
+
 // docker run -d --name elasticsearch3 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:6.4.1
       new Command("docker", [
         "run",
         "-d",
-        "--name",
-        "es",
         "-p",
-        "9200:9200",
+        "9200:${config.elasticsearch.port}",
         "-p",
         "9300:9300",
         "-e",
@@ -77,10 +63,6 @@ void main(List<String> args) async {
 
       break;
 
-    case initElasticsearch:
-      Config config = await readConfig(configPath);
-
-      break;
     default:
       printMenu();
       return;

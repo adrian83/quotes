@@ -1,7 +1,8 @@
 import 'dart:io';
-import './../common.dart';
-import '../../domain/author/service.dart';
 
+import './../common.dart';
+
+import '../../domain/author/service.dart';
 import '../../domain/common/form.dart';
 import '../../domain/common/model.dart';
 
@@ -29,7 +30,10 @@ class ListAuthorsHandler extends Handler {
 
     var req = new PageRequest(limit.value, offset.value);
 
-    var authors = await _authorService.findAuthors(req);
-    ok(authors, request);
+    await _authorService
+        .findAuthors(req)
+        .then((authors) => ok(authors, request))
+        .catchError((e) => handleErrors(e, request));
+    ;
   }
 }

@@ -22,7 +22,9 @@ class DeleteBookHandler extends Handler {
       return;
     }
 
-    _bookService.delete(authorIdOrErr.value, bookIdOrErr.value);
-    ok(null, request);
+    await _bookService
+        .delete(bookIdOrErr.value)
+        .then((_) => ok(null, request))
+        .catchError((e) => handleErrors(e, request));
   }
 }

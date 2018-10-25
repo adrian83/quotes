@@ -20,8 +20,11 @@ class BookRepository {
     return _store.index(book).then((_) => book);
   }
 
-  Future<Page<Book>> list(PageRequest request) async {
-    var req = new SearchRequest.all()
+  Future<Page<Book>> findBooks(String authorId, PageRequest request) async {
+    var query = MatchQuery("authorId", authorId);
+
+    var req = new SearchRequest()
+      ..query = query
       ..size = request.limit
       ..from = request.offset;
 
@@ -35,8 +38,7 @@ class BookRepository {
   Future<Book> find(String bookId) async =>
       _store.get(bookId).then((gr) => Book.fromJson(gr.source));
 
-  Future<Book> update(Book book) =>
-      _store.update(book).then((_) => book);
+  Future<Book> update(Book book) => _store.update(book).then((_) => book);
 
   Future<void> delete(String bookId) => _store.delete(bookId);
 }

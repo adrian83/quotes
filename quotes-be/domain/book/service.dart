@@ -9,7 +9,7 @@ class BookService {
 
   BookService(this._bookRepository);
 
-  Future<Page<Book>> findAuthors(PageRequest request) => _bookRepository.list(request);
+  Future<Page<Book>> findBooks(String authorId, PageRequest request) => _bookRepository.findBooks(authorId, request);
   Future<Book> save(Book book) => _bookRepository.save(book);
   Future<Book> update(Book book) => _bookRepository.update(book);
   Future<Book> find(String bookId) => _bookRepository.find(bookId);
