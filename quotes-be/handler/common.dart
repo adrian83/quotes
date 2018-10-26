@@ -39,17 +39,17 @@ abstract class Handler {
   }
 
   PathParseResult parsePath(List<String> segments) {
-    var pathParser = new PathParser(segments);
+    var pathParser = PathParser(segments);
     var pathResult = pathParser.parse(params);
     return pathResult;
   }
 
-  Future<ParseResult<F>> parseForm<F>(
-      HttpRequest request, FormParser<F> parser) async {
-    String content = await request.transform(utf8.decoder).join();
-    var data = jsonDecode(content) as Map;
-    return parser.parse(data);
-  }
+  Future<ParseResult<F>> parseForm<F>(HttpRequest req, FormParser<F> parser) =>
+      req
+          .transform(utf8.decoder)
+          .join()
+          .then((content) => jsonDecode(content) as Map)
+          .then((data) => parser.parse(data));
 
   bool canHandle(String uri, String method) {
     if (method != this._method) {

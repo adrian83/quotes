@@ -8,7 +8,7 @@ import './errors.dart';
 import './page.dart';
 
 class Service<T> {
-  static final Logger LOGGER = new Logger('Service');
+  static final Logger logger = new Logger('Service');
 
   static final _headers = {'Content-Type': 'application/json'};
 
@@ -16,29 +16,21 @@ class Service<T> {
 
   Service(this.http);
 
-  Future<Map<String, dynamic>> createEntity(String url, T entity) async {
-    var jsonBody = jsonEncode(entity);
-    var response = await http.post(url, headers: _headers, body: jsonBody);
-    return _handleErrors(response);
-  }
+  Future<Map<String, dynamic>> createEntity(String url, T entity) => http
+      .post(url, headers: _headers, body: jsonEncode(entity))
+      .then((response) => _handleErrors(response));
 
-  Future<Map<String, dynamic>> updateEntity(String url, T entity) async {
-    var jsonBody = jsonEncode(entity);
-    var response = await http.put(url, headers: _headers, body: jsonBody);
-    return _handleErrors(response);
-  }
+  Future<Map<String, dynamic>> updateEntity(String url, T entity) => http
+      .put(url, headers: _headers, body: jsonEncode(entity))
+      .then((response) => _handleErrors(response));
 
-  Future<Map<String, dynamic>> getEntity(String url) async {
-    var response = await http.get(url);
-    return _handleErrors(response);
-  }
+  Future<Map<String, dynamic>> getEntity(String url) =>
+      http.get(url).then((response) => _handleErrors(response));
 
-  Future<Map<String, dynamic>> deleteEntity(String url) async {
-    var response = await http.delete(url);
-    return response.statusCode == 200
-        ? new Map<String, dynamic>()
-        : _handleErrors(response);
-  }
+  Future<Map<String, dynamic>> deleteEntity(String url) =>
+      http.delete(url).then((response) => response.statusCode == 200
+          ? new Map<String, dynamic>()
+          : _handleErrors(response));
 
   Map<String, dynamic> _handleErrors(response) {
     if (response.statusCode == 404) {
@@ -53,12 +45,6 @@ class Service<T> {
     }
     return json;
   }
-
-  String listUrl(String api, String url, String params) => "$api/$url?$params";
-  String getUrl(String api, String url, String id) => "$api/$url/$id";
-  String createUrl(String api, String url) => "$api/$url";
-  String updateUrl(String api, String url, String id) => getUrl(api, url, id);
-  String deleteUrl(String api, String url, String id) => getUrl(api, url, id);
 
   String pageRequestToUrlParams(PageRequest request) {
     var params = new List<String>();

@@ -26,14 +26,10 @@ class AddBookHandler extends Handler {
       return;
     }
 
-    var book = formToBook(result.form, idOrErr.value);
-
-    await _bookService
-        .save(book)
+     _bookService
+        .save(Book(null, result.form.title, idOrErr.value))
         .then((b) => created(b, request))
         .catchError((e) => handleErrors(e, request));
   }
 
-  Book formToBook(BookForm form, String authorId) =>
-      Book(null, form.title, authorId);
 }

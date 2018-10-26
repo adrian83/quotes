@@ -30,9 +30,7 @@ class ValidationErrors implements Exception {
   List<ValidationError> validationErrors;
 
   ValidationErrors(List errors) {
-    this.validationErrors = new List<ValidationError>();
-    errors.forEach(
-        (e) => this.validationErrors.add(new ValidationError.fromJson(e)));
+    this.validationErrors = errors.map((e) => new ValidationError.fromJson(e));
   }
 
   factory ValidationErrors.fromJson(Map<String, dynamic> json) =>

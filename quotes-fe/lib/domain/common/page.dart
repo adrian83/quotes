@@ -14,27 +14,25 @@ class PageInfo {
   int get curent {
     var current = offset / limit;
     return current.isNaN ? 0 : current.ceil();
-  } 
+  }
 
-  void set offset(int val){
+  void set offset(int val) {
     _offset = val;
   }
 
-  void set limit(int val){
+  void set limit(int val) {
     _limit = val;
   }
 
-  void set total(int val){
+  void set total(int val) {
     _total = val;
   }
 
-  Map toJson() {
-    var map = new Map<String, Object>();
-    map["limit"] = this.limit;
-    map["offset"] = this.offset;
-    map["total"] = this.total;
-    return map;
-  }
+  Map toJson() => {
+        "limit": _limit,
+        "offset": _offset,
+        "total": _total,
+      };
 
   String toString() => jsonEncode(this);
 }

@@ -2,17 +2,13 @@ import 'dart:async';
 
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
-
 import 'package:logging/logging.dart';
 
 import '../../routes.dart';
-import '../../domain/author/service.dart';
-import '../../domain/author/model.dart';
 import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
 
 import '../common/error_handler.dart';
-import '../../domain/common/page.dart';
 import '../common/pagination.dart';
 import '../common/error.dart';
 import '../common/info.dart';
@@ -48,8 +44,6 @@ class ShowBookComponent extends ErrorHandler with OnActivate {
     var authorId = current.parameters[authorIdParam];
     var bookId = current.parameters[bookIdParam];
     logger.info("Show book with id: $bookId");
-_book = await _bookService.get(authorId, bookId).catchError(handleError);
+    _book = await _bookService.get(authorId, bookId).catchError(handleError);
   }
-
-
 }

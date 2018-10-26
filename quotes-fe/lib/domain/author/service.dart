@@ -1,55 +1,39 @@
 import 'dart:async';
 
 import 'package:http/browser_client.dart';
+
 import 'model.dart';
 
 import '../common/service.dart';
 import '../common/page.dart';
 
 class AuthorService extends Service<Author> {
-  //static final _headers = {'Content-Type': 'application/json'};
-  //static const _authorsUrl = 'http://localhost:5050/authors';
-  //static const _authorUrl = 'http://localhost:5050/authors/';
-  //final BrowserClient _http;
-
   static final String _host = "http://localhost:5050";
-static final String _authors = "authors";
 
   AuthorService(BrowserClient http) : super(http);
 
-  Future<AuthorsPage> list(PageRequest request) async {
-    //LOGGER.info("Get authors. Request params: $request");
-    var url = listUrl(_host, _authors, this.pageRequestToUrlParams(request));
-    var jsonPage = await getEntity(url);
-    return new AuthorsPage.fromJson(jsonPage);
+  Future<AuthorsPage> list(PageRequest request) {
+    var url = "$_host/authors?${this.pageRequestToUrlParams(request)}";
+    return getEntity(url).then((json) => AuthorsPage.fromJson(json));
   }
 
-  Future<Author> create(Author author) async {
-    //LOGGER.info("Create author: $author");
-    var url = createUrl(_host, _authors);
-    var json = await createEntity(url, author);
-    return new Author.fromJson(json);
+  Future<Author> create(Author author) {
+    var url = "$_host/authors";
+    return createEntity(url, author).then((json) => Author.fromJson(json));
   }
 
-  Future<Author> update(Author author) async {
-    //LOGGER.info("Update author: $author");
-    var url = updateUrl(_host, _authors, author.id);
-    var json = await updateEntity(url, author);
-    return new Author.fromJson(json);
+  Future<Author> update(Author author) {
+    var url = "$_host/authors/${author.id}";
+    return updateEntity(url, author).then((json) => Author.fromJson(json));
   }
 
-  Future<Author> get(String id) async {
-    //LOGGER.info("Get author with id: $id");
-    var url = getUrl(_host, _authors, id);
-    var json = await getEntity(url);
-    return new Author.fromJson(json);
+  Future<Author> get(String id) {
+    var url = "$_host/authors/$id";
+    return getEntity(url).then((json) => Author.fromJson(json));
   }
 
-  Future<String> delete(String id) async {
-    //LOGGER.info("Delete author with id: $id");
-    var url = deleteUrl(_host, _authors, id);
-    //LOGGER.info("Url : $url");
-    return await deleteEntity(url).then((_) => id);
+  Future<String> delete(String id) {
+    var url = "$_host/authors/$id";
+    return deleteEntity(url).then((_) => id);
   }
-
 }

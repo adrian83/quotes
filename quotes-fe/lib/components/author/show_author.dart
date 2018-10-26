@@ -67,7 +67,7 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
   }
 
   String _bookDetailsUrl(String authorId, String bookId) => RoutePaths
-      .showAuthor
+      .showBook
       .toUrl(parameters: {authorIdParam: '$authorId', bookIdParam: '$bookId'});
 
   void bookDetails(Book book) =>
