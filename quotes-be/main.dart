@@ -26,7 +26,7 @@ import './domain/author/model.dart';
 import './domain/author/service.dart';
 import './domain/author/repository.dart';
 
-//import './domain/quote/model.dart';
+import './domain/quote/model.dart';
 import './domain/quote/service.dart';
 import './domain/quote/repository.dart';
 
@@ -50,13 +50,17 @@ Future main(List<String> args) async {
   HttpClient client = new HttpClient();
 
   var esConfig = config.elasticsearch;
+
   var authorEsStore = new ESStore<Author>(
       client, esConfig.host, esConfig.port, esConfig.authorsIndex);
 
   var bookEsStore = new ESStore<Book>(
       client, esConfig.host, esConfig.port, esConfig.booksIndex);
 
-  var quoteRepository = new QuotesRepository();
+      var quoteEsStore = new ESStore<Quote>(
+          client, esConfig.host, esConfig.port, esConfig.quotesIndex);
+
+  var quoteRepository = new QuotesRepository(quoteEsStore);
   var quotesService = new QuotesService(quoteRepository);
 
   var authorRepository = new AuthorRepository(authorEsStore);

@@ -30,12 +30,17 @@ class UpdateQuoteHandler extends Handler {
       return;
     }
 
-    var quote = formToQuote(parsedForm.form, authorIdOrErr.value, bookIdOrErr.value, quoteIdOrErr.value);
-    var saved = _quotesService.update(quote);
-    ok(saved, request);
+    var quote = formToQuote(parsedForm.form, authorIdOrErr.value,
+        bookIdOrErr.value, quoteIdOrErr.value);
+        
+    _quotesService
+        .update(quote)
+        .then((q) => ok(q, request))
+        .catchError((e) => handleErrors(e, request));
   }
 
-  Quote formToQuote(QuoteForm form, String authorId, String bookId, String quoteId) {
+  Quote formToQuote(
+      QuoteForm form, String authorId, String bookId, String quoteId) {
     return new Quote(quoteId, form.text, authorId, bookId);
   }
 }

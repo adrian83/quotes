@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:uuid/uuid.dart';
+
 import 'model.dart';
 
 import '../common/model.dart';
-
 import '../../store/elasticsearch_store.dart';
 import '../../store/search.dart';
 
@@ -18,19 +18,19 @@ class AuthorRepository {
     return _store.index(author).then((_) => author);
   }
 
-  Future<Page<Author>> list(PageRequest request) async {
+  Future<Page<Author>> list(PageRequest request) {
     var req = new SearchRequest.all()
       ..size = request.limit
       ..from = request.offset;
 
-    var resp = await _store.list(req);
-
-    var authors = resp.hits.hits.map((d) => Author.fromJson(d.source)).toList();
-    var info = new PageInfo(request.limit, request.offset, resp.hits.total);
-    return new Page<Author>(info, authors);
+    return _store.list(req).then((resp) => resp.hits).then((hits) {
+      var authors = hits.hits.map((d) => Author.fromJson(d.source)).toList();
+      var info = new PageInfo(request.limit, request.offset, hits.total);
+      return Page<Author>(info, authors);
+    });
   }
 
-  Future<Author> find(String authorId) async =>
+  Future<Author> find(String authorId) =>
       _store.get(authorId).then((gr) => Author.fromJson(gr.source));
 
   Future<Author> update(Author author) =>

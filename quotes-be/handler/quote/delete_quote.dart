@@ -23,7 +23,9 @@ class DeleteQuoteHandler extends Handler {
       return;
     }
 
-    _quotesService.delete(authorIdOrErr.value, bookIdOrErr.value, quoteIdOrErr.value);
-    ok(null, request);
+    _quotesService
+        .delete(quoteIdOrErr.value)
+        .then((_) => ok(null, request))
+        .catchError((e) => handleErrors(e, request));
   }
 }

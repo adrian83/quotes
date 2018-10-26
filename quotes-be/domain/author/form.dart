@@ -5,13 +5,9 @@ class AuthorForm {
 
   AuthorForm(this._name);
 
-  String get name => this._name;
+  String get name => _name;
 
-  Map<String, Object> toJson() {
-    var map = new Map<String, Object>();
-    map["name"] = this._name;
-    return map;
-  }
+  Map<String, Object> toJson() => {"name": _name};
 }
 
 class AuthorFormParser extends FormParser<AuthorForm> {
@@ -20,11 +16,11 @@ class AuthorFormParser extends FormParser<AuthorForm> {
 
     Object textObj = rawForm["name"];
     if (textObj == null) {
-        errors.add(new ParsingError("name", "Name cannot be empty"));
+      errors.add(new ParsingError("name", "Name cannot be empty"));
     }
 
-    if(errors.length > 0){
-        return new ParseResult.failure(errors);
+    if (errors.length > 0) {
+      return new ParseResult.failure(errors);
     }
     return new ParseResult.success(new AuthorForm(textObj.toString()));
   }

@@ -13,8 +13,10 @@ class Book extends Entity {
 
   Map toJson() {
     var map = super.toJson();
-    map["title"] = this._title;
-    map["authorId"] = this._authorId;
+    map.addAll({
+      "title": _title,
+      "authorId": _authorId,
+    });
     return map;
   }
 }

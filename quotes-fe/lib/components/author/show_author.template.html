@@ -12,10 +12,7 @@
 
 <ul class="list-group list-group-flush">
   <li class="list-group-item" *ngFor="let book of booksPage.elements">
-    <h4  style="cursor:pointer;">{{book.title}}</h4>
-
-
-
+    <h4 (click)="bookDetails(book)" style="cursor:pointer;">{{book.title}}</h4>
     <div>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </div>
   </li>
 </ul>

@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import './../common.dart';
-
 import '../../domain/book/service.dart';
 import '../../domain/common/form.dart';
 import '../../domain/common/model.dart';
@@ -11,7 +10,7 @@ class ListBooksHandler extends Handler {
 
   BookService _bookService;
 
-  ListBooksHandler(this._bookService) : super(_URL, "GET") {}
+  ListBooksHandler(this._bookService) : super(_URL, "GET");
 
   void execute(HttpRequest request) async {
     var pathParsed = parsePath(request.requestedUri.pathSegments);
@@ -37,7 +36,8 @@ class ListBooksHandler extends Handler {
 
     var req = new PageRequest(limit.value, offset.value);
 
-    await _bookService.findBooks(idOrErr.value, req)
+    await _bookService
+        .findBooks(idOrErr.value, req)
         .then((books) => ok(books, request))
         .catchError((e) => handleErrors(e, request));
   }

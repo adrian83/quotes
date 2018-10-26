@@ -5,13 +5,9 @@ class BookForm {
 
   BookForm(this._title);
 
-  String get title => this._title;
+  String get title => _title;
 
-  Map<String, Object> toJson() {
-    var map = new Map<String, Object>();
-    map["title"] = this._title;
-    return map;
-  }
+  Map<String, Object> toJson() => {"title": _title};
 }
 
 class BookFormParser extends FormParser<BookForm> {
@@ -20,11 +16,11 @@ class BookFormParser extends FormParser<BookForm> {
 
     Object titleObj = rawForm["title"];
     if (titleObj == null) {
-        errors.add(new ParsingError("title", "Title cannot be empty"));
+      errors.add(new ParsingError("title", "Title cannot be empty"));
     }
 
-    if(errors.length > 0){
-        return new ParseResult.failure(errors);
+    if (errors.length > 0) {
+      return new ParseResult.failure(errors);
     }
     return new ParseResult.success(new BookForm(titleObj.toString()));
   }

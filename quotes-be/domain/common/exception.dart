@@ -1,5 +1,4 @@
-
-import './form.dart';
+import 'form.dart';
 
 class SaveFailedException implements Exception {}
 

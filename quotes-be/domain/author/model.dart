@@ -12,7 +12,7 @@ class Author extends Entity {
 
   Map toJson() {
     var map = super.toJson();
-    map["name"] = this.name;
+    map.addAll({"name": _name});
     return map;
   }
 }

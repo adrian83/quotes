@@ -7,19 +7,15 @@ class Entity extends ESDocument {
 
   Entity(this._id);
 
-  String get id => _id;
-
   String getId() => id;
+
+  String get id => _id;
 
   void set id(String id) {
     this._id = id;
   }
 
-  Map toJson() {
-    var map = new Map<String, Object>();
-    map["id"] = this.id;
-    return map;
-  }
+  Map toJson() => {"id": _id};
 
   String toString() => jsonEncode(this);
 }
@@ -42,13 +38,11 @@ class PageInfo {
   int get offset => _offset;
   int get total => _total;
 
-  Map toJson() {
-    var map = new Map<String, Object>();
-    map["limit"] = this.limit;
-    map["offset"] = this.offset;
-    map["total"] = this.total;
-    return map;
-  }
+  Map toJson() => {
+        "limit": _limit,
+        "offset": _offset,
+        "total": _total,
+      };
 
   String toString() => jsonEncode(this);
 }
@@ -61,12 +55,10 @@ class Page<T extends Entity> {
 
   List<T> get elements => _elements;
 
-  Map toJson() {
-    var map = new Map<String, Object>();
-    map["info"] = this._info.toJson();
-    map["elements"] = this.elements.map((e) => e.toJson()).toList();
-    return map;
-  }
+  Map toJson() => {
+        "info": _info.toJson(),
+        "elements": _elements.map((e) => e.toJson()).toList(),
+      };
 
   String toString() => jsonEncode(this);
 }

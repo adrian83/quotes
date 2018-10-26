@@ -6,12 +6,10 @@ class ParsingError {
   String get field => this._field;
   String get message => this._message;
 
-  Map toJson() {
-    var map = new Map<String, Object>();
-    map["field"] = this.field;
-    map["message"] = this.message;
-    return map;
-  }
+  Map toJson() => {
+        "field": _field,
+        "message": _message,
+      };
 }
 
 class ParseResult<F> {
@@ -38,21 +36,19 @@ class ParseElem<T> {
   ParseElem.failure(this._error);
   ParseElem.success(this._value);
 
-
   bool hasError() => _error != null;
   T get value => _value;
   ParsingError get error => _error;
 
   static List<ParsingError> errors(List<ParseElem> elems) {
     List<ParsingError> errors = [];
-    for(var e in elems){
-        if(e.hasError()) {
-          errors.add(e.error);
-        }
+    for (var e in elems) {
+      if (e.hasError()) {
+        errors.add(e.error);
+      }
     }
     return errors;
   }
-
 }
 
 class UrlParams {
@@ -66,14 +62,14 @@ class UrlParams {
       return new ParseElem.success(defaultVal);
     }
     ParseElem<String> parsedStr = getString(name);
-    if(parsedStr.hasError()) {
-        return new ParseElem.failure(parsedStr.error);
+    if (parsedStr.hasError()) {
+      return new ParseElem.failure(parsedStr.error);
     }
     try {
       var value = int.parse(parsedStr.value);
       return new ParseElem.success(value);
-    } on FormatException catch (e) {
-      print(e);
+      //} on FormatException catch (e) {
+    } on FormatException {
       var error = new ParsingError(name, "Invalid format");
       return new ParseElem.failure(error);
     }
@@ -96,8 +92,8 @@ class PathParseResult {
 
   ParseElem<int> getInt(String name) {
     ParseElem<String> parsedStr = getString(name);
-    if(parsedStr.hasError()) {
-        return new ParseElem.failure(parsedStr.error);
+    if (parsedStr.hasError()) {
+      return new ParseElem.failure(parsedStr.error);
     }
     try {
       var value = int.parse(parsedStr.value);

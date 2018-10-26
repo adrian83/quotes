@@ -1,10 +1,10 @@
 import 'dart:async';
 
 import 'package:uuid/uuid.dart';
+
 import 'model.dart';
 
 import '../common/model.dart';
-
 import '../../store/elasticsearch_store.dart';
 import '../../store/search.dart';
 
@@ -15,12 +15,12 @@ class BookRepository {
 
   List<Book> books = new List<Book>();
 
-  Future<Book> save(Book book) async {
+  Future<Book> save(Book book) {
     book.id = new Uuid().v4();
     return _store.index(book).then((_) => book);
   }
 
-  Future<Page<Book>> findBooks(String authorId, PageRequest request) async {
+  Future<Page<Book>> findBooks(String authorId, PageRequest request) {
     var query = MatchQuery("authorId", authorId);
 
     var req = new SearchRequest()
@@ -28,14 +28,14 @@ class BookRepository {
       ..size = request.limit
       ..from = request.offset;
 
-    var resp = await _store.list(req);
-
-    var books = resp.hits.hits.map((d) => Book.fromJson(d.source)).toList();
-    var info = new PageInfo(request.limit, request.offset, resp.hits.total);
-    return new Page<Book>(info, books);
+    return _store.list(req).then((resp) => resp.hits).then((hits) {
+      var books = hits.hits.map((d) => Book.fromJson(d.source)).toList();
+      var info = new PageInfo(request.limit, request.offset, hits.total);
+      return Page<Book>(info, books);
+    });
   }
 
-  Future<Book> find(String bookId) async =>
+  Future<Book> find(String bookId) =>
       _store.get(bookId).then((gr) => Book.fromJson(gr.source));
 
   Future<Book> update(Book book) => _store.update(book).then((_) => book);

@@ -1,26 +1,26 @@
 import '../common/page.dart';
 
 class Book {
-  String _id, _title;
+  String _id, _title, _authorId, _bookId;
 
-  Book(this._id, this._title);
+  Book(this._id, this._title, this._authorId, this._bookId);
 
   String get id => _id;
   String get title => _title;
+  String get authorId => _authorId;
+  String get bookId => _bookId;
 
   void set name(String title) {
     this._title = title;
   }
 
-  factory Book.fromJson(Map<String, dynamic> author) =>
-      new Book(author['id'], author['title']);
+  factory Book.fromJson(Map<String, dynamic> json) =>
+      new Book(json['id'], json['title'], json['authorId'], json['bookId']);
 
-  Map toJson() {
-    var map = new Map<String, Object>();
-    map["id"] = _id;
-    map["title"] = _title;
-    return map;
-  }
+  Map toJson() => {
+        "id": _id,
+        "title": _title,
+      };
 }
 
 class BooksPage extends Page<Book> {
@@ -34,5 +34,4 @@ class BooksPage extends Page<Book> {
     var info = PageInfo.fromJson(json['info']);
     return new BooksPage(info, books);
   }
-
 }

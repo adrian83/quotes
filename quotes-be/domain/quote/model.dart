@@ -5,15 +5,16 @@ class Quote extends Entity {
 
   Quote(String id, this._text, this._authorId, this._bookId) : super(id);
 
+  factory Quote.fromJson(Map<String, dynamic> json) =>
+      Quote(json['id'], json['text'], json['authorId'], json['bookId']);
+
   String get text => _text;
   String get authorId => _authorId;
   String get bookId => _bookId;
 
-  Map toJson() {
-    var map = super.toJson();
-    map["text"] = this.text;
-    map["authorId"] = this.authorId;
-    map["bookId"] = this.bookId;
-    return map;
-  }
+  Map toJson() => {
+        "text": _text,
+        "authorId": _authorId,
+        "bookId": _bookId,
+      };
 }

@@ -1,30 +1,43 @@
+import 'dart:async';
+
 import 'package:uuid/uuid.dart';
+
 import 'model.dart';
 
+import '../common/model.dart';
+import '../../store/elasticsearch_store.dart';
+import '../../store/search.dart';
+
 class QuotesRepository {
-  List<Quote> quotes = new List<Quote>();
+  ESStore<Quote> _store;
 
-  Quote save(Quote quote) {
+  QuotesRepository(this._store);
+
+  Future<Quote> save(Quote quote) {
     quote.id = new Uuid().v4();
-    quotes.add(quote);
-    return quote;
+    return _store.index(quote).then((_) => quote);
   }
 
-  List<Quote> findQuotes(String authorId, String bookId) => quotes.where((q) => q.authorId == authorId && q.bookId == bookId).toList();
-  Quote find(String authorId, String bookId, String quoteId) => quotes.firstWhere((e) => findByIds(e, authorId, bookId, quoteId));
+  Future<Page<Quote>> find(String bookId, PageRequest request) {
+    var query = MatchQuery("bookId", bookId);
 
-  Quote update(Quote quote) {
-    quotes.removeWhere((e) => e.id == quote.id);
-    quotes.add(quote);
-    return quote;
+    var req = new SearchRequest()
+      ..query = query
+      ..size = request.limit
+      ..from = request.offset;
+
+    return _store.list(req).then((resp) => resp.hits).then((hits) {
+      var quotes = hits.hits.map((d) => Quote.fromJson(d.source)).toList();
+      var info = new PageInfo(request.limit, request.offset, hits.total);
+      return Page<Quote>(info, quotes);
+    });
   }
 
-  void delete(String authorId, String bookId, String quoteId) {
-    quotes.removeWhere((e) => findByIds(e, authorId, bookId, quoteId));
-  }
+  Future<Quote> get(String id) =>
+      _store.get(id).then((gr) => Quote.fromJson(gr.source));
 
-  bool findByIds(Quote quote, String authorId, String bookId, String quoteId) {
-      return quote.authorId == authorId && quote.bookId == bookId && quote.id == quoteId;
-  }
+  Future<Quote> update(Quote quote) => _store.update(quote).then((_) => quote);
+
+  Future<void> delete(String id) => _store.delete(id);
 
 }

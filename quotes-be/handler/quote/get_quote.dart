@@ -23,12 +23,9 @@ class GetQuoteHandler extends Handler {
       return;
     }
 
-    var quote = _quotesService.find(authorIdOrErr.value, bookIdOrErr.value, quoteIdOrErr.value);
-    if (quote == null) {
-      notFound(request);
-      return;
-    }
-
-    ok(quote, request);
+    _quotesService
+        .get(quoteIdOrErr.value)
+        .then((q) => ok(q, request))
+        .catchError((e) => handleErrors(e, request));
   }
 }

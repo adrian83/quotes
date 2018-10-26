@@ -11,7 +11,7 @@ class UpdateBookHandler extends Handler {
 
   BookService _bookService;
 
-  UpdateBookHandler(this._bookService) : super(_URL, "PUT") {}
+  UpdateBookHandler(this._bookService) : super(_URL, "PUT");
 
   void execute(HttpRequest request) async {
     var parsedForm = await parseForm(request, new BookFormParser());
@@ -21,23 +21,22 @@ class UpdateBookHandler extends Handler {
     }
 
     var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var authorIdOrErr = pathParsed.getString("authorId");
-    var bookIdOrErr = pathParsed.getString("bookId");
-    var errors = ParseElem.errors([authorIdOrErr, bookIdOrErr]);
+    var authorId = pathParsed.getString("authorId");
+    var bookId = pathParsed.getString("bookId");
+    var errors = ParseElem.errors([authorId, bookId]);
     if (errors.length > 0) {
       badRequest(errors, request);
       return;
     }
 
-    var quote =
-        formToBook(parsedForm.form, authorIdOrErr.value, bookIdOrErr.value);
+    var quote = formToBook(parsedForm.form, authorId.value, bookId.value);
+
     await _bookService
         .update(quote)
         .then((b) => ok(b, request))
         .catchError((e) => handleErrors(e, request));
   }
 
-  Book formToBook(BookForm form, String authorId, String bookId) {
-    return new Book(bookId, form.title, authorId);
-  }
+  Book formToBook(BookForm form, String authorId, String bookId) =>
+      Book(bookId, form.title, authorId);
 }

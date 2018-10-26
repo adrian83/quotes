@@ -21,7 +21,7 @@ import '../common/validation.dart';
 @Component(
   selector: 'show-author',
   templateUrl: 'show_author.template.html',
-  providers: [ClassProvider(AuthorService),ClassProvider(BookService)],
+  providers: [ClassProvider(AuthorService), ClassProvider(BookService)],
   directives: const [
     coreDirectives,
     Pagination,
@@ -37,12 +37,12 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
 
   final AuthorService _authorService;
   final BookService _bookService;
+  final Router _router;
 
   Author _author = new Author(null, "");
   BooksPage _booksPage = new BooksPage.empty();
 
-
-  ShowAuthorComponent(this._authorService, this._bookService);
+  ShowAuthorComponent(this._authorService, this._bookService, this._router);
 
   Author get author => _author;
   BooksPage get booksPage => _booksPage;
@@ -65,4 +65,11 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
         .list(_author.id, new PageRequest(pageSize, pageNumber * pageSize))
         .catchError(handleError);
   }
+
+  String _bookDetailsUrl(String authorId, String bookId) => RoutePaths
+      .showAuthor
+      .toUrl(parameters: {authorIdParam: '$authorId', bookIdParam: '$bookId'});
+
+  void bookDetails(Book book) =>
+      _router.navigate(_bookDetailsUrl(book.authorId, book.id));
 }

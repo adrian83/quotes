@@ -20,4 +20,13 @@ class BookService extends Service<Book> {
     return new BooksPage.fromJson(jsonPage);
   }
 
+  Future<Book> get(String authorId, String bookId) async {
+    var path = "authors/$authorId/books/$bookId";
+    var url = getBookUrl(_host, path,);
+    var json = await getEntity(url);
+    return new Book.fromJson(json);
+  }
+
+  String getBookUrl(String host, String path) => "$host/$path";
+
 }
