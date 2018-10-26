@@ -44,7 +44,7 @@ abstract class Handler {
     return pathResult;
   }
 
-  Future<ParseResult<F>> parseForm<F>(HttpRequest req, FormParser<F> parser) =>
+  Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) =>
       req
           .transform(utf8.decoder)
           .join()

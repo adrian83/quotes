@@ -20,16 +20,12 @@ class AddBookHandler extends Handler {
       return;
     }
 
-    var result = await parseForm(request, new BookFormParser());
-    if (result.hasErrors()) {
-      badRequest(result.errors, request);
-      return;
-    }
-
-     _bookService
-        .save(Book(null, result.form.title, idOrErr.value))
-        .then((b) => created(b, request))
+    parseForm(request, new BookFormParser())
+        .then((form) => Book(null, form.title, idOrErr.value))
+        .then((book) async => await _bookService
+            .save(book)
+            .then((b) => created(b, request))
+            .catchError((e) => handleErrors(e, request)))
         .catchError((e) => handleErrors(e, request));
   }
-
 }

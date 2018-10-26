@@ -1,4 +1,5 @@
 import '../common/form.dart';
+import '../common/exception.dart';
 
 class QuoteForm {
   String _text;
@@ -11,7 +12,7 @@ class QuoteForm {
 }
 
 class QuoteFormParser extends FormParser<QuoteForm> {
-  ParseResult<QuoteForm> parse(Map rawForm) {
+  QuoteForm parse(Map rawForm) {
     List<ParsingError> errors = [];
 
     Object textObj = rawForm["text"];
@@ -20,9 +21,9 @@ class QuoteFormParser extends FormParser<QuoteForm> {
     }
 
     if (errors.length > 0) {
-      return new ParseResult.failure(errors);
+      throw InvalidDataException(errors);
     }
-    var form = new QuoteForm(textObj.toString());
-    return new ParseResult.success(form);
+
+    return QuoteForm(textObj.toString());
   }
 }

@@ -13,7 +13,7 @@ class AddQuoteHandler extends Handler {
 
   AddQuoteHandler(this._quotesService) : super(_URL, "POST");
 
-  void execute(HttpRequest request) async {
+  void execute(HttpRequest request) {
     var pathParsed = parsePath(request.requestedUri.pathSegments);
     var authorId = pathParsed.getString("authorId");
     var bookId = pathParsed.getString("bookId");
@@ -24,20 +24,12 @@ class AddQuoteHandler extends Handler {
       return;
     }
 
-    var result = await parseForm(request, new QuoteFormParser());
-    if (result.hasErrors()) {
-      badRequest(result.errors, request);
-      return;
-    }
-
-    var quote = formToQuote(result.form, authorId.value, bookId.value);
-    
-    _quotesService
-        .save(quote)
-        .then((q) => created(q, request))
+    parseForm(request, new QuoteFormParser())
+        .then((form) => Quote(null, form.text, authorId.value, bookId.value))
+        .then((quote) async => await _quotesService
+            .save(quote)
+            .then((q) => created(q, request))
+            .catchError((e) => handleErrors(e, request)))
         .catchError((e) => handleErrors(e, request));
   }
-
-  Quote formToQuote(QuoteForm form, String authorId, String bookId) =>
-      Quote(null, form.text, authorId, bookId);
 }

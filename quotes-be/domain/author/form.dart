@@ -1,4 +1,5 @@
 import '../common/form.dart';
+import '../common/exception.dart';
 
 class AuthorForm {
   String _name;
@@ -11,7 +12,7 @@ class AuthorForm {
 }
 
 class AuthorFormParser extends FormParser<AuthorForm> {
-  ParseResult<AuthorForm> parse(Map rawForm) {
+  AuthorForm parse(Map rawForm) {
     List<ParsingError> errors = [];
 
     Object textObj = rawForm["name"];
@@ -20,8 +21,9 @@ class AuthorFormParser extends FormParser<AuthorForm> {
     }
 
     if (errors.length > 0) {
-      return new ParseResult.failure(errors);
+      throw InvalidDataException(errors);
     }
-    return new ParseResult.success(new AuthorForm(textObj.toString()));
+
+    return AuthorForm(textObj.toString());
   }
 }

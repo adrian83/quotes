@@ -13,29 +13,24 @@ class UpdateQuoteHandler extends Handler {
 
   UpdateQuoteHandler(this._quotesService) : super(_URL, "PUT") {}
 
-  void execute(HttpRequest request) async {
-    var parsedForm = await parseForm(request, new QuoteFormParser());
-    if (parsedForm.hasErrors()) {
-      badRequest(parsedForm.errors, request);
-      return;
-    }
-
+  void execute(HttpRequest request) {
     var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var authorIdOrErr = pathParsed.getString("authorId");
-    var bookIdOrErr = pathParsed.getString("bookId");
-    var quoteIdOrErr = pathParsed.getString("quoteId");
-    var errors = ParseElem.errors([authorIdOrErr, bookIdOrErr, quoteIdOrErr]);
+    var authorId = pathParsed.getString("authorId");
+    var bookId = pathParsed.getString("bookId");
+    var quoteId = pathParsed.getString("quoteId");
+    var errors = ParseElem.errors([authorId, bookId, quoteId]);
     if (errors.length > 0) {
       badRequest(errors, request);
       return;
     }
 
-    var quote = formToQuote(parsedForm.form, authorIdOrErr.value,
-        bookIdOrErr.value, quoteIdOrErr.value);
-        
-    _quotesService
-        .update(quote)
-        .then((q) => ok(q, request))
+    parseForm(request, new QuoteFormParser())
+        .then((form) =>
+            Quote(quoteId.value, form.text, authorId.value, bookId.value))
+        .then((quote) async => await _quotesService
+            .update(quote)
+            .then((q) => ok(q, request))
+            .catchError((e) => handleErrors(e, request)))
         .catchError((e) => handleErrors(e, request));
   }
 

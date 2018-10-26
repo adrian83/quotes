@@ -13,12 +13,6 @@ class UpdateAuthorHandler extends Handler {
   UpdateAuthorHandler(this._authorService) : super(_URL, "PUT") {}
 
   void execute(HttpRequest request) async {
-    var parsedForm = await parseForm(request, new AuthorFormParser());
-    if (parsedForm.hasErrors()) {
-      badRequest(parsedForm.errors, request);
-      return;
-    }
-
     var pathParsed = parsePath(request.requestedUri.pathSegments);
     var idOrErr = pathParsed.getString("authorId");
     if (idOrErr.hasError()) {
@@ -26,10 +20,12 @@ class UpdateAuthorHandler extends Handler {
       return;
     }
 
-    var quote = formToAuthor(parsedForm.form, idOrErr.value);
-    await _authorService
-        .update(quote)
-        .then((author) => ok(author, request))
+    parseForm(request, new AuthorFormParser())
+        .then((form) => formToAuthor(form, idOrErr.value))
+        .then((quote) async => await _authorService
+            .update(quote)
+            .then((author) => ok(author, request))
+            .catchError((e) => handleErrors(e, request)))
         .catchError((e) => handleErrors(e, request));
   }
 

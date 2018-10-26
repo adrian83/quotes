@@ -1,4 +1,5 @@
 import '../common/form.dart';
+import '../common/exception.dart';
 
 class BookForm {
   String _title;
@@ -11,7 +12,7 @@ class BookForm {
 }
 
 class BookFormParser extends FormParser<BookForm> {
-  ParseResult<BookForm> parse(Map rawForm) {
+  BookForm parse(Map rawForm) {
     List<ParsingError> errors = [];
 
     Object titleObj = rawForm["title"];
@@ -20,8 +21,9 @@ class BookFormParser extends FormParser<BookForm> {
     }
 
     if (errors.length > 0) {
-      return new ParseResult.failure(errors);
+      throw InvalidDataException(errors);
     }
-    return new ParseResult.success(new BookForm(titleObj.toString()));
+    
+    return BookForm(titleObj.toString());
   }
 }

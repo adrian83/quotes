@@ -26,7 +26,7 @@ class ParseResult<F> {
 }
 
 abstract class FormParser<F> {
-  ParseResult<F> parse(Map rawForm);
+  F parse(Map rawForm);
 }
 
 class ParseElem<T> {
