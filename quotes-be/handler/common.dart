@@ -44,12 +44,11 @@ abstract class Handler {
     return pathResult;
   }
 
-  Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) =>
-      req
-          .transform(utf8.decoder)
-          .join()
-          .then((content) => jsonDecode(content) as Map)
-          .then((data) => parser.parse(data));
+  Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) => req
+      .transform(utf8.decoder)
+      .join()
+      .then((content) => jsonDecode(content) as Map)
+      .then((data) => parser.parse(data));
 
   bool canHandle(String uri, String method) {
     if (method != this._method) {
@@ -73,7 +72,14 @@ abstract class Handler {
     }
   }
 
-  void execute(HttpRequest request);
+  void handle(HttpRequest request) {
+    var pathParams = parsePath(request.requestedUri.pathSegments);
+    var uriParams = UrlParams(request.requestedUri.queryParameters);
+    execute(request, pathParams, uriParams);
+  }
+
+  void execute(
+      HttpRequest request, PathParseResult pathParams, UrlParams urlParams);
 
   void serverError(String msg, HttpRequest request) {
     write(msg, HttpStatus.internalServerError, request);

@@ -14,6 +14,9 @@ class RoutePaths {
   static final showBook = RoutePath(
       path:
           '${listAuthors.path}/show/:$authorIdParam/books/show/:$bookIdParam');
+  static final editBook = RoutePath(
+      path:
+          '${listAuthors.path}/show/:$authorIdParam/books/edit/:$bookIdParam');
 
   static final info = RoutePath(path: 'info');
 }

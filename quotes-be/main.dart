@@ -135,19 +135,19 @@ Future main(List<String> args) async {
 
     for (Handler handler in handlers) {
       if (handler.canHandle(request.uri.path, request.method)) {
-        handler.execute(request);
+        handler.handle(request);
         found = true;
         break;
       }
     }
 
     if (request.method == "OPTIONS") {
-      optionsHandler.execute(request);
+      optionsHandler.handle(request);
       continue;
     }
 
     if (!found) {
-      notFoundHandler.execute(request);
+      notFoundHandler.handle(request);
     }
   }
 }

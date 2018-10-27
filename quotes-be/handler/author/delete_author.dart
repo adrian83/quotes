@@ -2,6 +2,7 @@ import 'dart:io';
 
 import './../common.dart';
 import '../../domain/author/service.dart';
+import '../../domain/common/form.dart';
 
 class DeleteAuthorHandler extends Handler {
   static final _URL = r"/authors/{authorId}";
@@ -10,15 +11,15 @@ class DeleteAuthorHandler extends Handler {
 
   DeleteAuthorHandler(this._authorService) : super(_URL, "DELETE");
 
-  void execute(HttpRequest request) async {
-    var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var idOrErr = pathParsed.getString("authorId");
+  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+
+    var idOrErr = pathParams.getString("authorId");
     if (idOrErr.hasError()) {
       badRequest([idOrErr.error], request);
       return;
     }
 
-    await _authorService
+    _authorService
         .delete(idOrErr.value)
         .then((_) => ok(null, request))
         .catchError((e) => handleErrors(e, request));

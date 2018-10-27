@@ -13,10 +13,9 @@ class ListQuotesHandler extends Handler {
 
   ListQuotesHandler(this._quotesService) : super(_URL, "GET") {}
 
-  void execute(HttpRequest request) {
-    var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var authorIdOrErr = pathParsed.getString("authorId");
-    var bookIdOrErr = pathParsed.getString("bookId");
+  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+    var authorIdOrErr = pathParams.getString("authorId");
+    var bookIdOrErr = pathParams.getString("bookId");
 
     var errors = ParseElem.errors([authorIdOrErr, bookIdOrErr]);
     if (errors.length > 0) {

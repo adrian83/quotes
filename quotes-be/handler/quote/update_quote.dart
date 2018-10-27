@@ -13,24 +13,21 @@ class UpdateQuoteHandler extends Handler {
 
   UpdateQuoteHandler(this._quotesService) : super(_URL, "PUT") {}
 
-  void execute(HttpRequest request) {
-    var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var authorId = pathParsed.getString("authorId");
-    var bookId = pathParsed.getString("bookId");
-    var quoteId = pathParsed.getString("quoteId");
+  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+    var authorId = pathParams.getString("authorId");
+    var bookId = pathParams.getString("bookId");
+    var quoteId = pathParams.getString("quoteId");
     var errors = ParseElem.errors([authorId, bookId, quoteId]);
     if (errors.length > 0) {
       badRequest(errors, request);
       return;
     }
 
-    parseForm(request, new QuoteFormParser())
+    parseForm(request, QuoteFormParser())
         .then((form) =>
             Quote(quoteId.value, form.text, authorId.value, bookId.value))
-        .then((quote) async => await _quotesService
-            .update(quote)
-            .then((q) => ok(q, request))
-            .catchError((e) => handleErrors(e, request)))
+        .then((quote) => _quotesService.update(quote))
+        .then((quote) => ok(quote, request))
         .catchError((e) => handleErrors(e, request));
   }
 

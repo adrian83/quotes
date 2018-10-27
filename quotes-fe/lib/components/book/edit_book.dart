@@ -2,51 +2,54 @@ import 'dart:async';
 
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
-import 'package:logging/logging.dart';
+import 'package:angular_forms/angular_forms.dart';
 
 import '../../routes.dart';
 import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
 
 import '../common/error_handler.dart';
-import '../common/pagination.dart';
+
 import '../common/error.dart';
 import '../common/info.dart';
 import '../common/validation.dart';
 
 @Component(
-  selector: 'show-book',
-  templateUrl: 'show_book.template.html',
+  selector: 'edit-book',
+  templateUrl: 'edit_book.template.html',
   providers: [ClassProvider(BookService)],
   directives: const [
     coreDirectives,
-    Pagination,
+    formDirectives,
     ValidationErrorsComponent,
     ServerErrorsComponent,
     InfoComponent
   ],
 )
-class ShowBookComponent extends ErrorHandler with OnActivate {
-  static final Logger logger = new Logger('ShowBookComponent');
-
-  static final int pageSize = 2;
-
+class EditBookComponent extends ErrorHandler implements OnActivate {
   final BookService _bookService;
 
-  Book _book = Book(null, "", null, null);
+  Book _book = new Book(null, "", null, null);
 
-  ShowBookComponent(this._bookService);
+  EditBookComponent(this._bookService);
 
   Book get book => _book;
 
   @override
-  void onActivate(_, RouterState current) {
+  Future<void> onActivate(_, RouterState current) async {
     var authorId = current.parameters[authorIdParam];
     var bookId = current.parameters[bookIdParam];
-    logger.info("Show book with id: $bookId");
     _bookService
         .get(authorId, bookId)
         .then((book) => _book = book)
+        .catchError(handleError);
+  }
+
+  void update() {
+    _bookService
+        .update(_book)
+        .then((book) => _book = book)
+        .then((_) => showInfo("Book '${_book.title}' updated"))
         .catchError(handleError);
   }
 }

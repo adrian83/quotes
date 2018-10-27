@@ -7,6 +7,7 @@ import 'components/author/edit_author.template.dart' as edit_author_template;
 import 'components/author/new_author.template.dart' as new_author_template;
 
 import 'components/book/show_book.template.dart' as show_book_template;
+import 'components/book/edit_book.template.dart' as edit_book_template;
 
 import 'info.template.dart' as info_template;
 
@@ -44,7 +45,12 @@ class Routes {
     component: show_book_template.ShowBookComponentNgFactory,
   );
 
+  static final editBook = RouteDefinition(
+    routePath: RoutePaths.editBook,
+    component: edit_book_template.EditBookComponentNgFactory,
+  );
+
   static final all = <RouteDefinition>[
-    listAuthors, newAuthor, showAuthor, editAuthor, showBook, info
+    listAuthors, newAuthor, showAuthor, editAuthor, showBook, editBook, info
   ];
 }

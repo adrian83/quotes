@@ -13,10 +13,9 @@ class AddQuoteHandler extends Handler {
 
   AddQuoteHandler(this._quotesService) : super(_URL, "POST");
 
-  void execute(HttpRequest request) {
-    var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var authorId = pathParsed.getString("authorId");
-    var bookId = pathParsed.getString("bookId");
+  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+    var authorId = pathParams.getString("authorId");
+    var bookId = pathParams.getString("bookId");
 
     var errors = ParseElem.errors([authorId, bookId]);
     if (errors.length > 0) {
@@ -26,10 +25,8 @@ class AddQuoteHandler extends Handler {
 
     parseForm(request, new QuoteFormParser())
         .then((form) => Quote(null, form.text, authorId.value, bookId.value))
-        .then((quote) async => await _quotesService
-            .save(quote)
-            .then((q) => created(q, request))
-            .catchError((e) => handleErrors(e, request)))
+        .then((quote) => _quotesService.save(quote))
+        .then((quote) => created(quote, request))
         .catchError((e) => handleErrors(e, request));
   }
 }

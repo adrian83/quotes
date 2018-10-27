@@ -13,16 +13,16 @@ class ListAuthorsHandler extends Handler {
 
   ListAuthorsHandler(this._authorService) : super(_URL, "GET") {}
 
-  void execute(HttpRequest request) async {
-    var params = new UrlParams(request.requestedUri.queryParameters);
+  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams)  {
+print("$pathParams $urlParams");
 
-    var limit = params.getIntOrElse("limit", 2);
+    var limit = urlParams.getIntOrElse("limit", 2);
     if (limit.hasError()) {
       badRequest([limit.error], request);
       return;
     }
 
-    var offset = params.getIntOrElse("offset", 0);
+    var offset = urlParams.getIntOrElse("offset", 0);
     if (offset.hasError()) {
       badRequest([offset.error], request);
       return;
@@ -30,7 +30,7 @@ class ListAuthorsHandler extends Handler {
 
     var req = new PageRequest(limit.value, offset.value);
 
-    await _authorService
+     _authorService
         .findAuthors(req)
         .then((authors) => ok(authors, request))
         .catchError((e) => handleErrors(e, request));

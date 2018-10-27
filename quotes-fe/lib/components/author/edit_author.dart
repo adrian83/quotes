@@ -36,13 +36,16 @@ class EditAuthorComponent extends ErrorHandler implements OnActivate {
   Author get author => _author;
 
   @override
-  Future<void> onActivate(_, RouterState current) async {
+  void onActivate(_, RouterState current) {
     final id = current.parameters[authorIdParam];
-    _author = await _authorService.get(id).catchError(handleError);
+    _authorService
+        .get(id)
+        .then((author) => _author = author)
+        .catchError(handleError);
   }
 
-  Future<void> update() {
-    return _authorService
+  void update() {
+     _authorService
         .update(author)
         .then((author) => showInfo("Author '${author.name}' updated"))
         .catchError(handleError);

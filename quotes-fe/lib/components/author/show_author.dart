@@ -49,27 +49,40 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
   PageSwitcher get booksSwitcher => this;
 
   @override
-  Future<void> onActivate(_, RouterState current) async {
+  void onActivate(_, RouterState current) {
     var id = current.parameters[authorIdParam];
     logger.info("Show author with id: $id");
-    _author = await _authorService.get(id).catchError(handleError);
 
-    _booksPage = await _bookService
+    _authorService
+        .get(id)
+        .then((author) => _author = author)
+        .catchError(handleError);
+
+    _bookService
         .list(id, new PageRequest(pageSize, _booksPage.info.curent * pageSize))
+        .then((page) => _booksPage = page)
         .catchError(handleError);
   }
 
   @override
-  void change(int pageNumber) async {
-    _booksPage = await _bookService
+  void change(int pageNumber) {
+    _bookService
         .list(_author.id, new PageRequest(pageSize, pageNumber * pageSize))
+        .then((page) => _booksPage = page)
         .catchError(handleError);
   }
 
-  String _bookDetailsUrl(String authorId, String bookId) => RoutePaths
-      .showBook
+
+
+  String _bookDetailsUrl(String authorId, String bookId) => RoutePaths.showBook
+      .toUrl(parameters: {authorIdParam: '$authorId', bookIdParam: '$bookId'});
+
+  String _bookEditionUrl(String authorId, String bookId) => RoutePaths.editBook
       .toUrl(parameters: {authorIdParam: '$authorId', bookIdParam: '$bookId'});
 
   void bookDetails(Book book) =>
       _router.navigate(_bookDetailsUrl(book.authorId, book.id));
+
+  void editBook(Book book) =>
+      _router.navigate(_bookEditionUrl(book.authorId, book.id));
 }

@@ -37,10 +37,10 @@ class NewAuthorComponent extends ErrorHandler implements OnActivate {
 
   Author get author => _author;
 
-  Future<void> save() async {
-    _author = await _authorService
+  void save() {
+    _authorService
         .create(author)
+        .then((author) => _author = author)
         .catchError(handleError);
   }
-
 }

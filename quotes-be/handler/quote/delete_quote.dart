@@ -11,11 +11,10 @@ class DeleteQuoteHandler extends Handler {
 
   DeleteQuoteHandler(this._quotesService) : super(_URL, "DELETE");
 
-  void execute(HttpRequest request) async {
-    var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var authorIdOrErr = pathParsed.getString("authorId");
-    var bookIdOrErr = pathParsed.getString("bookId");
-    var quoteIdOrErr = pathParsed.getString("quoteId");
+  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+    var authorIdOrErr = pathParams.getString("authorId");
+    var bookIdOrErr = pathParams.getString("bookId");
+    var quoteIdOrErr = pathParams.getString("quoteId");
 
     var errors = ParseElem.errors([authorIdOrErr, bookIdOrErr, quoteIdOrErr]);
     if (errors.length > 0) {

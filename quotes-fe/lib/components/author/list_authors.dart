@@ -54,21 +54,20 @@ class ListAuthorsComponent extends PageSwitcher
   PageSwitcher get switcher => this;
   AuthorsPage get page => _authorsPage;
 
-  Future<void> _fetchFirstPage() => _fetchPage(0);
+  void _fetchFirstPage() => _fetchPage(0);
 
-  Future<void> _fetchPage(int pageNumber) async {
+  void _fetchPage(int pageNumber) {
     logger.info("Fething authors page with index: $pageNumber");
-    _authorsPage = await _authorService
+    _authorService
         .list(new PageRequest(pageSize, pageNumber * pageSize))
+        .then((page) => _authorsPage = page)
         .catchError(handleError);
   }
 
-  Future<void> delete(Author author) async {
+  void delete(Author author) {
     logger.info("Deleting author: $author");
-    var nextPage = await _authorService.list(
-        new PageRequest(pageSize, (_authorsPage.info.curent + 1) * pageSize));
 
-    return _authorService
+    _authorService
         .delete(author.id)
         .then((id) {
           var author = _authorsPage.elements.firstWhere((a) => a.id == id);
@@ -77,7 +76,9 @@ class ListAuthorsComponent extends PageSwitcher
         })
         .then((id) => _authorsPage.elements.removeWhere((a) => a.id == id))
         .then((_) => _authorsPage.info.total -= 1)
-        .then((_) => nextPage.empty
+        .then((_) => PageRequest(pageSize, (_authorsPage.info.curent + 1) * pageSize))
+        .then((req) => _authorService.list(req))
+        .then((nextPage) => nextPage.empty
             ? null
             : _authorsPage.elements.add(nextPage.elements[0]))
         .then((_) => _authorsPage.empty ? _fetchPage(0) : null)

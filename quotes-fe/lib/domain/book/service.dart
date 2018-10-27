@@ -22,4 +22,9 @@ class BookService extends Service<Book> {
     var url = "$_host/authors/$authorId/books/$bookId";
     return getEntity(url).then((json) => Book.fromJson(json));
   }
+
+  Future<Book> update(Book book) {
+    var url = "$_host/authors/${book.authorId}/books/${book.id}";
+    return updateEntity(url, book).then((json) => Book.fromJson(json));
+  }
 }

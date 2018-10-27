@@ -13,7 +13,7 @@ class Book {
   String get authorId => _authorId;
   String get bookId => _bookId;
 
-  void set name(String title) {
+  void set title(String title) {
     this._title = title;
   }
 
