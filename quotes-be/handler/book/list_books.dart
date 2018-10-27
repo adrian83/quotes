@@ -4,7 +4,6 @@ import './../common.dart';
 import '../../domain/book/service.dart';
 import '../../domain/common/form.dart';
 import '../../domain/common/model.dart';
-import '../../domain/common/form.dart';
 
 class ListBooksHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books";
