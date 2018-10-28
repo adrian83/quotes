@@ -72,14 +72,37 @@ class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
         .catchError(handleError);
   }
 
+  void deleteQuote(Quote quote) {
+    logger.info("Deleting quote: $quote");
+
+    _quoteService
+        .delete(quote.authorId, quote.bookId, quote.id)
+        .then((id) {
+          var quote = _quotesPage.elements.firstWhere((q) => q.id == id);
+          showInfo("Quote '${quote.text}' removed");
+          return id;
+        })
+        .then((id) => _quotesPage.elements.removeWhere((q) => q.id == id))
+        .then((_) => _quotesPage.info.total -= 1)
+        .then((_) => PageRequest(pageSize, (_quotesPage.info.curent + 1) * pageSize))
+        .then((req) => _quoteService.list(_book.authorId, _book.id, req))
+        .then((nextPage) => nextPage.empty
+            ? null
+            : _quotesPage.elements.add(nextPage.elements[0]))
+        .then((_) => _quotesPage.empty ? change(0) : null)
+        .catchError(handleError);
+  }
+
   String _quoteDetailsUrl(String authorId, String bookId, String quoteId) => RoutePaths.showQuote
       .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId, quoteIdParam: quoteId});
 
   void quoteDetails(Quote quote) =>
       _router.navigate(_quoteDetailsUrl(quote.authorId, quote.bookId, quote.id));
 
+  String _quoteEtitionUrl(String authorId, String bookId, String quoteId) => RoutePaths.editQuote
+      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId, quoteIdParam: quoteId});
 
-
-
+  void editQuote(Quote quote) =>
+      _router.navigate(_quoteEtitionUrl(quote.authorId, quote.bookId, quote.id));
 
 }

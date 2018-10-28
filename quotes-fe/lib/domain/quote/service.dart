@@ -33,4 +33,9 @@ class QuoteService extends Service<Quote> {
     var url = "$_host/authors/${quote.authorId}/books/${quote.bookId}/quotes";
     return createEntity(url, quote).then((json) => Quote.fromJson(json));
   }
+
+  Future<String> delete(String authorId, String bookId, String quoteId) {
+    var url = "$_host/authors/$authorId/books/$bookId/quotes/$quoteId";
+    return deleteEntity(url).then((_) => quoteId);
+  }
 }
