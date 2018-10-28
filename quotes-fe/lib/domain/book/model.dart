@@ -16,6 +16,10 @@ class Book {
     this._title = title;
   }
 
+  void set authorId(String authorId) {
+    this._authorId = authorId;
+  }
+
   Map toJson() => {
         "id": _id,
         "title": _title,

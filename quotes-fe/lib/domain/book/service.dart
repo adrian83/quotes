@@ -32,4 +32,9 @@ class BookService extends Service<Book> {
     var url = "$_host/authors/${book.authorId}/books";
     return createEntity(url, book).then((json) => Book.fromJson(json));
   }
+
+  Future<String> delete(String authorId, String bookId) {
+    var url = "$_host/authors/$authorId/books/$bookId";
+    return deleteEntity(url).then((_) => bookId);
+  }
 }

@@ -70,7 +70,26 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
         .catchError(handleError);
   }
 
+  void deleteBook(Book book) {
+    logger.info("Deleting book: $book");
 
+    _bookService
+        .delete(book.authorId, book.id)
+        .then((id) {
+          var book = _booksPage.elements.firstWhere((b) => b.id == id);
+          showInfo("Book '${book.title}' removed");
+          return id;
+        })
+        .then((id) => _booksPage.elements.removeWhere((b) => b.id == id))
+        .then((_) => _booksPage.info.total -= 1)
+        .then((_) => PageRequest(pageSize, (_booksPage.info.curent + 1) * pageSize))
+        .then((req) => _bookService.list(_author.id, req))
+        .then((nextPage) => nextPage.empty
+            ? null
+            : _booksPage.elements.add(nextPage.elements[0]))
+        .then((_) => _booksPage.empty ? change(0) : null)
+        .catchError(handleError);
+  }
 
   String _bookDetailsUrl(String authorId, String bookId) => RoutePaths.showBook
       .toUrl(parameters: {authorIdParam: '$authorId', bookIdParam: '$bookId'});

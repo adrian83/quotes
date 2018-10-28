@@ -33,7 +33,9 @@ class NewBookComponent extends ErrorHandler implements OnActivate {
   NewBookComponent(this._bookService, this._router);
 
   @override
-  void onActivate(_, RouterState current) async {}
+  void onActivate(_, RouterState current) async {
+    _book.authorId = current.parameters[authorIdParam];
+  }
 
   Book get book => _book;
 

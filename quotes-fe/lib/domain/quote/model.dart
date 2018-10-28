@@ -17,12 +17,16 @@ class Quote {
     this._text = text;
   }
 
-  Map toJson() => {
-        "id": _id,
-        "text": _text,
-        "authorId": _authorId,
-        "bookId": _bookId
-      };
+  void set authorId(String authorId) {
+    this._authorId = authorId;
+  }
+
+  void set bookId(String bookId) {
+    this._bookId = bookId;
+  }
+
+  Map toJson() =>
+      {"id": _id, "text": _text, "authorId": _authorId, "bookId": _bookId};
 }
 
 class QuotesPage extends Page<Quote> {

@@ -11,6 +11,7 @@ import 'components/book/edit_book.template.dart' as edit_book_template;
 import 'components/book/new_book.template.dart' as new_book_template;
 
 import 'components/quote/show_quote.template.dart' as show_quote_template;
+import 'components/quote/new_quote.template.dart' as new_quote_template;
 
 import 'info.template.dart' as info_template;
 
@@ -67,13 +68,13 @@ class Routes {
     routePath: RoutePaths.editBook,
     component: edit_book_template.EditBookComponentNgFactory,
   );
-
-  static final newBook = RouteDefinition(
-    routePath: RoutePaths.newBook,
-    component: new_book_template.NewBookComponentNgFactory,
-  );
 */
+  static final newQuote = RouteDefinition(
+    routePath: RoutePaths.newQuote,
+    component: new_quote_template.NewQuoteComponentNgFactory,
+  );
+
   static final all = <RouteDefinition>[
-    listAuthors, newAuthor, showAuthor, editAuthor, showBook, editBook, newBook, showQuote, info
+    listAuthors, newAuthor, showAuthor, editAuthor, showBook, editBook, newBook, showQuote, newQuote, info
   ];
 }
