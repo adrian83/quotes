@@ -7,3 +7,18 @@
 
 
 <h3>{{book.title}}</h3>
+
+<br/><br/>
+
+<ul class="list-group list-group-flush">
+  <li class="list-group-item" *ngFor="let quote of quotesPage.elements">
+    <h4 (click)="quoteDetails(quote)" style="cursor:pointer;">{{quote.text}}</h4>
+
+    <div>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </div>
+  </li>
+</ul>
+
+
+<div>
+  <pagination [page]="quotesPage.info" [switcher]="quotesSwitcher"></pagination>
+</div>

@@ -1,17 +1,16 @@
 import '../common/page.dart';
 
 class Book {
-  String _id, _title, _authorId, _bookId;
+  String _id, _title, _authorId;
 
-  Book(this._id, this._title, this._authorId, this._bookId);
+  Book(this._id, this._title, this._authorId);
 
   factory Book.fromJson(Map<String, dynamic> json) =>
-      new Book(json['id'], json['title'], json['authorId'], json['bookId']);
+      new Book(json['id'], json['title'], json['authorId']);
 
   String get id => _id;
   String get title => _title;
   String get authorId => _authorId;
-  String get bookId => _bookId;
 
   void set title(String title) {
     this._title = title;
@@ -20,6 +19,7 @@ class Book {
   Map toJson() => {
         "id": _id,
         "title": _title,
+        "authorId": _authorId,
       };
 }
 

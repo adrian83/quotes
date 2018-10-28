@@ -1,12 +1,10 @@
-import 'dart:async';
-
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
 
-import '../../routes.dart';
 import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
+import '../../route_paths.dart';
 
 import '../common/error_handler.dart';
 
@@ -15,8 +13,8 @@ import '../common/info.dart';
 import '../common/validation.dart';
 
 @Component(
-  selector: 'edit-book',
-  templateUrl: 'edit_book.template.html',
+  selector: 'new-book',
+  templateUrl: 'new_book.template.html',
   providers: [ClassProvider(BookService)],
   directives: const [
     coreDirectives,
@@ -26,30 +24,30 @@ import '../common/validation.dart';
     InfoComponent
   ],
 )
-class EditBookComponent extends ErrorHandler implements OnActivate {
+class NewBookComponent extends ErrorHandler implements OnActivate {
   final BookService _bookService;
+  final Router _router;
 
   Book _book = new Book(null, "", null);
 
-  EditBookComponent(this._bookService);
+  NewBookComponent(this._bookService, this._router);
+
+  @override
+  void onActivate(_, RouterState current) async {}
 
   Book get book => _book;
 
-  @override
-  Future<void> onActivate(_, RouterState current) async {
-    var authorId = current.parameters[authorIdParam];
-    var bookId = current.parameters[bookIdParam];
+  void save() {
     _bookService
-        .get(authorId, bookId)
+        .create(book)
         .then((book) => _book = book)
+        .then((_) => _edit(_book))
         .catchError(handleError);
   }
 
-  void update() {
-    _bookService
-        .update(_book)
-        .then((book) => _book = book)
-        .then((_) => showInfo("Book '${_book.title}' updated"))
-        .catchError(handleError);
-  }
+  String _editionUrl(String authorId, String bookId) => RoutePaths.editBook
+      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId});
+
+  void _edit(Book book) =>
+      _router.navigate(_editionUrl(book.authorId, book.id));
 }

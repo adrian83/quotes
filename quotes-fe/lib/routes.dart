@@ -8,6 +8,9 @@ import 'components/author/new_author.template.dart' as new_author_template;
 
 import 'components/book/show_book.template.dart' as show_book_template;
 import 'components/book/edit_book.template.dart' as edit_book_template;
+import 'components/book/new_book.template.dart' as new_book_template;
+
+import 'components/quote/show_quote.template.dart' as show_quote_template;
 
 import 'info.template.dart' as info_template;
 
@@ -50,7 +53,27 @@ class Routes {
     component: edit_book_template.EditBookComponentNgFactory,
   );
 
+  static final newBook = RouteDefinition(
+    routePath: RoutePaths.newBook,
+    component: new_book_template.NewBookComponentNgFactory,
+  );
+
+  static final showQuote = RouteDefinition(
+    routePath: RoutePaths.showQuote,
+    component: show_quote_template.ShowQuoteComponentNgFactory,
+  );
+/*
+  static final editBook = RouteDefinition(
+    routePath: RoutePaths.editBook,
+    component: edit_book_template.EditBookComponentNgFactory,
+  );
+
+  static final newBook = RouteDefinition(
+    routePath: RoutePaths.newBook,
+    component: new_book_template.NewBookComponentNgFactory,
+  );
+*/
   static final all = <RouteDefinition>[
-    listAuthors, newAuthor, showAuthor, editAuthor, showBook, editBook, info
+    listAuthors, newAuthor, showAuthor, editAuthor, showBook, editBook, newBook, showQuote, info
   ];
 }

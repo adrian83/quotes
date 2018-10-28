@@ -113,7 +113,7 @@ Future main(List<String> args) async {
   Author a3 = await authorRepository.save(new Author(null, "Shakespear"));
 
 
-   await bookRepository.save(new Book(null, "Dziady", a1.id));
+   Book b1 = await bookRepository.save(new Book(null, "Dziady", a1.id));
    await bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
    await bookRepository.save(new Book(null, "Switez", a1.id));
 
@@ -125,8 +125,12 @@ Future main(List<String> args) async {
    await bookRepository.save(new Book(null, "Makbet", a3.id));
    await bookRepository.save(new Book(null, "Burza", a3.id));
 
-  //quoteRepository.save(
-  //    new Quote(null, "Ciemno wszedzie, glucho wszedzie...", a1.id, b1.id));
+  await quoteRepository.save(
+      new Quote(null, "Ciemno wszedzie, glucho wszedzie... 1", a1.id, b1.id));
+  await quoteRepository.save(
+      new Quote(null, "Ciemno wszedzie, glucho wszedzie... 2", a1.id, b1.id));
+  await quoteRepository.save(
+      new Quote(null, "Ciemno wszedzie, glucho wszedzie... 3", a1.id, b1.id));
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 
