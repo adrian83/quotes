@@ -48,25 +48,31 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
 
   @override
   void onActivate(_, RouterState current) {
-    var id = current.parameters[authorIdParam];
-    logger.info("Show author with id: $id");
+    logger.info("Activating component");
+
+    var authorId = current.parameters[authorIdParam];
 
     _authorService
-        .get(id)
+        .get(authorId)
         .then((author) => _author = author)
+        .then((_) => logger.info("Author fetched: $_author"))
         .catchError(handleError);
 
     _bookService
-        .list(id, new PageRequest(pageSize, _booksPage.info.curent * pageSize))
+        .list(authorId,
+            new PageRequest(pageSize, _booksPage.info.curent * pageSize))
         .then((page) => _booksPage = page)
+        .then((_) => logger.info("BooksPage fetched: $_booksPage"))
         .catchError(handleError);
   }
 
   @override
   void change(int pageNumber) {
+    logger.info("Change page to $pageNumber");
     _bookService
         .list(_author.id, new PageRequest(pageSize, pageNumber * pageSize))
         .then((page) => _booksPage = page)
+        .then((_) => logger.info("BooksPage fetched: $_booksPage"))
         .catchError(handleError);
   }
 
@@ -76,13 +82,15 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
     _bookService
         .delete(book.authorId, book.id)
         .then((id) {
+          logger.info("Deleted book with id: $id");
           var book = _booksPage.elements.firstWhere((b) => b.id == id);
           showInfo("Book '${book.title}' removed");
           return id;
         })
         .then((id) => _booksPage.elements.removeWhere((b) => b.id == id))
         .then((_) => _booksPage.info.total -= 1)
-        .then((_) => PageRequest(pageSize, (_booksPage.info.curent + 1) * pageSize))
+        .then((_) =>
+            PageRequest(pageSize, (_booksPage.info.curent + 1) * pageSize))
         .then((req) => _bookService.list(_author.id, req))
         .then((nextPage) => nextPage.empty
             ? null
@@ -92,10 +100,10 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
   }
 
   String _bookDetailsUrl(String authorId, String bookId) => RoutePaths.showBook
-      .toUrl(parameters: {authorIdParam: '$authorId', bookIdParam: '$bookId'});
+      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId});
 
   String _bookEditionUrl(String authorId, String bookId) => RoutePaths.editBook
-      .toUrl(parameters: {authorIdParam: '$authorId', bookIdParam: '$bookId'});
+      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId});
 
   void bookDetails(Book book) =>
       _router.navigate(_bookDetailsUrl(book.authorId, book.id));
