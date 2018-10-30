@@ -1,5 +1,9 @@
 <h1>show author</h1>
-<br/><br/>
+<br/>
+
+<breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
+
+<br/>
 
 <info-messages [info]="info"></info-messages>
 <validation-errors [errors]="validationErrors"></validation-errors>
@@ -10,9 +14,13 @@
 
 <br/><br/>
 
+<input (click)="createBook()" class="btn btn-primary" type="button" value="new book">
+
+<br/><br/>
+
 <ul class="list-group list-group-flush">
   <li class="list-group-item" *ngFor="let book of booksPage.elements">
-    <h4 (click)="bookDetails(book)" style="cursor:pointer;">{{book.title}}</h4>
+    <h4 (click)="showBook(book)" style="cursor:pointer;">{{book.title}}</h4>
 
     <i class="fas fa-trash pull-right" (click)="deleteBook(book)" style="cursor:pointer;"></i>
     <i class="fas fa-marker pull-right" (click)="editBook(book)" style="margin-right:5px; cursor:pointer;"></i>

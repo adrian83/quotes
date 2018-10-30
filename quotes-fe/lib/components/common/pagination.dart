@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:angular/angular.dart';
 import 'package:angular_forms/angular_forms.dart';
-
 import 'package:logging/logging.dart';
 
 import '../../domain/common/page.dart';
@@ -30,7 +29,7 @@ abstract class PageSwitcher {
     templateUrl: 'pagination.template.html',
     directives: const [formDirectives, coreDirectives])
 class Pagination implements OnInit {
-  static final Logger LOGGER = new Logger('Pagination');
+  static final Logger logger = new Logger('Pagination');
 
   @Input()
   PageInfo page;
@@ -38,12 +37,12 @@ class Pagination implements OnInit {
   PageSwitcher switcher;
 
   Future<Null> ngOnInit() async {
-    LOGGER.info("Pagination initialized. Switcher: $switcher, page: $page");
+    logger.info("Pagination initialized. Switcher: $switcher, page: $page");
   }
 
   void changePage(int page) {
     var pages = _pagesCount();
-    LOGGER.info("Pages: $pages, page: $page");
+    logger.info("Pages: $pages, page: $page");
     if (page >= 0 && page < pages) {
       switcher.change(page);
     }
@@ -60,25 +59,30 @@ class Pagination implements OnInit {
   }
 
   List<PageLink> get links {
-    List<PageLink> links = new List<PageLink>();
-
     if (this.page == null) {
-      return links;
+      return [];
+    }
+
+    var pages = _pagesCount();
+
+    if (pages < 1) {
+      return [];
     }
 
     var current = _currentPage();
-    var pages = _pagesCount();
+    var pageZero = current == 0;
+    var lastPage = current == (pages - 1);
+    var zeroPages = pages == 0;
 
-    links.add(
-        new PageLink("<<", current == 0 || pages == 0, false, current - 1));
+    List<PageLink> links = [];
+    links.add(PageLink("<<", pageZero || zeroPages, false, current - 1));
 
     for (var i = 0; i < pages; i++) {
-      PageLink li = new PageLink((i + 1).toString(), false, current == i, i);
-      links.add(li);
+      links.add(PageLink("${i + 1}", false, current == i, i));
     }
 
-    links.add(new PageLink(
-        ">>", (current == (pages - 1)) || pages == 0, false, current + 1));
+    links.add(PageLink(">>", lastPage || zeroPages, false, current + 1));
+
     return links;
   }
 }

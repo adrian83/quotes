@@ -1,5 +1,9 @@
 <h1>edit author</h1>
-<br/><br/>
+<br/>
+
+<breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
+
+<br/>
 
 <info-messages [info]="info"></info-messages>
 <validation-errors [errors]="validationErrors"></validation-errors>
@@ -11,19 +15,19 @@
 
     <label for="nameLabel">Name</label>
 
-    <input 
-      type="text" 
-      class="form-control" 
-      id="inputName" 
-      aria-describedby="nameLabel" 
-      placeholder="Enter name" 
+    <input
+      type="text"
+      class="form-control"
+      id="inputName"
+      aria-describedby="nameLabel"
+      placeholder="Enter name"
       [(ngModel)]="author.name">
 
   </div>
-  
-  <input 
-    type="submit" 
-    class="btn btn-primary" 
+
+  <input
+    type="submit"
+    class="btn btn-primary"
     (click)="update()"/>
-  
+
 </form>

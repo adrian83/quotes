@@ -1,20 +1,20 @@
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
-
 import 'package:logging/logging.dart';
 
-import '../../routes.dart';
+import '../common/breadcrumb.dart';
+import '../common/error.dart';
+import '../common/error_handler.dart';
+import '../common/info.dart';
+import '../common/pagination.dart';
+import '../common/validation.dart';
+
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
 import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
-
-import '../common/error_handler.dart';
 import '../../domain/common/page.dart';
-import '../common/pagination.dart';
-import '../common/error.dart';
-import '../common/info.dart';
-import '../common/validation.dart';
+import '../../routes.dart';
 
 @Component(
   selector: 'show-author',
@@ -22,6 +22,7 @@ import '../common/validation.dart';
   providers: [ClassProvider(AuthorService), ClassProvider(BookService)],
   directives: const [
     coreDirectives,
+    Breadcrumbs,
     Pagination,
     ValidationErrorsComponent,
     ServerErrorsComponent,
@@ -66,6 +67,11 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
         .catchError(handleError);
   }
 
+  List<Breadcrumb> get breadcrumbs => [
+        Breadcrumb(RoutePaths.listAuthors.toUrl(), "authors", true, false),
+        Breadcrumb("", _author.name, false, true)
+      ];
+
   @override
   void change(int pageNumber) {
     logger.info("Change page to $pageNumber");
@@ -81,13 +87,8 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
 
     _bookService
         .delete(book.authorId, book.id)
-        .then((id) {
-          logger.info("Deleted book with id: $id");
-          var book = _booksPage.elements.firstWhere((b) => b.id == id);
-          showInfo("Book '${book.title}' removed");
-          return id;
-        })
-        .then((id) => _booksPage.elements.removeWhere((b) => b.id == id))
+        .then((id) => showInfo("Book '${book.title}' removed"))
+        .then((id) => _booksPage.elements.remove(book))
         .then((_) => _booksPage.info.total -= 1)
         .then((_) =>
             PageRequest(pageSize, (_booksPage.info.curent + 1) * pageSize))
@@ -99,15 +100,20 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
         .catchError(handleError);
   }
 
-  String _bookDetailsUrl(String authorId, String bookId) => RoutePaths.showBook
+  String _showBookUrl(String authorId, String bookId) => RoutePaths.showBook
       .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId});
 
-  String _bookEditionUrl(String authorId, String bookId) => RoutePaths.editBook
+  String _editBookUrl(String authorId, String bookId) => RoutePaths.editBook
       .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId});
 
-  void bookDetails(Book book) =>
-      _router.navigate(_bookDetailsUrl(book.authorId, book.id));
+  String _createBookUrl(String authorId) =>
+      RoutePaths.newBook.toUrl(parameters: {authorIdParam: authorId});
+
+  void showBook(Book book) =>
+      _router.navigate(_showBookUrl(book.authorId, book.id));
 
   void editBook(Book book) =>
-      _router.navigate(_bookEditionUrl(book.authorId, book.id));
+      _router.navigate(_editBookUrl(book.authorId, book.id));
+
+  void createBook() => _router.navigate(_createBookUrl(_author.id));
 }

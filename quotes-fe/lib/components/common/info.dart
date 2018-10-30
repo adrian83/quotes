@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import 'package:angular/angular.dart';
-
 import 'package:logging/logging.dart';
-
 import 'package:uuid/uuid.dart';
 
 class Info {
@@ -21,16 +19,11 @@ class Info {
     selector: 'info-messages',
     templateUrl: 'info.template.html',
     directives: const [coreDirectives])
-class InfoComponent implements OnInit {
+class InfoComponent {
   static final Logger LOGGER = new Logger('InfoComponent');
 
   @Input()
   List<Info> info;
-
-  Future<Null> ngOnInit() async {
-    LOGGER.info("InfoComponent initialized. Info: $info");
-  }
-
 
   void hideInfo(Info i) {
     new Future.delayed(new Duration(milliseconds: 300), () {

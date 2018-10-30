@@ -1,20 +1,19 @@
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
-
 import 'package:logging/logging.dart';
 
-import '../../route_paths.dart';
+import '../common/breadcrumb.dart';
+import '../common/error.dart';
+import '../common/error_handler.dart';
+import '../common/info.dart';
+import '../common/pagination.dart';
+import '../common/validation.dart';
+
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
 import '../../domain/common/page.dart';
-
-import '../common/error_handler.dart';
-
-import '../common/pagination.dart';
-import '../common/error.dart';
-import '../common/info.dart';
-import '../common/validation.dart';
+import '../../route_paths.dart';
 
 @Component(
   selector: 'list-authors',
@@ -23,6 +22,7 @@ import '../common/validation.dart';
   directives: const [
     coreDirectives,
     formDirectives,
+    Breadcrumbs,
     Pagination,
     ValidationErrorsComponent,
     ServerErrorsComponent,
@@ -62,19 +62,15 @@ class ListAuthorsComponent extends PageSwitcher
         .catchError(handleError);
   }
 
-  void delete(Author author) {
+  void deleteAuthor(Author author) {
     logger.info("Deleting author: $author");
-
     _authorService
         .delete(author.id)
-        .then((id) {
-          var author = _authorsPage.elements.firstWhere((a) => a.id == id);
-          showInfo("Author '${author.name}' removed");
-          return id;
-        })
-        .then((id) => _authorsPage.elements.removeWhere((a) => a.id == id))
+        .then((id) => showInfo("Author '${author.name}' removed"))
+        .then((_) => _authorsPage.elements.remove(author))
         .then((_) => _authorsPage.info.total -= 1)
-        .then((_) => PageRequest(pageSize, (_authorsPage.info.curent + 1) * pageSize))
+        .then((_) =>
+            PageRequest(pageSize, (_authorsPage.info.curent + 1) * pageSize))
         .then((req) => _authorService.list(req))
         .then((nextPage) => nextPage.empty
             ? null
@@ -83,13 +79,20 @@ class ListAuthorsComponent extends PageSwitcher
         .catchError(handleError);
   }
 
-  String _detailsUrl(String id) =>
-      RoutePaths.showAuthor.toUrl(parameters: {authorIdParam: '$id'});
+  String _showAuthorUrl(String id) =>
+      RoutePaths.showAuthor.toUrl(parameters: {authorIdParam: id});
 
-  String _editionUrl(String id) =>
-      RoutePaths.editAuthor.toUrl(parameters: {authorIdParam: '$id'});
+  String _editAuthorUrl(String id) =>
+      RoutePaths.editAuthor.toUrl(parameters: {authorIdParam: id});
 
-  void details(Author author) => _router.navigate(_detailsUrl(author.id));
+  String _createAuthorUrl() => RoutePaths.newAuthor.toUrl();
 
-  void edit(Author author) => _router.navigate(_editionUrl(author.id));
+  void showAuthor(Author author) => _router.navigate(_showAuthorUrl(author.id));
+
+  void editAuthor(Author author) => _router.navigate(_editAuthorUrl(author.id));
+
+  void createAuthor() => _router.navigate(_createAuthorUrl());
+
+  List<Breadcrumb> get breadcrumbs =>
+      [Breadcrumb(_createAuthorUrl(), "authors", false, true)];
 }

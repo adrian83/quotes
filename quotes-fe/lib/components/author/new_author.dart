@@ -2,14 +2,15 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
 
-import '../../domain/author/service.dart';
-import '../../domain/author/model.dart';
-import '../../route_paths.dart';
-
+import '../common/breadcrumb.dart';
 import '../common/error_handler.dart';
 import '../common/error.dart';
 import '../common/info.dart';
 import '../common/validation.dart';
+
+import '../../domain/author/service.dart';
+import '../../domain/author/model.dart';
+import '../../route_paths.dart';
 
 @Component(
   selector: 'new-author',
@@ -18,12 +19,13 @@ import '../common/validation.dart';
   directives: const [
     coreDirectives,
     formDirectives,
+    Breadcrumbs,
     ValidationErrorsComponent,
     ServerErrorsComponent,
     InfoComponent
   ],
 )
-class NewAuthorComponent extends ErrorHandler implements OnActivate {
+class NewAuthorComponent extends ErrorHandler {
   final AuthorService _authorService;
   final Router _router;
 
@@ -31,21 +33,24 @@ class NewAuthorComponent extends ErrorHandler implements OnActivate {
 
   NewAuthorComponent(this._authorService, this._router);
 
-  @override
-  void onActivate(_, RouterState current) async {}
-
   Author get author => _author;
 
   void save() {
     _authorService
         .create(author)
         .then((author) => _author = author)
-        .then((_) => _edit(_author))
+        .then((_) => _editAuthor(_author))
         .catchError(handleError);
   }
 
-  String _editionUrl(String id) =>
-      RoutePaths.editAuthor.toUrl(parameters: {authorIdParam: '$id'});
+  String _listAuthorsUrl() => RoutePaths.listAuthors.toUrl();
 
-  void _edit(Author author) => _router.navigate(_editionUrl(author.id));
+  String _editAuthorUrl(String id) =>
+      RoutePaths.editAuthor.toUrl(parameters: {authorIdParam: id});
+
+  void _editAuthor(Author author) =>
+      _router.navigate(_editAuthorUrl(author.id));
+
+  List<Breadcrumb> get breadcrumbs =>
+      [Breadcrumb(_listAuthorsUrl(), "authors", true, true)];
 }

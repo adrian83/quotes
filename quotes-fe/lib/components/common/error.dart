@@ -1,25 +1,19 @@
 import 'dart:async';
 
 import 'package:angular/angular.dart';
-
 import 'package:logging/logging.dart';
 
 import '../../domain/common/errors.dart';
-
 
 @Component(
     selector: 'server-errors',
     templateUrl: 'error.template.html',
     directives: const [coreDirectives])
-class ServerErrorsComponent implements OnInit {
+class ServerErrorsComponent {
   static final Logger LOGGER = new Logger('ServerErrorsComponent');
 
   @Input()
   ServerError error;
-
-  Future<Null> ngOnInit() async {
-    LOGGER.info("ServerErrorsComponent initialized. Error: $error");
-  }
 
   ServerError get serverError => error;
 

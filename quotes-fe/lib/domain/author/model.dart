@@ -10,10 +10,13 @@ class Author {
 
   String get id => _id;
   String get name => _name;
+  bool get empty => _id == null;
 
   void set name(String name) {
     this._name = name;
   }
+
+
 
   Map toJson() {
     var map = new Map<String, Object>();

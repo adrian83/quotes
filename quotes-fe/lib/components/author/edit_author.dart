@@ -2,15 +2,16 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
 
-import '../../routes.dart';
-import '../../domain/author/service.dart';
-import '../../domain/author/model.dart';
-
-import '../common/error_handler.dart';
-
+import '../common/breadcrumb.dart';
 import '../common/error.dart';
+import '../common/error_handler.dart';
 import '../common/info.dart';
 import '../common/validation.dart';
+
+import '../../domain/author/service.dart';
+import '../../domain/author/model.dart';
+import '../../routes.dart';
+import '../../route_paths.dart';
 
 @Component(
   selector: 'edit-author',
@@ -19,6 +20,7 @@ import '../common/validation.dart';
   directives: const [
     coreDirectives,
     formDirectives,
+    Breadcrumbs,
     ValidationErrorsComponent,
     ServerErrorsComponent,
     InfoComponent
@@ -27,6 +29,7 @@ import '../common/validation.dart';
 class EditAuthorComponent extends ErrorHandler implements OnActivate {
   final AuthorService _authorService;
 
+  String _oldName = null;
   Author _author = new Author(null, "");
 
   EditAuthorComponent(this._authorService);
@@ -39,13 +42,26 @@ class EditAuthorComponent extends ErrorHandler implements OnActivate {
     _authorService
         .get(id)
         .then((author) => _author = author)
+        .then((_) => _oldName = _author.name)
         .catchError(handleError);
   }
 
   void update() {
-     _authorService
+    _authorService
         .update(author)
-        .then((author) => showInfo("Author '${author.name}' updated"))
+        .then((author) => _author = author)
+        .then((_) => showInfo("Author '$_oldName' updated"))
+        .then((_) => _oldName = _author.name)
         .catchError(handleError);
   }
+
+  String _listAuthorsUrl() => RoutePaths.listAuthors.toUrl();
+
+  String _showAuthorUrl() => RoutePaths.showAuthor
+      .toUrl(parameters: {authorIdParam: _author.id ?? "-"});
+
+  List<Breadcrumb> get breadcrumbs => [
+        Breadcrumb(_listAuthorsUrl(), "authors", true, false),
+        Breadcrumb(_showAuthorUrl(), _oldName, true, true),
+      ];
 }

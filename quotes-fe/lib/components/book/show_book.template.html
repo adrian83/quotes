@@ -10,9 +10,13 @@
 
 <br/><br/>
 
+<input (click)="createQuote()" class="btn btn-primary" type="button" value="new quote">
+
+<br/><br/>
+
 <ul class="list-group list-group-flush">
   <li class="list-group-item" *ngFor="let quote of quotesPage.elements">
-    <h4 (click)="quoteDetails(quote)" style="cursor:pointer;">{{quote.text}}</h4>
+    <h4 (click)="showQuote(quote)" style="cursor:pointer;">{{quote.text}}</h4>
 
     <i class="fas fa-trash pull-right" (click)="deleteQuote(quote)" style="cursor:pointer;"></i>
     <i class="fas fa-marker pull-right" (click)="editQuote(quote)" style="margin-right:5px; cursor:pointer;"></i>

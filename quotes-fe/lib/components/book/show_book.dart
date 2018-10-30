@@ -2,18 +2,18 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
-import '../../routes.dart';
+import '../common/error.dart';
+import '../common/error_handler.dart';
+import '../common/info.dart';
+import '../common/pagination.dart';
+import '../common/validation.dart';
+
 import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
-
-import '../common/error_handler.dart';
 import '../../domain/common/page.dart';
-import '../common/pagination.dart';
-import '../common/error.dart';
-import '../common/info.dart';
-import '../common/validation.dart';
+import '../../routes.dart';
 
 @Component(
   selector: 'show-book',
@@ -49,7 +49,7 @@ class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
   void onActivate(_, RouterState current) {
     var authorId = current.parameters[authorIdParam];
     var bookId = current.parameters[bookIdParam];
-    logger.info("Show book with id: $bookId");
+    logger.info("Activating...");
 
     _bookService
         .get(authorId, bookId)
@@ -77,14 +77,11 @@ class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
 
     _quoteService
         .delete(quote.authorId, quote.bookId, quote.id)
-        .then((id) {
-          var quote = _quotesPage.elements.firstWhere((q) => q.id == id);
-          showInfo("Quote '${quote.text}' removed");
-          return id;
-        })
-        .then((id) => _quotesPage.elements.removeWhere((q) => q.id == id))
+        .then((id) => showInfo("Quote '${quote.text}' removed"))
+        .then((_) => _quotesPage.elements.remove(quote))
         .then((_) => _quotesPage.info.total -= 1)
-        .then((_) => PageRequest(pageSize, (_quotesPage.info.curent + 1) * pageSize))
+        .then((_) =>
+            PageRequest(pageSize, (_quotesPage.info.curent + 1) * pageSize))
         .then((req) => _quoteService.list(_book.authorId, _book.id, req))
         .then((nextPage) => nextPage.empty
             ? null
@@ -93,16 +90,29 @@ class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
         .catchError(handleError);
   }
 
-  String _quoteDetailsUrl(String authorId, String bookId, String quoteId) => RoutePaths.showQuote
-      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId, quoteIdParam: quoteId});
+  String _showQuoteUrl(String authorId, String bookId, String quoteId) =>
+      RoutePaths.showQuote.toUrl(parameters: {
+        authorIdParam: authorId,
+        bookIdParam: bookId,
+        quoteIdParam: quoteId
+      });
 
-  void quoteDetails(Quote quote) =>
-      _router.navigate(_quoteDetailsUrl(quote.authorId, quote.bookId, quote.id));
+  String _createQuoteUrl(String authorId, String bookId) => RoutePaths.newQuote
+      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId});
 
-  String _quoteEtitionUrl(String authorId, String bookId, String quoteId) => RoutePaths.editQuote
-      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId, quoteIdParam: quoteId});
+  String _editQuoteUrl(String authorId, String bookId, String quoteId) =>
+      RoutePaths.editQuote.toUrl(parameters: {
+        authorIdParam: authorId,
+        bookIdParam: bookId,
+        quoteIdParam: quoteId
+      });
+
+  void showQuote(Quote quote) =>
+      _router.navigate(_showQuoteUrl(quote.authorId, quote.bookId, quote.id));
 
   void editQuote(Quote quote) =>
-      _router.navigate(_quoteEtitionUrl(quote.authorId, quote.bookId, quote.id));
+      _router.navigate(_editQuoteUrl(quote.authorId, quote.bookId, quote.id));
 
+  void createQuote() =>
+      _router.navigate(_createQuoteUrl(_book.authorId, _book.id));
 }

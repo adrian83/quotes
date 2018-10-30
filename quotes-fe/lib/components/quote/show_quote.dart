@@ -2,15 +2,15 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
-import '../../routes.dart';
+import '../common/error.dart';
+import '../common/error_handler.dart';
+import '../common/info.dart';
+import '../common/pagination.dart';
+import '../common/validation.dart';
+
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
-
-import '../common/error_handler.dart';
-import '../common/pagination.dart';
-import '../common/error.dart';
-import '../common/info.dart';
-import '../common/validation.dart';
+import '../../routes.dart';
 
 @Component(
   selector: 'show-quote',
@@ -46,6 +46,6 @@ class ShowQuoteComponent extends ErrorHandler with OnActivate {
     _quoteService
         .get(authorId, bookId, quoteId)
         .then((quote) => _quote = quote)
-        .catchError(handleError); 
+        .catchError(handleError);
   }
 }

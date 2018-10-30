@@ -1,18 +1,15 @@
-import 'dart:async';
-
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
 
-import '../../routes.dart';
-import '../../domain/quote/service.dart';
-import '../../domain/quote/model.dart';
-
-import '../common/error_handler.dart';
-
 import '../common/error.dart';
+import '../common/error_handler.dart';
 import '../common/info.dart';
 import '../common/validation.dart';
+
+import '../../domain/quote/service.dart';
+import '../../domain/quote/model.dart';
+import '../../routes.dart';
 
 @Component(
   selector: 'edit-quote',
@@ -36,7 +33,7 @@ class EditQuoteComponent extends ErrorHandler implements OnActivate {
   Quote get quote => _quote;
 
   @override
-  Future<void> onActivate(_, RouterState current) async {
+  void onActivate(_, RouterState current) {
     var authorId = current.parameters[authorIdParam];
     var bookId = current.parameters[bookIdParam];
     var quoteId = current.parameters[quoteIdParam];
@@ -46,11 +43,9 @@ class EditQuoteComponent extends ErrorHandler implements OnActivate {
         .catchError(handleError);
   }
 
-  void update() {
-    _quoteService
-        .update(_quote)
-        .then((quote) => _quote = quote)
-        .then((_) => showInfo("Quote '${_quote.text}' updated"))
-        .catchError(handleError);
-  }
+  void update() => _quoteService
+      .update(_quote)
+      .then((quote) => _quote = quote)
+      .then((_) => showInfo("Quote '${_quote.text}' updated"))
+      .catchError(handleError);
 }
