@@ -4,11 +4,9 @@ import 'package:angular_forms/angular_forms.dart';
 import 'package:logging/logging.dart';
 
 import '../common/breadcrumb.dart';
-import '../common/error.dart';
 import '../common/error_handler.dart';
-import '../common/info.dart';
 import '../common/pagination.dart';
-import '../common/validation.dart';
+import '../common/events.dart';
 
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
@@ -22,11 +20,9 @@ import '../../route_paths.dart';
   directives: const [
     coreDirectives,
     formDirectives,
+    Events,
     Breadcrumbs,
-    Pagination,
-    ValidationErrorsComponent,
-    ServerErrorsComponent,
-    InfoComponent
+    Pagination
   ],
 )
 class ListAuthorsComponent extends PageSwitcher
@@ -94,5 +90,5 @@ class ListAuthorsComponent extends PageSwitcher
   void createAuthor() => _router.navigate(_createAuthorUrl());
 
   List<Breadcrumb> get breadcrumbs =>
-      [Breadcrumb(_createAuthorUrl(), "authors", false, true)];
+      [Breadcrumb.text("authors").last()];
 }

@@ -1,28 +1,31 @@
 <h1>new book</h1>
-<br/><br/>
 
-<info-messages [info]="info"></info-messages>
-<validation-errors [errors]="validationErrors"></validation-errors>
-<server-errors [error]="serverError"></server-errors>
+<br/>
+
+<breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
+
+<br/>
+
+<events [events]="events"></events> 
 
 <form>
 
   <div class="form-group">
     <label for="titleLabel">Title</label>
 
-    <input 
-      type="text" 
-      class="form-control" 
-      id="inputTitle" 
-      aria-describedby="titleLabel" 
-      placeholder="Enter title" 
+    <input
+      type="text"
+      class="form-control"
+      id="inputTitle"
+      aria-describedby="titleLabel"
+      placeholder="Enter title"
       [(ngModel)]="book.title">
 
   </div>
 
-  <input 
-    type="submit" 
-    class="btn btn-primary" 
+  <input
+    type="submit"
+    class="btn btn-primary"
     (click)="save()"/>
 
 </form>

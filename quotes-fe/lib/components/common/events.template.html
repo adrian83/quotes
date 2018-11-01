@@ -1,0 +1,7 @@
+
+<div *ngFor="let event of events" [ngSwitch]="event.type">
+  <invalid-data-event *ngSwitchCase="'warning'" [event]="event"></invalid-data-event>
+  <info-event *ngSwitchCase="'info'" [event]="event"></info-event>
+  <error-event *ngSwitchCase="'error'" [event]="event"></error-event>
+  <span *ngSwitchDefault>-----{{ event.type }}</span>
+</div>

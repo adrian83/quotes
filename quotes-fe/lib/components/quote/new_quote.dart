@@ -2,14 +2,12 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
 
-import '../common/error.dart';
 import '../common/error_handler.dart';
-import '../common/info.dart';
-import '../common/validation.dart';
+import '../common/events.dart';
 
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
-import '../../route_paths.dart';
+import '../../route_paths.dart'; 
 
 @Component(
   selector: 'new-quote',
@@ -18,9 +16,7 @@ import '../../route_paths.dart';
   directives: const [
     coreDirectives,
     formDirectives,
-    ValidationErrorsComponent,
-    ServerErrorsComponent,
-    InfoComponent
+    Events
   ],
 )
 class NewQuoteComponent extends ErrorHandler implements OnActivate {

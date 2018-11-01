@@ -16,8 +16,6 @@ class Author {
     this._name = name;
   }
 
-
-
   Map toJson() {
     var map = new Map<String, Object>();
     map["id"] = _id;

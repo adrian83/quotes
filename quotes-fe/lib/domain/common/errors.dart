@@ -29,12 +29,12 @@ class ValidationError {
 class ValidationErrors implements Exception {
   List<ValidationError> validationErrors;
 
-  ValidationErrors(List errors) {
-    this.validationErrors = errors.map((e) => new ValidationError.fromJson(e));
+  ValidationErrors(List<dynamic> errors) {
+    this.validationErrors = errors.map((e) => ValidationError.fromJson(e)).toList();
   }
 
-  factory ValidationErrors.fromJson(Map<String, dynamic> json) =>
-      new ValidationErrors(json['validationErrors']);
+  factory ValidationErrors.fromJson(List<dynamic> json) =>
+      new ValidationErrors(json);
 
   String toString() {
     var s = validationErrors != null ? validationErrors.join(",") : "";

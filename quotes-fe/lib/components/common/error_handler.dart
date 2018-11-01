@@ -1,55 +1,41 @@
-import '../../domain/common/errors.dart';
-
 import 'package:logging/logging.dart';
-import './info.dart';
+
+import '../../domain/common/errors.dart';
+import '../../domain/common/event.dart';
+
+
 
 class ErrorHandler {
   static final Logger LOGGER = new Logger('ErrorHandler');
 
-  List<ValidationError> _validationErrors;
-  ServerError _serverError;
-  List<Info> _info = new List<Info>();
+  List<Event> _events = [];
 
-  void handleError(e) {
+  List<Event> get events => _events;
+
+  void handleError(Object e) {
     LOGGER.info("Handle error: $e");
     if (e is ValidationErrors) {
-      cleanValidationErrors();
-      this.validationErrors = e.validationErrors;
-      LOGGER.info("Validation errors: $validationErrors");
-      return;
-    } else if (e is ServerError) {
-      this._serverError = e;
-      LOGGER.info("Server error: $_serverError");
+      _events.add(InvalidDataEvent(e.validationErrors));
+      LOGGER.info("Validation errors: $events");
       return;
     } else if (e is NotFoundError) {
-      this._serverError = ServerError("not found");
-      LOGGER.info("Not Found error: $_serverError");
+      _events.add(ErrorEvent("Not found"));
       return;
+    } else if (e is Exception) {
+      _events.add(ErrorEvent("Error: ${e.toString()}"));
+      return;
+    } else {
+      _events.add(ErrorEvent("Error: ${e.toString()}"));
+      LOGGER.info("Error type: ${e.runtimeType}");
     }
-
 
     LOGGER.info("Errors: $e");
   }
 
-  void set validationErrors(List<ValidationError> errors){
-    this._validationErrors = errors;
-  }
-
-  List<ValidationError> get validationErrors => this._validationErrors == null
-      ? new List<ValidationError>()
-      : this._validationErrors;
-
-  ServerError get serverError => _serverError;
-
-  void cleanValidationErrors(){
-    this._validationErrors = new List<ValidationError>();
-  }
-
-  List<Info> get info => _info;
 
   void showInfo(String msg) {
     LOGGER.info("show info: $msg");
-    _info.add(Info(msg));
+    _events.add(InfoEvent(msg));
   }
 
 }

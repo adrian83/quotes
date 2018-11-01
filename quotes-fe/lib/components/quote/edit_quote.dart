@@ -2,10 +2,8 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
 
-import '../common/error.dart';
 import '../common/error_handler.dart';
-import '../common/info.dart';
-import '../common/validation.dart';
+import '../common/events.dart';
 
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
@@ -18,9 +16,7 @@ import '../../routes.dart';
   directives: const [
     coreDirectives,
     formDirectives,
-    ValidationErrorsComponent,
-    ServerErrorsComponent,
-    InfoComponent
+    Events
   ],
 )
 class EditQuoteComponent extends ErrorHandler implements OnActivate {

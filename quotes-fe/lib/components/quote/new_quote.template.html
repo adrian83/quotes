@@ -1,28 +1,25 @@
 <h1>new quote</h1>
 <br/><br/>
-
-<info-messages [info]="info"></info-messages>
-<validation-errors [errors]="validationErrors"></validation-errors>
-<server-errors [error]="serverError"></server-errors>
+<events [events]="events"></events>
 
 <form>
 
   <div class="form-group">
     <label for="textLabel">Text</label>
 
-    <input 
-      type="text" 
-      class="form-control" 
-      id="inputText" 
-      aria-describedby="textLabel" 
-      placeholder="Enter text" 
+    <input
+      type="text"
+      class="form-control"
+      id="inputText"
+      aria-describedby="textLabel"
+      placeholder="Enter text"
       [(ngModel)]="quote.text">
 
   </div>
 
-  <input 
-    type="submit" 
-    class="btn btn-primary" 
+  <input
+    type="submit"
+    class="btn btn-primary"
     (click)="save()"/>
 
 </form>

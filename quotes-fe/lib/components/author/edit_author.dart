@@ -5,8 +5,7 @@ import 'package:angular_forms/angular_forms.dart';
 import '../common/breadcrumb.dart';
 import '../common/error.dart';
 import '../common/error_handler.dart';
-import '../common/info.dart';
-import '../common/validation.dart';
+import '../common/events.dart';
 
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
@@ -20,10 +19,9 @@ import '../../route_paths.dart';
   directives: const [
     coreDirectives,
     formDirectives,
+    Events,
     Breadcrumbs,
-    ValidationErrorsComponent,
     ServerErrorsComponent,
-    InfoComponent
   ],
 )
 class EditAuthorComponent extends ErrorHandler implements OnActivate {
@@ -61,7 +59,7 @@ class EditAuthorComponent extends ErrorHandler implements OnActivate {
       .toUrl(parameters: {authorIdParam: _author.id ?? "-"});
 
   List<Breadcrumb> get breadcrumbs => [
-        Breadcrumb(_listAuthorsUrl(), "authors", true, false),
-        Breadcrumb(_showAuthorUrl(), _oldName, true, true),
+        Breadcrumb.link(_listAuthorsUrl(), "authors"),
+        Breadcrumb.link(_showAuthorUrl(), _oldName).last(),
       ];
 }

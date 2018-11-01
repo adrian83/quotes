@@ -3,11 +3,10 @@ import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
 import '../common/breadcrumb.dart';
-import '../common/error.dart';
 import '../common/error_handler.dart';
-import '../common/info.dart';
 import '../common/pagination.dart';
-import '../common/validation.dart';
+import '../common/events.dart';
+import '../common/navigable.dart';
 
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
@@ -20,16 +19,10 @@ import '../../routes.dart';
   selector: 'show-author',
   templateUrl: 'show_author.template.html',
   providers: [ClassProvider(AuthorService), ClassProvider(BookService)],
-  directives: const [
-    coreDirectives,
-    Breadcrumbs,
-    Pagination,
-    ValidationErrorsComponent,
-    ServerErrorsComponent,
-    InfoComponent
-  ],
+  directives: const [coreDirectives, Events, Breadcrumbs, Pagination],
 )
-class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
+class ShowAuthorComponent extends PageSwitcher
+    with ErrorHandler, Navigable, OnActivate {
   static final Logger logger = new Logger('ShowAuthorComponent');
 
   static final int pageSize = 2;
@@ -56,21 +49,17 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
     _authorService
         .get(authorId)
         .then((author) => _author = author)
-        .then((_) => logger.info("Author fetched: $_author"))
+        .then((_) => logger.info("Author fetched: ${_author.name}"))
         .catchError(handleError);
 
     _bookService
         .list(authorId,
             new PageRequest(pageSize, _booksPage.info.curent * pageSize))
         .then((page) => _booksPage = page)
-        .then((_) => logger.info("BooksPage fetched: $_booksPage"))
+        .then(
+            (_) => logger.info("BooksPage fetched: ${_booksPage.info.curent}"))
         .catchError(handleError);
   }
-
-  List<Breadcrumb> get breadcrumbs => [
-        Breadcrumb(RoutePaths.listAuthors.toUrl(), "authors", true, false),
-        Breadcrumb("", _author.name, false, true)
-      ];
 
   @override
   void change(int pageNumber) {
@@ -78,7 +67,8 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
     _bookService
         .list(_author.id, new PageRequest(pageSize, pageNumber * pageSize))
         .then((page) => _booksPage = page)
-        .then((_) => logger.info("BooksPage fetched: $_booksPage"))
+        .then(
+            (_) => logger.info("BooksPage fetched: ${_booksPage.info.curent}"))
         .catchError(handleError);
   }
 
@@ -100,20 +90,16 @@ class ShowAuthorComponent extends PageSwitcher with ErrorHandler, OnActivate {
         .catchError(handleError);
   }
 
-  String _showBookUrl(String authorId, String bookId) => RoutePaths.showBook
-      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId});
-
-  String _editBookUrl(String authorId, String bookId) => RoutePaths.editBook
-      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId});
-
-  String _createBookUrl(String authorId) =>
-      RoutePaths.newBook.toUrl(parameters: {authorIdParam: authorId});
-
   void showBook(Book book) =>
-      _router.navigate(_showBookUrl(book.authorId, book.id));
+      _router.navigate(showBookUrl(book.authorId, book.id));
 
   void editBook(Book book) =>
-      _router.navigate(_editBookUrl(book.authorId, book.id));
+      _router.navigate(editBookUrl(book.authorId, book.id));
 
-  void createBook() => _router.navigate(_createBookUrl(_author.id));
+  void createBook() => _router.navigate(createBookUrl(_author.id));
+
+  List<Breadcrumb> get breadcrumbs => [
+        Breadcrumb.link(RoutePaths.listAuthors.toUrl(), "authors"),
+        Breadcrumb.text(_author.name).last()
+      ];
 }

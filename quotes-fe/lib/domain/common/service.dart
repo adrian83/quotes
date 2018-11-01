@@ -39,10 +39,14 @@ class Service<T> {
 
     var json = jsonDecode(response.body);
     if (response.statusCode == 400) {
-      throw ValidationErrors.fromJson(json);
+      logger.severe("json $json");
+      var ve =  ValidationErrors.fromJson(json);
+logger.severe("ve $ve");
+      throw ve;
     } else if (response.statusCode == 500) {
       throw ServerError.fromJson(json);
     }
+    logger.info("Http request: $json");
     return json;
   }
 

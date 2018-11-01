@@ -4,13 +4,11 @@ import 'package:angular_forms/angular_forms.dart';
 
 import '../common/breadcrumb.dart';
 import '../common/error_handler.dart';
-import '../common/error.dart';
-import '../common/info.dart';
-import '../common/validation.dart';
+import '../common/events.dart';
+import '../common/navigable.dart';
 
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
-import '../../route_paths.dart';
 
 @Component(
   selector: 'new-author',
@@ -19,13 +17,11 @@ import '../../route_paths.dart';
   directives: const [
     coreDirectives,
     formDirectives,
-    Breadcrumbs,
-    ValidationErrorsComponent,
-    ServerErrorsComponent,
-    InfoComponent
+    Events,
+    Breadcrumbs
   ],
 )
-class NewAuthorComponent extends ErrorHandler {
+class NewAuthorComponent extends ErrorHandler with Navigable {
   final AuthorService _authorService;
   final Router _router;
 
@@ -43,14 +39,9 @@ class NewAuthorComponent extends ErrorHandler {
         .catchError(handleError);
   }
 
-  String _listAuthorsUrl() => RoutePaths.listAuthors.toUrl();
-
-  String _editAuthorUrl(String id) =>
-      RoutePaths.editAuthor.toUrl(parameters: {authorIdParam: id});
-
   void _editAuthor(Author author) =>
-      _router.navigate(_editAuthorUrl(author.id));
+      _router.navigate(editAuthorUrl(author.id));
 
   List<Breadcrumb> get breadcrumbs =>
-      [Breadcrumb(_listAuthorsUrl(), "authors", true, true)];
+      [Breadcrumb.link(listAuthorsUrl(), "authors").last()];
 }

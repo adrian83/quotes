@@ -2,11 +2,9 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
-import '../common/error.dart';
 import '../common/error_handler.dart';
-import '../common/info.dart';
 import '../common/pagination.dart';
-import '../common/validation.dart';
+import '../common/events.dart';
 
 import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
@@ -21,10 +19,8 @@ import '../../routes.dart';
   providers: [ClassProvider(BookService), ClassProvider(QuoteService)],
   directives: const [
     coreDirectives,
-    Pagination,
-    ValidationErrorsComponent,
-    ServerErrorsComponent,
-    InfoComponent
+    Events,
+    Pagination
   ],
 )
 class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
@@ -64,13 +60,12 @@ class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
   }
 
   @override
-  void change(int pageNumber) {
-    _quoteService
+  void change(int pageNumber) => _quoteService
         .list(_book.authorId, _book.id,
             new PageRequest(pageSize, pageNumber * pageSize))
         .then((page) => _quotesPage = page)
         .catchError(handleError);
-  }
+  
 
   void deleteQuote(Quote quote) {
     logger.info("Deleting quote: $quote");

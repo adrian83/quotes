@@ -2,11 +2,9 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
-import '../common/error.dart';
 import '../common/error_handler.dart';
-import '../common/info.dart';
 import '../common/pagination.dart';
-import '../common/validation.dart';
+import '../common/events.dart';
 
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
@@ -18,10 +16,8 @@ import '../../routes.dart';
   providers: [ClassProvider(QuoteService)],
   directives: const [
     coreDirectives,
-    Pagination,
-    ValidationErrorsComponent,
-    ServerErrorsComponent,
-    InfoComponent
+    Events,
+    Pagination
   ],
 )
 class ShowQuoteComponent extends ErrorHandler with OnActivate {
