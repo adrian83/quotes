@@ -21,6 +21,25 @@ class MatchQuery<T> extends Query {
       };
 }
 
+class TermsQuery<T> extends Query {
+  String _field;
+  List<T> _values;
+
+  TermsQuery(this._field, this._values);
+
+  Map toJson() => {
+        "terms": {this._field: this._values}
+      };
+}
+
+class JustQuery extends Query {
+  Query _query;
+
+  JustQuery(this._query);
+
+  Map toJson() => {"query": _query.toJson()};
+}
+
 class SearchRequest {
   int _from = 0, _size = 10;
   Query _query;

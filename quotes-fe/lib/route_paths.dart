@@ -5,33 +5,26 @@ const bookIdParam = "bookId";
 const quoteIdParam = "quoteId";
 
 class RoutePaths {
-  static final listAuthors = RoutePath(path: 'authors');
-  static final newAuthor = RoutePath(path: '${listAuthors.path}/new');
-  static final showAuthor =
-      RoutePath(path: '${listAuthors.path}/show/:$authorIdParam');
-  static final editAuthor =
-      RoutePath(path: '${listAuthors.path}/edit/:$authorIdParam');
+  static final listAuthors = RoutePath(path: 'authors/show');
+  static final newAuthor = RoutePath(path: 'authors/new');
+  static final showAuthor = RoutePath(path: 'authors/show/:$authorIdParam');
+  static final editAuthor = RoutePath(path: 'authors/edit/:$authorIdParam');
 
-  static final showBook = RoutePath(
-      path:
-          '${listAuthors.path}/show/:$authorIdParam/books/show/:$bookIdParam');
-  static final editBook = RoutePath(
-      path:
-          '${listAuthors.path}/show/:$authorIdParam/books/edit/:$bookIdParam');
-  static final newBook = RoutePath(
-      path:
-          '${listAuthors.path}/show/:$authorIdParam/books/new');
+  static final showBook =
+      RoutePath(path: 'authors/show/:$authorIdParam/books/show/:$bookIdParam');
+  static final editBook =
+      RoutePath(path: 'authors/show/:$authorIdParam/books/edit/:$bookIdParam');
+  static final newBook =
+      RoutePath(path: 'authors/show/:$authorIdParam/books/new');
 
   static final showQuote = RoutePath(
       path:
-          '${listAuthors.path}/show/:$authorIdParam/books/show/:$bookIdParam/quotes/show/:$quoteIdParam');
+          'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/show/:$quoteIdParam');
   static final editQuote = RoutePath(
       path:
-          '${listAuthors.path}/show/:$authorIdParam/books/show/:$bookIdParam/quotes/edit/:$quoteIdParam');
+          'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/edit/:$quoteIdParam');
   static final newQuote = RoutePath(
-      path:
-          '${listAuthors.path}/show/:$authorIdParam/books/show/:$bookIdParam/quotes/new');
-
+      path: 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/new');
 
   static final info = RoutePath(path: 'info');
 }

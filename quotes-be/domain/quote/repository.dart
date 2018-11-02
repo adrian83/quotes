@@ -8,10 +8,10 @@ import '../common/model.dart';
 import '../../store/elasticsearch_store.dart';
 import '../../store/search.dart';
 
-class QuotesRepository {
+class QuoteRepository {
   ESStore<Quote> _store;
 
-  QuotesRepository(this._store);
+  QuoteRepository(this._store);
 
   Future<Quote> save(Quote quote) {
     quote.id = Uuid().v4();
@@ -39,4 +39,9 @@ class QuotesRepository {
   Future<Quote> update(Quote quote) => _store.update(quote).then((_) => quote);
 
   Future<void> delete(String id) => _store.delete(id);
+
+  Future<void> deleteByAuthor(String authorId) {
+    var query = JustQuery(MatchQuery("authorId", authorId));
+    return _store.deleteByQuery(query);
+  }
 }

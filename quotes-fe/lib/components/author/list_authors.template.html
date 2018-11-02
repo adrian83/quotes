@@ -13,12 +13,12 @@
 <br/><br/>
 <ul class="list-group list-group-flush">
   <li class="list-group-item" *ngFor="let author of page.elements">
-    <h4 (click)="showAuthor(author)" style="cursor:pointer;">{{author.name}}</h4>
-
-    <i class="fas fa-trash pull-right" (click)="deleteAuthor(author)" style="cursor:pointer;"></i>
-    <i class="fas fa-marker pull-right" (click)="editAuthor(author)" style="margin-right:5px; cursor:pointer;"></i>
-
-    <div>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </div>
+    <h4>
+      <span style="cursor:pointer;" (click)="showAuthor(author)">{{ author.name }}</span>
+      <i class="fas fa-trash pull-right" (click)="deleteAuthor(author)" style="cursor:pointer;"></i>
+      <i class="fas fa-marker pull-right" (click)="editAuthor(author)" style="margin-right:5px; cursor:pointer;"></i>
+    </h4>
+    <div>{{ author.shortDescription }}</div>
   </li>
 </ul>
 

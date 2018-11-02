@@ -41,4 +41,10 @@ class BookRepository {
   Future<Book> update(Book book) => _store.update(book).then((_) => book);
 
   Future<void> delete(String bookId) => _store.delete(bookId);
+
+  Future<void> deleteByAuthor(String authorId) {
+    var query = JustQuery(MatchQuery("authorId", authorId));
+    return _store
+        .deleteByQuery(query);
+  }
 }

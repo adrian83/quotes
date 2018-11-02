@@ -5,6 +5,7 @@ import 'package:angular_forms/angular_forms.dart';
 import '../common/breadcrumb.dart';
 import '../common/error_handler.dart';
 import '../common/events.dart';
+import '../common/navigable.dart';
 
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
@@ -22,7 +23,9 @@ import '../../route_paths.dart';
     Breadcrumbs,
   ],
 )
-class EditAuthorComponent extends ErrorHandler implements OnActivate {
+class EditAuthorComponent extends ErrorHandler
+    with Navigable
+    implements OnActivate {
   final AuthorService _authorService;
 
   String _oldName = null;
@@ -42,22 +45,16 @@ class EditAuthorComponent extends ErrorHandler implements OnActivate {
         .catchError(handleError);
   }
 
-  void update() {
-    _authorService
+  void update() => _authorService
         .update(author)
         .then((author) => _author = author)
         .then((_) => showInfo("Author '$_oldName' updated"))
         .then((_) => _oldName = _author.name)
         .catchError(handleError);
-  }
 
-  String _listAuthorsUrl() => RoutePaths.listAuthors.toUrl();
-
-  String _showAuthorUrl() => RoutePaths.showAuthor
-      .toUrl(parameters: {authorIdParam: _author.id ?? "-"});
 
   List<Breadcrumb> get breadcrumbs => [
-        Breadcrumb.link(_listAuthorsUrl(), "authors"),
-        Breadcrumb.link(_showAuthorUrl(), _oldName).last(),
+        Breadcrumb.link(listAuthorsUrl(), "authors"),
+        Breadcrumb.link(showAuthorUrl(_author.id), _oldName).last(),
       ];
 }

@@ -60,14 +60,13 @@ Future main(List<String> args) async {
   var quoteEsStore = ESStore<Quote>(
       client, esConfig.host, esConfig.port, esConfig.quotesIndex);
 
-  var quoteRepository = QuotesRepository(quoteEsStore);
-  var quotesService = QuotesService(quoteRepository);
-
   var authorRepository = AuthorRepository(authorEsStore);
-  var authorService = AuthorService(authorRepository);
-
   var bookRepository = BookRepository(bookEsStore);
+  var quoteRepository = QuoteRepository(quoteEsStore);
+
+  var authorService = AuthorService(authorRepository, bookRepository, quoteRepository);
   var bookService = BookService(bookRepository);
+  var quotesService = QuotesService(quoteRepository);
 
   var notFoundHandler = NotFoundHandler();
   var optionsHandler = OptionsHandler();
@@ -108,9 +107,12 @@ Future main(List<String> args) async {
     listQuotesHandler
   ];
 
-  Author a1 = await authorRepository.save(Author(null, "Adam Mickiewicz"));
-  Author a2 = await authorRepository.save(Author(null, "Henryk Sienkiewicz"));
-  Author a3 = await authorRepository.save(Author(null, "Shakespear"));
+  Author a1 =
+      await authorRepository.save(Author(null, "Adam Mickiewicz", "abc def"));
+  Author a2 = await authorRepository
+      .save(Author(null, "Henryk Sienkiewicz", "abc def"));
+  Author a3 =
+      await authorRepository.save(Author(null, "Shakespear", "abc def"));
 
   Book b1 = await bookRepository.save(Book(null, "Dziady", a1.id));
   await bookRepository.save(Book(null, "Pan Tadeusz", a1.id));

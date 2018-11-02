@@ -1,23 +1,32 @@
 import '../common/page.dart';
 
-class Author {
-  String _id, _name;
+import '../../tools/strings.dart';
 
-  Author(this._id, this._name);
+class Author {
+  String _id, _name, _description;
+
+  Author(this._id, this._name, this._description);
 
   factory Author.fromJson(Map<String, dynamic> json) =>
-      Author(json['id'], json['name']);
+      Author(json["id"], json["name"], json["description"]);
 
-  factory Author.empty() => Author(null, "");
+  factory Author.empty() => Author(null, "", "");
 
   String get id => _id;
   String get name => _name;
+  String get description => _description;
+  List<String> get descriptionParts => _description.split("\n");
+  String get shortDescription => shorten(_description, 250);
 
   void set name(String name) {
     this._name = name;
   }
 
-  Map toJson() => {"id": _id, "name": _name};
+  void set description(String desc) {
+    this._description = desc;
+  }
+
+  Map toJson() => {"id": _id, "name": _name, "description": _description};
 }
 
 class AuthorsPage extends Page<Author> {

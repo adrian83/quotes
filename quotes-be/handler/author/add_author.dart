@@ -16,7 +16,7 @@ class AddAuthorHandler extends Handler {
   void execute(
       HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
     parseForm(request, AuthorFormParser())
-        .then((form) => Author(null, form.name))
+        .then((form) => Author(null, form.name, form.description))
         .then((author) => _authorService.save(author))
         .then((author) => created(author, request))
         .catchError((e) => handleErrors(e, request));

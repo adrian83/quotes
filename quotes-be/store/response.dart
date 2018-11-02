@@ -127,3 +127,17 @@ class SearchResult {
   int get took => _took;
   SearchHits get hits => _hits;
 }
+
+class DeleteByQueryResult {
+  bool _timedOut;
+  int _took, _deleted;
+
+  DeleteByQueryResult(this._timedOut, this._took, this._deleted);
+
+  factory DeleteByQueryResult.fromJson(Map<String, dynamic> json) =>
+      DeleteByQueryResult(json['timed_out'], json['took'], json['deleted']);
+
+  bool get timedOut => _timedOut;
+  int get took => _took;
+  int get deleted => _deleted;
+}

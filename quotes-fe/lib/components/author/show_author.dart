@@ -81,6 +81,13 @@ class ShowAuthorComponent extends PageSwitcher
         .catchError(handleError);
   }
 
+  void deleteAuthor() => _authorService
+      .delete(_author.id)
+      .then((_) => listAuthors())
+      .catchError(handleError);
+
+  void editAuthor() => _router.navigate(editAuthorUrl(_author.id));
+
   void showBook(Book book) =>
       _router.navigate(showBookUrl(book.authorId, book.id));
 
@@ -88,6 +95,8 @@ class ShowAuthorComponent extends PageSwitcher
       _router.navigate(editBookUrl(book.authorId, book.id));
 
   void createBook() => _router.navigate(createBookUrl(_author.id));
+
+  void listAuthors() => _router.navigate(listAuthorsUrl());
 
   List<Breadcrumb> get breadcrumbs => [
         Breadcrumb.link(RoutePaths.listAuthors.toUrl(), "authors"),

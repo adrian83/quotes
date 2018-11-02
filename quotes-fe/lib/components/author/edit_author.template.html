@@ -1,9 +1,11 @@
 <h1>edit author</h1>
+
 <br/>
 
 <breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
 
-<br/> 
+<br/>
+
 <events [events]="events"></events>
 
 <form>
@@ -20,6 +22,16 @@
       placeholder="Enter name"
       [(ngModel)]="author.name">
 
+  </div>
+
+  <div class="form-group">
+    <label for="descriptionLabel">Description</label>
+
+    <textarea
+      class="form-control"
+      id="inputDescription"
+      rows="3"
+      [(ngModel)]="author.description"></textarea>
   </div>
 
   <input

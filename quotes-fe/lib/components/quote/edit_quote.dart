@@ -14,6 +14,7 @@ import '../../domain/book/model.dart';
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
 import '../../routes.dart';
+import '../../tools/strings.dart';
 
 @Component(
   selector: 'edit-quote',
@@ -71,9 +72,6 @@ class EditQuoteComponent extends ErrorHandler
       .then((_) => showInfo("Quote '${_quote.text}' updated"))
       .catchError(handleError);
 
-  String shorten(String txt) =>
-      txt.length > 20 ? txt.substring(0, 20).trim() + "..." : txt;
-
   List<Breadcrumb> get breadcrumbs => [
         Breadcrumb.link(listAuthorsUrl(), "authors"),
         Breadcrumb.link(showAuthorUrl(_book.authorId), _author.name),
@@ -81,7 +79,6 @@ class EditQuoteComponent extends ErrorHandler
         Breadcrumb.link(showBookUrl(_book.authorId, _book.id), _book.title),
         Breadcrumb.link(showBookUrl(_book.authorId, _book.id), "quotes"),
         Breadcrumb.link(showQuoteUrl(_book.authorId, _book.id, _quote.id),
-                shorten(_oldText))
-            .last(),
+                shorten(_oldText, 20)).last(),
       ];
 }

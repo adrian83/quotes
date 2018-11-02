@@ -6,6 +6,10 @@ import 'package:logging/logging.dart';
 
 import '../../domain/common/page.dart';
 
+abstract class PageSwitcher {
+  void change(int pageNumber);
+}
+
 class PageLink {
   String _label;
   bool _disabled;
@@ -18,10 +22,6 @@ class PageLink {
   bool get disabled => this._disabled;
   bool get current => this._current;
   int get page => this._page;
-}
-
-abstract class PageSwitcher {
-  void change(int pageNumber);
 }
 
 @Component(
@@ -65,7 +65,7 @@ class Pagination implements OnInit {
 
     var pages = _pagesCount();
 
-    if (pages < 1) {
+    if (pages < 2) {
       return [];
     }
 

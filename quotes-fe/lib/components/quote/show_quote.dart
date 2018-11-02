@@ -16,6 +16,8 @@ import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
 import '../../routes.dart';
 
+import '../../tools/strings.dart';
+
 @Component(
   selector: 'show-quote',
   templateUrl: 'show_quote.template.html',
@@ -24,7 +26,7 @@ import '../../routes.dart';
     ClassProvider(BookService),
     ClassProvider(QuoteService)
   ],
-  directives: const [coreDirectives, Events, Pagination],
+  directives: const [coreDirectives, Breadcrumbs, Events, Pagination],
 )
 class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
   static final Logger logger = Logger('ShowQuoteComponent');
@@ -39,7 +41,8 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
   Book _book = Book.empty();
   Quote _quote = Quote.empty();
 
-  ShowQuoteComponent(this._authorService, this._bookService, this._quoteService);
+  ShowQuoteComponent(
+      this._authorService, this._bookService, this._quoteService);
 
   Quote get quote => _quote;
 
@@ -66,8 +69,6 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
         .catchError(handleError);
   }
 
-  String shorten(String txt) =>
-      txt.length > 20 ? txt.substring(0, 20).trim() + "..." : txt;
 
   List<Breadcrumb> get breadcrumbs => [
         Breadcrumb.link(listAuthorsUrl(), "authors"),
@@ -75,8 +76,6 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
         Breadcrumb.link(showAuthorUrl(_book.authorId), "books"),
         Breadcrumb.link(showBookUrl(_book.authorId, _book.id), _book.title),
         Breadcrumb.link(showBookUrl(_book.authorId, _book.id), "quotes"),
-        Breadcrumb.text(shorten(_quote.text)).last(),
+        Breadcrumb.text(shorten(_quote.text, 20)).last(),
       ];
-
-
 }

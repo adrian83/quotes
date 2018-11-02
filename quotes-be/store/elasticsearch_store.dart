@@ -22,6 +22,8 @@ class ESStore<T extends ESDocument> {
   String _searchUri() => "$_protocol://$_host:$_port/$_index/$_type/_search";
   String _updateUri(String id) =>
       "$_protocol://$_host:$_port/$_index/$_type/$id/_update";
+  String _deleteByQueryUri() =>
+      "$_protocol://$_host:$_port/$_index/$_type/_delete_by_query";
 
   static final Decode<IndexResult> _indexResDecoder =
       (Map<String, dynamic> json) => IndexResult.fromJson(json);
@@ -33,6 +35,8 @@ class ESStore<T extends ESDocument> {
       (Map<String, dynamic> json) => DeleteResult.fromJson(json);
   static final Decode<SearchResult> _searchResDecoder =
       (Map<String, dynamic> json) => SearchResult.fromJson(json);
+  static final Decode<DeleteByQueryResult> _delByQueryResDecoder =
+      (Map<String, dynamic> json) => DeleteByQueryResult.fromJson(json);
 
   ESStore(this._client, this._host, this._port, this._index);
 
@@ -71,15 +75,21 @@ class ESStore<T extends ESDocument> {
       .then((HttpClientRequest req) => req.close())
       .then((HttpClientResponse resp) => decode(resp, _deleteResDecoder));
 
+  Future<DeleteByQueryResult> deleteByQuery(Query query) => _client
+      .postUrl(Uri.parse(_deleteByQueryUri()))
+      .then((httpCliReq) => withBody(httpCliReq, jsonEncode(query)))
+      .then((HttpClientResponse resp) => decode(resp, _delByQueryResDecoder));
+
   Future<SearchResult> list(SearchRequest searchRequest) => _client
       .postUrl(Uri.parse(_searchUri()))
       .then((HttpClientRequest req) => withBody(req, jsonEncode(searchRequest)))
       .then((HttpClientResponse resp) => decode(resp, _searchResDecoder));
 
-  Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) => response
-      .transform(utf8.decoder)
-      .join()
-      .then((content) => decode(jsonDecode(content)));
+  Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) =>
+      response.transform(utf8.decoder).join().then((content) {
+        print(content);
+        return content;
+      }).then((content) => decode(jsonDecode(content)));
 
   Future<HttpClientResponse> withBody(HttpClientRequest request, String body) {
     request

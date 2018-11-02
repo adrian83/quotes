@@ -6,7 +6,7 @@ import 'repository.dart';
 import '../common/model.dart';
 
 class QuotesService {
-  QuotesRepository _quotesRepository;
+  QuoteRepository _quotesRepository;
 
   QuotesService(this._quotesRepository);
 
