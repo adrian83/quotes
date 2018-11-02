@@ -62,6 +62,6 @@ class EditBookComponent extends ErrorHandler
         Breadcrumb.link(listAuthorsUrl(), "authors"),
         Breadcrumb.link(showAuthorUrl(_book.authorId), _author.name),
         Breadcrumb.link(showAuthorUrl(_book.authorId), "books"),
-        Breadcrumb.link(showBookUrl(_book.authorId, _book.id), _book.title).last(),
+        Breadcrumb.link(showBookUrl(_book.authorId, _book.id), _oldTitle).last(),
       ];
 }

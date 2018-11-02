@@ -3,7 +3,6 @@ import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
 
 import '../common/breadcrumb.dart';
-import '../common/error.dart';
 import '../common/error_handler.dart';
 import '../common/events.dart';
 
@@ -21,7 +20,6 @@ import '../../route_paths.dart';
     formDirectives,
     Events,
     Breadcrumbs,
-    ServerErrorsComponent,
   ],
 )
 class EditAuthorComponent extends ErrorHandler implements OnActivate {

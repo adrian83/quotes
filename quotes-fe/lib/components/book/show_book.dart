@@ -2,10 +2,14 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
+import '../common/breadcrumb.dart';
+import '../common/navigable.dart';
 import '../common/error_handler.dart';
 import '../common/pagination.dart';
 import '../common/events.dart';
 
+import '../../domain/author/service.dart';
+import '../../domain/author/model.dart';
 import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
 import '../../domain/quote/service.dart';
@@ -16,26 +20,25 @@ import '../../routes.dart';
 @Component(
   selector: 'show-book',
   templateUrl: 'show_book.template.html',
-  providers: [ClassProvider(BookService), ClassProvider(QuoteService)],
-  directives: const [
-    coreDirectives,
-    Events,
-    Pagination
-  ],
+  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuoteService)],
+  directives: const [coreDirectives, Breadcrumbs, Events, Pagination],
 )
-class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
+class ShowBookComponent extends PageSwitcher
+    with ErrorHandler, Navigable, OnActivate {
   static final Logger logger = Logger('ShowBookComponent');
 
   static final int pageSize = 2;
 
+final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
   final Router _router;
 
+Author _author = Author(null, "");
   Book _book = Book(null, "", null);
   QuotesPage _quotesPage = QuotesPage.empty();
 
-  ShowBookComponent(this._bookService, this._quoteService, this._router);
+  ShowBookComponent(this._authorService, this._bookService, this._quoteService, this._router);
 
   Book get book => _book;
   QuotesPage get quotesPage => _quotesPage;
@@ -46,6 +49,11 @@ class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
     var authorId = current.parameters[authorIdParam];
     var bookId = current.parameters[bookIdParam];
     logger.info("Activating...");
+
+    _authorService
+        .get(authorId)
+        .then((author) => _author = author)
+        .catchError(handleError);
 
     _bookService
         .get(authorId, bookId)
@@ -61,11 +69,10 @@ class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
 
   @override
   void change(int pageNumber) => _quoteService
-        .list(_book.authorId, _book.id,
-            new PageRequest(pageSize, pageNumber * pageSize))
-        .then((page) => _quotesPage = page)
-        .catchError(handleError);
-  
+      .list(_book.authorId, _book.id,
+          new PageRequest(pageSize, pageNumber * pageSize))
+      .then((page) => _quotesPage = page)
+      .catchError(handleError);
 
   void deleteQuote(Quote quote) {
     logger.info("Deleting quote: $quote");
@@ -85,29 +92,19 @@ class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
         .catchError(handleError);
   }
 
-  String _showQuoteUrl(String authorId, String bookId, String quoteId) =>
-      RoutePaths.showQuote.toUrl(parameters: {
-        authorIdParam: authorId,
-        bookIdParam: bookId,
-        quoteIdParam: quoteId
-      });
-
-  String _createQuoteUrl(String authorId, String bookId) => RoutePaths.newQuote
-      .toUrl(parameters: {authorIdParam: authorId, bookIdParam: bookId});
-
-  String _editQuoteUrl(String authorId, String bookId, String quoteId) =>
-      RoutePaths.editQuote.toUrl(parameters: {
-        authorIdParam: authorId,
-        bookIdParam: bookId,
-        quoteIdParam: quoteId
-      });
-
   void showQuote(Quote quote) =>
-      _router.navigate(_showQuoteUrl(quote.authorId, quote.bookId, quote.id));
+      _router.navigate(showQuoteUrl(quote.authorId, quote.bookId, quote.id));
 
   void editQuote(Quote quote) =>
-      _router.navigate(_editQuoteUrl(quote.authorId, quote.bookId, quote.id));
+      _router.navigate(editQuoteUrl(quote.authorId, quote.bookId, quote.id));
 
   void createQuote() =>
-      _router.navigate(_createQuoteUrl(_book.authorId, _book.id));
+      _router.navigate(createQuoteUrl(_book.authorId, _book.id));
+
+  List<Breadcrumb> get breadcrumbs => [
+        Breadcrumb.link(listAuthorsUrl(), "authors"),
+        Breadcrumb.link(showAuthorUrl(_book.authorId), _author.name),
+        Breadcrumb.link(showAuthorUrl(_book.authorId), "books"),
+        Breadcrumb.text(_book.title).last()
+      ];
 }
