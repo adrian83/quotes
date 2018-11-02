@@ -6,17 +6,21 @@ import '../../domain/common/event.dart';
 @Component(
     selector: 'events',
     templateUrl: 'events.template.html',
-    directives: const [coreDirectives, InvalidDataComponent, InfoComponent, ErrorComponent])
+    directives: const [
+      coreDirectives,
+      InvalidDataComponent,
+      InfoComponent,
+      ErrorComponent
+    ])
 class Events {
   @Input()
   List<Event> events;
 
   void remove(Event e) {
-    new Future.delayed(new Duration(milliseconds: 300), () {
+    Future.delayed(Duration(milliseconds: 300), () {
       events.removeWhere((ev) => e.id == ev.id);
     });
   }
-
 }
 
 @Component(
@@ -41,7 +45,6 @@ class InvalidDataComponent {
   Events events;
 
   void hide() => events.remove(event);
-
 }
 
 @Component(
@@ -89,5 +92,4 @@ class ErrorComponent {
   Events events;
 
   void hide() => events.remove(event);
-
 }

@@ -42,14 +42,14 @@ void main(List<String> args) async {
   String cmd = args[0];
   switch (cmd) {
     case runDocker:
-      await new Command("systemctl", ["start", "docker"]).exec();
+      await Command("systemctl", ["start", "docker"]).exec();
       break;
 
     case runInfrastructure:
       Config config = await readConfig(configPath);
 
 // docker run -d --name elasticsearch3 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:6.4.1
-      new Command("docker", [
+       Command("docker", [
         "run",
         "-d",
         "-p",

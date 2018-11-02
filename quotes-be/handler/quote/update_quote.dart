@@ -13,7 +13,8 @@ class UpdateQuoteHandler extends Handler {
 
   UpdateQuoteHandler(this._quotesService) : super(_URL, "PUT") {}
 
-  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+  void execute(
+      HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
     var authorId = pathParams.getString("authorId");
     var bookId = pathParams.getString("bookId");
     var quoteId = pathParams.getString("quoteId");
@@ -29,10 +30,5 @@ class UpdateQuoteHandler extends Handler {
         .then((quote) => _quotesService.update(quote))
         .then((quote) => ok(quote, request))
         .catchError((e) => handleErrors(e, request));
-  }
-
-  Quote formToQuote(
-      QuoteForm form, String authorId, String bookId, String quoteId) {
-    return new Quote(quoteId, form.text, authorId, bookId);
   }
 }

@@ -13,7 +13,8 @@ class ListQuotesHandler extends Handler {
 
   ListQuotesHandler(this._quotesService) : super(_URL, "GET") {}
 
-  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+  void execute(
+      HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
     var authorIdOrErr = pathParams.getString("authorId");
     var bookIdOrErr = pathParams.getString("bookId");
 
@@ -23,7 +24,7 @@ class ListQuotesHandler extends Handler {
       return;
     }
 
-    var params = new UrlParams(request.requestedUri.queryParameters);
+    var params = UrlParams(request.requestedUri.queryParameters);
 
     var limit = params.getIntOrElse("limit", 2);
     if (limit.hasError()) {
@@ -37,7 +38,7 @@ class ListQuotesHandler extends Handler {
       return;
     }
 
-    var req = new PageRequest(limit.value, offset.value);
+    var req = PageRequest(limit.value, offset.value);
 
     _quotesService
         .findQuotes(bookIdOrErr.value, req)

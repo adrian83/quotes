@@ -6,7 +6,7 @@ class Author extends Entity {
   Author(String id, this._name) : super(id);
 
   factory Author.fromJson(Map<String, dynamic> json) =>
-      new Author(json['id'], json['name']);
+      Author(json['id'], json['name']);
 
   String get name => _name;
 

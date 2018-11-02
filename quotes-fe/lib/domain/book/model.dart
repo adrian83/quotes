@@ -6,7 +6,9 @@ class Book {
   Book(this._id, this._title, this._authorId);
 
   factory Book.fromJson(Map<String, dynamic> json) =>
-      new Book(json['id'], json['title'], json['authorId']);
+      Book(json['id'], json['title'], json['authorId']);
+
+  factory Book.empty() => Book(null, "", null);
 
   String get id => _id;
   String get title => _title;
@@ -30,12 +32,12 @@ class Book {
 class BooksPage extends Page<Book> {
   BooksPage(PageInfo info, List<Book> elements) : super(info, elements);
 
-  BooksPage.empty() : super(new PageInfo(0, 0, 0), new List<Book>());
+  BooksPage.empty() : super(PageInfo(0, 0, 0), List<Book>());
 
   factory BooksPage.fromJson(Map<String, dynamic> json) {
     var elems = json['elements'] as List;
     var books = elems.map((j) => Book.fromJson(j)).toList();
     var info = PageInfo.fromJson(json['info']);
-    return new BooksPage(info, books);
+    return BooksPage(info, books);
   }
 }

@@ -6,7 +6,7 @@ class Book extends Entity {
   Book(String id, this._title, this._authorId) : super(id);
 
   factory Book.fromJson(Map<String, dynamic> json) =>
-      new Book(json['id'], json['title'], json['authorId']);
+      Book(json['id'], json['title'], json['authorId']);
 
   String get title => _title;
   String get authorId => _authorId;

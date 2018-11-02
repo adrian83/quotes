@@ -25,9 +25,9 @@ class EditBookComponent extends ErrorHandler
   final AuthorService _authorService;
   final BookService _bookService;
 
-  String _oldTitle = null;
-  Book _book = Book(null, "", null);
-  Author _author = Author(null, "");
+  String _oldTitle = "";
+  Book _book = Book.empty();
+  Author _author = Author.empty();
 
   EditBookComponent(this._authorService, this._bookService);
 

@@ -14,18 +14,18 @@ class AuthorRepository {
   AuthorRepository(this._store);
 
   Future<Author> save(Author author) {
-    author.id = new Uuid().v4();
+    author.id = Uuid().v4();
     return _store.index(author).then((_) => author);
   }
 
   Future<Page<Author>> list(PageRequest request) {
-    var req = new SearchRequest.all()
+    var req = SearchRequest.all()
       ..size = request.limit
       ..from = request.offset;
 
     return _store.list(req).then((resp) => resp.hits).then((hits) {
       var authors = hits.hits.map((d) => Author.fromJson(d.source)).toList();
-      var info = new PageInfo(request.limit, request.offset, hits.total);
+      var info = PageInfo(request.limit, request.offset, hits.total);
       return Page<Author>(info, authors);
     });
   }

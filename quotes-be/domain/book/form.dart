@@ -17,13 +17,13 @@ class BookFormParser extends FormParser<BookForm> {
 
     Object titleObj = rawForm["title"];
     if (titleObj == null) {
-      errors.add(new ParsingError("title", "Title cannot be empty"));
+      errors.add(ParsingError("title", "Title cannot be empty"));
     }
 
     if (errors.length > 0) {
       throw InvalidDataException(errors);
     }
-    
+
     return BookForm(titleObj.toString());
   }
 }

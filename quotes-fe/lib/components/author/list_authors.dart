@@ -7,11 +7,11 @@ import '../common/breadcrumb.dart';
 import '../common/error_handler.dart';
 import '../common/pagination.dart';
 import '../common/events.dart';
+import '../common/navigable.dart';
 
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
 import '../../domain/common/page.dart';
-import '../../route_paths.dart';
 
 @Component(
   selector: 'list-authors',
@@ -26,16 +26,14 @@ import '../../route_paths.dart';
   ],
 )
 class ListAuthorsComponent extends PageSwitcher
-    with ErrorHandler
+    with ErrorHandler, Navigable
     implements OnInit {
-  static final Logger logger = new Logger('ListAuthorsComponent');
-
-  static final int pageSize = 2;
+  static final Logger logger = Logger('ListAuthorsComponent');
 
   final AuthorService _authorService;
   final Router _router;
 
-  AuthorsPage _authorsPage = new AuthorsPage.empty();
+  AuthorsPage _authorsPage = AuthorsPage.empty();
 
   ListAuthorsComponent(this._authorService, this._router);
 
@@ -53,7 +51,7 @@ class ListAuthorsComponent extends PageSwitcher
   void _fetchPage(int pageNumber) {
     logger.info("Fething authors page with index: $pageNumber");
     _authorService
-        .list(new PageRequest(pageSize, pageNumber * pageSize))
+        .list(PageRequest.page(pageNumber))
         .then((page) => _authorsPage = page)
         .catchError(handleError);
   }
@@ -65,8 +63,7 @@ class ListAuthorsComponent extends PageSwitcher
         .then((id) => showInfo("Author '${author.name}' removed"))
         .then((_) => _authorsPage.elements.remove(author))
         .then((_) => _authorsPage.info.total -= 1)
-        .then((_) =>
-            PageRequest(pageSize, (_authorsPage.info.curent + 1) * pageSize))
+        .then((_) => PageRequest.page(_authorsPage.info.curent + 1))
         .then((req) => _authorService.list(req))
         .then((nextPage) => nextPage.empty
             ? null
@@ -75,20 +72,11 @@ class ListAuthorsComponent extends PageSwitcher
         .catchError(handleError);
   }
 
-  String _showAuthorUrl(String id) =>
-      RoutePaths.showAuthor.toUrl(parameters: {authorIdParam: id});
+  void showAuthor(Author author) => _router.navigate(showAuthorUrl(author.id));
 
-  String _editAuthorUrl(String id) =>
-      RoutePaths.editAuthor.toUrl(parameters: {authorIdParam: id});
+  void editAuthor(Author author) => _router.navigate(editAuthorUrl(author.id));
 
-  String _createAuthorUrl() => RoutePaths.newAuthor.toUrl();
+  void createAuthor() => _router.navigate(createAuthorUrl());
 
-  void showAuthor(Author author) => _router.navigate(_showAuthorUrl(author.id));
-
-  void editAuthor(Author author) => _router.navigate(_editAuthorUrl(author.id));
-
-  void createAuthor() => _router.navigate(_createAuthorUrl());
-
-  List<Breadcrumb> get breadcrumbs =>
-      [Breadcrumb.text("authors").last()];
+  List<Breadcrumb> get breadcrumbs => [Breadcrumb.text("authors").last()];
 }

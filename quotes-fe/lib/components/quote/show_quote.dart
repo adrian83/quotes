@@ -27,7 +27,7 @@ import '../../routes.dart';
   directives: const [coreDirectives, Events, Pagination],
 )
 class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
-  static final Logger logger = new Logger('ShowQuoteComponent');
+  static final Logger logger = Logger('ShowQuoteComponent');
 
   static final int pageSize = 2;
 
@@ -35,9 +35,9 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
   final BookService _bookService;
   final QuoteService _quoteService;
 
-  Author _author = Author(null, "");
-  Book _book = Book(null, "", null);
-  Quote _quote = Quote(null, "", null, null);
+  Author _author = Author.empty();
+  Book _book = Book.empty();
+  Quote _quote = Quote.empty();
 
   ShowQuoteComponent(this._authorService, this._bookService, this._quoteService);
 

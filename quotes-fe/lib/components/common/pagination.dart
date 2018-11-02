@@ -29,7 +29,7 @@ abstract class PageSwitcher {
     templateUrl: 'pagination.template.html',
     directives: const [formDirectives, coreDirectives])
 class Pagination implements OnInit {
-  static final Logger logger = new Logger('Pagination');
+  static final Logger logger = Logger('Pagination');
 
   @Input()
   PageInfo page;

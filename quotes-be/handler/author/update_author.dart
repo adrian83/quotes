@@ -13,15 +13,15 @@ class UpdateAuthorHandler extends Handler {
 
   UpdateAuthorHandler(this._authorService) : super(_URL, "PUT") {}
 
-  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
-
+  void execute(
+      HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
     var idOrErr = pathParams.getString("authorId");
     if (idOrErr.hasError()) {
       badRequest([idOrErr.error], request);
       return;
     }
 
-    parseForm(request, new AuthorFormParser())
+    parseForm(request, AuthorFormParser())
         .then((form) => Author(idOrErr.value, form.name))
         .then((quote) => _authorService.update(quote))
         .then((author) => ok(author, request))

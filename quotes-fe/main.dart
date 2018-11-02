@@ -1,9 +1,9 @@
 import 'dart:io';
 
 var contentTypes = {
-  "html": new ContentType("text", "html", charset: "utf-8"),
-  "css": new ContentType("text", "css", charset: "utf-8"),
-  "js": new ContentType("application", "javascript", charset: "utf-8")
+  "html":  ContentType("text", "html", charset: "utf-8"),
+  "css":  ContentType("text", "css", charset: "utf-8"),
+  "js":  ContentType("application", "javascript", charset: "utf-8")
 };
 
 main() {
@@ -21,7 +21,7 @@ main() {
         }
 
         print(filePath);
-        final File file = new File("./build$filePath");
+        final File file =  File("./build$filePath");
 
         var parts = filePath.split(".");
         var extension = parts[parts.length - 1];

@@ -13,8 +13,9 @@ class ListAuthorsHandler extends Handler {
 
   ListAuthorsHandler(this._authorService) : super(_URL, "GET") {}
 
-  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams)  {
-print("$pathParams $urlParams");
+  void execute(
+      HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+    print("$pathParams $urlParams");
 
     var limit = urlParams.getIntOrElse("limit", 2);
     if (limit.hasError()) {
@@ -28,9 +29,9 @@ print("$pathParams $urlParams");
       return;
     }
 
-    var req = new PageRequest(limit.value, offset.value);
+    var req = PageRequest(limit.value, offset.value);
 
-     _authorService
+    _authorService
         .findAuthors(req)
         .then((authors) => ok(authors, request))
         .catchError((e) => handleErrors(e, request));

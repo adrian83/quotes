@@ -10,7 +10,7 @@ class ElasticsearchConfig {
       this._booksIndex, this._quotesIndex);
 
   factory ElasticsearchConfig.fromJson(Map<String, dynamic> json) =>
-      new ElasticsearchConfig(json['host'], json['port'], json['authorsIndex'],
+      ElasticsearchConfig(json['host'], json['port'], json['authorsIndex'],
           json['booksIndex'], json['quotesIndex']);
 
   String get host => _host;
@@ -20,12 +20,11 @@ class ElasticsearchConfig {
   int get port => _port;
 }
 
-Future<Config> readConfig(String path) {
-  return File(path)
+Future<Config> readConfig(String path) => File(path)
       .readAsString()
       .then((str) => jsonDecode(str))
       .then((json) => Config.fromJson(json));
-}
+
 
 class Config {
   ElasticsearchConfig _elasticsearch;
@@ -33,7 +32,7 @@ class Config {
   Config(this._elasticsearch);
 
   factory Config.fromJson(Map<String, dynamic> json) =>
-      new Config(new ElasticsearchConfig.fromJson(json['elasticsearch']));
+      Config(ElasticsearchConfig.fromJson(json['elasticsearch']));
 
   ElasticsearchConfig get elasticsearch => _elasticsearch;
 }

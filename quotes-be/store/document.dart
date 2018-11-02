@@ -11,7 +11,7 @@ class UpdateDoc {
   UpdateDoc(this._doc);
 
   Map toJson() {
-    var map = new Map<String, Object>();
+    var map = Map<String, Object>();
     map["doc"] = _doc.toJson();
     map["doc_as_upsert"] = _docAsUpsert;
     map["detect_noop"] = _detectNoop;

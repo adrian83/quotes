@@ -11,7 +11,12 @@
 
 <br/><br/>
 
-<input (click)="createBook()" class="btn btn-primary" type="button" value="new book">
+<input
+  (click)="createBook()"
+  *ngIf="author.id != null"
+  class="btn btn-primary"
+  type="button"
+  value="new book">
 
 <br/><br/>
 

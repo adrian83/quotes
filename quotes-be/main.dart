@@ -47,48 +47,48 @@ Future main(List<String> args) async {
   String configLocation = args[0];
   Config config = await readConfig(configLocation);
 
-  HttpClient client = new HttpClient();
+  HttpClient client = HttpClient();
 
   var esConfig = config.elasticsearch;
 
-  var authorEsStore = new ESStore<Author>(
+  var authorEsStore = ESStore<Author>(
       client, esConfig.host, esConfig.port, esConfig.authorsIndex);
 
-  var bookEsStore = new ESStore<Book>(
-      client, esConfig.host, esConfig.port, esConfig.booksIndex);
+  var bookEsStore =
+      ESStore<Book>(client, esConfig.host, esConfig.port, esConfig.booksIndex);
 
-      var quoteEsStore = new ESStore<Quote>(
-          client, esConfig.host, esConfig.port, esConfig.quotesIndex);
+  var quoteEsStore = ESStore<Quote>(
+      client, esConfig.host, esConfig.port, esConfig.quotesIndex);
 
-  var quoteRepository = new QuotesRepository(quoteEsStore);
-  var quotesService = new QuotesService(quoteRepository);
+  var quoteRepository = QuotesRepository(quoteEsStore);
+  var quotesService = QuotesService(quoteRepository);
 
-  var authorRepository = new AuthorRepository(authorEsStore);
-  var authorService = new AuthorService(authorRepository);
+  var authorRepository = AuthorRepository(authorEsStore);
+  var authorService = AuthorService(authorRepository);
 
-  var bookRepository = new BookRepository(bookEsStore);
-  var bookService = new BookService(bookRepository);
+  var bookRepository = BookRepository(bookEsStore);
+  var bookService = BookService(bookRepository);
 
-  var notFoundHandler = new NotFoundHandler();
-  var optionsHandler = new OptionsHandler();
+  var notFoundHandler = NotFoundHandler();
+  var optionsHandler = OptionsHandler();
 
-  var addAuthorHandler = new AddAuthorHandler(authorService);
-  var listAuthorsHandler = new ListAuthorsHandler(authorService);
-  var getAuthorHandler = new GetAuthorHandler(authorService);
-  var updateAuthorHandler = new UpdateAuthorHandler(authorService);
-  var deleteAuthorHandler = new DeleteAuthorHandler(authorService);
+  var addAuthorHandler = AddAuthorHandler(authorService);
+  var listAuthorsHandler = ListAuthorsHandler(authorService);
+  var getAuthorHandler = GetAuthorHandler(authorService);
+  var updateAuthorHandler = UpdateAuthorHandler(authorService);
+  var deleteAuthorHandler = DeleteAuthorHandler(authorService);
 
-  var addBookHandler = new AddBookHandler(bookService);
-  var listBooksHandler = new ListBooksHandler(bookService);
-  var getBookHandler = new GetBookHandler(bookService);
-  var updateBookHandler = new UpdateBookHandler(bookService);
-  var deleteBookHandler = new DeleteBookHandler(bookService);
+  var addBookHandler = AddBookHandler(bookService);
+  var listBooksHandler = ListBooksHandler(bookService);
+  var getBookHandler = GetBookHandler(bookService);
+  var updateBookHandler = UpdateBookHandler(bookService);
+  var deleteBookHandler = DeleteBookHandler(bookService);
 
-  var addQuoteHandler = new AddQuoteHandler(quotesService);
-  var listQuotesHandler = new ListQuotesHandler(quotesService);
-  var getQuoteHandler = new GetQuoteHandler(quotesService);
-  var updateQuoteHandler = new UpdateQuoteHandler(quotesService);
-  var deleteQuoteHandler = new DeleteQuoteHandler(quotesService);
+  var addQuoteHandler = AddQuoteHandler(quotesService);
+  var listQuotesHandler = ListQuotesHandler(quotesService);
+  var getQuoteHandler = GetQuoteHandler(quotesService);
+  var updateQuoteHandler = UpdateQuoteHandler(quotesService);
+  var deleteQuoteHandler = DeleteQuoteHandler(quotesService);
 
   var handlers = [
     addAuthorHandler,
@@ -108,29 +108,28 @@ Future main(List<String> args) async {
     listQuotesHandler
   ];
 
-  Author a1 = await authorRepository.save(new Author(null, "Adam Mickiewicz"));
-  Author a2 = await authorRepository.save(new Author(null, "Henryk Sienkiewicz"));
-  Author a3 = await authorRepository.save(new Author(null, "Shakespear"));
+  Author a1 = await authorRepository.save(Author(null, "Adam Mickiewicz"));
+  Author a2 = await authorRepository.save(Author(null, "Henryk Sienkiewicz"));
+  Author a3 = await authorRepository.save(Author(null, "Shakespear"));
 
+  Book b1 = await bookRepository.save(Book(null, "Dziady", a1.id));
+  await bookRepository.save(Book(null, "Pan Tadeusz", a1.id));
+  await bookRepository.save(Book(null, "Switez", a1.id));
 
-   Book b1 = await bookRepository.save(new Book(null, "Dziady", a1.id));
-   await bookRepository.save(new Book(null, "Pan Tadeusz", a1.id));
-   await bookRepository.save(new Book(null, "Switez", a1.id));
+  await bookRepository.save(Book(null, "Balladyna", a2.id));
+  await bookRepository.save(Book(null, "Beniowski", a2.id));
+  await bookRepository.save(Book(null, "Kordian", a2.id));
 
-   await bookRepository.save(new Book(null, "Balladyna", a2.id));
-   await bookRepository.save(new Book(null, "Beniowski", a2.id));
-   await bookRepository.save(new Book(null, "Kordian", a2.id));
+  await bookRepository.save(Book(null, "Hamlet", a3.id));
+  await bookRepository.save(Book(null, "Makbet", a3.id));
+  await bookRepository.save(Book(null, "Burza", a3.id));
 
-   await bookRepository.save(new Book(null, "Hamlet", a3.id));
-   await bookRepository.save(new Book(null, "Makbet", a3.id));
-   await bookRepository.save(new Book(null, "Burza", a3.id));
-
-  await quoteRepository.save(
-      new Quote(null, "Ciemno wszedzie, glucho wszedzie... 1", a1.id, b1.id));
-  await quoteRepository.save(
-      new Quote(null, "Ciemno wszedzie, glucho wszedzie... 2", a1.id, b1.id));
-  await quoteRepository.save(
-      new Quote(null, "Ciemno wszedzie, glucho wszedzie... 3", a1.id, b1.id));
+  await quoteRepository
+      .save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 1", a1.id, b1.id));
+  await quoteRepository
+      .save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 2", a1.id, b1.id));
+  await quoteRepository
+      .save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 3", a1.id, b1.id));
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 

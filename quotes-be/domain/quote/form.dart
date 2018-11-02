@@ -17,7 +17,7 @@ class QuoteFormParser extends FormParser<QuoteForm> {
 
     Object textObj = rawForm["text"];
     if (textObj == null) {
-      errors.add(new ParsingError("text", "Text cannot be empty"));
+      errors.add(ParsingError("text", "Text cannot be empty"));
     }
 
     if (errors.length > 0) {

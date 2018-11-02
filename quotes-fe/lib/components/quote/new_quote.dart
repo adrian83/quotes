@@ -33,10 +33,9 @@ class NewQuoteComponent extends ErrorHandler
   final QuoteService _quoteService;
   final Router _router;
 
-  Author _author = Author(null, "");
-  Book _book = Book(null, "", null);
-
-  Quote _quote = new Quote(null, "", null, null);
+  Author _author = Author.empty();
+  Book _book = Book.empty();
+  Quote _quote = Quote.empty();
 
   NewQuoteComponent(
       this._authorService, this._bookService, this._quoteService, this._router);

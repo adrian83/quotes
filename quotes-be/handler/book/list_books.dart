@@ -12,7 +12,8 @@ class ListBooksHandler extends Handler {
 
   ListBooksHandler(this._bookService) : super(_URL, "GET");
 
-  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+  void execute(
+      HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
     var pathParsed = parsePath(request.requestedUri.pathSegments);
     var idOrErr = pathParsed.getString("authorId");
     if (idOrErr.hasError()) {
@@ -20,7 +21,7 @@ class ListBooksHandler extends Handler {
       return;
     }
 
-    var params = new UrlParams(request.requestedUri.queryParameters);
+    var params = UrlParams(request.requestedUri.queryParameters);
 
     var limit = params.getIntOrElse("limit", 2);
     if (limit.hasError()) {
@@ -34,9 +35,9 @@ class ListBooksHandler extends Handler {
       return;
     }
 
-    var req = new PageRequest(limit.value, offset.value);
+    var req = PageRequest(limit.value, offset.value);
 
-     _bookService
+    _bookService
         .findBooks(idOrErr.value, req)
         .then((books) => ok(books, request))
         .catchError((e) => handleErrors(e, request));

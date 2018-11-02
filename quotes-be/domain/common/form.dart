@@ -59,29 +59,29 @@ class UrlParams {
   ParseElem<int> getIntOrElse(String name, int defaultVal) {
     var obj = params[name];
     if (obj == null) {
-      return new ParseElem.success(defaultVal);
+      return ParseElem.success(defaultVal);
     }
     ParseElem<String> parsedStr = getString(name);
     if (parsedStr.hasError()) {
-      return new ParseElem.failure(parsedStr.error);
+      return ParseElem.failure(parsedStr.error);
     }
     try {
       var value = int.parse(parsedStr.value);
-      return new ParseElem.success(value);
+      return ParseElem.success(value);
       //} on FormatException catch (e) {
     } on FormatException {
-      var error = new ParsingError(name, "Invalid format");
-      return new ParseElem.failure(error);
+      var error = ParsingError(name, "Invalid format");
+      return ParseElem.failure(error);
     }
   }
 
   ParseElem<String> getString(String name) {
     var obj = params[name];
     if (obj == null) {
-      var error = new ParsingError(name, "Cannot be empty");
-      return new ParseElem.failure(error);
+      var error = ParsingError(name, "Cannot be empty");
+      return ParseElem.failure(error);
     }
-    return new ParseElem.success(obj.toString());
+    return ParseElem.success(obj.toString());
   }
 }
 
@@ -93,25 +93,25 @@ class PathParseResult {
   ParseElem<int> getInt(String name) {
     ParseElem<String> parsedStr = getString(name);
     if (parsedStr.hasError()) {
-      return new ParseElem.failure(parsedStr.error);
+      return ParseElem.failure(parsedStr.error);
     }
     try {
       var value = int.parse(parsedStr.value);
-      return new ParseElem.success(value);
+      return ParseElem.success(value);
     } on FormatException catch (e) {
       print(e);
-      var error = new ParsingError(name, "Invalid format");
-      return new ParseElem.failure(error);
+      var error = ParsingError(name, "Invalid format");
+      return ParseElem.failure(error);
     }
   }
 
   ParseElem<String> getString(String name) {
     var obj = params[name];
     if (obj == null) {
-      var error = new ParsingError(name, "Cannot be empty");
-      return new ParseElem.failure(error);
+      var error = ParsingError(name, "Cannot be empty");
+      return ParseElem.failure(error);
     }
-    return new ParseElem.success(obj.toString());
+    return ParseElem.success(obj.toString());
   }
 }
 
@@ -121,13 +121,13 @@ class PathParser {
   PathParser(this.segments);
 
   PathParseResult parse(Map<String, int> desc) {
-    var result = new Map<String, String>();
+    var result = Map<String, String>();
     var size = segments.length;
     desc.forEach((k, v) {
       if (v < size) {
         result[k] = segments[v];
       }
     });
-    return new PathParseResult(result);
+    return PathParseResult(result);
   }
 }

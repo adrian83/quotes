@@ -6,7 +6,7 @@ class PageInfo {
   PageInfo(this._limit, this._offset, this._total);
 
   factory PageInfo.fromJson(Map<String, dynamic> json) =>
-      new PageInfo(json['limit'], json['offset'], json['total']);
+      PageInfo(json['limit'], json['offset'], json['total']);
 
   int get limit => _limit;
   int get offset => _offset;
@@ -50,10 +50,15 @@ class Page<T> {
   String toString() => jsonEncode(this);
 }
 
+const defPageSize = 2;
+
 class PageRequest {
   int _limit, _offset;
 
   PageRequest(this._limit, this._offset);
+
+  PageRequest.page(int pageNumber)
+      : this(defPageSize, defPageSize * pageNumber);
 
   int get limit => this._limit;
   int get offset => this._offset;

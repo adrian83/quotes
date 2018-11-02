@@ -26,7 +26,7 @@ class EditAuthorComponent extends ErrorHandler implements OnActivate {
   final AuthorService _authorService;
 
   String _oldName = null;
-  Author _author = new Author(null, "");
+  Author _author = Author.empty();
 
   EditAuthorComponent(this._authorService);
 

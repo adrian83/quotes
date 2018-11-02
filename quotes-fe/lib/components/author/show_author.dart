@@ -23,16 +23,14 @@ import '../../routes.dart';
 )
 class ShowAuthorComponent extends PageSwitcher
     with ErrorHandler, Navigable, OnActivate {
-  static final Logger logger = new Logger('ShowAuthorComponent');
-
-  static final int pageSize = 2;
+  static final Logger logger = Logger('ShowAuthorComponent');
 
   final AuthorService _authorService;
   final BookService _bookService;
   final Router _router;
 
-  Author _author = new Author(null, "");
-  BooksPage _booksPage = new BooksPage.empty();
+  Author _author = Author.empty();
+  BooksPage _booksPage = BooksPage.empty();
 
   ShowAuthorComponent(this._authorService, this._bookService, this._router);
 
@@ -53,8 +51,7 @@ class ShowAuthorComponent extends PageSwitcher
         .catchError(handleError);
 
     _bookService
-        .list(authorId,
-            new PageRequest(pageSize, _booksPage.info.curent * pageSize))
+        .list(authorId, PageRequest.page(_booksPage.info.curent))
         .then((page) => _booksPage = page)
         .then(
             (_) => logger.info("BooksPage fetched: ${_booksPage.info.curent}"))
@@ -62,15 +59,10 @@ class ShowAuthorComponent extends PageSwitcher
   }
 
   @override
-  void change(int pageNumber) {
-    logger.info("Change page to $pageNumber");
-    _bookService
-        .list(_author.id, new PageRequest(pageSize, pageNumber * pageSize))
-        .then((page) => _booksPage = page)
-        .then(
-            (_) => logger.info("BooksPage fetched: ${_booksPage.info.curent}"))
-        .catchError(handleError);
-  }
+  void change(int pageNumber) => _bookService
+      .list(_author.id, PageRequest.page(pageNumber))
+      .then((page) => _booksPage = page)
+      .catchError(handleError);
 
   void deleteBook(Book book) {
     logger.info("Deleting book: $book");
@@ -80,8 +72,7 @@ class ShowAuthorComponent extends PageSwitcher
         .then((id) => showInfo("Book '${book.title}' removed"))
         .then((id) => _booksPage.elements.remove(book))
         .then((_) => _booksPage.info.total -= 1)
-        .then((_) =>
-            PageRequest(pageSize, (_booksPage.info.curent + 1) * pageSize))
+        .then((_) => PageRequest.page(_booksPage.info.curent + 1))
         .then((req) => _bookService.list(_author.id, req))
         .then((nextPage) => nextPage.empty
             ? null

@@ -32,10 +32,10 @@ class EditQuoteComponent extends ErrorHandler
   final BookService _bookService;
   final QuoteService _quoteService;
 
-String _oldText = "";
-  Author _author = Author(null, "");
-  Book _book = Book(null, "", null);
-  Quote _quote = Quote(null, "", null, null);
+  String _oldText = "";
+  Author _author = Author.empty();
+  Book _book = Book.empty();
+  Quote _quote = Quote.empty();
 
   EditQuoteComponent(
       this._authorService, this._bookService, this._quoteService);
@@ -71,9 +71,8 @@ String _oldText = "";
       .then((_) => showInfo("Quote '${_quote.text}' updated"))
       .catchError(handleError);
 
-  String shorten(String txt) => txt.length > 20
-      ? txt.substring(0, 20).trim() + "..."
-      : txt;
+  String shorten(String txt) =>
+      txt.length > 20 ? txt.substring(0, 20).trim() + "..." : txt;
 
   List<Breadcrumb> get breadcrumbs => [
         Breadcrumb.link(listAuthorsUrl(), "authors"),
@@ -81,8 +80,8 @@ String _oldText = "";
         Breadcrumb.link(showAuthorUrl(_book.authorId), "books"),
         Breadcrumb.link(showBookUrl(_book.authorId, _book.id), _book.title),
         Breadcrumb.link(showBookUrl(_book.authorId, _book.id), "quotes"),
-        Breadcrumb.link(
-                showQuoteUrl(_book.authorId, _book.id, _quote.id), shorten(_oldText))
+        Breadcrumb.link(showQuoteUrl(_book.authorId, _book.id, _quote.id),
+                shorten(_oldText))
             .last(),
       ];
 }

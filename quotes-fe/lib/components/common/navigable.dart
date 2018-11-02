@@ -11,6 +11,8 @@ class Navigable {
   String editAuthorUrl(String authorId) => RoutePaths.editAuthor
       .toUrl(parameters: {authorIdParam: authorId ?? missing});
 
+  String createAuthorUrl() => RoutePaths.newAuthor.toUrl();
+
   String createBookUrl(String authorId) => RoutePaths.newBook
       .toUrl(parameters: {authorIdParam: authorId ?? missing});
 

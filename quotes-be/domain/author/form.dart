@@ -17,7 +17,7 @@ class AuthorFormParser extends FormParser<AuthorForm> {
 
     Object textObj = rawForm["name"];
     if (textObj == null || textObj.toString().trim().length == 0) {
-      errors.add(new ParsingError("name", "Name cannot be empty"));
+      errors.add(ParsingError("name", "Name cannot be empty"));
     }
 
     if (errors.length > 0) {

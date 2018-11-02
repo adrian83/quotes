@@ -1,4 +1,3 @@
-
 const noop = "noop";
 const created = "created";
 const updated = "updated";
@@ -9,7 +8,7 @@ class BasicResult {
   BasicResult(this._index, this._type, this._id);
 
   factory BasicResult.fromJson(Map<String, dynamic> json) =>
-      new BasicResult(json['_index'], json['_type'], json['_id']);
+      BasicResult(json['_index'], json['_type'], json['_id']);
 
   String get index => _index;
   String get type => _type;
@@ -23,7 +22,7 @@ class IndexResult extends BasicResult {
   IndexResult(String index, String type, String id, this._result, this._version)
       : super(index, type, id);
 
-  factory IndexResult.fromJson(Map<String, dynamic> json) => new IndexResult(
+  factory IndexResult.fromJson(Map<String, dynamic> json) => IndexResult(
       json['_index'],
       json['_type'],
       json['_id'],
@@ -31,14 +30,13 @@ class IndexResult extends BasicResult {
       json['_version']);
 
   String get result => _result;
-
 }
 
 class UpdateResult extends IndexResult {
   UpdateResult(String index, String type, String id, String result, int version)
       : super(index, type, id, result, version);
 
-  factory UpdateResult.fromJson(Map<String, dynamic> json) => new UpdateResult(
+  factory UpdateResult.fromJson(Map<String, dynamic> json) => UpdateResult(
       json['_index'],
       json['_type'],
       json['_id'],
@@ -50,7 +48,7 @@ class DeleteResult extends IndexResult {
   DeleteResult(String index, String type, String id, String result, int version)
       : super(index, type, id, result, version);
 
-  factory DeleteResult.fromJson(Map<String, dynamic> json) => new DeleteResult(
+  factory DeleteResult.fromJson(Map<String, dynamic> json) => DeleteResult(
       json['_index'],
       json['_type'],
       json['_id'],
@@ -67,7 +65,7 @@ class GetResult extends BasicResult {
       this._source)
       : super(index, type, id);
 
-  factory GetResult.fromJson(Map<String, dynamic> json) => new GetResult(
+  factory GetResult.fromJson(Map<String, dynamic> json) => GetResult(
       json['_index'],
       json['_type'],
       json['_id'],
@@ -87,7 +85,7 @@ class SearchHit extends BasicResult {
   SearchHit(String index, String type, String id, this._score, this._source)
       : super(index, type, id);
 
-  factory SearchHit.fromJson(Map<String, dynamic> json) => new SearchHit(
+  factory SearchHit.fromJson(Map<String, dynamic> json) => SearchHit(
       json['_index'],
       json['_type'],
       json['_id'],
@@ -105,10 +103,10 @@ class SearchHits {
 
   SearchHits(this._total, this._maxScore, this._hits);
 
-  factory SearchHits.fromJson(Map<String, dynamic> json) => new SearchHits(
+  factory SearchHits.fromJson(Map<String, dynamic> json) => SearchHits(
       json['total'],
       json['maxScore'],
-      (json['hits'] as List).map((d) => new SearchHit.fromJson(d)).toList());
+      (json['hits'] as List).map((d) => SearchHit.fromJson(d)).toList());
 
   int get total => _total;
   double get maxScore => _maxScore;
@@ -122,8 +120,8 @@ class SearchResult {
 
   SearchResult(this._timedOut, this._took, this._hits);
 
-  factory SearchResult.fromJson(Map<String, dynamic> json) => new SearchResult(
-      json['timed_out'], json['took'], new SearchHits.fromJson(json['hits']));
+  factory SearchResult.fromJson(Map<String, dynamic> json) => SearchResult(
+      json['timed_out'], json['took'], SearchHits.fromJson(json['hits']));
 
   bool get timedOut => _timedOut;
   int get took => _took;

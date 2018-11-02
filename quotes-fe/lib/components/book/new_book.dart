@@ -26,8 +26,8 @@ class NewBookComponent extends ErrorHandler
   final AuthorService _authorService;
   final Router _router;
 
-  Book _book = Book(null, "", null);
-  Author _author = Author(null, "");
+  Book _book = Book.empty();
+  Author _author = Author.empty();
 
   NewBookComponent(this._authorService, this._bookService, this._router);
 

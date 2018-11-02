@@ -6,7 +6,6 @@ import '../../domain/author/form.dart';
 import '../../domain/author/model.dart';
 import '../../domain/common/form.dart';
 
-
 class AddAuthorHandler extends Handler {
   static final _URL = r"/authors";
 
@@ -14,12 +13,12 @@ class AddAuthorHandler extends Handler {
 
   AddAuthorHandler(this._authorService) : super(_URL, "POST");
 
-  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
-    parseForm(request, new AuthorFormParser())
+  void execute(
+      HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+    parseForm(request, AuthorFormParser())
         .then((form) => Author(null, form.name))
         .then((author) => _authorService.save(author))
         .then((author) => created(author, request))
         .catchError((e) => handleErrors(e, request));
   }
-
 }

@@ -14,21 +14,21 @@ class QuotesRepository {
   QuotesRepository(this._store);
 
   Future<Quote> save(Quote quote) {
-    quote.id = new Uuid().v4();
+    quote.id = Uuid().v4();
     return _store.index(quote).then((_) => quote);
   }
 
   Future<Page<Quote>> find(String bookId, PageRequest request) {
     var query = MatchQuery("bookId", bookId);
 
-    var req = new SearchRequest()
+    var req = SearchRequest()
       ..query = query
       ..size = request.limit
       ..from = request.offset;
 
     return _store.list(req).then((resp) => resp.hits).then((hits) {
       var quotes = hits.hits.map((d) => Quote.fromJson(d.source)).toList();
-      var info = new PageInfo(request.limit, request.offset, hits.total);
+      var info = PageInfo(request.limit, request.offset, hits.total);
       return Page<Quote>(info, quotes);
     });
   }
@@ -39,5 +39,4 @@ class QuotesRepository {
   Future<Quote> update(Quote quote) => _store.update(quote).then((_) => quote);
 
   Future<void> delete(String id) => _store.delete(id);
-
 }

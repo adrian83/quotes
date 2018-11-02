@@ -20,25 +20,28 @@ import '../../routes.dart';
 @Component(
   selector: 'show-book',
   templateUrl: 'show_book.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuoteService)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(BookService),
+    ClassProvider(QuoteService)
+  ],
   directives: const [coreDirectives, Breadcrumbs, Events, Pagination],
 )
 class ShowBookComponent extends PageSwitcher
     with ErrorHandler, Navigable, OnActivate {
   static final Logger logger = Logger('ShowBookComponent');
 
-  static final int pageSize = 2;
-
-final AuthorService _authorService;
+  final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
   final Router _router;
 
-Author _author = Author(null, "");
-  Book _book = Book(null, "", null);
+  Author _author = Author.empty();
+  Book _book = Book.empty();
   QuotesPage _quotesPage = QuotesPage.empty();
 
-  ShowBookComponent(this._authorService, this._bookService, this._quoteService, this._router);
+  ShowBookComponent(
+      this._authorService, this._bookService, this._quoteService, this._router);
 
   Book get book => _book;
   QuotesPage get quotesPage => _quotesPage;
@@ -61,16 +64,14 @@ Author _author = Author(null, "");
         .catchError(handleError);
 
     _quoteService
-        .list(authorId, bookId,
-            new PageRequest(pageSize, _quotesPage.info.curent * pageSize))
+        .list(authorId, bookId, PageRequest.page(_quotesPage.info.curent))
         .then((page) => _quotesPage = page)
         .catchError(handleError);
   }
 
   @override
   void change(int pageNumber) => _quoteService
-      .list(_book.authorId, _book.id,
-          new PageRequest(pageSize, pageNumber * pageSize))
+      .list(_book.authorId, _book.id, PageRequest.page(pageNumber))
       .then((page) => _quotesPage = page)
       .catchError(handleError);
 
@@ -82,8 +83,7 @@ Author _author = Author(null, "");
         .then((id) => showInfo("Quote '${quote.text}' removed"))
         .then((_) => _quotesPage.elements.remove(quote))
         .then((_) => _quotesPage.info.total -= 1)
-        .then((_) =>
-            PageRequest(pageSize, (_quotesPage.info.curent + 1) * pageSize))
+        .then((_) => PageRequest.page(_quotesPage.info.curent + 1))
         .then((req) => _quoteService.list(_book.authorId, _book.id, req))
         .then((nextPage) => nextPage.empty
             ? null

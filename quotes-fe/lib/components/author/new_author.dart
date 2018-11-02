@@ -25,7 +25,7 @@ class NewAuthorComponent extends ErrorHandler with Navigable {
   final AuthorService _authorService;
   final Router _router;
 
-  Author _author = new Author(null, "");
+  Author _author = Author.empty();
 
   NewAuthorComponent(this._authorService, this._router);
 

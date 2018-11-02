@@ -6,7 +6,9 @@ class Quote {
   Quote(this._id, this._text, this._authorId, this._bookId);
 
   factory Quote.fromJson(Map<String, dynamic> json) =>
-      new Quote(json['id'], json['text'], json['authorId'], json['bookId']);
+      Quote(json['id'], json['text'], json['authorId'], json['bookId']);
+
+  factory Quote.empty() => Quote(null, "", null, null);
 
   String get id => _id;
   String get text => _text;
@@ -32,12 +34,12 @@ class Quote {
 class QuotesPage extends Page<Quote> {
   QuotesPage(PageInfo info, List<Quote> elements) : super(info, elements);
 
-  QuotesPage.empty() : super(new PageInfo(0, 0, 0), new List<Quote>());
+  QuotesPage.empty() : super(PageInfo(0, 0, 0), List<Quote>());
 
   factory QuotesPage.fromJson(Map<String, dynamic> json) {
     var elems = json['elements'] as List;
     var quotes = elems.map((j) => Quote.fromJson(j)).toList();
     var info = PageInfo.fromJson(json['info']);
-    return new QuotesPage(info, quotes);
+    return QuotesPage(info, quotes);
   }
 }

@@ -6,17 +6,17 @@ import '../domain/common/form.dart';
 import '../domain/common/exception.dart';
 
 abstract class Handler {
-  var JSON_CONTENT = new ContentType("application", "json", charset: "utf-8");
+  var JSON_CONTENT = ContentType("application", "json", charset: "utf-8");
 
   String _url, _method;
   RegExp _exp;
 
-  Map<String, int> params = new Map<String, int>();
+  Map<String, int> params =  Map<String, int>();
 
   Handler(this._url, this._method) {
     var urlPatterns = _transoformURI(this._url);
     print("Url: $_url, RegExp: $urlPatterns");
-    _exp = new RegExp(urlPatterns);
+    _exp =  RegExp(urlPatterns);
   }
 
   String _transoformURI(String urlPatterns) {

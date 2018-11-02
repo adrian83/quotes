@@ -1,12 +1,11 @@
-
 abstract class Query {
   Map toJson();
 }
 
 class MatchAllQuery extends Query {
   Map toJson() {
-    var map = new Map<String, Object>();
-      map["match_all"] = new Map<String, String>();
+    var map = Map<String, Object>();
+    map["match_all"] = Map<String, String>();
     return map;
   }
 }
@@ -17,8 +16,9 @@ class MatchQuery<T> extends Query {
 
   MatchQuery(this._field, this._value);
 
-  Map toJson() => {"match": {this._field: this._value}};
-
+  Map toJson() => {
+        "match": {this._field: this._value}
+      };
 }
 
 class SearchRequest {
@@ -31,11 +31,11 @@ class SearchRequest {
 
   SearchRequest();
 
-  void set from(int f){
+  void set from(int f) {
     _from = f;
   }
 
-  void set size(int s){
+  void set size(int s) {
     _size = s;
   }
 
@@ -44,7 +44,7 @@ class SearchRequest {
   }
 
   Map toJson() {
-    var map = new Map<String, Object>();
+    var map = Map<String, Object>();
     map["size"] = _size;
     map["from"] = _from;
     map["query"] = _query.toJson();

@@ -4,11 +4,11 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:logging/logging.dart';
 
-import './errors.dart';
-import './page.dart';
+import 'errors.dart';
+import 'page.dart';
 
 class Service<T> {
-  static final Logger logger = new Logger('Service');
+  static final Logger logger = Logger('Service');
 
   static final _headers = {'Content-Type': 'application/json'};
 
@@ -28,9 +28,8 @@ class Service<T> {
       http.get(url).then((response) => _handleErrors(response));
 
   Future<Map<String, dynamic>> deleteEntity(String url) =>
-      http.delete(url).then((response) => response.statusCode == 200
-          ? new Map<String, dynamic>()
-          : _handleErrors(response));
+      http.delete(url).then((response) =>
+          response.statusCode == 200 ? {} : _handleErrors(response));
 
   Map<String, dynamic> _handleErrors(response) {
     if (response.statusCode == 404) {
@@ -40,20 +39,16 @@ class Service<T> {
     var json = jsonDecode(response.body);
     if (response.statusCode == 400) {
       logger.severe("json $json");
-      var ve =  ValidationErrors.fromJson(json);
-logger.severe("ve $ve");
+      var ve = ValidationErrors.fromJson(json);
+      logger.severe("ve $ve");
       throw ve;
     } else if (response.statusCode == 500) {
-      throw ServerError.fromJson(json);
+      throw Exception(json);
     }
     logger.info("Http request: $json");
     return json;
   }
 
-  String pageRequestToUrlParams(PageRequest request) {
-    var params = new List<String>();
-    params.add("limit=${request.limit}");
-    params.add("offset=${request.offset}");
-    return params.join("&");
-  }
+  String pageRequestToUrlParams(PageRequest request) =>
+      ["limit=${request.limit}", "offset=${request.offset}"].join("&");
 }

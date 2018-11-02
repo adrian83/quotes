@@ -24,15 +24,15 @@ class ESStore<T extends ESDocument> {
       "$_protocol://$_host:$_port/$_index/$_type/$id/_update";
 
   static final Decode<IndexResult> _indexResDecoder =
-      (Map<String, dynamic> json) => new IndexResult.fromJson(json);
+      (Map<String, dynamic> json) => IndexResult.fromJson(json);
   static final Decode<UpdateResult> _updateResDecoder =
-      (Map<String, dynamic> json) => new UpdateResult.fromJson(json);
+      (Map<String, dynamic> json) => UpdateResult.fromJson(json);
   static final Decode<GetResult> _getResDecoder =
-      (Map<String, dynamic> json) => new GetResult.fromJson(json);
+      (Map<String, dynamic> json) => GetResult.fromJson(json);
   static final Decode<DeleteResult> _deleteResDecoder =
-      (Map<String, dynamic> json) => new DeleteResult.fromJson(json);
+      (Map<String, dynamic> json) => DeleteResult.fromJson(json);
   static final Decode<SearchResult> _searchResDecoder =
-      (Map<String, dynamic> json) => new SearchResult.fromJson(json);
+      (Map<String, dynamic> json) => SearchResult.fromJson(json);
 
   ESStore(this._client, this._host, this._port, this._index);
 
@@ -81,8 +81,7 @@ class ESStore<T extends ESDocument> {
       .join()
       .then((content) => decode(jsonDecode(content)));
 
-  Future<HttpClientResponse> withBody(
-      HttpClientRequest request, String body) {
+  Future<HttpClientResponse> withBody(HttpClientRequest request, String body) {
     request
       ..headers.contentType = ContentType.json
       ..write(body);
