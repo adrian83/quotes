@@ -48,29 +48,21 @@ class ListAuthorsComponent extends PageSwitcher
 
   void _fetchFirstPage() => _fetchPage(0);
 
-  void _fetchPage(int pageNumber) {
-    logger.info("Fething authors page with index: $pageNumber");
-    _authorService
-        .list(PageRequest.page(pageNumber))
-        .then((page) => _authorsPage = page)
-        .catchError(handleError);
-  }
+  void _fetchPage(int pageNumber) => _authorService
+      .list(PageRequest.page(pageNumber))
+      .then((page) => _authorsPage = page)
+      .catchError(handleError);
 
-  void deleteAuthor(Author author) {
-    logger.info("Deleting author: $author");
-    _authorService
-        .delete(author.id)
-        .then((id) => showInfo("Author '${author.name}' removed"))
-        .then((_) => _authorsPage.elements.remove(author))
-        .then((_) => _authorsPage.info.total -= 1)
-        .then((_) => PageRequest.page(_authorsPage.info.curent + 1))
-        .then((req) => _authorService.list(req))
-        .then((nextPage) => nextPage.empty
-            ? null
-            : _authorsPage.elements.add(nextPage.elements[0]))
-        .then((_) => _authorsPage.empty ? _fetchPage(0) : null)
-        .catchError(handleError);
-  }
+  void deleteAuthor(Author author) => _authorService
+      .delete(author.id)
+      .then((id) => showInfo("Author '${author.name}' removed"))
+      .then((_) => _authorsPage.elements.remove(author))
+      .then((_) => _authorsPage.info.total -= 1)
+      .then((_) => PageRequest.page(_authorsPage.info.curent + 1))
+      .then((req) => _authorService.list(req))
+      .then((nextPage) => _authorsPage.last = nextPage.first)
+      .then((_) => _authorsPage.empty ? _fetchPage(0) : null)
+      .catchError(handleError);
 
   void showAuthor(Author author) => _router.navigate(showAuthorUrl(author.id));
 

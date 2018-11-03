@@ -1,17 +1,28 @@
 <h1>show author</h1>
+
 <br/>
 
 <breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
 
 <br/>
+
 <events [events]="events"></events>
 
 
-<h3>
+<h3 *ngIf="author.id != null">
   {{author.name}}
-  <i class="fas fa-trash pull-right" (click)="deleteAuthor()" style="cursor:pointer;"></i>
-  <i class="fas fa-marker pull-right" (click)="editAuthor()" style="margin-right:5px; cursor:pointer;"></i>
+  <i
+    class="fas fa-trash pull-right"
+    (click)="deleteAuthor()"
+    style="cursor:pointer;"></i>
+
+  <i
+    class="fas fa-marker pull-right"
+    (click)="editAuthor()"
+    style="margin-right:5px; cursor:pointer;"></i>
+
 </h3>
+
 <h5 *ngFor="let par of author.descriptionParts">{{ par }}</h5>
 
 <br/><br/>
@@ -25,17 +36,37 @@
 
 <br/><br/>
 
-<ul class="list-group list-group-flush">
-  <li class="list-group-item" *ngFor="let book of booksPage.elements">
-    <h4 (click)="showBook(book)" style="cursor:pointer;">{{book.title}}
-      <i class="fas fa-trash pull-right" (click)="deleteBook(book)" style="cursor:pointer;"></i>
-      <i class="fas fa-marker pull-right" (click)="editBook(book)" style="margin-right:5px; cursor:pointer;"></i>
-    </h4>
-    <div>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </div>
-  </li>
-</ul>
+<div *ngIf="author.id != null">
+  <ul class="list-group list-group-flush">
 
+    <li
+      class="list-group-item"
+      *ngFor="let book of booksPage.elements">
 
-<div>
-  <pagination [page]="booksPage.info" [switcher]="booksSwitcher"></pagination>
+      <h4>
+
+        <span
+          (click)="showBook(book)"
+          style="cursor:pointer;">{{book.title}}</span>
+
+        <i
+          class="fas fa-trash pull-right"
+          (click)="deleteBook(book)"
+          style="cursor:pointer;"></i>
+
+        <i
+          class="fas fa-marker pull-right"
+          (click)="editBook(book)"
+          style="margin-right:5px; cursor:pointer;"></i>
+
+      </h4>
+      <div>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum
+        lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem
+        ipsum lorem ipsum </div>
+    </li>
+  </ul>
+
+  <div>
+    <pagination [page]="booksPage.info" [switcher]="booksSwitcher"></pagination>
+  </div>
 </div>

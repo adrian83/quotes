@@ -92,19 +92,29 @@ class ShowBookComponent extends PageSwitcher
         .catchError(handleError);
   }
 
+  void deleteBook() => _bookService
+      .delete(_book.authorId, _book.id)
+      .then((_) => showInfo("Book '${_book.title}' deleted"))
+      .then((_) => _book = Book.empty())
+      .catchError(handleError);
+
+  void showAuthor() => _router.navigate(showAuthorUrl(_book.authorId));
+
   void showQuote(Quote quote) =>
       _router.navigate(showQuoteUrl(quote.authorId, quote.bookId, quote.id));
 
   void editQuote(Quote quote) =>
       _router.navigate(editQuoteUrl(quote.authorId, quote.bookId, quote.id));
 
+  void editBook() => _router.navigate(editBookUrl(_book.authorId, _book.id));
+
   void createQuote() =>
       _router.navigate(createQuoteUrl(_book.authorId, _book.id));
 
   List<Breadcrumb> get breadcrumbs => [
         Breadcrumb.link(listAuthorsUrl(), "authors"),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), _author.name),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), "books"),
+        Breadcrumb.link(showAuthorUrl(_author.id), _author.name),
+        Breadcrumb.link(showAuthorUrl(_author.id), "books"),
         Breadcrumb.text(_book.title).last()
       ];
 }

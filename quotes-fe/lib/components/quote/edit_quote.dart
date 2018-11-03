@@ -69,16 +69,17 @@ class EditQuoteComponent extends ErrorHandler
   void update() => _quoteService
       .update(_quote)
       .then((quote) => _quote = quote)
+      .then((_) => _oldText = _quote.text)
       .then((_) => showInfo("Quote '${_quote.text}' updated"))
       .catchError(handleError);
 
   List<Breadcrumb> get breadcrumbs => [
         Breadcrumb.link(listAuthorsUrl(), "authors"),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), _author.name),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), "books"),
-        Breadcrumb.link(showBookUrl(_book.authorId, _book.id), _book.title),
-        Breadcrumb.link(showBookUrl(_book.authorId, _book.id), "quotes"),
-        Breadcrumb.link(showQuoteUrl(_book.authorId, _book.id, _quote.id),
+        Breadcrumb.link(showAuthorUrl(_author.id), _author.name),
+        Breadcrumb.link(showAuthorUrl(_author.id), "books"),
+        Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title),
+        Breadcrumb.link(showBookUrl(_author.id, _book.id), "quotes"),
+        Breadcrumb.link(showQuoteUrl(_author.id, _book.id, _quote.id),
                 shorten(_oldText, 20)).last(),
       ];
 }

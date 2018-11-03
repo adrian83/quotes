@@ -71,9 +71,9 @@ class NewQuoteComponent extends ErrorHandler
 
   List<Breadcrumb> get breadcrumbs => [
         Breadcrumb.link(listAuthorsUrl(), "authors"),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), _author.name),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), "books"),
-        Breadcrumb.link(showBookUrl(_book.authorId, _book.id), _book.title)
+        Breadcrumb.link(showAuthorUrl(_author.id), _author.name),
+        Breadcrumb.link(showAuthorUrl(_author.id), "books"),
+        Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title)
             .last(),
       ];
 }

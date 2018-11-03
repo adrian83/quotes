@@ -8,4 +8,10 @@
 
 <events [events]="events"></events>
 
-<h3>{{quote.text}}</h3>
+<h3></h3>
+
+<h3 *ngIf="quote.id != null">
+  {{quote.text}}
+  <i class="fas fa-trash pull-right" (click)="deleteQuote()" style="cursor:pointer;"></i>
+  <i class="fas fa-marker pull-right" (click)="editQuote()" style="margin-right:5px; cursor:pointer;"></i>
+</h3>

@@ -46,6 +46,18 @@ class Page<T> {
   List<T> get elements => _elements;
   PageInfo get info => _info;
   bool get empty => this._elements == null || this._elements.length == 0;
+  T get first => empty ? null : _elements[0];
+
+  void set last(T elem) {
+    if(elem == null){
+      return;
+    }
+    if (_elements == null) {
+      _elements = [elem];
+    } else {
+      _elements.add(elem);
+    }
+  }
 
   String toString() => jsonEncode(this);
 }

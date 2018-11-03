@@ -31,18 +31,17 @@ import '../../tools/strings.dart';
 class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
   static final Logger logger = Logger('ShowQuoteComponent');
 
-  static final int pageSize = 2;
-
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
+  final Router _router;
 
   Author _author = Author.empty();
   Book _book = Book.empty();
   Quote _quote = Quote.empty();
 
   ShowQuoteComponent(
-      this._authorService, this._bookService, this._quoteService);
+      this._authorService, this._bookService, this._quoteService, this._router);
 
   Quote get quote => _quote;
 
@@ -69,13 +68,21 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
         .catchError(handleError);
   }
 
+  void editQuote() =>
+      _router.navigate(editQuoteUrl(_quote.authorId, _quote.bookId, _quote.id));
+
+  void deleteQuote() => _quoteService
+      .delete(quote.authorId, quote.bookId, quote.id)
+      .then((_) => showInfo("Quote '${shorten(_quote.text, 20)}' deleted"))
+      .then((_) => _quote = Quote.empty())
+      .catchError(handleError);
 
   List<Breadcrumb> get breadcrumbs => [
         Breadcrumb.link(listAuthorsUrl(), "authors"),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), _author.name),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), "books"),
-        Breadcrumb.link(showBookUrl(_book.authorId, _book.id), _book.title),
-        Breadcrumb.link(showBookUrl(_book.authorId, _book.id), "quotes"),
+        Breadcrumb.link(showAuthorUrl(_author.id), _author.name),
+        Breadcrumb.link(showAuthorUrl(_author.id), "books"),
+        Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title),
+        Breadcrumb.link(showBookUrl(_author.id, _book.id), "quotes"),
         Breadcrumb.text(shorten(_quote.text, 20)).last(),
       ];
 }
