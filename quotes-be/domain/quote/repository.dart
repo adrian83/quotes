@@ -24,7 +24,8 @@ class QuoteRepository {
     var req = SearchRequest()
       ..query = query
       ..size = request.limit
-      ..from = request.offset;
+      ..from = request.offset
+      ..sort = [SortElement.asc("created")];
 
     return _store.list(req).then((resp) => resp.hits).then((hits) {
       var quotes = hits.hits.map((d) => Quote.fromJson(d.source)).toList();

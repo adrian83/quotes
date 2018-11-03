@@ -26,7 +26,8 @@ class BookRepository {
     var req = SearchRequest()
       ..query = query
       ..size = request.limit
-      ..from = request.offset;
+      ..from = request.offset
+      ..sort = [SortElement.asc("created")];
 
     return _store.list(req).then((resp) => resp.hits).then((hits) {
       var books = hits.hits.map((d) => Book.fromJson(d.source)).toList();

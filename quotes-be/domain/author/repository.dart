@@ -21,7 +21,8 @@ class AuthorRepository {
   Future<Page<Author>> list(PageRequest request) {
     var req = SearchRequest.all()
       ..size = request.limit
-      ..from = request.offset;
+      ..from = request.offset
+      ..sort = [SortElement.asc("created")];
 
     return _store.list(req).then((resp) => resp.hits).then((hits) {
       var authors = hits.hits.map((d) => Author.fromJson(d.source)).toList();

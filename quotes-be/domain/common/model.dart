@@ -1,11 +1,18 @@
 import 'dart:convert';
 
+import 'package:intl/intl.dart';
+
 import '../../store/document.dart';
+
+var dateFormat = DateFormat('yyyy-MM-dd');
 
 class Entity extends ESDocument {
   String _id;
+  DateTime _createdUtc;
 
-  Entity(this._id);
+  Entity(this._id) {
+    _createdUtc = DateTime.now().toUtc();
+  }
 
   String getId() => id;
 
@@ -15,7 +22,7 @@ class Entity extends ESDocument {
     this._id = id;
   }
 
-  Map toJson() => {"id": _id};
+  Map toJson() => {"id": _id, "created": dateFormat.format(_createdUtc)};
 
   String toString() => jsonEncode(this);
 }

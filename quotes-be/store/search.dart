@@ -40,9 +40,29 @@ class JustQuery extends Query {
   Map toJson() => {"query": _query.toJson()};
 }
 
+const asc = "asc";
+const desc = "desc";
+
+class SortElement {
+  String _field, _dir;
+
+  SortElement.asc(this._field) {
+    _dir = asc;
+  }
+
+  SortElement.desc(this._field) {
+    _dir = desc;
+  }
+
+  Map toJson() => {
+        _field: {"order": _dir}
+      };
+}
+
 class SearchRequest {
   int _from = 0, _size = 10;
   Query _query;
+  List<SortElement> _sort;
 
   SearchRequest.all() {
     _query = MatchAllQuery();
@@ -62,11 +82,18 @@ class SearchRequest {
     _query = q;
   }
 
+  void set sort(List<SortElement> elems) {
+    _sort = elems;
+  }
+
   Map toJson() {
     var map = Map<String, Object>();
     map["size"] = _size;
     map["from"] = _from;
     map["query"] = _query.toJson();
+    if(_sort != null && _sort.length > 0) {
+      map["sort"] = _sort;
+    }
     return map;
   }
 }
