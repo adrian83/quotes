@@ -1,8 +1,13 @@
+import 'package:angular_router/angular_router.dart';
+
 import '../../route_paths.dart';
 
 const missing = "-";
 
 class Navigable {
+
+String param(String name, RouterState router) => router.parameters[name];
+
   String listAuthorsUrl() => RoutePaths.listAuthors.toUrl();
 
   String showAuthorUrl(String authorId) => RoutePaths.showAuthor

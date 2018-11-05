@@ -48,26 +48,15 @@ class ShowBookComponent extends PageSwitcher
   PageSwitcher get quotesSwitcher => this;
 
   @override
-  void onActivate(_, RouterState current) {
-    var authorId = current.parameters[authorIdParam];
-    var bookId = current.parameters[bookIdParam];
-    logger.info("Activating...");
-
-    _authorService
-        .get(authorId)
-        .then((author) => _author = author)
-        .catchError(handleError);
-
-    _bookService
-        .get(authorId, bookId)
-        .then((book) => _book = book)
-        .catchError(handleError);
-
-    _quoteService
-        .list(authorId, bookId, PageRequest.page(_quotesPage.info.curent))
-        .then((page) => _quotesPage = page)
-        .catchError(handleError);
-  }
+  void onActivate(_, RouterState router) => _authorService
+      .get(param(authorIdParam, router))
+      .then((author) => _author = author)
+      .then((_) => _bookService.get(_author.id, param(bookIdParam, router)))
+      .then((book) => _book = book)
+      .then((_) => PageRequest.page(_quotesPage.info.curent))
+      .then((listReq) => _quoteService.list(_author.id, _book.id, listReq))
+      .then((page) => _quotesPage = page)
+      .catchError(handleError);
 
   @override
   void change(int pageNumber) => _quoteService
@@ -75,22 +64,16 @@ class ShowBookComponent extends PageSwitcher
       .then((page) => _quotesPage = page)
       .catchError(handleError);
 
-  void deleteQuote(Quote quote) {
-    logger.info("Deleting quote: $quote");
-
-    _quoteService
-        .delete(quote.authorId, quote.bookId, quote.id)
-        .then((id) => showInfo("Quote '${quote.text}' removed"))
-        .then((_) => _quotesPage.elements.remove(quote))
-        .then((_) => _quotesPage.info.total -= 1)
-        .then((_) => PageRequest.page(_quotesPage.info.curent + 1))
-        .then((req) => _quoteService.list(_book.authorId, _book.id, req))
-        .then((nextPage) => nextPage.empty
-            ? null
-            : _quotesPage.elements.add(nextPage.elements[0]))
-        .then((_) => _quotesPage.empty ? change(0) : null)
-        .catchError(handleError);
-  }
+  void deleteQuote(Quote quote) => _quoteService
+      .delete(quote.authorId, quote.bookId, quote.id)
+      .then((id) => showInfo("Quote '${quote.text}' removed"))
+      .then((_) => _quotesPage.elements.remove(quote))
+      .then((_) => _quotesPage.info.total -= 1)
+      .then((_) => PageRequest.page(_quotesPage.info.curent + 1))
+      .then((listReq) => _quoteService.list(_author.id, _book.id, listReq))
+      .then((nextPage) => _quotesPage.last = nextPage.first)
+      .then((_) => _quotesPage.empty ? change(0) : null)
+      .catchError(handleError);
 
   void deleteBook() => _bookService
       .delete(_book.authorId, _book.id)
@@ -111,10 +94,16 @@ class ShowBookComponent extends PageSwitcher
   void createQuote() =>
       _router.navigate(createQuoteUrl(_book.authorId, _book.id));
 
-  List<Breadcrumb> get breadcrumbs => [
-        Breadcrumb.link(listAuthorsUrl(), "authors"),
-        Breadcrumb.link(showAuthorUrl(_author.id), _author.name),
-        Breadcrumb.link(showAuthorUrl(_author.id), "books"),
-        Breadcrumb.text(_book.title).last()
-      ];
+  List<Breadcrumb> get breadcrumbs {
+    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+
+    if (_author.id == null) return elems;
+    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
+    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), "books"));
+
+    if (_book.id == null) return elems;
+    elems.add(Breadcrumb.text(_book.title).last());
+
+    return elems;
+  }
 }

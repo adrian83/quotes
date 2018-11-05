@@ -39,24 +39,13 @@ class ShowAuthorComponent extends PageSwitcher
   PageSwitcher get booksSwitcher => this;
 
   @override
-  void onActivate(_, RouterState current) {
-    logger.info("Activating component");
-
-    var authorId = current.parameters[authorIdParam];
-
-    _authorService
-        .get(authorId)
-        .then((author) => _author = author)
-        .then((_) => logger.info("Author fetched: ${_author.name}"))
-        .catchError(handleError);
-
-    _bookService
-        .list(authorId, PageRequest.page(_booksPage.info.curent))
-        .then((page) => _booksPage = page)
-        .then(
-            (_) => logger.info("BooksPage fetched: ${_booksPage.info.curent}"))
-        .catchError(handleError);
-  }
+  void onActivate(_, RouterState router) => _authorService
+      .get(param(authorIdParam, router))
+      .then((author) => _author = author)
+      .then((_) => PageRequest.page(_booksPage.info.curent))
+      .then((listReq) => _bookService.list(_author.id, listReq))
+      .then((page) => _booksPage = page)
+      .catchError(handleError);
 
   @override
   void change(int pageNumber) => _bookService
@@ -64,22 +53,16 @@ class ShowAuthorComponent extends PageSwitcher
       .then((page) => _booksPage = page)
       .catchError(handleError);
 
-  void deleteBook(Book book) {
-    logger.info("Deleting book: $book");
-
-    _bookService
-        .delete(book.authorId, book.id)
-        .then((id) => showInfo("Book '${book.title}' removed"))
-        .then((id) => _booksPage.elements.remove(book))
-        .then((_) => _booksPage.info.total -= 1)
-        .then((_) => PageRequest.page(_booksPage.info.curent + 1))
-        .then((req) => _bookService.list(_author.id, req))
-        .then((nextPage) => nextPage.empty
-            ? null
-            : _booksPage.elements.add(nextPage.elements[0]))
-        .then((_) => _booksPage.empty ? change(0) : null)
-        .catchError(handleError);
-  }
+  void deleteBook(Book book) => _bookService
+      .delete(book.authorId, book.id)
+      .then((id) => showInfo("Book '${book.title}' removed"))
+      .then((id) => _booksPage.elements.remove(book))
+      .then((_) => _booksPage.info.total -= 1)
+      .then((_) => PageRequest.page(_booksPage.info.curent + 1))
+      .then((listReq) => _bookService.list(_author.id, listReq))
+      .then((nextPage) => _booksPage.last = nextPage.first)
+      .then((_) => _booksPage.empty ? change(0) : null)
+      .catchError(handleError);
 
   void deleteAuthor() => _authorService
       .delete(_author.id)
@@ -97,9 +80,12 @@ class ShowAuthorComponent extends PageSwitcher
 
   void createBook() => _router.navigate(createBookUrl(_author.id));
 
+  List<Breadcrumb> get breadcrumbs {
+    var elems = [Breadcrumb.link(RoutePaths.listAuthors.toUrl(), "authors")];
 
-  List<Breadcrumb> get breadcrumbs => [
-        Breadcrumb.link(RoutePaths.listAuthors.toUrl(), "authors"),
-        Breadcrumb.text(_author.name).last()
-      ];
+    if (_author.id == null) return elems;
+    elems.add(Breadcrumb.text(_author.name).last());
+
+    return elems;
+  }
 }

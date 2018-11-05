@@ -40,25 +40,17 @@ class NewQuoteComponent extends ErrorHandler
   NewQuoteComponent(
       this._authorService, this._bookService, this._quoteService, this._router);
 
-  @override
-  void onActivate(_, RouterState current) {
-    var authorId = current.parameters[authorIdParam];
-    var bookId = current.parameters[bookIdParam];
-    _quote.authorId = authorId;
-    _quote.bookId = bookId;
-
-    _authorService
-        .get(authorId)
-        .then((author) => _author = author)
-        .catchError(handleError);
-
-    _bookService
-        .get(authorId, bookId)
-        .then((book) => _book = book)
-        .catchError(handleError);
-  }
-
   Quote get quote => _quote;
+
+  @override
+  void onActivate(_, RouterState state) => _authorService
+      .get(param(authorIdParam, state))
+      .then((author) => _author = author)
+      .then((_) => _quote.authorId = _author.id)
+      .then((_) => _bookService.get(_author.id, param(bookIdParam, state)))
+      .then((book) => _book = book)
+      .then((_) => _quote.bookId = _book.id)
+      .catchError(handleError);
 
   void save() => _quoteService
       .create(quote)
@@ -69,11 +61,16 @@ class NewQuoteComponent extends ErrorHandler
   void _editQuote(Quote quote) =>
       _router.navigate(editQuoteUrl(quote.authorId, quote.bookId, quote.id));
 
-  List<Breadcrumb> get breadcrumbs => [
-        Breadcrumb.link(listAuthorsUrl(), "authors"),
-        Breadcrumb.link(showAuthorUrl(_author.id), _author.name),
-        Breadcrumb.link(showAuthorUrl(_author.id), "books"),
-        Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title)
-            .last(),
-      ];
+  List<Breadcrumb> get breadcrumbs{
+        var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+
+        if(_author.id == null) return elems;
+        elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
+        elems.add(Breadcrumb.link(showAuthorUrl(_author.id), "books"));
+
+if(_book.id == null) return elems;
+        elems.add(Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title).last());
+
+        return elems;
+  }
 }

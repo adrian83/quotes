@@ -37,14 +37,14 @@ class ListAuthorsComponent extends PageSwitcher
 
   ListAuthorsComponent(this._authorService, this._router);
 
+  PageSwitcher get switcher => this;
+  AuthorsPage get page => _authorsPage;
+
   @override
   void ngOnInit() => _fetchFirstPage();
 
   @override
   void change(int pageNumber) => _fetchPage(pageNumber);
-
-  PageSwitcher get switcher => this;
-  AuthorsPage get page => _authorsPage;
 
   void _fetchFirstPage() => _fetchPage(0);
 

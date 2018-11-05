@@ -36,8 +36,8 @@ class EditAuthorComponent extends ErrorHandler
   Author get author => _author;
 
   @override
-  void onActivate(_, RouterState current) => _authorService
-      .get(current.parameters[authorIdParam])
+  void onActivate(_, RouterState router) => _authorService
+      .get(param(authorIdParam, router))
       .then((author) => _author = author)
       .then((_) => _oldName = _author.name)
       .catchError(handleError);
@@ -49,8 +49,12 @@ class EditAuthorComponent extends ErrorHandler
       .then((_) => _oldName = _author.name)
       .catchError(handleError);
 
-  List<Breadcrumb> get breadcrumbs => [
-        Breadcrumb.link(listAuthorsUrl(), "authors"),
-        Breadcrumb.link(showAuthorUrl(_author.id), _oldName).last(),
-      ];
+  List<Breadcrumb> get breadcrumbs {
+    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+
+    if (_author.id == null) return elems;
+    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _oldName).last());
+
+    return elems;
+  }
 }

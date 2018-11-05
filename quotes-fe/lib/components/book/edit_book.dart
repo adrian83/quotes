@@ -35,21 +35,13 @@ class EditBookComponent extends ErrorHandler
   Author get author => _author;
 
   @override
-  void onActivate(_, RouterState current) {
-    var authorId = current.parameters[authorIdParam];
-    var bookId = current.parameters[bookIdParam];
-
-    _bookService
-        .get(authorId, bookId)
-        .then((book) => _book = book)
-        .then((_) => _oldTitle = _book.title)
-        .catchError(handleError);
-
-    _authorService
-        .get(authorId)
-        .then((author) => _author = author)
-        .catchError(handleError);
-  }
+  void onActivate(_, RouterState router) => _authorService
+      .get(router.parameters[authorIdParam])
+      .then((author) => _author = author)
+      .then((author) => _bookService.get(author.id, param(bookIdParam, router)))
+      .then((book) => _book = book)
+      .then((_) => _oldTitle = _book.title)
+      .catchError(handleError);
 
   void update() => _bookService
       .update(_book)
@@ -58,10 +50,17 @@ class EditBookComponent extends ErrorHandler
       .then((_) => _oldTitle = _book.title)
       .catchError(handleError);
 
-  List<Breadcrumb> get breadcrumbs => [
-        Breadcrumb.link(listAuthorsUrl(), "authors"),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), _author.name),
-        Breadcrumb.link(showAuthorUrl(_book.authorId), "books"),
-        Breadcrumb.link(showBookUrl(_book.authorId, _book.id), _oldTitle).last(),
-      ];
+  List<Breadcrumb> get breadcrumbs {
+    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+
+    if (_author.id == null) return elems;
+    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
+    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), "books"));
+
+    if (_book.id != null) return elems;
+    elems.add(
+        Breadcrumb.link(showBookUrl(_author.id, _book.id), _oldTitle).last());
+
+    return elems;
+  }
 }
