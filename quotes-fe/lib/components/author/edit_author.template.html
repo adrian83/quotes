@@ -8,35 +8,41 @@
 
 <events [events]="events"></events>
 
-<form>
+<div *ngIf="author.id != null">
 
-  <div class="form-group">
+  <form>
 
-    <label for="nameLabel">Name</label>
+    <div class="form-group">
+
+      <label for="nameLabel">Name</label>
+
+      <input
+        type="text"
+        class="form-control"
+        id="inputName"
+        aria-describedby="nameLabel"
+        placeholder="Enter name"
+        [(ngModel)]="author.name">
+
+    </div>
+
+    <div class="form-group">
+      
+      <label for="descriptionLabel">Description</label>
+
+      <textarea
+        class="form-control"
+        id="inputDescription"
+        rows="3"
+        [(ngModel)]="author.description"></textarea>
+
+    </div>
 
     <input
-      type="text"
-      class="form-control"
-      id="inputName"
-      aria-describedby="nameLabel"
-      placeholder="Enter name"
-      [(ngModel)]="author.name">
+      type="submit"
+      class="btn btn-primary"
+      (click)="update()"/>
 
-  </div>
+  </form>
 
-  <div class="form-group">
-    <label for="descriptionLabel">Description</label>
-
-    <textarea
-      class="form-control"
-      id="inputDescription"
-      rows="3"
-      [(ngModel)]="author.description"></textarea>
-  </div>
-
-  <input
-    type="submit"
-    class="btn btn-primary"
-    (click)="update()"/>
-
-</form>
+</div>

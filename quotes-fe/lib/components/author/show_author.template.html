@@ -8,35 +8,34 @@
 
 <events [events]="events"></events>
 
-
-<h3 *ngIf="author.id != null">
-  {{author.name}}
-  <i
-    class="fas fa-trash pull-right"
-    (click)="deleteAuthor()"
-    style="cursor:pointer;"></i>
-
-  <i
-    class="fas fa-marker pull-right"
-    (click)="editAuthor()"
-    style="margin-right:5px; cursor:pointer;"></i>
-
-</h3>
-
-<h5 *ngFor="let par of author.descriptionParts">{{ par }}</h5>
-
-<br/><br/>
-
-<input
-  (click)="createBook()"
-  *ngIf="author.id != null"
-  class="btn btn-primary"
-  type="button"
-  value="new book">
-
-<br/><br/>
-
 <div *ngIf="author.id != null">
+
+  <h3>
+    {{author.name}}
+    <i
+      class="fas fa-trash pull-right"
+      (click)="deleteAuthor()"
+      style="cursor:pointer;"></i>
+
+    <i
+      class="fas fa-marker pull-right"
+      (click)="editAuthor()"
+      style="margin-right:5px; cursor:pointer;"></i>
+
+  </h3>
+
+  <h5 *ngFor="let par of author.descriptionParts">{{ par }}</h5>
+
+  <br/><br/>
+
+  <input
+    (click)="createBook()"
+    class="btn btn-primary"
+    type="button"
+    value="new book">
+
+  <br/><br/>
+
   <ul class="list-group list-group-flush">
 
     <li
@@ -69,4 +68,5 @@
   <div>
     <pagination [page]="booksPage.info" [switcher]="booksSwitcher"></pagination>
   </div>
+    
 </div>

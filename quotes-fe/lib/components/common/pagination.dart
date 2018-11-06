@@ -64,6 +64,8 @@ class Pagination implements OnInit {
     }
 
     var pages = _pagesCount();
+    logger.info("total: ${page.total}, pages: $pages");
+
 
     if (pages < 2) {
       return [];

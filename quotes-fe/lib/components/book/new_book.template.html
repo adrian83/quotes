@@ -8,24 +8,28 @@
 
 <events [events]="events"></events> 
 
-<form>
+<div>
 
-  <div class="form-group">
-    <label for="titleLabel">Title</label>
+  <form>
+
+    <div class="form-group">
+      <label for="titleLabel">Title</label>
+
+      <input
+        type="text"
+        class="form-control"
+        id="inputTitle"
+        aria-describedby="titleLabel"
+        placeholder="Enter title"
+        [(ngModel)]="book.title">
+
+    </div>
 
     <input
-      type="text"
-      class="form-control"
-      id="inputTitle"
-      aria-describedby="titleLabel"
-      placeholder="Enter title"
-      [(ngModel)]="book.title">
+      type="submit"
+      class="btn btn-primary"
+      (click)="save()"/>
 
-  </div>
+  </form>
 
-  <input
-    type="submit"
-    class="btn btn-primary"
-    (click)="save()"/>
-
-</form>
+</div>

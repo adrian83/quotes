@@ -8,25 +8,29 @@
 
 <events [events]="events"></events>
 
-<form>
+<div *ngIf="quote.id != null">
 
-  <div class="form-group">
+  <form>
 
-    <label for="textLabel">Text</label>
+    <div class="form-group">
+
+      <label for="textLabel">Text</label>
+
+      <input
+        type="text"
+        class="form-control"
+        id="inputText"
+        aria-describedby="textLabel"
+        placeholder="Enter text"
+        [(ngModel)]="quote.text">
+
+    </div>
 
     <input
-      type="text"
-      class="form-control"
-      id="inputText"
-      aria-describedby="textLabel"
-      placeholder="Enter text"
-      [(ngModel)]="quote.text">
+      type="submit"
+      class="btn btn-primary"
+      (click)="update()"/>
 
-  </div>
+  </form>
 
-  <input
-    type="submit"
-    class="btn btn-primary"
-    (click)="update()"/>
-
-</form>
+</div>

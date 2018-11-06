@@ -8,34 +8,38 @@
 
 <events [events]="events"></events>
 
-<form>
+<div>
 
-  <div class="form-group">
-    <label for="nameLabel">Name</label>
+  <form>
+
+    <div class="form-group">
+      <label for="nameLabel">Name</label>
+
+      <input
+        type="text"
+        class="form-control"
+        id="inputName"
+        aria-describedby="nameLabel"
+        placeholder="Enter name"
+        [(ngModel)]="author.name">
+
+    </div>
+
+    <div class="form-group">
+      <label for="descriptionLabel">Description</label>
+
+      <textarea
+        class="form-control"
+        id="inputDescription"
+        rows="3"
+        [(ngModel)]="author.description"></textarea>
+    </div>
 
     <input
-      type="text"
-      class="form-control"
-      id="inputName"
-      aria-describedby="nameLabel"
-      placeholder="Enter name"
-      [(ngModel)]="author.name">
+      type="submit"
+      class="btn btn-primary"
+      (click)="save()"/>
 
-  </div>
+  </form>
 
-  <div class="form-group">
-    <label for="descriptionLabel">Description</label>
-
-    <textarea
-      class="form-control"
-      id="inputDescription"
-      rows="3"
-      [(ngModel)]="author.description"></textarea>
-  </div>
-
-  <input
-    type="submit"
-    class="btn btn-primary"
-    (click)="save()"/>
-
-</form>
+</div>

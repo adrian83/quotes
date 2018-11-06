@@ -8,35 +8,37 @@
 
 <events [events]="events"></events>
 
-<h3 *ngIf="book.id != null">
-  {{book.title}}
-  <i class="fas fa-trash pull-right" (click)="deleteBook()" style="cursor:pointer;"></i>
-  <i class="fas fa-marker pull-right" (click)="editBook()" style="margin-right:5px; cursor:pointer;"></i>
-</h3>
+<div *ngIf="book.id != null">
 
-<br/><br/>
+  <h3>
+    {{book.title}}
+    <i class="fas fa-trash pull-right" (click)="deleteBook()" style="cursor:pointer;"></i>
+    <i class="fas fa-marker pull-right" (click)="editBook()" style="margin-right:5px; cursor:pointer;"></i>
+  </h3>
 
-<input
-  *ngIf="book.id != null"
-  (click)="createQuote()"
-  class="btn btn-primary"
-  type="button"
-  value="new quote">
+  <br/><br/>
 
-<br/><br/>
+  <input
+    (click)="createQuote()"
+    class="btn btn-primary"
+    type="button"
+    value="new quote">
 
-<ul *ngIf="book.id != null" class="list-group list-group-flush">
-  <li class="list-group-item" *ngFor="let quote of quotesPage.elements">
-    <h4>
-      <span (click)="showQuote(quote)" style="cursor:pointer;">{{quote.text}}</span>
-      <i class="fas fa-trash pull-right" (click)="deleteQuote(quote)" style="cursor:pointer;"></i>
-      <i class="fas fa-marker pull-right" (click)="editQuote(quote)" style="margin-right:5px; cursor:pointer;"></i>
-    </h4>
-    <div>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </div>
-  </li>
-</ul>
+  <br/><br/>
 
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item" *ngFor="let quote of quotesPage.elements">
+      <h4>
+        <span (click)="showQuote(quote)" style="cursor:pointer;">{{quote.text}}</span>
+        <i class="fas fa-trash pull-right" (click)="deleteQuote(quote)" style="cursor:pointer;"></i>
+        <i class="fas fa-marker pull-right" (click)="editQuote(quote)" style="margin-right:5px; cursor:pointer;"></i>
+      </h4>
+      <div>lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum </div>
+    </li>
+  </ul>
 
-<div>
-  <pagination [page]="quotesPage.info" [switcher]="quotesSwitcher"></pagination>
+  <div>
+    <pagination [page]="quotesPage.info" [switcher]="quotesSwitcher"></pagination>
+  </div>
+
 </div>

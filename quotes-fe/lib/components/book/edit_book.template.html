@@ -8,25 +8,29 @@
 
 <events [events]="events"></events>
 
-<form>
+<div *ngIf="book.id != null">
 
-  <div class="form-group">
+  <form>
 
-    <label for="titleLabel">Title</label>
+    <div class="form-group">
+
+      <label for="titleLabel">Title</label>
+
+      <input
+        type="text"
+        class="form-control"
+        id="inputTitle"
+        aria-describedby="titleLabel"
+        placeholder="Enter title"
+        [(ngModel)]="book.title">
+
+    </div>
 
     <input
-      type="text"
-      class="form-control"
-      id="inputTitle"
-      aria-describedby="titleLabel"
-      placeholder="Enter title"
-      [(ngModel)]="book.title">
+      type="submit"
+      class="btn btn-primary"
+      (click)="update()"/>
 
-  </div>
+  </form>
 
-  <input
-    type="submit"
-    class="btn btn-primary"
-    (click)="update()"/>
-
-</form>
+</div>
