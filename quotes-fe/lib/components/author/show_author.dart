@@ -39,8 +39,8 @@ class ShowAuthorComponent extends PageSwitcher
   PageSwitcher get booksSwitcher => this;
 
   @override
-  void onActivate(_, RouterState router) => _authorService
-      .get(param(authorIdParam, router))
+  void onActivate(_, RouterState state) => _authorService
+      .get(param(authorIdParam, state))
       .then((author) => _author = author)
       .then((_) => PageRequest.page(_booksPage.info.curent))
       .then((listReq) => _bookService.list(_author.id, listReq))

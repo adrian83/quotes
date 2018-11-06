@@ -5,4 +5,3 @@ environment:
   sdk: '>=1.2.0'
 dependencies:
   uuid: ^1.0.3
-  intl: ^0.15.7

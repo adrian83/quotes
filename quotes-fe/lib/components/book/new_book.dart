@@ -35,8 +35,8 @@ class NewBookComponent extends ErrorHandler
   Author get author => _author;
 
   @override
-  void onActivate(_, RouterState router) => _authorService
-      .get(param(authorIdParam, router))
+  void onActivate(_, RouterState state) => _authorService
+      .get(param(authorIdParam, state))
       .then((author) => _author = author)
       .then((_) => _book.authorId = _author.id)
       .catchError(handleError);

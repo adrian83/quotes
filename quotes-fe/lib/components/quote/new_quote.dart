@@ -61,16 +61,17 @@ class NewQuoteComponent extends ErrorHandler
   void _editQuote(Quote quote) =>
       _router.navigate(editQuoteUrl(quote.authorId, quote.bookId, quote.id));
 
-  List<Breadcrumb> get breadcrumbs{
-        var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+  List<Breadcrumb> get breadcrumbs {
+    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
 
-        if(_author.id == null) return elems;
-        elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
-        elems.add(Breadcrumb.link(showAuthorUrl(_author.id), "books"));
+    if (_author.id == null) return elems;
+    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
+    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), "books"));
 
-if(_book.id == null) return elems;
-        elems.add(Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title).last());
+    if (_book.id == null) return elems;
+    elems.add(
+        Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title).last());
 
-        return elems;
+    return elems;
   }
 }

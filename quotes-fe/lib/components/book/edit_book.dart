@@ -35,10 +35,10 @@ class EditBookComponent extends ErrorHandler
   Author get author => _author;
 
   @override
-  void onActivate(_, RouterState router) => _authorService
-      .get(router.parameters[authorIdParam])
+  void onActivate(_, RouterState state) => _authorService
+      .get(state.parameters[authorIdParam])
       .then((author) => _author = author)
-      .then((author) => _bookService.get(author.id, param(bookIdParam, router)))
+      .then((author) => _bookService.get(author.id, param(bookIdParam, state)))
       .then((book) => _book = book)
       .then((_) => _oldTitle = _book.title)
       .catchError(handleError);
