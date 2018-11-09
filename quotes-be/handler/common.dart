@@ -2,7 +2,9 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:async';
 
-import '../domain/common/form.dart';
+import 'common/exception.dart';
+import 'common/form.dart';
+
 import '../domain/common/exception.dart';
 
 abstract class Handler {
@@ -38,11 +40,8 @@ abstract class Handler {
     return result;
   }
 
-  PathParseResult parsePath(List<String> segments) {
-    var pathParser = PathParser(segments);
-    var pathResult = pathParser.parse(params);
-    return pathResult;
-  }
+  PathParams parsePath(List<String> segments) => PathParams(segments, params);
+
 
   Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) => req
       .transform(utf8.decoder)
@@ -79,7 +78,7 @@ abstract class Handler {
   }
 
   void execute(
-      HttpRequest request, PathParseResult pathParams, UrlParams urlParams);
+      HttpRequest request, PathParams pathParams, UrlParams urlParams);
 
   void serverError(String msg, HttpRequest request) {
     write(msg, HttpStatus.internalServerError, request);

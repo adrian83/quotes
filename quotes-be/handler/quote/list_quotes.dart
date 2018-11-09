@@ -1,9 +1,9 @@
 import 'dart:io';
 
-import './../common.dart';
+import '../common.dart';
+import '../common/form.dart';
 
 import '../../domain/quote/service.dart';
-import '../../domain/common/form.dart';
 import '../../domain/common/model.dart';
 
 class ListQuotesHandler extends Handler {
@@ -14,34 +14,22 @@ class ListQuotesHandler extends Handler {
   ListQuotesHandler(this._quotesService) : super(_URL, "GET") {}
 
   void execute(
-      HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
-    var authorIdOrErr = pathParams.getString("authorId");
-    var bookIdOrErr = pathParams.getString("bookId");
+      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
+    var authorId = pathParams.getString("authorId");
+    var bookId = pathParams.getString("bookId");
+    var limit = urlParams.getIntOrElse("limit", 2);
+    var offset = urlParams.getIntOrElse("offset", 0);
 
-    var errors = ParseElem.errors([authorIdOrErr, bookIdOrErr]);
+    var errors = ParseElem.errors([authorId, bookId, limit, offset]);
     if (errors.length > 0) {
       badRequest(errors, request);
-      return;
-    }
-
-    var params = UrlParams(request.requestedUri.queryParameters);
-
-    var limit = params.getIntOrElse("limit", 2);
-    if (limit.hasError()) {
-      badRequest([limit.error], request);
-      return;
-    }
-
-    var offset = params.getIntOrElse("offset", 0);
-    if (offset.hasError()) {
-      badRequest([offset.error], request);
       return;
     }
 
     var req = PageRequest(limit.value, offset.value);
 
     _quotesService
-        .findQuotes(bookIdOrErr.value, req)
+        .findQuotes(bookId.value, req)
         .then((p) => ok(p, request))
         .catchError((e) => handleErrors(e, request));
   }

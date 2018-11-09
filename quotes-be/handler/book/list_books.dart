@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import './../common.dart';
+import '../common.dart';
+import '../common/form.dart';
+
 import '../../domain/book/service.dart';
-import '../../domain/common/form.dart';
 import '../../domain/common/model.dart';
 
 class ListBooksHandler extends Handler {
@@ -13,25 +14,14 @@ class ListBooksHandler extends Handler {
   ListBooksHandler(this._bookService) : super(_URL, "GET");
 
   void execute(
-      HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
-    var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var idOrErr = pathParsed.getString("authorId");
-    if (idOrErr.hasError()) {
-      badRequest([idOrErr.error], request);
-      return;
-    }
+      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
+    var idOrErr = pathParams.getString("authorId");
+    var limit = urlParams.getIntOrElse("limit", 2);
+    var offset = urlParams.getIntOrElse("offset", 0);
 
-    var params = UrlParams(request.requestedUri.queryParameters);
-
-    var limit = params.getIntOrElse("limit", 2);
-    if (limit.hasError()) {
-      badRequest([limit.error], request);
-      return;
-    }
-
-    var offset = params.getIntOrElse("offset", 0);
-    if (offset.hasError()) {
-      badRequest([offset.error], request);
+    var errors = ParseElem.errors([idOrErr, limit, offset]);
+    if (errors.length > 0) {
+      badRequest(errors, request);
       return;
     }
 

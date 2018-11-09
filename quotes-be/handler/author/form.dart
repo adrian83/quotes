@@ -2,7 +2,7 @@ import '../common/form.dart';
 import '../common/exception.dart';
 
 class AuthorForm {
-  String _name, _description;
+  String _name, _description; 
 
   AuthorForm(this._name, this._description);
 

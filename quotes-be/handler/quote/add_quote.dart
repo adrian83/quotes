@@ -1,9 +1,11 @@
 import 'dart:io';
 
-import './../common.dart';
-import '../../domain/common/form.dart';
+import 'form.dart';
+
+import '../common.dart';
+import '../common/form.dart';
+
 import '../../domain/quote/service.dart';
-import '../../domain/quote/form.dart';
 import '../../domain/quote/model.dart';
 
 class AddQuoteHandler extends Handler {
@@ -13,7 +15,7 @@ class AddQuoteHandler extends Handler {
 
   AddQuoteHandler(this._quotesService) : super(_URL, "POST");
 
-  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+  void execute(HttpRequest request, PathParams pathParams, UrlParams urlParams) {
     var authorId = pathParams.getString("authorId");
     var bookId = pathParams.getString("bookId");
 

@@ -1,9 +1,10 @@
 import 'dart:io';
 
-import './../common.dart';
+import '../common.dart';
+
+import '../common/form.dart';
 
 import '../../domain/author/service.dart';
-import '../../domain/common/form.dart';
 import '../../domain/common/model.dart';
 
 class ListAuthorsHandler extends Handler {
@@ -14,18 +15,13 @@ class ListAuthorsHandler extends Handler {
   ListAuthorsHandler(this._authorService) : super(_URL, "GET") {}
 
   void execute(
-      HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
-    print("$pathParams $urlParams");
-
+      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
     var limit = urlParams.getIntOrElse("limit", 2);
-    if (limit.hasError()) {
-      badRequest([limit.error], request);
-      return;
-    }
-
     var offset = urlParams.getIntOrElse("offset", 0);
-    if (offset.hasError()) {
-      badRequest([offset.error], request);
+
+    var errors = ParseElem.errors([limit, offset]);
+    if (errors.length > 0) {
+      badRequest(errors, request);
       return;
     }
 

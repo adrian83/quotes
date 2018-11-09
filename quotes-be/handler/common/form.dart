@@ -85,10 +85,26 @@ class UrlParams {
   }
 }
 
-class PathParseResult {
-  Map<String, String> params;
 
-  PathParseResult(this.params);
+class PathParams {
+  Map<String, String> _params;
+
+  PathParams(List<String> segments, Map<String, int> desc){
+    var entries = desc.entries
+        .where((e) => e.value < segments.length)
+        .map((e) => MapEntry(e.key, segments[e.value]))
+        .toList();
+    _params = Map<String, String>.fromEntries(entries);
+  }
+
+  ParseElem<String> getString(String name) {
+    var obj = _params[name];
+    if (obj == null) {
+      var error = ParsingError(name, "Cannot be empty");
+      return ParseElem.failure(error);
+    }
+    return ParseElem.success(obj.toString());
+  }
 
   ParseElem<int> getInt(String name) {
     ParseElem<String> parsedStr = getString(name);
@@ -105,29 +121,4 @@ class PathParseResult {
     }
   }
 
-  ParseElem<String> getString(String name) {
-    var obj = params[name];
-    if (obj == null) {
-      var error = ParsingError(name, "Cannot be empty");
-      return ParseElem.failure(error);
-    }
-    return ParseElem.success(obj.toString());
-  }
-}
-
-class PathParser {
-  List<String> segments;
-
-  PathParser(this.segments);
-
-  PathParseResult parse(Map<String, int> desc) {
-    var result = Map<String, String>();
-    var size = segments.length;
-    desc.forEach((k, v) {
-      if (v < size) {
-        result[k] = segments[v];
-      }
-    });
-    return PathParseResult(result);
-  }
 }

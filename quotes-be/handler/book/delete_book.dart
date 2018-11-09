@@ -1,8 +1,10 @@
 import 'dart:io';
 
+import '../common.dart';
+import '../common/form.dart';
+
 import './../common.dart';
 import '../../domain/book/service.dart';
-import '../../domain/common/form.dart';
 
 class DeleteBookHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books/{bookId}";
@@ -11,19 +13,20 @@ class DeleteBookHandler extends Handler {
 
   DeleteBookHandler(this._bookService) : super(_URL, "DELETE");
 
-  void execute(HttpRequest request, PathParseResult pathParams, UrlParams urlParams) {
+  void execute(
+      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
     var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var authorIdOrErr = pathParsed.getString("authorId");
-    var bookIdOrErr = pathParsed.getString("bookId");
+    var authorId = pathParsed.getString("authorId");
+    var bookId = pathParsed.getString("bookId");
 
-    var errors = ParseElem.errors([authorIdOrErr, bookIdOrErr]);
+    var errors = ParseElem.errors([authorId, bookId]);
     if (errors.length > 0) {
       badRequest(errors, request);
       return;
     }
 
     _bookService
-        .delete(bookIdOrErr.value)
+        .delete(bookId.value)
         .then((_) => ok(null, request))
         .catchError((e) => handleErrors(e, request));
   }
