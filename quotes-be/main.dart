@@ -114,17 +114,17 @@ Future main(List<String> args) async {
   Author a3 =
       await authorRepository.save(Author(null, "Shakespear", "abc def"));
 
-  Book b1 = await bookRepository.save(Book(null, "Dziady", a1.id));
-  await bookRepository.save(Book(null, "Pan Tadeusz", a1.id));
-  await bookRepository.save(Book(null, "Switez", a1.id));
+  Book b1 = await bookRepository.save(Book(null, "Dziady", "Description...", a1.id));
+  await bookRepository.save(Book(null, "Pan Tadeusz", "Description...", a1.id));
+  await bookRepository.save(Book(null, "Switez", "Description...", a1.id));
 
-  await bookRepository.save(Book(null, "Balladyna", a2.id));
-  await bookRepository.save(Book(null, "Beniowski", a2.id));
-  await bookRepository.save(Book(null, "Kordian", a2.id));
+  await bookRepository.save(Book(null, "Balladyna", "Description...", a2.id));
+  await bookRepository.save(Book(null, "Beniowski", "Description...", a2.id));
+  await bookRepository.save(Book(null, "Kordian", "Description...", a2.id));
 
-  await bookRepository.save(Book(null, "Hamlet", a3.id));
-  await bookRepository.save(Book(null, "Makbet", a3.id));
-  await bookRepository.save(Book(null, "Burza", a3.id));
+  await bookRepository.save(Book(null, "Hamlet", "Description...", a3.id));
+  await bookRepository.save(Book(null, "Makbet", "Description...", a3.id));
+  await bookRepository.save(Book(null, "Burza", "Description...", a3.id));
 
   await quoteRepository
       .save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 1", a1.id, b1.id));

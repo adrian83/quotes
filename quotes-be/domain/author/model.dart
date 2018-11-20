@@ -11,9 +11,6 @@ class Author extends Entity {
   String get name => _name;
   String get description => _description;
 
-  Map toJson() {
-    var map = super.toJson();
-    map.addAll({"name": _name, "description": _description});
-    return map;
-  }
+  Map toJson() =>
+      super.toJson()..addAll({"name": _name, "description": _description});
 }

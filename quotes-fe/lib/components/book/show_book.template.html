@@ -16,6 +16,8 @@
     <i class="fas fa-marker pull-right" (click)="editBook()" style="margin-right:5px; cursor:pointer;"></i>
   </h3>
 
+  <h5 *ngFor="let par of book.descriptionParts">{{ par }}</h5>
+
   <br/><br/>
 
   <input

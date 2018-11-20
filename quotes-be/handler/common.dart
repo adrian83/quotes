@@ -8,40 +8,33 @@ import 'common/form.dart';
 import '../domain/common/exception.dart';
 
 abstract class Handler {
-  var JSON_CONTENT = ContentType("application", "json", charset: "utf-8");
+  ContentType jsonHeader = ContentType("application", "json", charset: "utf-8");
 
   String _url, _method;
   RegExp _exp;
 
-  Map<String, int> params =  Map<String, int>();
+  Map<String, int> _pathParamsDesc;
+  String _paramPattern = r"([a-z-A-Z0-9]+)";
 
   Handler(this._url, this._method) {
-    var urlPatterns = _transoformURI(this._url);
+    var urlPatterns = _url
+            .split("/")
+            .map((e) => isPathParam(e) ? _paramPattern : e)
+            .join("/") +
+        r"[/]?$";
+
+    _exp = RegExp(urlPatterns);
+
+    _pathParamsDesc = _url.split("/").asMap().map((i, e) => MapEntry(e, i - 1))
+      ..removeWhere((e, i) => !isPathParam(e));
+
+    _pathParamsDesc = _pathParamsDesc
+        .map((e, i) => MapEntry(e.substring(1, e.length - 1), i));
+
     print("Url: $_url, RegExp: $urlPatterns");
-    _exp =  RegExp(urlPatterns);
   }
 
-  String _transoformURI(String urlPatterns) {
-    var elems = urlPatterns.split("/");
-    var result = "";
-    for (var i = 0; i < elems.length; i++) {
-      var e = elems[i];
-      if (e.startsWith("{") && e.endsWith("}")) {
-        result += r"/([a-z-A-Z0-9]+)";
-
-        var key = e.substring(1, e.length - 1);
-        params[key] = i - 1;
-      } else if (e != "") {
-        result += "/" + e;
-      }
-    }
-
-    result += r"[/]?$";
-    return result;
-  }
-
-  PathParams parsePath(List<String> segments) => PathParams(segments, params);
-
+  bool isPathParam(String elem) => elem.startsWith("{") && elem.endsWith("}");
 
   Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) => req
       .transform(utf8.decoder)
@@ -72,13 +65,13 @@ abstract class Handler {
   }
 
   void handle(HttpRequest request) {
-    var pathParams = parsePath(request.requestedUri.pathSegments);
+    var segments = request.requestedUri.pathSegments;
+    var pathParams = PathParams(segments, _pathParamsDesc);
     var uriParams = UrlParams(request.requestedUri.queryParameters);
     execute(request, pathParams, uriParams);
   }
 
-  void execute(
-      HttpRequest request, PathParams pathParams, UrlParams urlParams);
+  void execute(HttpRequest request, PathParams pathParams, UrlParams urlParams);
 
   void serverError(String msg, HttpRequest request) {
     write(msg, HttpStatus.internalServerError, request);
@@ -102,19 +95,27 @@ abstract class Handler {
 
   void write(Object body, int status, HttpRequest request) {
     var resp = request.response;
-    resp.headers.contentType = JSON_CONTENT;
+    resp.headers.contentType = jsonHeader;
 
-    // cors
-    resp.headers.set("Access-Control-Allow-Origin", "*");
-    resp.headers.set("Access-Control-Allow-Headers",
-        "origin, content-type, accept, authorization");
-    resp.headers.set("Access-Control-Allow-Methods",
-        "GET, POST, PUT, DELETE, OPTIONS, HEAD");
+    enableCORS(resp);
 
     resp.statusCode = status;
     if (body != null) {
       resp.write(jsonEncode(body));
     }
     resp.close();
+  }
+
+  String acceptOriginHeader = "Access-Control-Allow-Origin";
+  String acceptOrigin = "*";
+  String acceptHeadersHeader = "Access-Control-Allow-Headers";
+  String acceptHeaders = "origin, content-type, accept, authorization";
+  String acceptMethodsHeader = "Access-Control-Allow-Methods";
+  String acceptMethods = "GET, POST, PUT, DELETE, OPTIONS, HEAD";
+
+  void enableCORS(HttpResponse response) {
+    response.headers.set(acceptOriginHeader, acceptOrigin);
+    response.headers.set(acceptHeadersHeader, acceptHeaders);
+    response.headers.set(acceptMethodsHeader, acceptMethods);
   }
 }

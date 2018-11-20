@@ -42,7 +42,7 @@ class NewBookComponent extends ErrorHandler
       .catchError(handleError);
 
   void save() => _bookService
-      .create(book)
+      .create(book) 
       .then((book) => _book = book)
       .then((_) => _editBook(_book))
       .catchError(handleError);

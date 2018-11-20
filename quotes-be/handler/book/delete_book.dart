@@ -15,9 +15,8 @@ class DeleteBookHandler extends Handler {
 
   void execute(
       HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-    var pathParsed = parsePath(request.requestedUri.pathSegments);
-    var authorId = pathParsed.getString("authorId");
-    var bookId = pathParsed.getString("bookId");
+    var authorId = pathParams.getString("authorId");
+    var bookId = pathParams.getString("bookId");
 
     var errors = ParseElem.errors([authorId, bookId]);
     if (errors.length > 0) {

@@ -12,13 +12,10 @@ class Quote extends Entity {
   String get authorId => _authorId;
   String get bookId => _bookId;
 
-  Map toJson() {
-    var map = super.toJson();
-    map.addAll({
+  Map toJson() => super.toJson()
+    ..addAll({
       "text": _text,
       "authorId": _authorId,
       "bookId": _bookId,
     });
-    return map;
-  }
 }
