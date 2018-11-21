@@ -1,0 +1,16 @@
+{
+  "elasticsearch": {
+    "host": "localhost",
+    "port": 9200,
+    "authorsIndex": "authors6",
+    "booksIndex": "books5",
+    "quotesIndex": "quotes5"
+  },
+  "postgres": {
+    "host": "localhost",
+    "port": 5432,
+    "database": "quotes",
+    "user": "root",
+    "password": "secret"
+  }
+}

@@ -1,13 +1,24 @@
 import 'dart:io';
+import 'dart:async';
 
 import 'config/config.dart';
 
-const elasticsearchVersion = "6.4.1";
-const configPath = "./config/local.json";
-const mappingsPath = "./config/es_mapping.json";
+var nowMs = new DateTime.now().millisecondsSinceEpoch;
 
-const String runDocker = 'run-docker';
-const String runInfrastructure = 'run-infra';
+const elasticsearchVersion = "6.4.1";
+const configPath = "./infra/local.json";
+
+const postgresVersion = "11.1";
+const postgresEnvTemplatePath = "./infra/env.db.template";
+const postgresEnvPath = "./infra/env.db";
+const postgresInitScript = "./infra/db.sql";
+var postgresName = "postgresdb-$nowMs";
+
+const containerInfo = "./infra/container";
+
+const runDocker = 'run-docker';
+const runInfrastructure = 'run-infra';
+const initDatabase = 'init-db';
 
 void printMenu() {
   print("");
@@ -39,6 +50,8 @@ void main(List<String> args) async {
     return;
   }
 
+  Config config = await readConfig(configPath);
+
   String cmd = args[0];
   switch (cmd) {
     case runDocker:
@@ -46,10 +59,9 @@ void main(List<String> args) async {
       break;
 
     case runInfrastructure:
-      Config config = await readConfig(configPath);
 
 // docker run -d --name elasticsearch3 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:6.4.1
-       Command("docker", [
+      Command("docker", [
         "run",
         "-d",
         "-p",
@@ -61,8 +73,52 @@ void main(List<String> args) async {
         "elasticsearch:$elasticsearchVersion"
       ]).exec();
 
+      await File(postgresEnvTemplatePath)
+          .readAsString()
+          .then((content) => content
+              .replaceAll("--db-user--", config.postgres.user)
+              .replaceAll("--db-pass--", config.postgres.password)
+              .replaceAll("--db-name--", config.postgres.database))
+          .then((content) => File(postgresEnvPath).writeAsStringSync(content))
+          .catchError((e) => print(e));
+
+      Command("docker", [
+        "run",
+        "--name",
+        postgresName,
+        "-p",
+        "5432:${config.postgres.port}",
+        "--env-file=$postgresEnvPath",
+        "-d",
+        "postgres:$postgresVersion"
+      ]).exec();
+
+      File(containerInfo).writeAsStringSync(postgresName);
+
       break;
 
+    case initDatabase:
+
+var containerName = File(containerInfo).readAsStringSync();
+
+      // docker run --name postgres --env-file=env.db -d postgres
+      Command("docker", ["cp", postgresInitScript, "$containerName:/file.sql"])
+          .exec();
+
+// docker exec vigilant_lamport psql quotes admin -f /file.sql
+      Command("docker", [
+        "exec",
+        containerName,
+        "psql",
+        config.postgres.database,
+        config.postgres.user,
+        "-f",
+        "/file.sql"
+      ]).exec();
+
+      // docker cp ./localfile.sql containername:/container/path/file.sql
+      // docker exec containername -u postgresuser psql dbname postgresuser -f /container/path/file.sql
+      break;
     default:
       printMenu();
       return;

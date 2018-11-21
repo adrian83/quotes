@@ -50,7 +50,7 @@ abstract class Handler {
     return _exp.hasMatch(uri);
   }
 
-  void handleErrors(Exception ex, HttpRequest request) {
+  void handleErrors(Object ex, HttpRequest request) {
     if (ex is SaveFailedException) {
       serverError("cannot save entity", request);
     } else if (ex is UpdateFailedException) {

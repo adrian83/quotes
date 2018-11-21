@@ -1,9 +1,0 @@
-{
-  "elasticsearch": {
-    "host": "localhost",
-    "port": 9200,
-    "authorsIndex": "authors5",
-    "booksIndex": "books5",
-    "quotesIndex": "quotes5"
-  }
-}

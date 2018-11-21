@@ -1,41 +1,37 @@
 import 'dart:async';
 
-import 'package:uuid/uuid.dart';
+import 'package:postgres/postgres.dart';
 
 import 'model.dart';
 
-import '../common/model.dart';
-import '../../store/elasticsearch_store.dart';
-import '../../store/search.dart';
+import '../common/exception.dart';
 
 class AuthorRepository {
-  ESStore<Author> _store;
+  PostgreSQLConnection _connection;
 
-  AuthorRepository(this._store);
+  AuthorRepository(this._connection);
 
-  Future<Author> save(Author author) {
-    author.id = Uuid().v4();
-    return _store.index(author).then((_) => author);
-  }
+  Future<void> save(Author author) => _connection.execute(
+          "INSERT INTO Author (ID, NAME, DESCRIPTION, CREATED_UTC) VALUES (@id, @name, @desc, @created)",
+          substitutionValues: {
+            "id": author.id,
+            "name": author.name,
+            "desc": author.description,
+            "created": author.createdUtc
+          });
 
-  Future<Page<Author>> list(PageRequest request) {
-    var req = SearchRequest.all()
-      ..size = request.limit
-      ..from = request.offset
-      ..sort = [SortElement.asc("created")];
+  Future<Author> find(String authorId) {
+    return _connection.query("SELECT * FROM Author WHERE id = @id",
+        substitutionValues: {"id": authorId}).then((List<List<dynamic>> l) {
+      if (l.length == 0) throw FindFailedException();
+      var authorData = l[0];
 
-    return _store.list(req).then((resp) => resp.hits).then((hits) {
-      var authors = hits.hits.map((d) => Author.fromJson(d.source)).toList();
-      var info = PageInfo(request.limit, request.offset, hits.total);
-      return Page<Author>(info, authors);
+      for(int i = 0; i < authorData.length; i++){
+        print("$i  ${authorData[i]} ${authorData[i].runtimeType}\n");
+      }
+
+      print(authorData);
+      return Author(authorData[0].toString().trim(), authorData[1].toString().trim(), authorData[2].toString().trim(), authorData[3]);
     });
   }
-
-  Future<Author> find(String authorId) =>
-      _store.get(authorId).then((gr) => Author.fromJson(gr.source));
-
-  Future<Author> update(Author author) =>
-      _store.update(author).then((_) => author);
-
-  Future<void> delete(String authorId) => _store.delete(authorId);
 }

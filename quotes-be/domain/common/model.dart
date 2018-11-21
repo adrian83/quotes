@@ -2,18 +2,20 @@ import 'dart:convert';
 
 import '../../store/document.dart';
 
-
 class Entity extends ESDocument {
   String _id;
   DateTime _createdUtc;
 
-  Entity(this._id) {
-    _createdUtc = DateTime.now().toUtc();
-  } 
+  Entity(this._id, [DateTime createdUtc]) {
+_createdUtc = createdUtc == null ? DateTime.now().toUtc() : createdUtc;
+
+    print("DATE $_createdUtc");
+  }
 
   String getId() => id;
 
   String get id => _id;
+  DateTime get createdUtc => _createdUtc;
 
   void set id(String id) {
     this._id = id;

@@ -3,7 +3,7 @@ import '../common/model.dart';
 class Author extends Entity {
   String _name, _description;
 
-  Author(String id, this._name, this._description) : super(id);
+  Author(String id, this._name, this._description, [DateTime createdUtc]) : super(id, createdUtc);
 
   factory Author.fromJson(Map<String, dynamic> json) =>
       Author(json['id'], json['name'], json['description']);

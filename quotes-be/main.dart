@@ -24,6 +24,7 @@ import './handler/book/update_book.dart';
 
 import './domain/author/model.dart';
 import './domain/author/service.dart';
+import './domain/author/event_repository.dart';
 import './domain/author/repository.dart';
 
 import './domain/quote/model.dart';
@@ -36,6 +37,8 @@ import './domain/book/repository.dart';
 
 import 'store/elasticsearch_store.dart';
 
+import 'package:postgres/postgres.dart';
+
 import 'config/config.dart';
 
 Future main(List<String> args) async {
@@ -46,6 +49,15 @@ Future main(List<String> args) async {
 
   String configLocation = args[0];
   Config config = await readConfig(configLocation);
+
+  var dbConfig = config.postgres;
+
+  PostgreSQLConnection connection = PostgreSQLConnection(
+      dbConfig.host, dbConfig.port, dbConfig.database,
+      username: dbConfig.user, password: dbConfig.password);
+  await connection.open();
+
+  AuthorRepository authorRepository = AuthorRepository(connection);
 
   HttpClient client = HttpClient();
 
@@ -60,11 +72,12 @@ Future main(List<String> args) async {
   var quoteEsStore = ESStore<Quote>(
       client, esConfig.host, esConfig.port, esConfig.quotesIndex);
 
-  var authorRepository = AuthorRepository(authorEsStore);
+  var authorEventRepository = AuthorEventRepository(authorEsStore);
   var bookRepository = BookRepository(bookEsStore);
   var quoteRepository = QuoteRepository(quoteEsStore);
 
-  var authorService = AuthorService(authorRepository, bookRepository, quoteRepository);
+  var authorService =
+      AuthorService(authorRepository, authorEventRepository, bookRepository, quoteRepository);
   var bookService = BookService(bookRepository);
   var quotesService = QuotesService(quoteRepository);
 
@@ -107,14 +120,12 @@ Future main(List<String> args) async {
     listQuotesHandler
   ];
 
-  Author a1 =
-      await authorRepository.save(Author(null, "Adam Mickiewicz", "abc def"));
-  Author a2 = await authorRepository
-      .save(Author(null, "Henryk Sienkiewicz", "abc def"));
-  Author a3 =
-      await authorRepository.save(Author(null, "Shakespear", "abc def"));
+  Author a1 = await authorService.save(Author(null, "Adam Mickiewicz", "abc def"));
+  Author a2 = await authorService.save(Author(null, "Henryk Sienkiewicz", "abc def"));
+  Author a3 = await authorService.save(Author(null, "Shakespear", "abc def"));
 
-  Book b1 = await bookRepository.save(Book(null, "Dziady", "Description...", a1.id));
+  Book b1 =
+      await bookRepository.save(Book(null, "Dziady", "Description...", a1.id));
   await bookRepository.save(Book(null, "Pan Tadeusz", "Description...", a1.id));
   await bookRepository.save(Book(null, "Switez", "Description...", a1.id));
 
