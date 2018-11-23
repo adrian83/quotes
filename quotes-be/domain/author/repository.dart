@@ -50,4 +50,11 @@ class AuthorRepository {
         if (count == 0) throw FindFailedException();
         return author;
       });
+
+  Future<void> delete(String authorId) => _connection.execute(deleteAuthorStmt, substitutionValues: {
+    "id": authorId
+  }).then((count) {
+    if (count == 0) throw FindFailedException();
+  });
+
 }

@@ -32,11 +32,12 @@ class AuthorService {
   Future<Author> update(Author author) => _authorRepository
       .update(author)
       .then((_) => _authorEventRepository.update(author));
-      
+
   Future<Author> find(String authorId) => _authorRepository.find(authorId);
 
-  Future<void> delete(String authorId) => _authorEventRepository
+  Future<void> delete(String authorId) => _authorRepository
       .delete(authorId)
+      .then((_) => _authorEventRepository.delete(authorId))
       .then((_) => _bookRepository.deleteByAuthor(authorId))
       .then((_) => _quoteRepository.deleteByAuthor(authorId));
 }

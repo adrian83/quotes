@@ -9,7 +9,7 @@ import '../../store/elasticsearch_store.dart';
 import '../../store/search.dart';
 
 class BookRepository {
-  ESStore<Book> _store;
+  ESStore<BookEvent> _store;
 
   BookRepository(this._store);
 

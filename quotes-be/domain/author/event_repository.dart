@@ -9,7 +9,7 @@ import '../../store/elasticsearch_store.dart';
 import '../../store/search.dart';
 
 class AuthorEventRepository {
-  ESStore<Author> _store;
+  ESStore<AuthorEvent> _store;
 
   AuthorEventRepository(this._store);
 

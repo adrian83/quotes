@@ -9,7 +9,7 @@ import '../../store/elasticsearch_store.dart';
 import '../../store/search.dart';
 
 class QuoteRepository {
-  ESStore<Quote> _store;
+  ESStore<QuoteEvent> _store;
 
   QuoteRepository(this._store);
 

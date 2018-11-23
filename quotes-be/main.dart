@@ -63,13 +63,13 @@ Future main(List<String> args) async {
 
   var esConfig = config.elasticsearch;
 
-  var authorEsStore = ESStore<Author>(
+  var authorEsStore = ESStore<AuthorEvent>(
       client, esConfig.host, esConfig.port, esConfig.authorsIndex);
 
   var bookEsStore =
-      ESStore<Book>(client, esConfig.host, esConfig.port, esConfig.booksIndex);
+      ESStore<BookEvent>(client, esConfig.host, esConfig.port, esConfig.booksIndex);
 
-  var quoteEsStore = ESStore<Quote>(
+  var quoteEsStore = ESStore<QuoteEvent>(
       client, esConfig.host, esConfig.port, esConfig.quotesIndex);
 
   var authorEventRepository = AuthorEventRepository(authorEsStore);
