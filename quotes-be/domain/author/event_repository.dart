@@ -1,6 +1,6 @@
 import 'dart:async';
 
-
+import 'package:uuid/uuid.dart';
 
 import 'model.dart';
 
@@ -13,9 +13,10 @@ class AuthorEventRepository {
 
   AuthorEventRepository(this._store);
 
-  Future<Author> save(Author author) {
-    return _store.index(author).then((_) => author);
-  }
+  Future<Author> save(Author author) => Future.value(Uuid().v4())
+      .then((docId) => AuthorEvent.created(docId, author))
+      .then((event) => _store.index(event))
+      .then((_) => author);
 
   Future<Page<Author>> list(PageRequest request) {
     var req = SearchRequest.all()
@@ -33,8 +34,16 @@ class AuthorEventRepository {
   Future<Author> find(String authorId) =>
       _store.get(authorId).then((gr) => Author.fromJson(gr.source));
 
-  Future<Author> update(Author author) =>
-      _store.update(author).then((_) => author);
+  Future<Author> update(Author author) => Future.value(Uuid().v4())
+      .then((docId) => AuthorEvent.modified(docId, author))
+      .then((event) => _store.index(event))
+      .then((_) => author);
+  //return _store.update(authorEvent).then((_) => author);
 
-  Future<void> delete(String authorId) => _store.delete(authorId);
+  Future<void> delete(Author author) => Future.value(Uuid().v4())
+      .then((docId) => AuthorEvent.deleted(docId, author))
+      .then((event) => _store.index(event))
+      .then((_) => author);
+  //return _store.delete(authorEvent.docId);}
+
 }

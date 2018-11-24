@@ -5,6 +5,7 @@ import 'package:postgres/postgres.dart';
 import 'model.dart';
 
 import '../common/exception.dart';
+import '../common/model.dart';
 
 const insertAuthorStmt =
     "INSERT INTO Author (ID, NAME, DESCRIPTION, CREATED_UTC) VALUES (@id, @name, @desc, @created)";
@@ -12,6 +13,8 @@ const updateAuthorStmt =
     "UPDATE Author SET NAME = @name, DESCRIPTION = @desc WHERE ID = @id";
 const getAuthorStmt = "SELECT * FROM Author WHERE id = @id";
 const deleteAuthorStmt = "DELETE FROM Author WHERE id = @id";
+const listAuthorsStmt = "SELECT * FROM Author LIMIT @limit OFFSET @offset";
+const authorsCountStmt = "SELECT count(*) FROM Author";
 
 class AuthorRepository {
   PostgreSQLConnection _connection;
@@ -26,20 +29,27 @@ class AuthorRepository {
         "created": author.createdUtc
       });
 
-  Future<Author> find(String authorId) {
-    return _connection.query(getAuthorStmt,
-        substitutionValues: {"id": authorId}).then((List<List<dynamic>> l) {
-      if (l.length == 0) throw FindFailedException();
-      var authorData = l[0];
-
-      for (int i = 0; i < authorData.length; i++) {
-        print("$i  ${authorData[i]} ${authorData[i].runtimeType}\n");
-      }
-
-      print(authorData);
-      return Author.fromDB(authorData);
+  Future<Author> find(String authorId) => _connection
+        .query(getAuthorStmt, substitutionValues: {"id": authorId}).then(
+            (List<List<dynamic>> authorsData) {
+      if (authorsData.length == 0) throw FindFailedException();
+      return Author.fromDB(authorsData[0]);
     });
-  }
+  
+
+  Future<Page<Author>> findAuthors(PageRequest request) => _connection
+      .query(listAuthorsStmt, substitutionValues: {
+        "limit": request.limit,
+        "offset": request.offset
+      })
+      .then((List<List<dynamic>> authorsData) => authorsData
+          .map((List<dynamic> authorData) => Author.fromDB(authorData))
+          .toList())
+      .then((List<Author> authors) => _connection
+          .query(authorsCountStmt)
+          .then((l) => l[0][0])
+          .then((total) => PageInfo(request.limit, request.offset, total))
+          .then((info) => Page(info, authors)));
 
   Future<Author> update(Author author) =>
       _connection.execute(updateAuthorStmt, substitutionValues: {
@@ -51,10 +61,8 @@ class AuthorRepository {
         return author;
       });
 
-  Future<void> delete(String authorId) => _connection.execute(deleteAuthorStmt, substitutionValues: {
-    "id": authorId
-  }).then((count) {
-    if (count == 0) throw FindFailedException();
-  });
-
+  Future<void> delete(String authorId) => _connection.execute(deleteAuthorStmt,
+          substitutionValues: {"id": authorId}).then((count) {
+        if (count == 0) throw FindFailedException();
+      });
 }

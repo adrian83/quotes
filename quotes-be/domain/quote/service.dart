@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:uuid/uuid.dart';
+
 import 'model.dart';
 import 'repository.dart';
 
@@ -11,9 +13,16 @@ class QuotesService {
   QuotesService(this._quotesRepository);
 
   Future<Page<Quote>> findQuotes(String bookId, PageRequest request) =>
-      _quotesRepository.find(bookId, request);
-  Future<Quote> save(Quote quote) => _quotesRepository.save(quote);
+      _quotesRepository.findQuotes(bookId, request);
+
+  Future<Quote> save(Quote quote) {
+    quote.id = Uuid().v4();
+    return _quotesRepository.save(quote);
+    //.then((_) => _authorEventRepository.save(author));
+  }
+  // => _quotesRepository.save(quote);
+
   Future<Quote> update(Quote quote) => _quotesRepository.update(quote);
-  Future<Quote> get(String quoteId) => _quotesRepository.get(quoteId);
+  Future<Quote> get(String quoteId) => _quotesRepository.find(quoteId);
   Future<void> delete(String quoteId) => _quotesRepository.delete(quoteId);
 }

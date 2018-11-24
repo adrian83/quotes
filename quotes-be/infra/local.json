@@ -9,7 +9,7 @@
   "postgres": {
     "host": "localhost",
     "port": 5432,
-    "database": "quotes",
+    "database": "quotes4",
     "user": "root",
     "password": "secret"
   }

@@ -42,7 +42,7 @@ class ESStore<T extends ESDocument> {
 
   Future<IndexResult> index(T doc) {
     return _client
-        .postUrl(Uri.parse(_indexUri(doc.getId())))
+        .postUrl(Uri.parse(_indexUri(doc.docId)))
         .then((httpCliReq) => withBody(httpCliReq, jsonEncode(doc)))
         .then((httpCliResp) => decode(httpCliResp, _indexResDecoder))
         .then((ir) {
@@ -52,7 +52,7 @@ class ESStore<T extends ESDocument> {
   }
 
   Future<UpdateResult> update(T doc) => _client
-          .postUrl(Uri.parse(_updateUri(doc.getId())))
+          .postUrl(Uri.parse(_updateUri(doc.docId)))
           .then(
               (httpCliReq) => withBody(httpCliReq, jsonEncode(UpdateDoc(doc))))
           .then((httpCliResp) => decode(httpCliResp, _updateResDecoder))

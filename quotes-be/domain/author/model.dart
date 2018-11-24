@@ -20,8 +20,22 @@ class Author extends Entity {
       super.toJson()..addAll({"name": _name, "description": _description});
 }
 
-class AuthorEvent extends Author implements ESDocument {
+class AuthorEvent extends ESDocument {
+  Author _author;
 
-  AuthorEvent(Author author)
-      : super(author.id, author.name, author.description, author.createdUtc);
+  AuthorEvent(String docId, String operation, this._author)
+      : super(docId, operation);
+
+  factory AuthorEvent.created(String docId, Author author) =>
+      AuthorEvent(docId, ESDocument.created, author);
+
+  factory AuthorEvent.modified(String docId, Author author) =>
+      AuthorEvent(docId, ESDocument.modified, author);
+
+  factory AuthorEvent.deleted(String docId, Author author) =>
+      AuthorEvent(docId, ESDocument.deleted, author);
+
+  Author get author => _author;
+
+  Map toJson() => super.toJson()..addAll(_author.toJson());
 }

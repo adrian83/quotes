@@ -1,51 +1,84 @@
 import 'dart:async';
 
-import 'package:uuid/uuid.dart';
+import 'package:postgres/postgres.dart';
 
 import 'model.dart';
 
+import '../common/exception.dart';
 import '../common/model.dart';
-import '../../store/elasticsearch_store.dart';
-import '../../store/search.dart';
+
+const insertBookStmt =
+    "INSERT INTO Book (ID, TITLE, DESCRIPTION, AUTHOR_ID, CREATED_UTC) VALUES (@id, @title, @desc, @authorId, @created)";
+const updateBookStmt =
+    "UPDATE Book SET TITLE = @title, DESCRIPTION = @desc WHERE ID = @id";
+const getBookStmt = "SELECT * FROM Book WHERE id = @id";
+const deleteBookStmt = "DELETE FROM Book WHERE id = @id";
+const listAuthorBooksStmt =
+    "SELECT * FROM Book WHERE AUTHOR_ID = @authorId LIMIT @limit OFFSET @offset";
+const authorBooksCountStmt =
+    "SELECT count(*) FROM Book WHERE AUTHOR_ID = @authorId";
 
 class BookRepository {
-  ESStore<BookEvent> _store;
+  PostgreSQLConnection _connection;
 
-  BookRepository(this._store);
-
-  List<Book> books = [];
-
-  Future<Book> save(Book book) {
-    book.id = Uuid().v4();
-    return _store.index(book).then((_) => book);
-  }
+  BookRepository(this._connection);
 
   Future<Page<Book>> findBooks(String authorId, PageRequest request) {
-    var query = MatchQuery("authorId", authorId);
+    return _connection
+        .query(listAuthorBooksStmt, substitutionValues: {
+          "limit": request.limit,
+          "offset": request.offset,
+          "authorId": authorId
+        })
+        .then((List<List<dynamic>> booksData) => booksData
+            .map((List<dynamic> bookData) => Book.fromDB(bookData))
+            .toList())
+        .then((List<Book> books) =>
+          _connection
+              .query(authorBooksCountStmt,
+                  substitutionValues: {"authorId": authorId})
+              .then((l) => l[0][0])
+              .then((total) => PageInfo(request.limit, request.offset, total))
+              .then((info) => Page(info, books)));
+        
+  }
 
-    var req = SearchRequest()
-      ..query = query
-      ..size = request.limit
-      ..from = request.offset
-      ..sort = [SortElement.asc("created")];
+  Future<void> save(Book book) =>
+      _connection.execute(insertBookStmt, substitutionValues: {
+        "id": book.id,
+        "title": book.title,
+        "desc": book.description,
+        "authorId": book.authorId,
+        "created": book.createdUtc
+      });
 
-    return _store.list(req).then((resp) => resp.hits).then((hits) {
-      var books = hits.hits.map((d) => Book.fromJson(d.source)).toList();
-      var info = PageInfo(request.limit, request.offset, hits.total);
-      return Page<Book>(info, books);
+  Future<Book> find(String bookId) {
+    return _connection.query(getBookStmt,
+        substitutionValues: {"id": bookId}).then((List<List<dynamic>> l) {
+      if (l.length == 0) throw FindFailedException();
+      var bookData = l[0];
+
+      for (int i = 0; i < bookData.length; i++) {
+        print("$i  ${bookData[i]} ${bookData[i].runtimeType}\n");
+      }
+
+      print(bookData);
+      return Book.fromDB(bookData);
     });
   }
 
-  Future<Book> find(String bookId) =>
-      _store.get(bookId).then((gr) => Book.fromJson(gr.source));
+  Future<Book> update(Book book) =>
+      _connection.execute(updateBookStmt, substitutionValues: {
+        "id": book.id,
+        "title": book.title,
+        "desc": book.description
+      }).then((count) {
+        if (count == 0) throw FindFailedException();
+        return book;
+      });
 
-  Future<Book> update(Book book) => _store.update(book).then((_) => book);
-
-  Future<void> delete(String bookId) => _store.delete(bookId);
-
-  Future<void> deleteByAuthor(String authorId) {
-    var query = JustQuery(MatchQuery("authorId", authorId));
-    return _store
-        .deleteByQuery(query);
-  }
+  Future<void> delete(String bookId) => _connection.execute(deleteBookStmt,
+          substitutionValues: {"id": bookId}).then((count) {
+        if (count == 0) throw FindFailedException();
+      });
 }

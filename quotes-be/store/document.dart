@@ -1,7 +1,15 @@
-
 abstract class ESDocument {
-  String getId();
-  Map toJson();
+  static final String created = "created",
+      modified = "modified",
+      deleted = "deleted";
+
+  String _docId, _operation;
+
+  ESDocument(this._docId, this._operation);
+
+  String get docId => _docId;
+
+  Map toJson() => {"docId": _docId, "operatio": _operation};
 }
 
 class UpdateDoc {
@@ -10,12 +18,9 @@ class UpdateDoc {
 
   UpdateDoc(this._doc);
 
-  Map toJson() {
-    var map = Map<String, Object>();
-    map["doc"] = _doc.toJson();
-    map["doc_as_upsert"] = _docAsUpsert;
-    map["detect_noop"] = _detectNoop;
-    return map;
-  }
-
+  Map toJson() => {
+        "doc": _doc.toJson(),
+        "doc_as_upsert": _docAsUpsert,
+        "detect_noop": _detectNoop
+      };
 }

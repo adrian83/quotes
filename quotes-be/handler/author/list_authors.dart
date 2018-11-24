@@ -31,6 +31,6 @@ class ListAuthorsHandler extends Handler {
         .findAuthors(req)
         .then((authors) => ok(authors, request))
         .catchError((e) => handleErrors(e, request));
-    ;
+    
   }
 }
