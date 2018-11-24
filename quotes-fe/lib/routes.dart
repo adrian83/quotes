@@ -5,6 +5,7 @@ import 'components/author/list_authors.template.dart' as list_authors_template;
 import 'components/author/show_author.template.dart' as show_author_template;
 import 'components/author/edit_author.template.dart' as edit_author_template;
 import 'components/author/new_author.template.dart' as new_author_template;
+import 'components/author/author_events.template.dart' as author_events_template;
 
 import 'components/book/show_book.template.dart' as show_book_template;
 import 'components/book/edit_book.template.dart' as edit_book_template;
@@ -19,7 +20,6 @@ import 'info.template.dart' as info_template;
 export 'route_paths.dart';
 
 class Routes {
-
   static final listAuthors = RouteDefinition(
     routePath: RoutePaths.listAuthors,
     component: list_authors_template.ListAuthorsComponentNgFactory,
@@ -38,6 +38,11 @@ class Routes {
   static final newAuthor = RouteDefinition(
     routePath: RoutePaths.newAuthor,
     component: new_author_template.NewAuthorComponentNgFactory,
+  );
+
+  static final authorEvents = RouteDefinition(
+    routePath: RoutePaths.authorEvents,
+    component: author_events_template.AuthorEventsComponentNgFactory,
   );
 
   static final info = RouteDefinition(
@@ -76,6 +81,17 @@ class Routes {
   );
 
   static final all = <RouteDefinition>[
-    listAuthors, newAuthor, showAuthor, editAuthor, showBook, editBook, newBook, showQuote, newQuote, editQuote, info
+    listAuthors,
+    newAuthor,
+    showAuthor,
+    editAuthor,
+    authorEvents,
+    showBook,
+    editBook,
+    newBook,
+    showQuote,
+    newQuote,
+    editQuote,
+    info
   ];
 }

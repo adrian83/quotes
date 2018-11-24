@@ -42,6 +42,9 @@ class QuoteEvent extends ESDocument {
   factory QuoteEvent.deleted(String docId, Quote quote) =>
       QuoteEvent(docId, ESDocument.deleted, quote);
 
+  factory QuoteEvent.fromJson(Map<String, dynamic> json) =>
+      QuoteEvent(json['docId'], json['operation'], Quote.fromJson(json));
+
   Quote get quote => _quote;
 
   Map toJson() => super.toJson()..addAll(_quote.toJson());

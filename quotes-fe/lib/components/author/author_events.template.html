@@ -1,0 +1,28 @@
+<h1>author events</h1>
+
+<br/>
+
+<breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
+
+<br/>
+
+<events [events]="events"></events>
+
+
+
+<br/><br/>
+<ul class="list-group list-group-flush">
+  <li class="list-group-item" *ngFor="let authorEvent of page.elements">
+    <h4>
+      
+      <span>{{ authorEvent.name }}</span>
+      <span>{{ authorEvent.operation }}</span>
+
+    </h4>
+  </li>
+</ul>
+
+
+<div>
+  <pagination [page]="page.info" [switcher]="switcher"></pagination>
+</div>

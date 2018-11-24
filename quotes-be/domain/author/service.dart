@@ -27,6 +27,8 @@ class AuthorService {
         return page;
       });
 
+  Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) => _authorEventRepository.listEvents(authorId, request);
+
   Future<Author> save(Author author) {
     author.id = Uuid().v4();
     return _authorRepository

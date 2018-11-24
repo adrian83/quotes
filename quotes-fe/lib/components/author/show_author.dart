@@ -57,11 +57,8 @@ class ShowAuthorComponent extends PageSwitcher
       .delete(book.authorId, book.id)
       .then((id) => showInfo("Book '${book.title}' removed"))
       .then((id) => _booksPage.elements.remove(book))
-      .then((_) => _booksPage.info.total -= 1)
-      .then((_) => PageRequest.page(_booksPage.info.curent + 1))
-      .then((listReq) => _bookService.list(_author.id, listReq))
-      .then((nextPage) => _booksPage.last = nextPage.first)
-      .then((_) => _booksPage.empty ? change(0) : null)
+      .then((_) => _booksPage.empty ? 0 : _booksPage.info.curent)
+      .then((pageNumber) => change(pageNumber))
       .catchError(handleError);
 
   void deleteAuthor() => _authorService

@@ -17,6 +17,11 @@ class AuthorService extends Service<Author> {
     return getEntity(url).then((json) => AuthorsPage.fromJson(json));
   }
 
+  Future<AuthorEventsPage> listEvents(String authorId, PageRequest request) {
+    var url = "$_host/authors/${authorId}/events?${this.pageRequestToUrlParams(request)}";
+    return getEntity(url).then((json) => AuthorEventsPage.fromJson(json));
+  }
+
   Future<Author> create(Author author) {
     var url = "$_host/authors";
     return createEntity(url, author).then((json) => Author.fromJson(json));

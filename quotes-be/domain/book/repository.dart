@@ -13,6 +13,7 @@ const updateBookStmt =
     "UPDATE Book SET TITLE = @title, DESCRIPTION = @desc WHERE ID = @id";
 const getBookStmt = "SELECT * FROM Book WHERE id = @id";
 const deleteBookStmt = "DELETE FROM Book WHERE id = @id";
+const deleteAuthorsBooks = "DELETE FROM Book WHERE";
 const listAuthorBooksStmt =
     "SELECT * FROM Book WHERE AUTHOR_ID = @authorId LIMIT @limit OFFSET @offset";
 const authorBooksCountStmt =
@@ -33,14 +34,12 @@ class BookRepository {
         .then((List<List<dynamic>> booksData) => booksData
             .map((List<dynamic> bookData) => Book.fromDB(bookData))
             .toList())
-        .then((List<Book> books) =>
-          _connection
-              .query(authorBooksCountStmt,
-                  substitutionValues: {"authorId": authorId})
-              .then((l) => l[0][0])
-              .then((total) => PageInfo(request.limit, request.offset, total))
-              .then((info) => Page(info, books)));
-        
+        .then((List<Book> books) => _connection
+            .query(authorBooksCountStmt,
+                substitutionValues: {"authorId": authorId})
+            .then((l) => l[0][0])
+            .then((total) => PageInfo(request.limit, request.offset, total))
+            .then((info) => Page(info, books)));
   }
 
   Future<void> save(Book book) =>

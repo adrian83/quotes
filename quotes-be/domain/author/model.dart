@@ -20,20 +20,23 @@ class Author extends Entity {
       super.toJson()..addAll({"name": _name, "description": _description});
 }
 
-class AuthorEvent extends ESDocument {
+class AuthorEvent extends ESDocument implements Jsonable {
   Author _author;
 
-  AuthorEvent(String docId, String operation, this._author)
-      : super(docId, operation);
+  AuthorEvent(String eventId, String operation, this._author)
+      : super(eventId, operation);
 
-  factory AuthorEvent.created(String docId, Author author) =>
-      AuthorEvent(docId, ESDocument.created, author);
+  factory AuthorEvent.created(String eventId, Author author) =>
+      AuthorEvent(eventId, ESDocument.created, author);
 
-  factory AuthorEvent.modified(String docId, Author author) =>
-      AuthorEvent(docId, ESDocument.modified, author);
+  factory AuthorEvent.modified(String eventId, Author author) =>
+      AuthorEvent(eventId, ESDocument.modified, author);
 
-  factory AuthorEvent.deleted(String docId, Author author) =>
-      AuthorEvent(docId, ESDocument.deleted, author);
+  factory AuthorEvent.deleted(String eventId, Author author) =>
+      AuthorEvent(eventId, ESDocument.deleted, author);
+
+  factory AuthorEvent.fromJson(Map<String, dynamic> json) =>
+      AuthorEvent(json['eventId'], json['operation'], Author.fromJson(json));
 
   Author get author => _author;
 

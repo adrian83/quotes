@@ -14,7 +14,7 @@ class ESStore<T extends ESDocument> {
   String _host, _index, _protocol = "http", _type = "doc";
   int _port;
 
-  String _indexUri(String id) =>
+  String _indexUri(String id) => 
       "$_protocol://$_host:$_port/$_index/$_type/$id";
   String _getUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id";
   String _deleteUri(String id) =>
@@ -42,7 +42,7 @@ class ESStore<T extends ESDocument> {
 
   Future<IndexResult> index(T doc) {
     return _client
-        .postUrl(Uri.parse(_indexUri(doc.docId)))
+        .postUrl(Uri.parse(_indexUri(doc.eventId)))
         .then((httpCliReq) => withBody(httpCliReq, jsonEncode(doc)))
         .then((httpCliResp) => decode(httpCliResp, _indexResDecoder))
         .then((ir) {
@@ -52,7 +52,7 @@ class ESStore<T extends ESDocument> {
   }
 
   Future<UpdateResult> update(T doc) => _client
-          .postUrl(Uri.parse(_updateUri(doc.docId)))
+          .postUrl(Uri.parse(_updateUri(doc.eventId)))
           .then(
               (httpCliReq) => withBody(httpCliReq, jsonEncode(UpdateDoc(doc))))
           .then((httpCliResp) => decode(httpCliResp, _updateResDecoder))

@@ -30,12 +30,11 @@ class AuthorRepository {
       });
 
   Future<Author> find(String authorId) => _connection
-        .query(getAuthorStmt, substitutionValues: {"id": authorId}).then(
-            (List<List<dynamic>> authorsData) {
-      if (authorsData.length == 0) throw FindFailedException();
-      return Author.fromDB(authorsData[0]);
-    });
-  
+          .query(getAuthorStmt, substitutionValues: {"id": authorId}).then(
+              (List<List<dynamic>> authorsData) {
+        if (authorsData.length == 0) throw FindFailedException();
+        return Author.fromDB(authorsData[0]);
+      });
 
   Future<Page<Author>> findAuthors(PageRequest request) => _connection
       .query(listAuthorsStmt, substitutionValues: {

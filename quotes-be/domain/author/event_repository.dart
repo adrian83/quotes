@@ -14,20 +14,23 @@ class AuthorEventRepository {
   AuthorEventRepository(this._store);
 
   Future<Author> save(Author author) => Future.value(Uuid().v4())
-      .then((docId) => AuthorEvent.created(docId, author))
+      .then((eventId) => AuthorEvent.created(eventId, author))
       .then((event) => _store.index(event))
       .then((_) => author);
 
-  Future<Page<Author>> list(PageRequest request) {
-    var req = SearchRequest.all()
+  Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) {
+    var query = MatchQuery("id", authorId);
+
+    var req = SearchRequest()
+      ..query = query
       ..size = request.limit
-      ..from = request.offset
-      ..sort = [SortElement.asc("created")];
+      ..from = request.offset;
+     // ..sort = [SortElement.asc("created")];
 
     return _store.list(req).then((resp) => resp.hits).then((hits) {
-      var authors = hits.hits.map((d) => Author.fromJson(d.source)).toList();
+      var authors = hits.hits.map((d) => AuthorEvent.fromJson(d.source)).toList();
       var info = PageInfo(request.limit, request.offset, hits.total);
-      return Page<Author>(info, authors);
+      return Page<AuthorEvent>(info, authors);
     });
   }
 
@@ -35,13 +38,13 @@ class AuthorEventRepository {
       _store.get(authorId).then((gr) => Author.fromJson(gr.source));
 
   Future<Author> update(Author author) => Future.value(Uuid().v4())
-      .then((docId) => AuthorEvent.modified(docId, author))
+      .then((eventId) => AuthorEvent.modified(eventId, author))
       .then((event) => _store.index(event))
       .then((_) => author);
   //return _store.update(authorEvent).then((_) => author);
 
   Future<void> delete(Author author) => Future.value(Uuid().v4())
-      .then((docId) => AuthorEvent.deleted(docId, author))
+      .then((eventId) => AuthorEvent.deleted(eventId, author))
       .then((event) => _store.index(event))
       .then((_) => author);
   //return _store.delete(authorEvent.docId);}

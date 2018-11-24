@@ -9,6 +9,7 @@ class RoutePaths {
   static final newAuthor = RoutePath(path: 'authors/new');
   static final showAuthor = RoutePath(path: 'authors/show/:$authorIdParam');
   static final editAuthor = RoutePath(path: 'authors/edit/:$authorIdParam');
+  static final authorEvents = RoutePath(path: 'authors/events/:$authorIdParam');
 
   static final showBook =
       RoutePath(path: 'authors/show/:$authorIdParam/books/show/:$bookIdParam');

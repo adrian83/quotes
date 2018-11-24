@@ -68,11 +68,8 @@ class ShowBookComponent extends PageSwitcher
       .delete(quote.authorId, quote.bookId, quote.id)
       .then((id) => showInfo("Quote '${quote.text}' removed"))
       .then((_) => _quotesPage.elements.remove(quote))
-      .then((_) => _quotesPage.info.total -= 1)
-      .then((_) => PageRequest.page(_quotesPage.info.curent + 1))
-      .then((listReq) => _quoteService.list(_author.id, _book.id, listReq))
-      .then((nextPage) => _quotesPage.last = nextPage.first)
-      .then((_) => _quotesPage.empty ? change(0) : null)
+      .then((_) => _quotesPage.empty ? 0 : _quotesPage.info.curent)
+      .then((pageNumber) => change(pageNumber))
       .catchError(handleError);
 
   void deleteBook() => _bookService

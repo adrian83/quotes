@@ -3,13 +3,20 @@ abstract class ESDocument {
       modified = "modified",
       deleted = "deleted";
 
-  String _docId, _operation;
+  String _eventId, _operation;
+  DateTime _modifiedUtc;
 
-  ESDocument(this._docId, this._operation);
+  ESDocument(this._eventId, this._operation, [DateTime modifiedUtc]) {
+    _modifiedUtc = modifiedUtc == null ? DateTime.now().toUtc() : modifiedUtc;
+  }
 
-  String get docId => _docId;
+  String get eventId => _eventId;
 
-  Map toJson() => {"docId": _docId, "operatio": _operation};
+  Map toJson() => {
+        "eventId": _eventId,
+        "operation": _operation,
+        "modifiedUtc": _modifiedUtc.toIso8601String()
+      };
 }
 
 class UpdateDoc {

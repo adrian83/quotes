@@ -13,12 +13,20 @@ class QuoteEventRepository {
 
   QuoteEventRepository(this._store);
 
-  Future<Quote> save(Quote quote) {
-    var docId = Uuid().v4();
-    var quoteEvent = QuoteEvent.created(docId, quote);
-    return _store.index(quoteEvent).then((_) => quote);
-    //return _store.index(quote).then((_) => quote);
-  }
+  Future<Quote> save(Quote quote) => Future.value(Uuid().v4())
+      .then((docId) => QuoteEvent.created(docId, quote))
+      .then((event) => _store.index(event))
+      .then((_) => quote);
+
+  Future<Quote> update(Quote quote) => Future.value(Uuid().v4())
+      .then((docId) => QuoteEvent.modified(docId, quote))
+      .then((event) => _store.index(event))
+      .then((_) => quote);
+
+  Future<void> delete(Quote quote) => findNewest(quote.id)
+      .then((quote) => QuoteEvent.deleted(Uuid().v4(), quote))
+      .then((event) => _store.index(event))
+      .then((_) => quote);
 
   Future<Page<Quote>> find(String bookId, PageRequest request) {
     var query = MatchQuery("bookId", bookId);
@@ -36,22 +44,24 @@ class QuoteEventRepository {
     });
   }
 
+  Future<Quote> findNewest(String quoteId) {
+    var query = MatchQuery("id", quoteId);
+
+    var req = SearchRequest()
+      ..query = query
+      ..size = 1
+      ..from = 0
+      ..sort = [SortElement.asc("modifiedUtc")];
+
+    return _store
+        .list(req)
+        .then((resp) => resp.hits)
+        .then((hits) => hits.hits.map((d) => Quote.fromJson(d.source)).toList())
+        .then((quotes) => quotes[0]);
+  }
+
   Future<Quote> get(String id) =>
       _store.get(id).then((gr) => Quote.fromJson(gr.source));
-
-  Future<Quote> update(Quote quote) {
-    var docId = Uuid().v4();
-    var quoteEvent = QuoteEvent.modified(docId, quote);
-    return _store.index(quoteEvent).then((_) => quote);
-    //_store.update(quote).then((_) => quote);
-  }
-
-  Future<void> delete(Quote quote) {
-    var docId = Uuid().v4();
-    var quoteEvent = QuoteEvent.deleted(docId, quote);
-    return _store.index(quoteEvent).then((_) => quote);
-// _store.delete(id);
-  }
 
   Future<void> deleteByAuthor(String authorId) {
     var query = JustQuery(MatchQuery("authorId", authorId));

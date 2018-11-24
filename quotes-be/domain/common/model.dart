@@ -1,13 +1,11 @@
 import 'dart:convert';
 
-class Entity {
+class Entity implements Jsonable{
   String _id;
   DateTime _createdUtc;
 
   Entity(this._id, [DateTime createdUtc]) {
     _createdUtc = createdUtc == null ? DateTime.now().toUtc() : createdUtc;
-
-    print("DATE $_createdUtc");
   }
 
   String getId() => id;
@@ -51,7 +49,11 @@ class PageInfo {
   String toString() => jsonEncode(this);
 }
 
-class Page<T extends Entity> {
+abstract class Jsonable {
+  Map toJson();
+}
+
+class Page<T extends Jsonable> {
   PageInfo _info;
   List<T> _elements;
 

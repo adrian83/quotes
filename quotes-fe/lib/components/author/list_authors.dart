@@ -57,11 +57,8 @@ class ListAuthorsComponent extends PageSwitcher
       .delete(author.id)
       .then((id) => showInfo("Author '${author.name}' removed"))
       .then((_) => _authorsPage.elements.remove(author))
-      .then((_) => _authorsPage.info.total -= 1)
-      .then((_) => PageRequest.page(_authorsPage.info.curent + 1))
-      .then((req) => _authorService.list(req))
-      .then((nextPage) => _authorsPage.last = nextPage.first)
-      .then((_) => _authorsPage.empty ? _fetchPage(0) : null)
+      .then((_) => _authorsPage.empty ? 0 : _authorsPage.info.curent)
+      .then((pageNumber) => _fetchPage(pageNumber))
       .catchError(handleError);
 
   void showAuthor(Author author) => _router.navigate(showAuthorUrl(author.id));
