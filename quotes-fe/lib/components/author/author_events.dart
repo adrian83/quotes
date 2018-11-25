@@ -31,6 +31,8 @@ class AuthorEventsComponent extends PageSwitcher
     implements OnActivate {
   static final Logger logger = Logger('AuthorEventsComponent');
 
+  static final int pageSize = 10;
+
   final AuthorService _authorService;
 
   AuthorEventsPage _authorEventPage = AuthorEventsPage.empty();
@@ -57,7 +59,7 @@ class AuthorEventsComponent extends PageSwitcher
   void _fetchFirstPage() => _fetchPage(0);
 
   void _fetchPage(int pageNumber) => _authorService
-      .listEvents(_authorId, PageRequest.page(pageNumber))
+      .listEvents(_authorId, PageRequest.pageWithSize(pageNumber, pageSize))
       .then((page) => _authorEventPage = page)
       .catchError(handleError);
 

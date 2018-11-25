@@ -94,7 +94,7 @@ Future main(List<String> args) async {
   var getAuthorHandler = GetAuthorHandler(authorService);
   var updateAuthorHandler = UpdateAuthorHandler(authorService);
   var deleteAuthorHandler = DeleteAuthorHandler(authorService);
- var authorEventsHandler = AuthorEventsHandler(authorService);
+  var authorEventsHandler = AuthorEventsHandler(authorService);
 
   var addBookHandler = AddBookHandler(bookService);
   var listBooksHandler = ListBooksHandler(bookService);
@@ -115,7 +115,6 @@ Future main(List<String> args) async {
     updateAuthorHandler,
     deleteAuthorHandler,
     listAuthorsHandler,
-    
     addBookHandler,
     getBookHandler,
     updateBookHandler,
@@ -128,11 +127,12 @@ Future main(List<String> args) async {
     listQuotesHandler
   ];
 
-  Author a1 =
-      await authorService.save(Author(null, "Adam Mickiewicz", "abc def"));
-  Author a2 =
-      await authorService.save(Author(null, "Henryk Sienkiewicz", "abc def"));
-  Author a3 = await authorService.save(Author(null, "Shakespear", "abc def"));
+  Author a1 = await authorService
+      .save(Author(null, "Adam Mickiewicz", "abc def", DateTime.now().toUtc()));
+  Author a2 = await authorService.save(
+      Author(null, "Henryk Sienkiewicz", "abc def", DateTime.now().toUtc()));
+  Author a3 = await authorService
+      .save(Author(null, "Shakespear", "abc def", DateTime.now().toUtc()));
 
   Book b1 =
       await bookService.save(Book(null, "Dziady", "Description...", a1.id));

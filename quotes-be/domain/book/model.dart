@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import '../common/model.dart';
 
 import '../../store/document.dart';
@@ -7,7 +9,7 @@ class Book extends Entity {
 
   Book(String id, this._title, this._description, this._authorId,
       [DateTime createdUtc])
-      : super(id, createdUtc);
+      : super(id, DateTime.now().toUtc());
 
   factory Book.fromJson(Map<String, dynamic> json) =>
       Book(json['id'], json['title'], json['description'], json['authorId']);
@@ -18,6 +20,11 @@ class Book extends Entity {
   String get title => _title;
   String get description => _description;
   String get authorId => _authorId;
+
+  Book generateId() {
+    id = Uuid().v4();
+    return this;
+  }
 
   Map toJson() => super.toJson()
     ..addAll({

@@ -8,7 +8,6 @@ import './../common.dart';
 import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
 
-
 class AddAuthorHandler extends Handler {
   static final _URL = r"/authors";
 
@@ -18,8 +17,8 @@ class AddAuthorHandler extends Handler {
 
   void execute(
           HttpRequest request, PathParams pathParams, UrlParams urlParams) =>
-      parseForm(request, AuthorFormParser())
-          .then((form) => Author(null, form.name, form.description))
+      parseForm(request, AuthorFormParser(false))
+          .then((form) => Author(null, form.name, form.description, nowUtc()))
           .then((author) => _authorService.save(author))
           .then((author) => created(author, request))
           .catchError((e) => handleErrors(e, request));

@@ -4,17 +4,28 @@ import '../../tools/strings.dart';
 
 class Author {
   String _id, _name, _description;
+  DateTime _createdUtc;
 
-  Author(this._id, this._name, this._description);
+  Author(this._id, this._name, this._description, this._createdUtc);
 
-  factory Author.fromJson(Map<String, dynamic> json) =>
-      Author(json["id"], json["name"], json["description"]);
+  factory Author.fromJson(Map<String, dynamic> json){
+    print("JSON $json");
+    DateTime j = null;
+    try {
+      j = DateTime.parse(json["createdUtc"]);
+    } on FormatException  catch (e) {
+      print("Error $e");
+    }
 
-  factory Author.empty() => Author(null, "", "");
+      return Author(json["id"], json["name"], json["description"], DateTime.parse(json["createdUtc"]));
+  }
+
+  factory Author.empty() => Author(null, "", "", DateTime.now().toUtc());
 
   String get id => _id;
   String get name => _name;
   String get description => _description;
+  DateTime get createdUtc => _createdUtc;
   List<String> get descriptionParts => _description.split("\n");
   String get shortDescription => shorten(_description, 250);
 
@@ -26,22 +37,23 @@ class Author {
     this._description = desc;
   }
 
-  Map toJson() => {"id": _id, "name": _name, "description": _description};
+  Map toJson() => {"id": _id, "name": _name, "description": _description, "createdUtc": _createdUtc.toIso8601String()};
 }
 
 class AuthorEvent extends Author {
   String _eventId, _operation;
 
   AuthorEvent(this._eventId, this._operation, String id, String name,
-      String description)
-      : super(id, name, description);
+      String description, DateTime createdUtc)
+      : super(id, name, description,createdUtc);
 
   factory AuthorEvent.fromJson(Map<String, dynamic> json) => AuthorEvent(
       json["eventId"],
       json["operation"],
       json["id"],
       json["name"],
-      json["description"]);
+      json["description"], 
+      DateTime.parse(json["createdUtc"]));
 
   String get eventId => _eventId;
   String get operation => _operation;

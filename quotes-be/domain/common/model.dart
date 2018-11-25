@@ -4,9 +4,7 @@ class Entity implements Jsonable{
   String _id;
   DateTime _createdUtc;
 
-  Entity(this._id, [DateTime createdUtc]) {
-    _createdUtc = createdUtc == null ? DateTime.now().toUtc() : createdUtc;
-  }
+  Entity(this._id, this._createdUtc);
 
   String getId() => id;
 
@@ -17,9 +15,7 @@ class Entity implements Jsonable{
     this._id = id;
   }
 
-  Map toJson() => {"id": _id, "created": _createdUtc.toIso8601String()};
-
-  String toString() => jsonEncode(this);
+  Map toJson() => {"id": _id, "createdUtc": _createdUtc.toIso8601String()};
 }
 
 class PageRequest {

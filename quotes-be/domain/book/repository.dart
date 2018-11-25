@@ -13,7 +13,7 @@ const updateBookStmt =
     "UPDATE Book SET TITLE = @title, DESCRIPTION = @desc WHERE ID = @id";
 const getBookStmt = "SELECT * FROM Book WHERE id = @id";
 const deleteBookStmt = "DELETE FROM Book WHERE id = @id";
-const deleteAuthorsBooks = "DELETE FROM Book WHERE";
+const deleteAuthorsBooks = "DELETE FROM Book WHERE AUTHOR_ID = @authorId";
 const listAuthorBooksStmt =
     "SELECT * FROM Book WHERE AUTHOR_ID = @authorId LIMIT @limit OFFSET @offset";
 const authorBooksCountStmt =
@@ -79,5 +79,9 @@ class BookRepository {
   Future<void> delete(String bookId) => _connection.execute(deleteBookStmt,
           substitutionValues: {"id": bookId}).then((count) {
         if (count == 0) throw FindFailedException();
+      });
+
+  Future<void> deleteByAuthor(String authorId) => _connection.execute(deleteAuthorsBooks, substitutionValues: {
+        "authorId": authorId
       });
 }

@@ -17,13 +17,13 @@ class BookService {
   Future<Page<Book>> findBooks(String authorId, PageRequest request) =>
       _bookRepository.findBooks(authorId, request);
 
-  Future<Book> save(Book book){
-    book.id = Uuid().v4();
-return _bookRepository.save(book).then((_) => _bookEventRepository.save(book));
-// _bookRepository.save(book);
-  } 
+  Future<Book> save(Book book) => _bookRepository
+      .save(book.generateId())
+      .then((_) => _bookEventRepository.save(book));
 
   Future<Book> update(Book book) => _bookRepository.update(book);
   Future<Book> find(String bookId) => _bookRepository.find(bookId);
   Future<void> delete(String bookId) => _bookRepository.delete(bookId);
+
+  Future<void> deleteByAuthor(String authorId) => _bookRepository.deleteByAuthor(authorId) ;
 }

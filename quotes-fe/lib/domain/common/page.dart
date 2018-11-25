@@ -49,7 +49,7 @@ class Page<T> {
   T get first => empty ? null : _elements[0];
 
   void set last(T elem) {
-    if(elem == null){
+    if (elem == null) {
       return;
     }
     if (_elements == null) {
@@ -71,6 +71,9 @@ class PageRequest {
 
   PageRequest.page(int pageNumber)
       : this(defPageSize, defPageSize * pageNumber);
+
+  PageRequest.pageWithSize(int pageNumber, int size)
+      : this(size, size * pageNumber);
 
   int get limit => this._limit;
   int get offset => this._offset;

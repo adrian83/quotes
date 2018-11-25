@@ -2,14 +2,14 @@
   "elasticsearch": {
     "host": "localhost",
     "port": 9200,
-    "authorsIndex": "authors7",
-    "booksIndex": "books7",
-    "quotesIndex": "quotes7"
+    "authorsIndex": "authors8",
+    "booksIndex": "books8",
+    "quotesIndex": "quotes8"
   },
   "postgres": {
     "host": "localhost",
     "port": 5432,
-    "database": "quotes7",
+    "database": "quotes8",
     "user": "root",
     "password": "secret"
   }

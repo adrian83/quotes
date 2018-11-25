@@ -29,7 +29,7 @@ class EditAuthorComponent extends ErrorHandler
   final AuthorService _authorService;
 
   String _oldName = null;
-  Author _author = Author.empty();
+  Author _author = Author.empty(); 
 
   EditAuthorComponent(this._authorService);
 
@@ -39,6 +39,7 @@ class EditAuthorComponent extends ErrorHandler
   void onActivate(_, RouterState state) => _authorService
       .get(param(authorIdParam, state))
       .then((author) => _author = author)
+      .then((_) => print("Author ${_author.toJson()}"))
       .then((_) => _oldName = _author.name)
       .catchError(handleError);
 

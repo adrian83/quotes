@@ -7,7 +7,7 @@ class Quote extends Entity {
 
   Quote(String id, this._text, this._authorId, this._bookId,
       [DateTime createdUtc])
-      : super(id, createdUtc);
+      : super(id, DateTime.now().toUtc());
 
   factory Quote.fromJson(Map<String, dynamic> json) =>
       Quote(json['id'], json['text'], json['authorId'], json['bookId']);

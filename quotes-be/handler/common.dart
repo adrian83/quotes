@@ -34,6 +34,8 @@ abstract class Handler {
     print("Url: $_url, RegExp: $urlPatterns");
   }
 
+  DateTime nowUtc() => DateTime.now().toUtc();
+
   bool isPathParam(String elem) => elem.startsWith("{") && elem.endsWith("}");
 
   Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) => req
@@ -60,7 +62,7 @@ abstract class Handler {
     } else if (ex is InvalidDataException) {
       badRequest(ex.errors, request);
     } else {
-      serverError("unknown error", request);
+      serverError("unknown error ${ex.runtimeType}", request);
     }
   }
 

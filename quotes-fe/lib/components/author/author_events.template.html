@@ -9,18 +9,25 @@
 <events [events]="events"></events>
 
 
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th> 
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Operation</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let authorEvent of page.elements; let i = index">
+      <th scope="row">{{ i+1 }}</th>
+      <td>{{ authorEvent.name }}</td>
+      <td>{{ authorEvent.description }}</td>
+      <td>{{ authorEvent.operation }}</td>
+    </tr>
+  </tbody>
+</table>
 
-<br/><br/>
-<ul class="list-group list-group-flush">
-  <li class="list-group-item" *ngFor="let authorEvent of page.elements">
-    <h4>
-      
-      <span>{{ authorEvent.name }}</span>
-      <span>{{ authorEvent.operation }}</span>
-
-    </h4>
-  </li>
-</ul>
 
 
 <div>
