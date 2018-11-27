@@ -25,8 +25,8 @@ class AddQuoteHandler extends Handler {
       return;
     }
 
-    parseForm(request, QuoteFormParser())
-        .then((form) => Quote(null, form.text, authorId.value, bookId.value))
+    parseForm(request, QuoteFormParser(false, false))
+        .then((form) => Quote(null, form.text, authorId.value, bookId.value, nowUtc(), nowUtc()))
         .then((quote) => _quotesService.save(quote))
         .then((quote) => created(quote, request))
         .catchError((e) => handleErrors(e, request));

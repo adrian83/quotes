@@ -1,21 +1,26 @@
 import 'dart:convert';
 
-class Entity implements Jsonable{
+class Entity implements Jsonable {
   String _id;
-  DateTime _createdUtc;
+  DateTime _modifiedUtc, _createdUtc;
 
-  Entity(this._id, this._createdUtc);
+  Entity(this._id, this._modifiedUtc, this._createdUtc);
 
   String getId() => id;
 
   String get id => _id;
+  DateTime get modifiedUtc => _modifiedUtc;
   DateTime get createdUtc => _createdUtc;
 
   void set id(String id) {
     this._id = id;
   }
 
-  Map toJson() => {"id": _id, "createdUtc": _createdUtc.toIso8601String()};
+  Map toJson() => {
+        "id": _id,
+        "createdUtc": _createdUtc.toIso8601String(),
+        "modifiedUtc": _modifiedUtc.toIso8601String()
+      };
 }
 
 class PageRequest {

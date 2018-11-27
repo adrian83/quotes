@@ -3,27 +3,28 @@ import '../common/exception.dart';
 
 class AuthorForm {
   String _name, _description;
-  DateTime _createdUtc;
+  DateTime _modifiedUtc, _createdUtc;
 
-  AuthorForm(this._name, this._description, this._createdUtc);
+  AuthorForm(
+      this._name, this._description, this._modifiedUtc, this._createdUtc);
 
   String get name => _name;
   String get description => _description;
+  DateTime get modifiedUtc => _modifiedUtc;
   DateTime get createdUtc => _createdUtc;
 
   Map<String, Object> toJson() => {
         "name": _name,
         "description": _description,
+        "modifiedUtc": _modifiedUtc.toIso8601String(),
         "createdUtc": _createdUtc.toIso8601String()
       };
 }
 
 class AuthorFormParser extends FormParser<AuthorForm> {
-  bool _creationDateRequired;
+  bool _modificationDateRequired, _creationDateRequired;
 
-  AuthorFormParser([bool creationDateRequired]) {
-    _creationDateRequired = creationDateRequired;
-  }
+  AuthorFormParser(this._modificationDateRequired, this._creationDateRequired);
 
   AuthorForm parse(Map rawForm) {
     List<ParsingError> errors = [];
@@ -38,27 +39,22 @@ class AuthorFormParser extends FormParser<AuthorForm> {
       errors.add(ParsingError("description", "Description cannot be empty"));
     }
 
+    Object modificationDateObj = rawForm["modifiedUtc"];
+    print("MODIFICATION DATE $modificationDateObj");
+    DateTime modifiedUtc =
+        parseDate(modificationDateObj, _modificationDateRequired, errors);
+
     Object creationDateObj = rawForm["createdUtc"];
     print("CREATION DATE $creationDateObj");
-    String creationDateStr = (creationDateObj != null &&
-            creationDateObj.toString().trim().length > 0)
-        ? creationDateObj.toString().trim()
-        : null;
-
-        print("CREATION DATE $creationDateStr");
-
-    DateTime createdUtc = null;
-    if (_creationDateRequired && creationDateStr == null) {
-      errors.add(ParsingError("createdUtc", "Creation date cannot be empty"));
-    } else if (creationDateStr != null) {
-      createdUtc = DateTime.parse(creationDateStr);
-    }
+    DateTime createdUtc =
+        parseDate(creationDateObj, _creationDateRequired, errors);
 
     if (errors.length > 0) {
       print("VALIDATION ERRORS");
       throw InvalidDataException(errors);
     }
 
-    return AuthorForm(nameObj.toString(), descObj.toString(), createdUtc);
+    return AuthorForm(
+        nameObj.toString(), descObj.toString(), modifiedUtc, createdUtc);
   }
 }

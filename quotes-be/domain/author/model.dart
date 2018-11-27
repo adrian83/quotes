@@ -6,14 +6,19 @@ import '../common/model.dart';
 class Author extends Entity {
   String _name, _description;
 
-  Author(String id, this._name, this._description, DateTime createdUtc)
-      : super(id, createdUtc);
+  Author(String id, this._name, this._description, DateTime modifiedUtc,
+      DateTime createdUtc)
+      : super(id, modifiedUtc, createdUtc);
 
-  factory Author.fromJson(Map<String, dynamic> json) =>
-      Author(json['id'], json['name'], json['description'], DateTime.parse(json['createdUtc']));
+  factory Author.fromJson(Map<String, dynamic> json) => Author(
+      json['id'],
+      json['name'],
+      json['description'],
+      DateTime.parse(json['modifiedUtc']),
+      DateTime.parse(json['createdUtc']));
 
   factory Author.fromDB(List<dynamic> row) => Author(row[0].toString().trim(),
-      row[1].toString().trim(), row[2].toString().trim(), row[3]);
+      row[1].toString().trim(), row[2].toString().trim(), row[3], row[4]);
 
   String get name => _name;
   String get description => _description;

@@ -23,8 +23,8 @@ class UpdateAuthorHandler extends Handler {
       return;
     }
 
-    parseForm(request, AuthorFormParser(true))
-        .then((form) => Author(authorId.value, form.name, form.description, form.createdUtc))
+    parseForm(request, AuthorFormParser(true, true))
+        .then((form) => Author(authorId.value, form.name, form.description, form.modifiedUtc, form.createdUtc))
         .then((quote) => _authorService.update(quote))
         .then((author) => ok(author, request))
         .catchError((e) => handleErrors(e, request));

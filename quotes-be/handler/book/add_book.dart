@@ -15,16 +15,17 @@ class AddBookHandler extends Handler {
 
   AddBookHandler(this._bookService) : super(_URL, "POST");
 
-  void execute(HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-
+  void execute(
+      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
     var authorId = pathParams.getString("authorId");
     if (authorId.hasError()) {
       badRequest([authorId.error], request);
       return;
     }
 
-    parseForm(request, BookFormParser())
-        .then((form) => Book(null, form.title, form.description, authorId.value, null))
+    parseForm(request, BookFormParser(false, false))
+        .then((form) => Book(null, form.title, form.description, authorId.value,
+            nowUtc(), nowUtc()))
         .then((book) => _bookService.save(book))
         .then((book) => created(book, request))
         .catchError((e) => handleErrors(e, request));

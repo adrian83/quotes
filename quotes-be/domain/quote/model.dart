@@ -8,14 +8,24 @@ class Quote extends Entity {
   String _text, _authorId, _bookId;
 
   Quote(String id, this._text, this._authorId, this._bookId,
-      [DateTime createdUtc])
-      : super(id, DateTime.now().toUtc());
+      DateTime modifiedUtc, DateTime createdUtc)
+      : super(id, modifiedUtc, DateTime.now().toUtc());
 
-  factory Quote.fromJson(Map<String, dynamic> json) =>
-      Quote(json['id'], json['text'], json['authorId'], json['bookId']);
+  factory Quote.fromJson(Map<String, dynamic> json) => Quote(
+      json['id'],
+      json['text'],
+      json['authorId'],
+      json['bookId'],
+      DateTime.parse(json['modifiedUtc']),
+      DateTime.parse(json['createdUtc']));
 
-  factory Quote.fromDB(List<dynamic> row) => Quote(row[0].toString().trim(),
-      row[1].toString().trim(), row[2].toString().trim(), row[3].toString().trim(), row[4]);
+  factory Quote.fromDB(List<dynamic> row) => Quote(
+      row[0].toString().trim(),
+      row[1].toString().trim(),
+      row[2].toString().trim(),
+      row[3].toString().trim(),
+      row[4],
+      row[5]);
 
   String get text => _text;
   String get authorId => _authorId;

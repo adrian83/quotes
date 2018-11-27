@@ -27,6 +27,22 @@ class ParseResult<F> {
 
 abstract class FormParser<F> {
   F parse(Map rawForm);
+
+  // todo introduce Either or Tuple2
+  DateTime parseDate(Object dateObj, bool required, List<ParsingError> errors) {
+    print("DATE $dateObj");
+    String dateStr = (dateObj != null && dateObj.toString().trim().length > 0)
+        ? dateObj.toString().trim()
+        : null;
+
+    DateTime date = null;
+    if (required && dateStr == null) {
+      errors.add(ParsingError("createdUtc", "Creation date cannot be empty"));
+    } else if (dateStr != null) {
+      date = DateTime.parse(dateStr);
+    }
+    return date;
+  }
 }
 
 class ParseElem<T> {
@@ -85,11 +101,10 @@ class UrlParams {
   }
 }
 
-
 class PathParams {
   Map<String, String> _params;
 
-  PathParams(List<String> segments, Map<String, int> desc){
+  PathParams(List<String> segments, Map<String, int> desc) {
     var entries = desc.entries
         .where((e) => e.value < segments.length)
         .map((e) => MapEntry(e.key, segments[e.value]))
@@ -120,5 +135,4 @@ class PathParams {
       return ParseElem.failure(error);
     }
   }
-
 }

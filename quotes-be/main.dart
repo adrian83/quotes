@@ -132,32 +132,40 @@ Future main(List<String> args) async {
     listQuotesHandler
   ];
 
-  Author a1 = await authorService
-      .save(Author(null, "Adam Mickiewicz", "abc def", DateTime.now().toUtc()));
-  Author a2 = await authorService.save(
-      Author(null, "Henryk Sienkiewicz", "abc def", DateTime.now().toUtc()));
-  Author a3 = await authorService
-      .save(Author(null, "Shakespear", "abc def", DateTime.now().toUtc()));
+  Author a1 = await authorService.save(Author(null, "Adam Mickiewicz",
+      "abc def", DateTime.now().toUtc(), DateTime.now().toUtc()));
+  Author a2 = await authorService.save(Author(null, "Henryk Sienkiewicz",
+      "abc def", DateTime.now().toUtc(), DateTime.now().toUtc()));
+  Author a3 = await authorService.save(Author(null, "Shakespear", "abc def",
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
 
-  Book b1 =
-      await bookService.save(Book(null, "Dziady", "Description...", a1.id, DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Pan Tadeusz", "Description...", a1.id, DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Switez", "Description...", a1.id, DateTime.now().toUtc()));
+  Book b1 = await bookService.save(Book(null, "Dziady", "Description...", a1.id,
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Pan Tadeusz", "Description...", a1.id,
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Switez", "Description...", a1.id,
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
 
-  await bookService.save(Book(null, "Balladyna", "Description...", a2.id, DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Beniowski", "Description...", a2.id, DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Kordian", "Description...", a2.id, DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Balladyna", "Description...", a2.id,
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Beniowski", "Description...", a2.id,
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Kordian", "Description...", a2.id,
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
 
-  await bookService.save(Book(null, "Hamlet", "Description...", a3.id, DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Makbet", "Description...", a3.id, DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Burza", "Description...", a3.id, DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Hamlet", "Description...", a3.id,
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Makbet", "Description...", a3.id,
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Burza", "Description...", a3.id,
+      DateTime.now().toUtc(), DateTime.now().toUtc()));
 
-  await quoteService
-      .save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 1", a1.id, b1.id));
-  await quoteService
-      .save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 2", a1.id, b1.id));
-  await quoteService
-      .save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 3", a1.id, b1.id));
+  await quoteService.save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 1",
+      a1.id, b1.id, DateTime.now().toUtc(), DateTime.now().toUtc()));
+  await quoteService.save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 2",
+      a1.id, b1.id, DateTime.now().toUtc(), DateTime.now().toUtc()));
+  await quoteService.save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 3",
+      a1.id, b1.id, DateTime.now().toUtc(), DateTime.now().toUtc()));
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 

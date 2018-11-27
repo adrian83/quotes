@@ -26,9 +26,9 @@ class UpdateQuoteHandler extends Handler {
       return;
     }
 
-    parseForm(request, QuoteFormParser())
+    parseForm(request, QuoteFormParser(true, true))
         .then((form) =>
-            Quote(quoteId.value, form.text, authorId.value, bookId.value))
+            Quote(quoteId.value, form.text, authorId.value, bookId.value, form.modifiedUtc, form.createdUtc))
         .then((quote) => _quotesService.update(quote))
         .then((quote) => ok(quote, request))
         .catchError((e) => handleErrors(e, request));

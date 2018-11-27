@@ -19,21 +19,19 @@ class BookEventRepository {
       .then((_) => book);
 
   Future<Page<Book>> findBooks(String authorId, PageRequest request) =>
-
-Future.value(MatchQuery("authorId", authorId)).then((query) => SearchRequest()
-  ..query = query
-  ..size = request.limit
-  ..from = request.offset
-  ..sort = [SortElement.asc("createdUtc")]).then((req) =>
-
-
-
-     _store.list(req)).then((resp) => resp.hits).then((hits) {
-      var books = hits.hits.map((d) => Book.fromJson(d.source)).toList();
-      var info = PageInfo(request.limit, request.offset, hits.total);
-      return Page<Book>(info, books);
-    });
-  
+      Future.value(MatchQuery("authorId", authorId))
+          .then((query) => SearchRequest()
+            ..query = query
+            ..size = request.limit
+            ..from = request.offset
+            ..sort = [SortElement.asc("createdUtc")])
+          .then((req) => _store.list(req))
+          .then((resp) => resp.hits)
+          .then((hits) {
+        var books = hits.hits.map((d) => Book.fromJson(d.source)).toList();
+        var info = PageInfo(request.limit, request.offset, hits.total);
+        return Page<Book>(info, books);
+      });
 
   Future<Book> find(String bookId) =>
       _store.get(bookId).then((gr) => Book.fromJson(gr.source));
