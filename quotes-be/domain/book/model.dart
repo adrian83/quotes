@@ -7,15 +7,25 @@ import '../../store/document.dart';
 class Book extends Entity {
   String _title, _description, _authorId;
 
-  Book(String id, this._title, this._description, this._authorId, DateTime modifiedUtc,
-      DateTime createdUtc)
+  Book(String id, this._title, this._description, this._authorId,
+      DateTime modifiedUtc, DateTime createdUtc)
       : super(id, modifiedUtc, createdUtc);
 
-  factory Book.fromJson(Map<String, dynamic> json) =>
-      Book(json['id'], json['title'], json['description'], json['authorId'], DateTime.parse(json['modifiedUtc']), DateTime.parse(json['createdUtc']));
+  factory Book.fromJson(Map<String, dynamic> json) => Book(
+      json['id'],
+      json['title'],
+      json['description'],
+      json['authorId'],
+      DateTime.parse(json['modifiedUtc']),
+      DateTime.parse(json['createdUtc']));
 
-  factory Book.fromDB(List<dynamic> row) => Book(row[0].toString().trim(),
-      row[1].toString().trim(), row[2].toString().trim(), row[3].toString().trim(), row[4], row[5]);
+  factory Book.fromDB(List<dynamic> row) => Book(
+      row[0].toString().trim(),
+      row[1].toString().trim(),
+      row[2].toString().trim(),
+      row[3].toString().trim(),
+      row[4],
+      row[5]);
 
   String get title => _title;
   String get description => _description;
