@@ -1,3 +1,9 @@
+
+const asc = "asc";
+const desc = "desc";
+
+const maxSize = 10000;
+
 abstract class Query {
   Map toJson();
 }
@@ -32,6 +38,25 @@ class TermsQuery<T> extends Query {
       };
 }
 
+class BoolQuery extends Query {
+  Query _must;
+  BoolQuery(this._must);
+
+  factory BoolQuery.must(Query must) => BoolQuery(must);
+
+  Map toJson() => {
+        "bool": _must.toJson()
+      };
+}
+
+class MustQuery extends Query {
+  List<Query> _queries;
+
+  MustQuery(this._queries);
+
+  Map toJson() => {"must": _queries.map((e) => e.toJson()).toList()};
+}
+
 class JustQuery extends Query {
   Query _query;
 
@@ -40,8 +65,7 @@ class JustQuery extends Query {
   Map toJson() => {"query": _query.toJson()};
 }
 
-const asc = "asc";
-const desc = "desc";
+
 
 class SortElement {
   String _field, _dir;
@@ -68,6 +92,16 @@ class SearchRequest {
     _query = MatchAllQuery();
   }
 
+  SearchRequest.allByQuery(Query query) {
+    _query = query;
+    _size = maxSize;
+  }
+
+  SearchRequest.oneByQuery(Query query) {
+    _query = query;
+    _size = 1;
+  }
+
   SearchRequest();
 
   void set from(int f) {
@@ -91,7 +125,7 @@ class SearchRequest {
     map["size"] = _size;
     map["from"] = _from;
     map["query"] = _query.toJson();
-    if(_sort != null && _sort.length > 0) {
+    if (_sort != null && _sort.length > 0) {
       map["sort"] = _sort;
     }
     return map;

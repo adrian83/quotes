@@ -8,7 +8,7 @@ class QuoteForm {
 
   String get text => this._text;
 
-  Map toJson() => {"text": _text};
+  Map toJson() => {"text": _text}; 
 }
 
 class QuoteFormParser extends FormParser<QuoteForm> {

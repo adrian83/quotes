@@ -11,7 +11,7 @@ import '../../domain/author/model.dart';
 class AddAuthorHandler extends Handler {
   static final _URL = r"/authors";
 
-  AuthorService _authorService;
+  AuthorService _authorService; 
 
   AddAuthorHandler(this._authorService) : super(_URL, "POST");
 

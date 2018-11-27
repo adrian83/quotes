@@ -8,7 +8,7 @@ import '../../domain/book/service.dart';
 class GetBookHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books/{bookId}";
 
-  BookService _bookService;
+  BookService _bookService; 
 
   GetBookHandler(this._bookService) : super(_URL, "GET");
 

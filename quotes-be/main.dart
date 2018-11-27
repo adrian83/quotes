@@ -81,10 +81,15 @@ Future main(List<String> args) async {
   var bookEventRepository = BookEventRepository(bookEsStore);
   var quoteEventRepository = QuoteEventRepository(quoteEsStore);
 
-  var authorService = AuthorService(authorRepository, authorEventRepository,
-      bookRepository, bookEventRepository, quoteRepository);
+  var authorService = AuthorService(
+      authorRepository,
+      authorEventRepository,
+      bookRepository,
+      bookEventRepository,
+      quoteRepository,
+      quoteEventRepository);
   var bookService = BookService(bookRepository, bookEventRepository);
-  var quoteService = QuotesService(quoteRepository);
+  var quoteService = QuotesService(quoteRepository, quoteEventRepository);
 
   var notFoundHandler = NotFoundHandler();
   var optionsHandler = OptionsHandler();
@@ -135,17 +140,17 @@ Future main(List<String> args) async {
       .save(Author(null, "Shakespear", "abc def", DateTime.now().toUtc()));
 
   Book b1 =
-      await bookService.save(Book(null, "Dziady", "Description...", a1.id));
-  await bookService.save(Book(null, "Pan Tadeusz", "Description...", a1.id));
-  await bookService.save(Book(null, "Switez", "Description...", a1.id));
+      await bookService.save(Book(null, "Dziady", "Description...", a1.id, DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Pan Tadeusz", "Description...", a1.id, DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Switez", "Description...", a1.id, DateTime.now().toUtc()));
 
-  await bookService.save(Book(null, "Balladyna", "Description...", a2.id));
-  await bookService.save(Book(null, "Beniowski", "Description...", a2.id));
-  await bookService.save(Book(null, "Kordian", "Description...", a2.id));
+  await bookService.save(Book(null, "Balladyna", "Description...", a2.id, DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Beniowski", "Description...", a2.id, DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Kordian", "Description...", a2.id, DateTime.now().toUtc()));
 
-  await bookService.save(Book(null, "Hamlet", "Description...", a3.id));
-  await bookService.save(Book(null, "Makbet", "Description...", a3.id));
-  await bookService.save(Book(null, "Burza", "Description...", a3.id));
+  await bookService.save(Book(null, "Hamlet", "Description...", a3.id, DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Makbet", "Description...", a3.id, DateTime.now().toUtc()));
+  await bookService.save(Book(null, "Burza", "Description...", a3.id, DateTime.now().toUtc()));
 
   await quoteService
       .save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 1", a1.id, b1.id));

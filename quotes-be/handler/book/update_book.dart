@@ -26,7 +26,7 @@ class UpdateBookHandler extends Handler {
     }
 
     parseForm(request, BookFormParser())
-        .then((form) => Book(bookId.value, form.title, form.description, authorId.value))
+        .then((form) => Book(bookId.value, form.title, form.description, authorId.value,null))
         .then((book) => _bookService.update(book))
         .then((book) => ok(book, request))
         .catchError((e) => handleErrors(e, request));

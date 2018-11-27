@@ -6,6 +6,7 @@ import 'repository.dart';
 import '../book/repository.dart';
 import '../book/event_repository.dart';
 import '../quote/repository.dart';
+import '../quote/event_repository.dart';
 
 import '../common/model.dart';
 
@@ -15,9 +16,15 @@ class AuthorService {
   BookRepository _bookRepository;
   BookEventRepository _bookEventRepository;
   QuoteRepository _quoteRepository;
+  QuoteEventRepository _quoteEventRepository;
 
-  AuthorService(this._authorRepository, this._authorEventRepository,
-      this._bookRepository, this._bookEventRepository, this._quoteRepository);
+  AuthorService(
+      this._authorRepository,
+      this._authorEventRepository,
+      this._bookRepository,
+      this._bookEventRepository,
+      this._quoteRepository,
+      this._quoteEventRepository);
 
   Future<Page<Author>> findAuthors(PageRequest request) =>
       _authorRepository.findAuthors(request);
@@ -39,5 +46,7 @@ class AuthorService {
       .delete(authorId)
       .then((_) => _authorEventRepository.delete(authorId))
       .then((_) => _bookRepository.deleteByAuthor(authorId))
-      .then((_) => _bookEventRepository.deleteByAuthor(authorId));
+      .then((_) => _bookEventRepository.deleteByAuthor(authorId))
+      .then((_) => _quoteRepository.deleteByAuthor(authorId))
+      .then((_) => _quoteEventRepository.deleteByAuthor(authorId));
 }

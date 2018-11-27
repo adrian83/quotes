@@ -16,6 +16,8 @@ const listBookQuotesStmt =
     "SELECT * FROM Quote WHERE BOOK_ID = @bookId LIMIT @limit OFFSET @offset";
 const bookQuotesCountStmt =
     "SELECT count(*) FROM Quote WHERE BOOK_ID = @bookId";
+const deleteAuthorQuotesStmt = "DELETE FROM Quote WHERE AUTHOR_ID = @authorId";
+const deleteBookQuotesStmt = "DELETE FROM Quote WHERE BOOK_ID = @bookId";
 
 class QuoteRepository {
   PostgreSQLConnection _connection;
@@ -76,4 +78,11 @@ class QuoteRepository {
           substitutionValues: {"id": quoteId}).then((count) {
         if (count == 0) throw FindFailedException();
       });
+
+  Future<void> deleteByAuthor(String authorId) =>
+      _connection.execute(deleteAuthorQuotesStmt,
+          substitutionValues: {"authorId": authorId});
+
+  Future<void> deleteByBook(String bookId) => _connection
+      .execute(deleteBookQuotesStmt, substitutionValues: {"bookId": bookId});
 }

@@ -14,7 +14,7 @@ class ESStore<T extends ESDocument> {
   String _host, _index, _protocol = "http", _type = "doc";
   int _port;
 
-  String _indexUri(String id) => 
+  String _indexUri(String id) =>
       "$_protocol://$_host:$_port/$_index/$_type/$id";
   String _getUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id";
   String _deleteUri(String id) =>
@@ -82,7 +82,10 @@ class ESStore<T extends ESDocument> {
 
   Future<SearchResult> list(SearchRequest searchRequest) => _client
       .postUrl(Uri.parse(_searchUri()))
-      .then((HttpClientRequest req) => withBody(req, jsonEncode(searchRequest)))
+      .then((HttpClientRequest req){
+        print("List query ${jsonEncode(searchRequest)}");
+        return withBody(req, jsonEncode(searchRequest));
+      })
       .then((HttpClientResponse resp) => decode(resp, _searchResDecoder));
 
   Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) =>

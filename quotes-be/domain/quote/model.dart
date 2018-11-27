@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import '../common/model.dart';
 
 import '../../store/document.dart';
@@ -18,6 +20,11 @@ class Quote extends Entity {
   String get text => _text;
   String get authorId => _authorId;
   String get bookId => _bookId;
+
+  Quote generateId() {
+    id = Uuid().v4();
+    return this;
+  }
 
   Map toJson() => super.toJson()
     ..addAll({

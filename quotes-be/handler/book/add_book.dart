@@ -24,7 +24,7 @@ class AddBookHandler extends Handler {
     }
 
     parseForm(request, BookFormParser())
-        .then((form) => Book(null, form.title, form.description, authorId.value))
+        .then((form) => Book(null, form.title, form.description, authorId.value, null))
         .then((book) => _bookService.save(book))
         .then((book) => created(book, request))
         .catchError((e) => handleErrors(e, request));

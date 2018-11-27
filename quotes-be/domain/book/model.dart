@@ -8,11 +8,11 @@ class Book extends Entity {
   String _title, _description, _authorId;
 
   Book(String id, this._title, this._description, this._authorId,
-      [DateTime createdUtc])
-      : super(id, DateTime.now().toUtc());
+      DateTime createdUtc)
+      : super(id, createdUtc);
 
   factory Book.fromJson(Map<String, dynamic> json) =>
-      Book(json['id'], json['title'], json['description'], json['authorId']);
+      Book(json['id'], json['title'], json['description'], json['authorId'], DateTime.parse(json['createdUtc']));
 
   factory Book.fromDB(List<dynamic> row) => Book(row[0].toString().trim(),
       row[1].toString().trim(), row[2].toString().trim(), row[3].toString().trim(), row[4]);
