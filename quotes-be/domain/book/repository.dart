@@ -8,9 +8,9 @@ import '../common/exception.dart';
 import '../common/model.dart';
 
 const insertBookStmt =
-    "INSERT INTO Book (ID, TITLE, DESCRIPTION, AUTHOR_ID, CREATED_UTC) VALUES (@id, @title, @desc, @authorId, @created)";
+    "INSERT INTO Book (ID, TITLE, DESCRIPTION, AUTHOR_ID, MODIFIED_UTC, CREATED_UTC) VALUES (@id, @title, @desc, @authorId, @modified, @created)";
 const updateBookStmt =
-    "UPDATE Book SET TITLE = @title, DESCRIPTION = @desc WHERE ID = @id";
+    "UPDATE Book SET TITLE = @title, DESCRIPTION = @desc, MODIFIED_UTC = @modified WHERE ID = @id";
 const getBookStmt = "SELECT * FROM Book WHERE id = @id";
 const deleteBookStmt = "DELETE FROM Book WHERE id = @id";
 const deleteAuthorsBooks = "DELETE FROM Book WHERE AUTHOR_ID = @authorId";
@@ -48,6 +48,7 @@ class BookRepository {
         "title": book.title,
         "desc": book.description,
         "authorId": book.authorId,
+        "modified": book.modifiedUtc,
         "created": book.createdUtc
       });
 
@@ -70,7 +71,8 @@ class BookRepository {
       _connection.execute(updateBookStmt, substitutionValues: {
         "id": book.id,
         "title": book.title,
-        "desc": book.description
+        "desc": book.description,
+        "modified": book.modifiedUtc
       }).then((count) {
         if (count == 0) throw FindFailedException();
         return book;

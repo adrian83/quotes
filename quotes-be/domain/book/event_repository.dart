@@ -51,7 +51,7 @@ class BookEventRepository {
   Future<void> delete(String bookId) => findNewest(bookId)
       .then((book) => BookEvent.deleted(Uuid().v4(), book))
       .then((event) => _store.index(event))
-      .then((_) => bookId);
+      .then((_) => print("bookevent with id $bookId removed"));
 
   Future<void> deleteByAuthor(String authorId) {
     var authorIdQ = MatchQuery("authorId", authorId);

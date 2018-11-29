@@ -88,7 +88,8 @@ Future main(List<String> args) async {
       bookEventRepository,
       quoteRepository,
       quoteEventRepository);
-  var bookService = BookService(bookRepository, bookEventRepository);
+  var bookService = BookService(bookRepository, bookEventRepository, quoteRepository,
+  quoteEventRepository);
   var quoteService = QuotesService(quoteRepository, quoteEventRepository);
 
   var notFoundHandler = NotFoundHandler();

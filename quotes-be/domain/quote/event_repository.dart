@@ -28,37 +28,31 @@ class QuoteEventRepository {
       .then((quote) => QuoteEvent.deleted(Uuid().v4(), quote))
       .then((event) => _store.index(event));
 
-  Future<Page<Quote>> find(String bookId, PageRequest request) {
-    var query = MatchQuery("bookId", bookId);
+  Future<Page<Quote>> find(String bookId, PageRequest request) =>
+      Future.value(MatchQuery("bookId", bookId))
+          .then((query) => SearchRequest()
+            ..query = query
+            ..size = request.limit
+            ..from = request.offset
+            ..sort = [SortElement.asc("created")])
+          .then((req) => _store.list(req))
+          .then((resp) => resp.hits)
+          .then((hits) {
+        var quotes = hits.hits.map((d) => Quote.fromJson(d.source)).toList();
+        var info = PageInfo(request.limit, request.offset, hits.total);
+        return Page<Quote>(info, quotes);
+      });
 
-    var req = SearchRequest()
-      ..query = query
-      ..size = request.limit
-      ..from = request.offset
-      ..sort = [SortElement.asc("created")];
-
-    return _store.list(req).then((resp) => resp.hits).then((hits) {
-      var quotes = hits.hits.map((d) => Quote.fromJson(d.source)).toList();
-      var info = PageInfo(request.limit, request.offset, hits.total);
-      return Page<Quote>(info, quotes);
-    });
-  }
-
-  Future<Quote> findNewest(String quoteId) {
-    var query = MatchQuery("id", quoteId);
-
-    var req = SearchRequest()
-      ..query = query
-      ..size = 1
-      ..from = 0
-      ..sort = [SortElement.asc("modifiedUtc")];
-
-    return _store
-        .list(req)
-        .then((resp) => resp.hits)
-        .then((hits) => hits.hits.map((d) => Quote.fromJson(d.source)).toList())
-        .then((quotes) => quotes[0]);
-  }
+  Future<Quote> findNewest(String quoteId) =>
+      Future.value(MatchQuery("id", quoteId))
+          .then((query) => MatchQuery("id", quoteId))
+          .then((query) => SearchRequest.oneByQuery(query)
+            ..sort = [SortElement.asc("modifiedUtc")])
+          .then((req) => _store.list(req))
+          .then((resp) => resp.hits)
+          .then(
+              (hits) => hits.hits.map((d) => Quote.fromJson(d.source)).toList())
+          .then((quotes) => quotes[0]);
 
   Future<Quote> get(String id) =>
       _store.get(id).then((gr) => Quote.fromJson(gr.source));
@@ -69,14 +63,11 @@ class QuoteEventRepository {
 
     var query = BoolQuery.must(MustQuery([authorIdQ, operationQ]));
 
-    var req = SearchRequest()
-      ..query = query
-      ..size = 10000
-      ..from = 0;
+    var req = SearchRequest.allByQuery(query);
 
     return _store
         .list(req)
-        .then((resp){
+        .then((resp) {
           print("Removing quotes by author. Count: ${resp.hits.total}");
           return resp.hits;
         })
@@ -85,19 +76,17 @@ class QuoteEventRepository {
   }
 
   Future<void> deleteByBook(String bookId) {
+    print("dasdsdasdasd");
+
     var bookIdQ = MatchQuery("bookId", bookId);
     var operationQ = MatchQuery("operation", ESDocument.created);
 
     var query = BoolQuery.must(MustQuery([bookIdQ, operationQ]));
-
-    var req = SearchRequest()
-      ..query = query
-      ..size = 10000
-      ..from = 0;
+    var req = SearchRequest.allByQuery(query);
 
     return _store
         .list(req)
-        .then((resp){
+        .then((resp) {
           print("Removing quotes by book. Count: ${resp.hits.total}");
           return resp.hits;
         })

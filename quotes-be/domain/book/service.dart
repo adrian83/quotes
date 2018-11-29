@@ -13,7 +13,7 @@ class BookService {
   QuoteRepository _quoteRepository;
   QuoteEventRepository _quoteEventRepository;
 
-  BookService(this._bookRepository, this._bookEventRepository);
+  BookService(this._bookRepository, this._bookEventRepository, this._quoteRepository, this._quoteEventRepository);
 
   Future<Page<Book>> findBooks(String authorId, PageRequest request) =>
       _bookRepository.findBooks(authorId, request);

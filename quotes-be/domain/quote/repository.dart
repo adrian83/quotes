@@ -8,8 +8,8 @@ import '../common/exception.dart';
 import '../common/model.dart';
 
 const insertQuoteStmt =
-    "INSERT INTO Quote (ID, TEXT, AUTHOR_ID, BOOK_ID, CREATED_UTC) VALUES (@id, @text, @authorId, @bookId, @created)";
-const updateQuoteStmt = "UPDATE Quote SET TEXT = @text WHERE ID = @id";
+    "INSERT INTO Quote (ID, TEXT, AUTHOR_ID, BOOK_ID, MODIFIED_UTC, CREATED_UTC) VALUES (@id, @text, @authorId, @bookId, @modified, @created)";
+const updateQuoteStmt = "UPDATE Quote SET TEXT = @text, MODIFIED_UTC = @modified WHERE ID = @id";
 const getQuoteStmt = "SELECT * FROM Quote WHERE id = @id";
 const deleteQuoteStmt = "DELETE FROM Quote WHERE id = @id";
 const listBookQuotesStmt =
@@ -47,6 +47,7 @@ class QuoteRepository {
         "text": quote.text,
         "authorId": quote.authorId,
         "bookId": quote.bookId,
+        "modified": quote.modifiedUtc,
         "created": quote.createdUtc
       }).then((_) => quote);
 
@@ -68,7 +69,8 @@ class QuoteRepository {
   Future<Quote> update(Quote quote) =>
       _connection.execute(updateQuoteStmt, substitutionValues: {
         "id": quote.id,
-        "text": quote.text
+        "text": quote.text,
+        "modified": quote.modifiedUtc
       }).then((count) {
         if (count == 0) throw FindFailedException();
         return quote;
@@ -83,6 +85,7 @@ class QuoteRepository {
       _connection.execute(deleteAuthorQuotesStmt,
           substitutionValues: {"authorId": authorId});
 
-  Future<void> deleteByBook(String bookId) => _connection
+  Future<void> deleteByBook(String bookId) =>_connection
       .execute(deleteBookQuotesStmt, substitutionValues: {"bookId": bookId});
+
 }

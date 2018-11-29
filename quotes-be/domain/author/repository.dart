@@ -8,9 +8,9 @@ import '../common/exception.dart';
 import '../common/model.dart';
 
 const insertAuthorStmt =
-    "INSERT INTO Author (ID, NAME, DESCRIPTION, CREATED_UTC) VALUES (@id, @name, @desc, @created)";
+    "INSERT INTO Author (ID, NAME, DESCRIPTION, MODIFIED_UTC, CREATED_UTC) VALUES (@id, @name, @desc, @modified, @created)";
 const updateAuthorStmt =
-    "UPDATE Author SET NAME = @name, DESCRIPTION = @desc WHERE ID = @id";
+    "UPDATE Author SET NAME = @name, DESCRIPTION = @desc, MODIFIED_UTC = @modified WHERE ID = @id";
 const getAuthorStmt = "SELECT * FROM Author WHERE id = @id";
 const deleteAuthorStmt = "DELETE FROM Author WHERE id = @id";
 const listAuthorsStmt = "SELECT * FROM Author LIMIT @limit OFFSET @offset";
@@ -26,6 +26,7 @@ class AuthorRepository {
         "id": author.id,
         "name": author.name,
         "desc": author.description,
+        "modified": author.modifiedUtc,
         "created": author.createdUtc
       });
 
@@ -54,6 +55,7 @@ class AuthorRepository {
       _connection.execute(updateAuthorStmt, substitutionValues: {
         "id": author.id,
         "name": author.name,
+        "modified": author.modifiedUtc,
         "desc": author.description
       }).then((count) {
         if (count == 0) throw FindFailedException();

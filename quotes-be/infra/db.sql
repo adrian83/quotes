@@ -12,6 +12,7 @@ CREATE TABLE Book (
    TITLE        CHAR(200)               NOT NULL,
    DESCRIPTION  CHAR(200)               NOT NULL,
    AUTHOR_ID    CHAR(100)               NOT NULL,
+   MODIFIED_UTC TIMESTAMP               NOT NULL,
    CREATED_UTC  TIMESTAMP               NOT NULL
 );
 
@@ -20,5 +21,6 @@ CREATE TABLE Quote (
    TEXT         CHAR(200)               NOT NULL,
    AUTHOR_ID    CHAR(100)               NOT NULL,
    BOOK_ID      CHAR(100)               NOT NULL,
+   MODIFIED_UTC TIMESTAMP               NOT NULL,
    CREATED_UTC  TIMESTAMP               NOT NULL
 );
