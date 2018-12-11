@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
@@ -43,13 +45,9 @@ class AuthorEventsComponent extends PageSwitcher
   PageSwitcher get switcher => this;
   AuthorEventsPage get page => _authorEventPage;
 
- 
-
   @override
-  void onActivate(_, RouterState state){ 
-    print("1");
+  void onActivate(_, RouterState state) {
     _authorId = param(authorIdParam, state);
-    print(_authorId);
     _fetchFirstPage();
   }
 
@@ -58,10 +56,12 @@ class AuthorEventsComponent extends PageSwitcher
 
   void _fetchFirstPage() => _fetchPage(0);
 
-  void _fetchPage(int pageNumber) => _authorService
-      .listEvents(_authorId, PageRequest.pageWithSize(pageNumber, pageSize))
-      .then((page) => _authorEventPage = page)
-      .catchError(handleError);
+  void _fetchPage(int pageNumber) =>
+      Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
+          .then((req) => _authorService.listEvents(_authorId, req))
+          .then((page) => _authorEventPage = page)
+          .catchError(handleError);
 
-  List<Breadcrumb> get breadcrumbs =>  [Breadcrumb.link(RoutePaths.listAuthors.toUrl(), "authors")];
+  List<Breadcrumb> get breadcrumbs =>
+      [Breadcrumb.link(RoutePaths.listAuthors.toUrl(), "authors")];
 }
