@@ -2,7 +2,7 @@ import 'package:uuid/uuid.dart';
 
 import '../common/model.dart';
 
-import '../../store/document.dart';
+import '../../tools/elasticsearch/document.dart';
 
 class Book extends Entity {
   String _title, _description, _authorId;

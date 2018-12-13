@@ -4,9 +4,9 @@ import 'package:uuid/uuid.dart';
 
 import 'model.dart';
 import '../common/model.dart';
-import '../../store/elasticsearch_store.dart';
-import '../../store/search.dart';
-import '../../store/document.dart';
+import '../../tools/elasticsearch/store.dart';
+import '../../tools/elasticsearch/search.dart';
+import '../../tools/elasticsearch/document.dart';
 
 class BookEventRepository {
   ESStore<BookEvent> _store;

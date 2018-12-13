@@ -1,12 +1,12 @@
 import 'dart:async';
 
 import 'model.dart';
-import 'event_repository.dart';
+import 'event.dart';
 import 'repository.dart';
 import '../book/repository.dart';
-import '../book/event_repository.dart';
+import '../book/event.dart';
 import '../quote/repository.dart';
-import '../quote/event_repository.dart';
+import '../quote/event.dart';
 
 import '../common/model.dart';
 

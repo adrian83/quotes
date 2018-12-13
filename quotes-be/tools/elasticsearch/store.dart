@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
-import './document.dart';
-import './response.dart';
-import './search.dart';
-import '../domain/common/exception.dart';
+import 'document.dart';
+import 'response.dart';
+import 'search.dart';
+import 'exception.dart';
 
 typedef Decode<T> = T Function(Map<String, dynamic> json);
 
@@ -80,13 +80,11 @@ class ESStore<T extends ESDocument> {
       .then((httpCliReq) => withBody(httpCliReq, jsonEncode(query)))
       .then((HttpClientResponse resp) => decode(resp, _delByQueryResDecoder));
 
-  Future<SearchResult> list(SearchRequest searchRequest) => _client
-      .postUrl(Uri.parse(_searchUri()))
-      .then((HttpClientRequest req){
+  Future<SearchResult> list(SearchRequest searchRequest) =>
+      _client.postUrl(Uri.parse(_searchUri())).then((HttpClientRequest req) {
         print("List query ${jsonEncode(searchRequest)}");
         return withBody(req, jsonEncode(searchRequest));
-      })
-      .then((HttpClientResponse resp) => decode(resp, _searchResDecoder));
+      }).then((HttpClientResponse resp) => decode(resp, _searchResDecoder));
 
   Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) =>
       response.transform(utf8.decoder).join().then((content) {

@@ -25,20 +25,20 @@ import './handler/book/update_book.dart';
 
 import './domain/author/model.dart';
 import './domain/author/service.dart';
-import './domain/author/event_repository.dart';
+import './domain/author/event.dart';
 import './domain/author/repository.dart';
 
 import './domain/quote/model.dart';
 import './domain/quote/service.dart';
-import './domain/quote/event_repository.dart';
+import './domain/quote/event.dart';
 import './domain/quote/repository.dart';
 
 import './domain/book/model.dart';
 import './domain/book/service.dart';
-import './domain/book/event_repository.dart';
+import './domain/book/event.dart';
 import './domain/book/repository.dart';
 
-import 'store/elasticsearch_store.dart';
+import 'tools/elasticsearch/store.dart';
 
 import 'package:postgres/postgres.dart';
 

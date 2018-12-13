@@ -2,15 +2,19 @@ import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
 
-
 class PostgresConfig {
   String _host, _database, _user, _password;
   int _port;
 
-  PostgresConfig(this._host, this._port, this._database, this._user, this._password);
+  PostgresConfig(
+      this._host, this._port, this._database, this._user, this._password);
 
-  factory PostgresConfig.fromJson(Map<String, dynamic> json) =>
-      PostgresConfig(json['host'], json['port'], json['database'], json['user'], json['password']);
+  factory PostgresConfig.fromJson(Map<String, dynamic> json) => PostgresConfig(
+      json['host'],
+      json['port'],
+      json['database'],
+      json['user'],
+      json['password']);
 
   String get host => _host;
   String get database => _database;
@@ -38,10 +42,9 @@ class ElasticsearchConfig {
 }
 
 Future<Config> readConfig(String path) => File(path)
-      .readAsString()
-      .then((str) => jsonDecode(str))
-      .then((json) => Config.fromJson(json));
-
+    .readAsString()
+    .then((str) => jsonDecode(str))
+    .then((json) => Config.fromJson(json));
 
 class Config {
   ElasticsearchConfig _elasticsearch;
@@ -49,8 +52,9 @@ class Config {
 
   Config(this._elasticsearch, this._postgres);
 
-  factory Config.fromJson(Map<String, dynamic> json) =>
-      Config(ElasticsearchConfig.fromJson(json['elasticsearch']), PostgresConfig.fromJson(json['postgres']));
+  factory Config.fromJson(Map<String, dynamic> json) => Config(
+      ElasticsearchConfig.fromJson(json['elasticsearch']),
+      PostgresConfig.fromJson(json['postgres']));
 
   ElasticsearchConfig get elasticsearch => _elasticsearch;
   PostgresConfig get postgres => _postgres;

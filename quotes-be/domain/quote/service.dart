@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'model.dart';
 import 'repository.dart';
-import 'event_repository.dart';
+import 'event.dart';
 
 import '../common/model.dart';
 

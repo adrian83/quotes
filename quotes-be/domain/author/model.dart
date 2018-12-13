@@ -1,7 +1,8 @@
 import 'package:uuid/uuid.dart';
 
-import '../../store/document.dart';
 import '../common/model.dart';
+
+import '../../tools/elasticsearch/document.dart';
 
 class Author extends Entity {
   String _name, _description;
