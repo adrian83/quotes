@@ -25,8 +25,8 @@ class AuthorEventRepository {
     var req = SearchRequest()
       ..query = query
       ..size = request.limit
-      ..from = request.offset;
-    // ..sort = [SortElement.asc("created")];
+      ..from = request.offset
+      ..sort = [SortElement.asc("modifiedUtc")];
 
     return _store.list(req).then((resp) => resp.hits).then((hits) {
       var authors = _fromDocuments(hits.hits);
@@ -35,7 +35,8 @@ class AuthorEventRepository {
     });
   }
 
-  List<AuthorEvent> _fromDocuments(List<SearchHit> hits) => hits.map((h) => AuthorEvent.fromJson(h.source)).toList();
+  List<AuthorEvent> _fromDocuments(List<SearchHit> hits) =>
+      hits.map((h) => AuthorEvent.fromJson(h.source)).toList();
 
   Future<Author> find(String authorId) =>
       _store.get(authorId).then((gr) => Author.fromJson(gr.source));
@@ -43,8 +44,8 @@ class AuthorEventRepository {
   Future<Author> findNewest(String authorId) {
     var query = MatchQuery("id", authorId);
 
-    var req = SearchRequest.oneByQuery(query);
-    // ..sort = [SortElement.asc("modifiedUtc")];
+    var req = SearchRequest.oneByQuery(query)
+      ..sort = [SortElement.desc("modifiedUtc")];
 
     return _store
         .list(req)
@@ -58,6 +59,10 @@ class AuthorEventRepository {
       .then((_) => author);
 
   Future<void> delete(String authorId) => findNewest(authorId)
+      .then((author) {
+        author.modifiedUtc = DateTime.now().toUtc();
+        return author;
+      })
       .then((author) => AuthorEvent.deleted(Uuid().v4(), author))
       .then((event) => _store.index(event))
       .then((_) => authorId);

@@ -16,6 +16,10 @@ class Entity implements Jsonable {
     this._id = id;
   }
 
+  void set modifiedUtc(DateTime md) {
+    _modifiedUtc = md;
+  }
+
   Map toJson() => {
         "id": _id,
         "createdUtc": _createdUtc.toIso8601String(),
