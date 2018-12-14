@@ -2,18 +2,14 @@ import 'dart:io';
 
 import 'config/config.dart';
 
-var nowMs = new DateTime.now().millisecondsSinceEpoch;
 
-const elasticsearchVersion = "6.4.1";
+const esVersion = "6.4.1";
 const configPath = "./infra/local.json";
 
 const postgresVersion = "11.1";
 const postgresEnvTemplatePath = "./infra/env.db.template";
 const postgresEnvPath = "./infra/env.db";
 const postgresInitScript = "./infra/db.sql";
-var postgresName = "postgresdb-$nowMs";
-
-const containerInfo = "./infra/container";
 
 const runDocker = 'run-docker';
 const runInfrastructure = 'run-infra';
@@ -22,9 +18,11 @@ const initDatabase = 'init-db';
 void printMenu() {
   print("");
   print("------------ MENU ------------");
-  print("$runDocker - runs docker daemon (systemd)");
-  print(
-      "$runInfrastructure - runs infrastructure (docker image with elasticsearch:$elasticsearchVersion)");
+  print("$runDocker  \t- runs docker daemon (systemd)");
+  print("$runInfrastructure \t- runs infrastructure");
+  print("\t\t\t- docker image with elasticsearch:$esVersion");
+  print("\t\t\t- docker image with postgres:$postgresVersion");
+  print("$initDatabase \t- initialize database");
   print("");
 }
 
@@ -32,13 +30,19 @@ class Command {
   String _app;
   List<String> _params;
 
-  Command(this._app, this._params);
+  Command(String cmdString){
+    var words = cmdString.split(" ")
+    ..removeWhere((w) => w.length == 0);
+    _app = words[0];
+    _params = words.sublist(1);
+  }
 
   void exec() {
     var cmd = "$_app ${_params.join(' ')}";
     print("Starting: $cmd");
     ProcessResult result = Process.runSync(_app, _params);
-    print("STDOUT: \n ${result.stdout}");
+    print("STDOUT: \n${result.stdout}");
+    print("STDERR: \n${result.stderr}");
     print("Executed: $cmd");
   }
 }
@@ -54,23 +58,12 @@ void main(List<String> args) async {
   String cmd = args[0];
   switch (cmd) {
     case runDocker:
-      await Command("systemctl", ["start", "docker"]).exec();
+      await Command("systemctl start docker").exec();
       break;
 
     case runInfrastructure:
 
-// docker run -d --name elasticsearch3 -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:6.4.1
-      Command("docker", [
-        "run",
-        "-d",
-        "-p",
-        "9200:${config.elasticsearch.port}",
-        "-p",
-        "9300:9300",
-        "-e",
-        "\"discovery.type=single-node\"",
-        "elasticsearch:$elasticsearchVersion"
-      ]).exec();
+      Command("docker run -d -p 9200:${config.elasticsearch.port} -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:$esVersion").exec();
 
       await File(postgresEnvTemplatePath)
           .readAsString()
@@ -81,47 +74,27 @@ void main(List<String> args) async {
           .then((content) => File(postgresEnvPath).writeAsStringSync(content))
           .catchError((e) => print(e));
 
-      Command("docker", [
-        "run",
-        "--name",
-        postgresName,
-        "-p",
-        "5432:${config.postgres.port}",
-        "--env-file=$postgresEnvPath",
-        "-d",
-        "postgres:$postgresVersion"
-      ]).exec();
-
-      File(containerInfo).writeAsStringSync(postgresName);
+      Command("docker run -p 5432:${config.postgres.port} --env-file=$postgresEnvPath -d postgres:$postgresVersion").exec();
 
       break;
 
     case initDatabase:
+      if (args.length < 2) {
+        print("Please provide Postgres container name (docker ps)");
+        return;
+      }
 
-var containerName = File(containerInfo).readAsStringSync();
+      var containerName = args[1];
 
-      // docker run --name postgres --env-file=env.db -d postgres
-      Command("docker", ["cp", postgresInitScript, "$containerName:/file.sql"])
-          .exec();
+      Command("docker cp $postgresInitScript $containerName:/file.sql").exec();
 
-// docker exec vigilant_lamport psql quotes admin -f /file.sql
-      Command("docker", [
-        "exec",
-        containerName,
-        "psql",
-        config.postgres.database,
-        config.postgres.user,
-        "-f",
-        "/file.sql"
-      ]).exec();
+      Command("docker exec $containerName psql ${config.postgres.database} ${config.postgres.user} -f /file.sql").exec();
 
-      // docker cp ./localfile.sql containername:/container/path/file.sql
-      // docker exec containername -u postgresuser psql dbname postgresuser -f /container/path/file.sql
       break;
+
     default:
       printMenu();
       return;
   }
 
-  //exit(1);
 }
