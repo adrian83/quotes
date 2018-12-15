@@ -4,7 +4,7 @@
 
 <breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
 
-<nav class="navbar navbar-light"  style="background-color: #e3f2fd;">
+<nav class="navbar navbar-light"  style="background-color: #e3f2fd;" *ngIf="author.id != null && author.id != ''">
   <span class="navbar-brand mb-0" (click)="editAuthor()" style="cursor:pointer;">edit</span>
   <span class="navbar-brand mb-0" (click)="deleteAuthor()" style="cursor:pointer;">delete</span>
   <span class="navbar-brand mb-0" (click)="createBook()" style="cursor:pointer;">new book</span>

@@ -36,11 +36,12 @@ class AuthorEventsComponent extends PageSwitcher
   static final int pageSize = 10;
 
   final AuthorService _authorService;
+    final Router _router;
 
   AuthorEventsPage _authorEventPage = AuthorEventsPage.empty();
   String _authorId;
 
-  AuthorEventsComponent(this._authorService);
+  AuthorEventsComponent(this._authorService, this._router);
 
   PageSwitcher get switcher => this;
   AuthorEventsPage get page => _authorEventPage;
@@ -61,6 +62,8 @@ class AuthorEventsComponent extends PageSwitcher
           .then((req) => _authorService.listEvents(_authorId, req))
           .then((page) => _authorEventPage = page)
           .catchError(handleError);
+
+  void showAuthor() => _router.navigate(showAuthorUrl(_authorEventPage.elements.last.id));
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];

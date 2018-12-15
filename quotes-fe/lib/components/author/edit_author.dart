@@ -27,11 +27,12 @@ class EditAuthorComponent extends ErrorHandler
     with Navigable
     implements OnActivate {
   final AuthorService _authorService;
+  final Router _router;
 
   String _oldName = null;
   Author _author = Author.empty();
 
-  EditAuthorComponent(this._authorService);
+  EditAuthorComponent(this._authorService, this._router);
 
   Author get author => _author;
 
@@ -48,6 +49,10 @@ class EditAuthorComponent extends ErrorHandler
       .then((_) => showInfo("Author '$_oldName' updated"))
       .then((_) => _oldName = _author.name)
       .catchError(handleError);
+
+  void showAuthor() => _router.navigate(showAuthorUrl(_author.id));
+
+  void showEvents() => _router.navigate(authorEventsUrl(_author.id));
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];

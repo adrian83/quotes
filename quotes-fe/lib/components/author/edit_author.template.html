@@ -4,6 +4,11 @@
 
 <breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
 
+<nav class="navbar navbar-light"  style="background-color: #e3f2fd;">
+  <span class="navbar-brand mb-0" (click)="showAuthor()" style="cursor:pointer;">show</span>
+  <span class="navbar-brand mb-0" (click)="showEvents()" style="cursor:pointer;">events</span>
+</nav>
+
 <br/>
 
 <events [events]="events"></events>
