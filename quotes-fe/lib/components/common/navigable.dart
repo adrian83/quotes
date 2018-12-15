@@ -5,8 +5,7 @@ import '../../route_paths.dart';
 const missing = "-";
 
 class Navigable {
-
-String param(String name, RouterState router) => router.parameters[name];
+  String param(String name, RouterState router) => router.parameters[name];
 
   String listAuthorsUrl() => RoutePaths.listAuthors.toUrl();
 
@@ -17,6 +16,9 @@ String param(String name, RouterState router) => router.parameters[name];
       .toUrl(parameters: {authorIdParam: authorId ?? missing});
 
   String createAuthorUrl() => RoutePaths.newAuthor.toUrl();
+
+  String authorEventsUrl(String authorId) => RoutePaths.authorEvents
+      .toUrl(parameters: {authorIdParam: authorId ?? missing});
 
   String createBookUrl(String authorId) => RoutePaths.newBook
       .toUrl(parameters: {authorIdParam: authorId ?? missing});

@@ -62,6 +62,13 @@ class AuthorEventsComponent extends PageSwitcher
           .then((page) => _authorEventPage = page)
           .catchError(handleError);
 
-  List<Breadcrumb> get breadcrumbs =>
-      [Breadcrumb.link(RoutePaths.listAuthors.toUrl(), "authors")];
+  List<Breadcrumb> get breadcrumbs {
+    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+
+    if (_authorId == null || page.elements.length == 0) return elems;
+    elems.add(Breadcrumb.link(showAuthorUrl(_authorId), page.elements.last.name).last());
+
+    return elems;
+  }
+
 }

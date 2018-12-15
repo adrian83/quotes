@@ -4,6 +4,13 @@
 
 <breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
 
+<nav class="navbar navbar-light"  style="background-color: #e3f2fd;">
+  <span class="navbar-brand mb-0" (click)="editAuthor()" style="cursor:pointer;">edit</span>
+  <span class="navbar-brand mb-0" (click)="deleteAuthor()" style="cursor:pointer;">delete</span>
+  <span class="navbar-brand mb-0" (click)="createBook()" style="cursor:pointer;">new book</span>
+  <span class="navbar-brand mb-0" (click)="showEvents()" style="cursor:pointer;">events</span>
+</nav>
+
 <br/>
 
 <events [events]="events"></events>
@@ -12,27 +19,12 @@
 
   <h3>
     {{author.name}}
-    <i
-      class="fas fa-trash pull-right"
-      (click)="deleteAuthor()"
-      style="cursor:pointer;"></i>
-
-    <i
-      class="fas fa-marker pull-right"
-      (click)="editAuthor()"
-      style="margin-right:5px; cursor:pointer;"></i>
-
   </h3>
 
   <h5 *ngFor="let par of author.descriptionParts">{{ par }}</h5>
 
-  <br/><br/>
-
-  <input
-    (click)="createBook()"
-    class="btn btn-primary"
-    type="button"
-    value="new book">
+  <h5>Created: {{ author.createdUtc }}</h5>
+  <h5>Modified: {{ author.modifiedUtc }}</h5>
 
   <br/><br/>
 
