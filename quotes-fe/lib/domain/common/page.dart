@@ -37,11 +37,19 @@ class PageInfo {
   String toString() => jsonEncode(this);
 }
 
+typedef JsonDecoder<T> = T Function(Map<String, dynamic> json);
+
 class Page<T> {
   PageInfo _info;
   List<T> _elements;
 
   Page(this._info, this._elements);
+
+  Page.fromJson(JsonDecoder<T> decoder, Map<String, dynamic> json) {
+    var jsonElems = json['elements'] as List;
+    _elements = jsonElems.map((j) => decoder(j)).toList();
+    _info = PageInfo.fromJson(json['info']);
+  }
 
   List<T> get elements => _elements;
   PageInfo get info => _info;

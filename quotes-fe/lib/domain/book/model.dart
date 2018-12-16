@@ -51,52 +51,14 @@ class Book {
       };
 }
 
-class BookEvent extends Book {
-  String _eventId, _operation;
-
-  BookEvent(this._eventId, this._operation, String id, String title,
-      String description, String authorId, DateTime modifiedUtc, DateTime createdUtc)
-      : super(id, title, description, authorId, modifiedUtc, createdUtc);
-
-  factory BookEvent.fromJson(Map<String, dynamic> json) => BookEvent(
-      json["eventId"],
-      json["operation"],
-      json["id"],
-      json["title"],
-      json["description"],
-      json["authorId"],
-      DateTime.parse(json["modifiedUtc"]),
-      DateTime.parse(json["createdUtc"]));
-
-  String get eventId => _eventId;
-  String get operation => _operation;
-
-  Map toJson() =>
-      super.toJson()..addAll({"eventId": _eventId, "operation": _operation});
-}
+JsonDecoder<Book> _bookJsonDecoder =
+    (Map<String, dynamic> json) => Book.fromJson(json);
 
 class BooksPage extends Page<Book> {
   BooksPage(PageInfo info, List<Book> elements) : super(info, elements);
 
   BooksPage.empty() : super(PageInfo(0, 0, 0), List<Book>());
 
-  factory BooksPage.fromJson(Map<String, dynamic> json) {
-    var elems = json['elements'] as List;
-    var books = elems.map((j) => Book.fromJson(j)).toList();
-    var info = PageInfo.fromJson(json['info']);
-    return BooksPage(info, books);
-  }
-}
-
-class BookEventsPage extends Page<BookEvent> {
-  BookEventsPage(PageInfo info, List<BookEvent> elements): super(info, elements);
-
-  BookEventsPage.empty() : super(PageInfo(0, 0, 0), List<BookEvent>());
-
-  factory BookEventsPage.fromJson(Map<String, dynamic> json) {
-    var elems = json['elements'] as List;
-    var books = elems.map((j) => BookEvent.fromJson(j)).toList();
-    var info = PageInfo.fromJson(json['info']);
-    return BookEventsPage(info, books);
-  }
+  BooksPage.fromJson(Map<String, dynamic> json)
+      : super.fromJson(_bookJsonDecoder, json);
 }

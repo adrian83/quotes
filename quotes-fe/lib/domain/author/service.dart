@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:http/browser_client.dart';
 
 import 'model.dart';
+import 'event.dart';
 
 import '../common/service.dart';
 import '../common/page.dart';

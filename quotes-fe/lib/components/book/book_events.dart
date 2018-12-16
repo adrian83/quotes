@@ -12,7 +12,7 @@ import '../common/events.dart';
 import '../common/navigable.dart';
 
 import '../../domain/book/service.dart';
-import '../../domain/book/model.dart';
+import '../../domain/book/event.dart';
 import '../../domain/common/page.dart';
 import '../../routes.dart';
 

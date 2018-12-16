@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:http/browser_client.dart';
 
 import 'model.dart';
+import 'event.dart';
 
 import '../common/service.dart';
 import '../common/page.dart';
@@ -16,6 +17,11 @@ class QuoteService extends Service<Quote> {
     var url =
         "$_host/authors/$authorId/books/$bookId/quotes?${this.pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
+  }
+
+    Future<QuoteEventsPage> listEvents(String authorId, String bookId, String quoteId, PageRequest request) {
+    var url = "$_host/authors/$authorId/books/$bookId/quotes/$quoteId/?${this.pageRequestToUrlParams(request)}";
+    return getEntity(url).then((json) => QuoteEventsPage.fromJson(json));
   }
 
   Future<Quote> get(String authorId, String bookId, String quoteId) {
