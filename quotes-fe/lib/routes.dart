@@ -10,6 +10,7 @@ import 'components/author/author_events.template.dart' as author_events_template
 import 'components/book/show_book.template.dart' as show_book_template;
 import 'components/book/edit_book.template.dart' as edit_book_template;
 import 'components/book/new_book.template.dart' as new_book_template;
+import 'components/book/book_events.template.dart' as book_events_template;
 
 import 'components/quote/show_quote.template.dart' as show_quote_template;
 import 'components/quote/new_quote.template.dart' as new_quote_template;
@@ -65,6 +66,11 @@ class Routes {
     component: new_book_template.NewBookComponentNgFactory,
   );
 
+  static final bookEvents = RouteDefinition(
+    routePath: RoutePaths.bookEvents,
+    component: book_events_template.BookEventsComponentNgFactory,
+  );
+
   static final showQuote = RouteDefinition(
     routePath: RoutePaths.showQuote,
     component: show_quote_template.ShowQuoteComponentNgFactory,
@@ -89,6 +95,7 @@ class Routes {
     showBook,
     editBook,
     newBook,
+    bookEvents,
     showQuote,
     newQuote,
     editQuote,

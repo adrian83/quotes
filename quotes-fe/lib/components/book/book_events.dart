@@ -11,15 +11,15 @@ import '../common/pagination.dart';
 import '../common/events.dart';
 import '../common/navigable.dart';
 
-import '../../domain/author/service.dart';
-import '../../domain/author/model.dart';
+import '../../domain/book/service.dart';
+import '../../domain/book/model.dart';
 import '../../domain/common/page.dart';
 import '../../routes.dart';
 
 @Component(
-  selector: 'author-events',
-  templateUrl: 'author_events.template.html',
-  providers: [ClassProvider(AuthorService)],
+  selector: 'book-events',
+  templateUrl: 'book_events.template.html',
+  providers: [ClassProvider(BookService)],
   directives: const [
     coreDirectives,
     formDirectives,
@@ -28,27 +28,29 @@ import '../../routes.dart';
     Pagination
   ],
 )
-class AuthorEventsComponent extends PageSwitcher
+class BookEventsComponent extends PageSwitcher
     with ErrorHandler, Navigable
     implements OnActivate {
-  static final Logger logger = Logger('AuthorEventsComponent');
+  static final Logger logger = Logger('BookEventsComponent');
 
   static final int pageSize = 10;
 
-  final AuthorService _authorService;
-  final Router _router;
+  final BookService _bookService;
+    final Router _router;
 
-  AuthorEventsPage _authorEventPage = AuthorEventsPage.empty();
+  BookEventsPage _bookEventPage = BookEventsPage.empty();
   String _authorId;
+  String _bookId;
 
-  AuthorEventsComponent(this._authorService, this._router);
+  BookEventsComponent(this._bookService, this._router);
 
   PageSwitcher get switcher => this;
-  AuthorEventsPage get page => _authorEventPage;
+  BookEventsPage get page => _bookEventPage;
 
   @override
   void onActivate(_, RouterState state) {
     _authorId = param(authorIdParam, state);
+    _bookId = param(bookIdParam, state);
     _fetchFirstPage();
   }
 
@@ -58,21 +60,20 @@ class AuthorEventsComponent extends PageSwitcher
   void _fetchFirstPage() => _fetchPage(0);
 
   void _fetchPage(int pageNumber) =>
-      Future.value(PageRequest.pageWithSize(pageNumber, pageSize)) 
-          .then((req) => _authorService.listEvents(_authorId, req))
-          .then((page) => _authorEventPage = page)
+      Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
+          .then((req) => _bookService.listEvents(_authorId, _bookId, req))
+          .then((page) => _bookEventPage = page)
           .catchError(handleError);
 
-  void showAuthor() =>
-      _router.navigate(showAuthorUrl(_authorEventPage.elements.last.id));
+  void showBook() => _router.navigate(showBookUrl(_bookEventPage.elements.last.authorId, _bookEventPage.elements.last.id));
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
 
     if (_authorId == null || page.elements.length == 0) return elems;
-    elems.add(Breadcrumb.link(showAuthorUrl(_authorId), page.elements.last.name)
-        .last());
+    elems.add(Breadcrumb.link(showAuthorUrl(_authorId), "tmp name").last());
 
     return elems;
   }
+
 }

@@ -44,7 +44,7 @@ class Book extends Entity {
     });
 }
 
-class BookEvent extends ESDocument {
+class BookEvent extends ESDocument implements Jsonable {
   Book _book;
 
   BookEvent(String docId, String operation, this._book)
@@ -58,6 +58,9 @@ class BookEvent extends ESDocument {
 
   factory BookEvent.deleted(String docId, Book book) =>
       BookEvent(docId, ESDocument.deleted, book);
+
+  factory BookEvent.fromJson(Map<String, dynamic> json) =>
+      BookEvent(json['eventId'], json['operation'], Book.fromJson(json));
 
   Book get book => _book;
 

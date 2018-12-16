@@ -29,6 +29,9 @@ class Navigable {
   String editBookUrl(String authorId, String bookId) =>
       RoutePaths.editBook.toUrl(parameters: mapFromParams2(authorId, bookId));
 
+  String bookEventsUrl(String authorId, String bookId) => RoutePaths.bookEvents
+      .toUrl(parameters: {authorIdParam: authorId ?? missing, bookIdParam: bookId ?? missing});
+
   String showQuoteUrl(String authorId, String bookId, String quoteId) =>
       RoutePaths.showQuote
           .toUrl(parameters: mapFromParams3(authorId, bookId, quoteId));

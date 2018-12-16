@@ -22,6 +22,7 @@ import './handler/book/add_book.dart';
 import './handler/book/delete_book.dart';
 import './handler/book/get_book.dart';
 import './handler/book/update_book.dart';
+import './handler/book/list_events.dart';
 
 import './domain/author/model.dart';
 import './domain/author/service.dart';
@@ -107,6 +108,7 @@ Future main(List<String> args) async {
   var getBookHandler = GetBookHandler(bookService);
   var updateBookHandler = UpdateBookHandler(bookService);
   var deleteBookHandler = DeleteBookHandler(bookService);
+  var bookEventsHandler = BookEventsHandler(bookService);
 
   var addQuoteHandler = AddQuoteHandler(quoteService);
   var listQuotesHandler = ListQuotesHandler(quoteService);
@@ -125,6 +127,7 @@ Future main(List<String> args) async {
     getBookHandler,
     updateBookHandler,
     deleteBookHandler,
+    bookEventsHandler,
     listBooksHandler,
     addQuoteHandler,
     getQuoteHandler,

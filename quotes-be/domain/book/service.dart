@@ -18,6 +18,9 @@ class BookService {
   Future<Page<Book>> findBooks(String authorId, PageRequest request) =>
       _bookRepository.findBooks(authorId, request);
 
+  Future<Page<BookEvent>> listEvents(String authorId, String bookId, PageRequest request) =>
+      _bookEventRepository.listEvents(authorId, bookId, request);
+
   Future<Book> save(Book book) => _bookRepository
       .save(book.generateId())
       .then((_) => _bookEventRepository.save(book));

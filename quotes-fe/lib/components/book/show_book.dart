@@ -91,6 +91,12 @@ class ShowBookComponent extends PageSwitcher
   void createQuote() =>
       _router.navigate(createQuoteUrl(_book.authorId, _book.id));
 
+  void showEvents(){
+    var u = bookEventsUrl(_author.id, _book.id);
+    print(u);
+    _router.navigate(bookEventsUrl(_author.id, _book.id));
+  }
+
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
 

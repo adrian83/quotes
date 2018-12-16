@@ -6,6 +6,7 @@ import 'model.dart';
 import '../common/model.dart';
 import '../../tools/elasticsearch/store.dart';
 import '../../tools/elasticsearch/search.dart';
+import '../../tools/elasticsearch/response.dart';
 import '../../tools/elasticsearch/document.dart';
 
 class BookEventRepository {
@@ -64,4 +65,23 @@ class BookEventRepository {
         .then((hits) => hits.hits.map((d) => Book.fromJson(d.source)).toList())
         .then((books) => books.map((book) => delete(book.id)));
   }
+
+    Future<Page<BookEvent>> listEvents(String authorId, String bookId, PageRequest request) {
+    var query = MatchQuery("id", bookId);
+
+    var req = SearchRequest()
+      ..query = query
+      ..size = request.limit
+      ..from = request.offset
+      ..sort = [SortElement.asc("modifiedUtc")];
+
+    return _store.list(req).then((resp) => resp.hits).then((hits) {
+      var books = _fromDocuments(hits.hits);
+      var info = PageInfo(request.limit, request.offset, hits.total);
+      return Page<BookEvent>(info, books);
+    });
+  }
+
+    List<BookEvent> _fromDocuments(List<SearchHit> hits) =>
+      hits.map((h) => BookEvent.fromJson(h.source)).toList();
 }
