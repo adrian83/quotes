@@ -1,30 +1,28 @@
 import '../common/page.dart';
+import '../common/model.dart';
 
 import '../../tools/strings.dart';
 
-class Book {
-  String _id, _title, _description, _authorId;
-  DateTime _modifiedUtc, _createdUtc;
+class Book extends Entity {
+  String _title, _description, _authorId;
 
-  Book(this._id, this._title, this._description, this._authorId,
-      this._modifiedUtc, this._createdUtc);
+  Book(String id, this._title, this._description, this._authorId,
+      DateTime modifiedUtc, DateTime createdUtc)
+      : super(id, modifiedUtc, createdUtc);
 
-  factory Book.fromJson(Map<String, dynamic> json) => Book(
-      json['id'],
-      json['title'],
-      json['description'],
-      json['authorId'],
-      DateTime.parse(json["modifiedUtc"]),
-      DateTime.parse(json["createdUtc"]));
+  Book.fromJson(Map<String, dynamic> json)
+      : this(
+            json['id'],
+            json['title'],
+            json['description'],
+            json['authorId'],
+            DateTime.parse(json["modifiedUtc"]),
+            DateTime.parse(json["createdUtc"]));
 
-  factory Book.empty() =>
-      Book(null, "", "", null, DateTime.now().toUtc(), DateTime.now().toUtc());
+  Book.empty() : this(null, "", "", null, nowUtc(), nowUtc());
 
-  String get id => _id;
   String get title => _title;
   String get description => _description;
-  DateTime get modifiedUtc => _modifiedUtc;
-  DateTime get createdUtc => _createdUtc;
   List<String> get descriptionParts => _description.split("\n");
   String get shortDescription => shorten(_description, 250);
   String get authorId => _authorId;
@@ -41,14 +39,11 @@ class Book {
     this._description = desc;
   }
 
-  Map toJson() => {
-        "id": _id,
+  Map toJson() => super.toJson()..addAll({
         "title": _title,
         "authorId": _authorId,
-        "description": _description,
-        "modifiedUtc": _modifiedUtc.toIso8601String(),
-        "createdUtc": _createdUtc.toIso8601String()
-      };
+        "description": _description
+      });
 }
 
 JsonDecoder<Book> _bookJsonDecoder =

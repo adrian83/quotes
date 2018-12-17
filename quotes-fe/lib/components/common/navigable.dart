@@ -29,8 +29,11 @@ class Navigable {
   String editBookUrl(String authorId, String bookId) =>
       RoutePaths.editBook.toUrl(parameters: mapFromParams2(authorId, bookId));
 
-  String bookEventsUrl(String authorId, String bookId) => RoutePaths.bookEvents
-      .toUrl(parameters: {authorIdParam: authorId ?? missing, bookIdParam: bookId ?? missing});
+  String bookEventsUrl(String authorId, String bookId) =>
+      RoutePaths.bookEvents.toUrl(parameters: {
+        authorIdParam: authorId ?? missing,
+        bookIdParam: bookId ?? missing
+      });
 
   String showQuoteUrl(String authorId, String bookId, String quoteId) =>
       RoutePaths.showQuote
@@ -42,6 +45,13 @@ class Navigable {
   String editQuoteUrl(String authorId, String bookId, String quoteId) =>
       RoutePaths.editQuote
           .toUrl(parameters: mapFromParams3(authorId, bookId, quoteId));
+
+  String quoteEventsUrl(String authorId, String bookId, String quoteId) =>
+      RoutePaths.quoteEvents.toUrl(parameters: {
+        authorIdParam: authorId ?? missing,
+        bookIdParam: bookId ?? missing,
+        quoteIdParam: quoteId ?? missing
+      });
 
   Map<String, String> mapFromParams2(String authorId, String bookId) =>
       {authorIdParam: authorId ?? missing, bookIdParam: bookId ?? missing};

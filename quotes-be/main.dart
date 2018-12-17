@@ -9,6 +9,7 @@ import './handler/quote/add_quote.dart';
 import './handler/quote/update_quote.dart';
 import './handler/quote/delete_quote.dart';
 import './handler/quote/get_quote.dart';
+import './handler/quote/list_events.dart';
 
 import './handler/author/list_authors.dart';
 import './handler/author/add_author.dart';
@@ -89,9 +90,9 @@ Future main(List<String> args) async {
       bookEventRepository,
       quoteRepository,
       quoteEventRepository);
-  var bookService = BookService(bookRepository, bookEventRepository, quoteRepository,
-  quoteEventRepository);
-  var quoteService = QuotesService(quoteRepository, quoteEventRepository);
+  var bookService = BookService(bookRepository, bookEventRepository,
+      quoteRepository, quoteEventRepository);
+  var quoteService = QuoteService(quoteRepository, quoteEventRepository);
 
   var notFoundHandler = NotFoundHandler();
   var optionsHandler = OptionsHandler();
@@ -115,6 +116,7 @@ Future main(List<String> args) async {
   var getQuoteHandler = GetQuoteHandler(quoteService);
   var updateQuoteHandler = UpdateQuoteHandler(quoteService);
   var deleteQuoteHandler = DeleteQuoteHandler(quoteService);
+  var quoteEventsHandler = QuoteEventsHandler(quoteService);
 
   var handlers = [
     authorEventsHandler,
@@ -133,7 +135,8 @@ Future main(List<String> args) async {
     getQuoteHandler,
     updateQuoteHandler,
     deleteQuoteHandler,
-    listQuotesHandler
+    listQuotesHandler,
+    quoteEventsHandler
   ];
 
   Author a1 = await authorService.save(Author(null, "Adam Mickiewicz",

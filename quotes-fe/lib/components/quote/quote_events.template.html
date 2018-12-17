@@ -1,0 +1,39 @@
+<h1>author events</h1>
+
+<br/>
+
+<breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
+
+<nav class="navbar navbar-light"  style="background-color: #e3f2fd;">
+  <span class="navbar-brand mb-0" (click)="showQuote()" style="cursor:pointer;">show</span>
+</nav>
+
+<br/>
+
+<events [events]="events"></events>
+
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th> 
+      <th scope="col">Text</th>
+      <th scope="col">Operation</th>
+      <th scope="col">Modified</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let authorEvent of page.elements; let i = index">
+      <th scope="row">{{ i+1 }}</th>
+      <td>{{ authorEvent.text }}</td>
+      <td>{{ authorEvent.operation }}</td>
+      <td>{{ authorEvent.modifiedUtc }}</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+<div>
+  <pagination [page]="page.info" [switcher]="switcher"></pagination>
+</div>

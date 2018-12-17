@@ -4,6 +4,12 @@
 
 <breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
 
+<nav class="navbar navbar-light"  style="background-color: #e3f2fd;" *ngIf="quote.id != null && quote.id != ''">
+  <span class="navbar-brand mb-0" (click)="editQuote()" style="cursor:pointer;">edit</span>
+  <span class="navbar-brand mb-0" (click)="deleteQuote()" style="cursor:pointer;">delete</span>
+  <span class="navbar-brand mb-0" (click)="showEvents()" style="cursor:pointer;">events</span>
+</nav>
+
 <br/>
 
 <events [events]="events"></events>

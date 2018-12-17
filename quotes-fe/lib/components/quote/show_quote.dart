@@ -65,6 +65,8 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
       .then((_) => _quote = Quote.empty())
       .catchError(handleError);
 
+        void showEvents() => _router.navigate(quoteEventsUrl(_author.id, _book.id, _quote.id));
+
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
 

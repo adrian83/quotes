@@ -1,29 +1,29 @@
 import '../common/page.dart';
+import '../common/model.dart';
 
-class Quote {
-  String _id, _text, _authorId, _bookId;
-  DateTime _modifiedUtc, _createdUtc;
+class Quote extends Entity {
+  String _text, _authorId, _bookId;
 
-  Quote(this._id, this._text, this._authorId, this._bookId, this._modifiedUtc,
-      this._createdUtc);
+  Quote(String id, this._text, this._authorId, this._bookId,
+      DateTime modifiedUtc, DateTime createdUtc)
+      : super(id, modifiedUtc, createdUtc);
 
-  factory Quote.fromJson(Map<String, dynamic> json) => Quote(
-      json['id'],
-      json['text'],
-      json['authorId'],
-      json['bookId'],
-      DateTime.parse(json["modifiedUtc"]),
-      DateTime.parse(json["createdUtc"]));
+  Quote.fromJson(Map<String, dynamic> json)
+      : this(
+            json['id'],
+            json['text'],
+            json['authorId'],
+            json['bookId'],
+            DateTime.parse(json["modifiedUtc"]),
+            DateTime.parse(json["createdUtc"]));
 
-  factory Quote.empty() => Quote(
-      null, "", null, null, DateTime.now().toUtc(), DateTime.now().toUtc());
+  Quote.empty()
+      : this(null, "", null, null, DateTime.now().toUtc(),
+            DateTime.now().toUtc());
 
-  String get id => _id;
   String get text => _text;
   String get authorId => _authorId;
   String get bookId => _bookId;
-  DateTime get modifiedUtc => _modifiedUtc;
-  DateTime get createdUtc => _createdUtc;
 
   void set text(String text) {
     this._text = text;
@@ -37,14 +37,8 @@ class Quote {
     this._bookId = bookId;
   }
 
-  Map toJson() => {
-        "id": _id,
-        "text": _text,
-        "authorId": _authorId,
-        "bookId": _bookId,
-        "modifiedUtc": _modifiedUtc.toIso8601String(),
-        "createdUtc": _createdUtc.toIso8601String()
-      };
+  Map toJson() => super.toJson()
+    ..addAll({"text": _text, "authorId": _authorId, "bookId": _bookId});
 }
 
 JsonDecoder<Quote> _quoteJsonDecoder =

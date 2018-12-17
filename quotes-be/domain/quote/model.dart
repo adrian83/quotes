@@ -44,7 +44,7 @@ class Quote extends Entity {
     });
 }
 
-class QuoteEvent extends ESDocument {
+class QuoteEvent extends ESDocument implements Jsonable {
   Quote _quote;
 
   QuoteEvent(String docId, String operation, this._quote)

@@ -8,9 +8,9 @@ import '../../domain/quote/service.dart';
 class GetQuoteHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
 
-  QuotesService _quotesService;
+  QuoteService _quoteService;
 
-  GetQuoteHandler(this._quotesService) : super(_URL, "GET");
+  GetQuoteHandler(this._quoteService) : super(_URL, "GET");
 
   void execute(
       HttpRequest request, PathParams pathParams, UrlParams urlParams) {
@@ -24,7 +24,7 @@ class GetQuoteHandler extends Handler {
       return;
     }
 
-    _quotesService
+    _quoteService
         .get(quoteId.value)
         .then((q) => ok(q, request))
         .catchError((e) => handleErrors(e, request));

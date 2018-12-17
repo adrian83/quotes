@@ -15,6 +15,7 @@ import 'components/book/book_events.template.dart' as book_events_template;
 import 'components/quote/show_quote.template.dart' as show_quote_template;
 import 'components/quote/new_quote.template.dart' as new_quote_template;
 import 'components/quote/edit_quote.template.dart' as edit_quote_template;
+import 'components/quote/quote_events.template.dart' as quote_events_template;
 
 import 'info.template.dart' as info_template;
 
@@ -86,6 +87,11 @@ class Routes {
     component: new_quote_template.NewQuoteComponentNgFactory,
   );
 
+  static final quoteEvents = RouteDefinition(
+    routePath: RoutePaths.quoteEvents,
+    component: quote_events_template.QuoteEventsComponentNgFactory,
+  );
+
   static final all = <RouteDefinition>[
     listAuthors,
     newAuthor,
@@ -99,6 +105,7 @@ class Routes {
     showQuote,
     newQuote,
     editQuote,
+    quoteEvents,
     info
   ];
 }

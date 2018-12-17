@@ -7,6 +7,7 @@ import 'model.dart';
 import '../common/model.dart';
 import '../../tools/elasticsearch/store.dart';
 import '../../tools/elasticsearch/search.dart';
+import '../../tools/elasticsearch/response.dart';
 import '../../tools/elasticsearch/document.dart';
 
 class QuoteEventRepository {
@@ -93,4 +94,24 @@ class QuoteEventRepository {
         .then((hits) => hits.hits.map((d) => Quote.fromJson(d.source)).toList())
         .then((quotes) => quotes.map((quote) => delete(quote.id)));
   }
+
+  Future<Page<QuoteEvent>> listEvents(
+      String authorId, String bookId, String quoteId, PageRequest request) {
+    var query = MatchQuery("id", quoteId);
+
+    var req = SearchRequest()
+      ..query = query
+      ..size = request.limit
+      ..from = request.offset
+      ..sort = [SortElement.asc("modifiedUtc")];
+
+    return _store.list(req).then((resp) => resp.hits).then((hits) {
+      var quotes = _fromDocuments(hits.hits);
+      var info = PageInfo(request.limit, request.offset, hits.total);
+      return Page<QuoteEvent>(info, quotes);
+    });
+  }
+
+  List<QuoteEvent> _fromDocuments(List<SearchHit> hits) =>
+      hits.map((h) => QuoteEvent.fromJson(h.source)).toList();
 }

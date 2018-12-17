@@ -8,9 +8,9 @@ import '../../domain/quote/service.dart';
 class DeleteQuoteHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
 
-  QuotesService _quotesService;
+  QuoteService _quoteService;
 
-  DeleteQuoteHandler(this._quotesService) : super(_URL, "DELETE");
+  DeleteQuoteHandler(this._quoteService) : super(_URL, "DELETE");
 
   void execute(HttpRequest request, PathParams pathParams, UrlParams urlParams) {
     var authorId = pathParams.getString("authorId");
@@ -23,7 +23,7 @@ class DeleteQuoteHandler extends Handler {
       return;
     }
 
-    _quotesService
+    _quoteService
         .delete(quoteId.value)
         .then((_) => ok(null, request))
         .catchError((e) => handleErrors(e, request));

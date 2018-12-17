@@ -9,9 +9,9 @@ import '../../domain/common/model.dart';
 class ListQuotesHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books/{bookId}/quotes";
 
-  QuotesService _quotesService;
+  QuoteService _quoteService;
 
-  ListQuotesHandler(this._quotesService) : super(_URL, "GET") {}
+  ListQuotesHandler(this._quoteService) : super(_URL, "GET") {}
 
   void execute(
       HttpRequest request, PathParams pathParams, UrlParams urlParams) {
@@ -28,7 +28,7 @@ class ListQuotesHandler extends Handler {
 
     var req = PageRequest(limit.value, offset.value);
 
-    _quotesService
+    _quoteService
         .findQuotes(bookId.value, req)
         .then((p) => ok(p, request))
         .catchError((e) => handleErrors(e, request));

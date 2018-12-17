@@ -11,9 +11,9 @@ import '../../domain/quote/model.dart';
 class UpdateQuoteHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
 
-  QuotesService _quotesService;
+  QuoteService _quoteService;
 
-  UpdateQuoteHandler(this._quotesService) : super(_URL, "PUT") {}
+  UpdateQuoteHandler(this._quoteService) : super(_URL, "PUT") {}
 
   void execute(
       HttpRequest request, PathParams pathParams, UrlParams urlParams) {
@@ -29,7 +29,7 @@ class UpdateQuoteHandler extends Handler {
     parseForm(request, QuoteFormParser(true, true))
         .then((form) =>
             Quote(quoteId.value, form.text, authorId.value, bookId.value, form.modifiedUtc, form.createdUtc))
-        .then((quote) => _quotesService.update(quote))
+        .then((quote) => _quoteService.update(quote))
         .then((quote) => ok(quote, request))
         .catchError((e) => handleErrors(e, request));
   }

@@ -6,14 +6,17 @@ import 'event.dart';
 
 import '../common/model.dart';
 
-class QuotesService {
+class QuoteService {
   QuoteRepository _quotesRepository;
   QuoteEventRepository _quoteEventRepository;
 
-  QuotesService(this._quotesRepository, this._quoteEventRepository);
+  QuoteService(this._quotesRepository, this._quoteEventRepository);
 
   Future<Page<Quote>> findQuotes(String bookId, PageRequest request) =>
       _quotesRepository.findQuotes(bookId, request);
+
+  Future<Page<QuoteEvent>> listEvents(String authorId, String bookId, String quoteId, PageRequest request) =>
+      _quoteEventRepository.listEvents(authorId, bookId, quoteId, request);
 
   Future<Quote> save(Quote quote) => _quotesRepository
       .save(quote.generateId())
