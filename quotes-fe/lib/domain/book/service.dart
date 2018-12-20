@@ -18,6 +18,12 @@ class BookService extends Service<Book> {
     return getEntity(url).then((json) => BooksPage.fromJson(json));
   }
 
+  Future<BooksPage> find(String searchPhrase, PageRequest request) {
+    var url = "$_host/books?${this.pageRequestToUrlParams(request)}";
+    url = appendUrlParam(url, "searchPhrase", searchPhrase);
+    return getEntity(url).then((json) => BooksPage.fromJson(json));
+  }
+
   Future<BookEventsPage> listEvents(String authorId, String bookId, PageRequest request) {
     var url = "$_host/authors/$authorId/books/$bookId/events?${this.pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => BookEventsPage.fromJson(json));

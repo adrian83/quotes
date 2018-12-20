@@ -45,4 +45,5 @@ class RoutePaths {
   static final quoteEvents = RoutePath(path: quoteEventsPath);
 
   static final info = RoutePath(path: 'info');
+  static final search = RoutePath(path: '');
 }

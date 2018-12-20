@@ -28,7 +28,7 @@ class ListBooksHandler extends Handler {
     var req = PageRequest(limit.value, offset.value);
 
     _bookService
-        .findBooks(idOrErr.value, req)
+        .findAuthorBooks(idOrErr.value, req)
         .then((books) => ok(books, request))
         .catchError((e) => handleErrors(e, request));
   }

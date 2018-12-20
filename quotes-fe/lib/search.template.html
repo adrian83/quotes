@@ -1,0 +1,50 @@
+<h1>search</h1>
+
+
+
+<br/>
+
+<breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
+
+<br/>
+
+<events [events]="events"></events>
+
+<br/>
+
+<div class="input-group">
+    <input type="text" 
+        class="form-control" 
+        placeholder="Search for..." 
+        [(ngModel)]="phrase">
+
+    <span class="input-group-btn">
+        <button class="btn btn-default" type="button" (click)="search()">Search</button>
+    </span>
+</div>
+
+<div>{{ phrase }}</div>
+<br/><br/>
+<ul class="list-group list-group-flush">
+  <li class="list-group-item" *ngFor="let author of authorPage.elements">
+    <h4>{{ author.name }}</h4>
+    <div>{{ author.shortDescription }}</div>
+  </li>
+</ul>
+
+<div>
+  <pagination [page]="authorPage.info" [switcher]="authorSwitcher"></pagination>
+</div>
+
+
+<br/><br/>
+<ul class="list-group list-group-flush">
+  <li class="list-group-item" *ngFor="let book of bookPage.elements">
+    <h4>{{ book.title }}</h4>
+    <div>{{ book.shortDescription }}</div>
+  </li>
+</ul>
+
+<div>
+  <pagination [page]="bookPage.info" [switcher]="bookSwitcher"></pagination>
+</div>

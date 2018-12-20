@@ -26,8 +26,8 @@ class AuthorService {
       this._quoteRepository,
       this._quoteEventRepository);
 
-  Future<Page<Author>> findAuthors(PageRequest request) =>
-      _authorRepository.findAuthors(request);
+  Future<Page<Author>> findAuthors(String phrase, PageRequest request) =>
+      _authorRepository.findAuthors(phrase, request);
 
   Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) =>
       _authorEventRepository.listEvents(authorId, request);

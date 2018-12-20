@@ -4,15 +4,15 @@ import '../common.dart';
 
 import '../common/form.dart';
 
-import '../../domain/author/service.dart';
+import '../../domain/book/service.dart';
 import '../../domain/common/model.dart';
 
-class ListAuthorsHandler extends Handler {
-  static final _URL = r"/authors";
+class FindBooksHandler extends Handler {
+  static final _URL = r"/books";
 
-  AuthorService _authorService;
+  BookService _bookService;
 
-  ListAuthorsHandler(this._authorService) : super(_URL, "GET") {}
+  FindBooksHandler(this._bookService) : super(_URL, "GET") {}
 
   void execute(
       HttpRequest request, PathParams pathParams, UrlParams urlParams) {
@@ -28,9 +28,9 @@ class ListAuthorsHandler extends Handler {
     var searchPhrase = urlParams.getOptionalString("searchPhrase").value;
     var req = PageRequest(limit.value, offset.value);
 
-    _authorService
-        .findAuthors(searchPhrase, req)
-        .then((authors) => ok(authors, request))
+    _bookService
+        .findBooks(searchPhrase, req)
+        .then((books) => ok(books, request))
         .catchError((e) => handleErrors(e, request));
     
   }

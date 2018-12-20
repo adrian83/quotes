@@ -13,8 +13,9 @@ class AuthorService extends Service<Author> {
 
   AuthorService(BrowserClient http) : super(http);
 
-  Future<AuthorsPage> list(PageRequest request) => Future.value(request)
+  Future<AuthorsPage> list(PageRequest request, [String searchPhrase]) => Future.value(request)
       .then((req) => pageRequestToUrlParams(req))
+      .then((urlParams) => appendUrlParam(urlParams, "searchPhrase", searchPhrase))
       .then((urlParams) => "$_host/authors?$urlParams")
       .then((url) => getEntity(url))
       .then((json) => AuthorsPage.fromJson(json));

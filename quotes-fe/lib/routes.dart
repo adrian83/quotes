@@ -18,6 +18,7 @@ import 'components/quote/edit_quote.template.dart' as edit_quote_template;
 import 'components/quote/quote_events.template.dart' as quote_events_template;
 
 import 'info.template.dart' as info_template;
+import 'search.template.dart' as search_template;
 
 export 'route_paths.dart';
 
@@ -45,11 +46,6 @@ class Routes {
   static final authorEvents = RouteDefinition(
     routePath: RoutePaths.authorEvents,
     component: author_events_template.AuthorEventsComponentNgFactory,
-  );
-
-  static final info = RouteDefinition(
-    routePath: RoutePaths.info,
-    component: info_template.InfoComponentNgFactory,
   );
 
   static final showBook = RouteDefinition(
@@ -92,6 +88,16 @@ class Routes {
     component: quote_events_template.QuoteEventsComponentNgFactory,
   );
 
+    static final info = RouteDefinition(
+    routePath: RoutePaths.info,
+    component: info_template.InfoComponentNgFactory,
+  );
+
+    static final search = RouteDefinition(
+    routePath: RoutePaths.search,
+    component: search_template.SearchComponentNgFactory,
+  );
+
   static final all = <RouteDefinition>[
     listAuthors,
     newAuthor,
@@ -106,6 +112,7 @@ class Routes {
     newQuote,
     editQuote,
     quoteEvents,
+    search,
     info
   ];
 }

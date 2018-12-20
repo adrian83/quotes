@@ -97,7 +97,11 @@ class UrlParams {
       var error = ParsingError(name, "Cannot be empty");
       return ParseElem.failure(error);
     }
-    return ParseElem.success(obj.toString());
+    return ParseElem.success(obj);
+  }
+
+  ParseElem<String> getOptionalString(String name) {
+    return ParseElem.success(params[name]);
   }
 }
 

@@ -62,7 +62,7 @@ abstract class Handler {
     } else if (ex is InvalidDataException) {
       badRequest(ex.errors, request);
     } else {
-      serverError("unknown error ${ex.runtimeType}", request);
+      serverError("unknown error ${ex}", request);
     }
   }
 

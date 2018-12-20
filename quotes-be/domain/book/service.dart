@@ -13,12 +13,17 @@ class BookService {
   QuoteRepository _quoteRepository;
   QuoteEventRepository _quoteEventRepository;
 
-  BookService(this._bookRepository, this._bookEventRepository, this._quoteRepository, this._quoteEventRepository);
+  BookService(this._bookRepository, this._bookEventRepository,
+      this._quoteRepository, this._quoteEventRepository);
 
-  Future<Page<Book>> findBooks(String authorId, PageRequest request) =>
-      _bookRepository.findBooks(authorId, request);
+  Future<Page<Book>> findAuthorBooks(String authorId, PageRequest request) =>
+      _bookRepository.findAuthorBooks(authorId, request);
 
-  Future<Page<BookEvent>> listEvents(String authorId, String bookId, PageRequest request) =>
+  Future<Page<Book>> findBooks(String searchPhrase, PageRequest request) =>
+      _bookRepository.findBooks(searchPhrase, request);
+
+  Future<Page<BookEvent>> listEvents(
+          String authorId, String bookId, PageRequest request) =>
       _bookEventRepository.listEvents(authorId, bookId, request);
 
   Future<Book> save(Book book) => _bookRepository

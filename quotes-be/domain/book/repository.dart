@@ -24,7 +24,7 @@ class BookRepository {
 
   BookRepository(this._connection);
 
-  Future<Page<Book>> findBooks(String authorId, PageRequest request) {
+  Future<Page<Book>> findAuthorBooks(String authorId, PageRequest request) {
     return _connection
         .query(listAuthorBooksStmt, substitutionValues: {
           "limit": request.limit,
@@ -37,6 +37,35 @@ class BookRepository {
         .then((List<Book> books) => _connection
             .query(authorBooksCountStmt,
                 substitutionValues: {"authorId": authorId})
+            .then((l) => l[0][0])
+            .then((total) => PageInfo(request.limit, request.offset, total))
+            .then((info) => Page(info, books)));
+  }
+
+  Future<Page<Book>> findBooks(String searchPhrase, PageRequest request) {
+
+    var phrase = searchPhrase ?? "";
+    print(phrase);
+
+    Map<String, Object> params = {
+      "limit": request.limit,
+      "offset": request.offset,
+      "phrase": phrase
+    };
+
+    // TODO fix - use prepared statement.
+    var stmt =
+        "SELECT * FROM Book WHERE TITLE ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%' LIMIT @limit OFFSET @offset";
+    var countStmt = "SELECT count(*) FROM Book WHERE TITLE ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%'";
+
+    print(stmt);
+    return _connection
+        .query(stmt, substitutionValues: params)
+        .then((List<List<dynamic>> booksData) => booksData
+            .map((List<dynamic> bookData) => Book.fromDB(bookData))
+            .toList())
+        .then((List<Book> books) => _connection
+            .query(countStmt)
             .then((l) => l[0][0])
             .then((total) => PageInfo(request.limit, request.offset, total))
             .then((info) => Page(info, books)));
