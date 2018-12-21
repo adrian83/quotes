@@ -41,6 +41,7 @@ class SearchComponent extends ErrorHandler {
 
   AuthorPageSwitcher _authorPageSwitcher;
   BookPageSwitcher _bookPageSwitcher;
+QuotePageSwitcher _quotePageSwitcher;
 
   String phrase = "";
 
@@ -49,6 +50,8 @@ class SearchComponent extends ErrorHandler {
     _authorPageSwitcher.change(0);
     _bookPageSwitcher = BookPageSwitcher(_bookService, this);
     _bookPageSwitcher.change(0);
+    _quotePageSwitcher = QuotePageSwitcher(_quoteService, this);
+    _quotePageSwitcher.change(0);
   }
 
   PageSwitcher get authorSwitcher => _authorPageSwitcher;
@@ -57,11 +60,15 @@ class SearchComponent extends ErrorHandler {
   PageSwitcher get bookSwitcher => _bookPageSwitcher;
   BooksPage get bookPage => _bookPageSwitcher.page;
 
+  PageSwitcher get quoteSwitcher => _quotePageSwitcher;
+  QuotesPage get quotePage => _quotePageSwitcher.page;
+
   List<Breadcrumb> get breadcrumbs => [Breadcrumb.text("authors").last()];
 
   void search() {
     _authorPageSwitcher.search(phrase);
     _bookPageSwitcher.search(phrase);
+    _quotePageSwitcher.search(phrase);
   }
 }
 
@@ -114,5 +121,31 @@ class BookPageSwitcher extends PageSwitcher {
   void _fetchPage(int pageNumber) => _bookService
       .find(_phrase, PageRequest.page(pageNumber))
       .then((page) => _booksPage = page)
+      .catchError(_parent.handleError);
+}
+
+class QuotePageSwitcher extends PageSwitcher {
+  QuoteService _quoteService;
+  ErrorHandler _parent;
+
+  String _phrase;
+
+  QuotesPage _quotesPage = QuotesPage.empty();
+
+  QuotePageSwitcher(this._quoteService, this._parent);
+
+  QuotesPage get page => _quotesPage;
+
+  void search(String phrase) {
+    _phrase = phrase;
+    change(0);
+  }
+
+  @override
+  void change(int pageNumber) => _fetchPage(pageNumber);
+
+  void _fetchPage(int pageNumber) => _quoteService
+      .find(_phrase, PageRequest.page(pageNumber))
+      .then((page) => _quotesPage = page)
       .catchError(_parent.handleError);
 }

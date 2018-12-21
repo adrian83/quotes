@@ -12,8 +12,11 @@ class QuoteService {
 
   QuoteService(this._quotesRepository, this._quoteEventRepository);
 
-  Future<Page<Quote>> findQuotes(String bookId, PageRequest request) =>
-      _quotesRepository.findQuotes(bookId, request);
+  Future<Page<Quote>> findBookQuotes(String bookId, PageRequest request) =>
+      _quotesRepository.findBookQuotes(bookId, request);
+
+  Future<Page<Quote>> findQuotes(String searchPhrase, PageRequest request) =>
+      _quotesRepository.findQuotes(searchPhrase, request);
 
   Future<Page<QuoteEvent>> listEvents(String authorId, String bookId, String quoteId, PageRequest request) =>
       _quoteEventRepository.listEvents(authorId, bookId, quoteId, request);

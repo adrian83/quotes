@@ -24,7 +24,7 @@ class QuoteRepository {
 
   QuoteRepository(this._connection);
 
-  Future<Page<Quote>> findQuotes(String bookId, PageRequest request) {
+  Future<Page<Quote>> findBookQuotes(String bookId, PageRequest request) {
     return _connection
         .query(listBookQuotesStmt, substitutionValues: {
           "limit": request.limit,
@@ -40,6 +40,34 @@ class QuoteRepository {
             .then((total) => PageInfo(request.limit, request.offset, total))
             .then((info) => Page(info, quotes)));
   }
+
+Future<Page<Quote>>findQuotes(String searchPhrase, PageRequest request) {
+
+    var phrase = searchPhrase ?? "";
+    print(phrase);
+
+    Map<String, Object> params = {
+      "limit": request.limit,
+      "offset": request.offset,
+      "phrase": phrase
+    };
+
+    // TODO fix - use prepared statement.
+    var stmt = "SELECT * FROM Quote WHERE TEXT ILIKE '%$phrase%' LIMIT @limit OFFSET @offset";
+    var countStmt = "SELECT count(*) FROM Quote WHERE TEXT ILIKE '%$phrase%'";
+
+    return _connection
+        .query(stmt, substitutionValues: params)
+        .then((List<List<dynamic>> quotesData) => quotesData
+            .map((List<dynamic> quoteData) => Quote.fromDB(quoteData))
+            .toList())
+        .then((List<Quote> quotes) => _connection
+            .query(countStmt)
+            .then((l) => l[0][0])
+            .then((total) => PageInfo(request.limit, request.offset, total))
+            .then((info) => Page(info, quotes)));
+
+}
 
   Future<Quote> save(Quote quote) =>
       _connection.execute(insertQuoteStmt, substitutionValues: {

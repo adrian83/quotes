@@ -19,8 +19,16 @@ class QuoteService extends Service<Quote> {
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
   }
 
-    Future<QuoteEventsPage> listEvents(String authorId, String bookId, String quoteId, PageRequest request) {
-    var url = "$_host/authors/$authorId/books/$bookId/quotes/$quoteId/events?${this.pageRequestToUrlParams(request)}";
+  Future<QuotesPage> find(String searchPhrase, PageRequest request) {
+    var url = "$_host/quotes?${this.pageRequestToUrlParams(request)}";
+    url = appendUrlParam(url, "searchPhrase", searchPhrase);
+    return getEntity(url).then((json) => QuotesPage.fromJson(json));
+  }
+
+  Future<QuoteEventsPage> listEvents(
+      String authorId, String bookId, String quoteId, PageRequest request) {
+    var url =
+        "$_host/authors/$authorId/books/$bookId/quotes/$quoteId/events?${this.pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => QuoteEventsPage.fromJson(json));
   }
 

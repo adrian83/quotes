@@ -10,6 +10,7 @@ import './handler/quote/update_quote.dart';
 import './handler/quote/delete_quote.dart';
 import './handler/quote/get_quote.dart';
 import './handler/quote/list_events.dart';
+import './handler/quote/find_quotes.dart';
 
 import './handler/author/list_authors.dart';
 import './handler/author/add_author.dart';
@@ -119,6 +120,7 @@ Future main(List<String> args) async {
   var updateQuoteHandler = UpdateQuoteHandler(quoteService);
   var deleteQuoteHandler = DeleteQuoteHandler(quoteService);
   var quoteEventsHandler = QuoteEventsHandler(quoteService);
+  var findQuotesHandler = FindQuotesHandler(quoteService);
 
   var handlers = [
     authorEventsHandler,
@@ -139,7 +141,8 @@ Future main(List<String> args) async {
     updateQuoteHandler,
     deleteQuoteHandler,
     listQuotesHandler,
-    quoteEventsHandler
+    quoteEventsHandler,
+    findQuotesHandler
   ];
 
   Author a1 = await authorService.save(Author(null, "Adam Mickiewicz",
