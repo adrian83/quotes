@@ -13,6 +13,7 @@ import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
+import '../../domain/common/router.dart';
 import '../../route_paths.dart';
 
 import '../../tools/strings.dart';
@@ -23,7 +24,8 @@ import '../../tools/strings.dart';
   providers: [
     ClassProvider(AuthorService),
     ClassProvider(BookService),
-    ClassProvider(QuoteService)
+    ClassProvider(QuoteService),
+    ClassProvider(QuotesRouter)
   ],
   directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
@@ -33,13 +35,14 @@ class EditQuoteComponent extends ErrorHandler
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
+  final QuotesRouter _router;
 
   Author _author = Author.empty();
   Book _book = Book.empty();
   Quote _quote = Quote.empty();
 
   EditQuoteComponent(
-      this._authorService, this._bookService, this._quoteService);
+      this._authorService, this._bookService, this._quoteService, this._router);
 
   Quote get quote => _quote;
 
@@ -59,6 +62,9 @@ class EditQuoteComponent extends ErrorHandler
       .then((quote) => _quote = quote)
       .then((_) => showInfo("Quote '${_quote.text}' updated"))
       .catchError(handleError);
+
+  void showQuote() =>
+      _router.showQuote(_quote.authorId, _quote.bookId, _quote.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(search(), "search")];

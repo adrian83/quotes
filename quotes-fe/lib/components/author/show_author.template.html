@@ -17,14 +17,16 @@
 
 <div *ngIf="author.id != null">
 
-  <h3>
-    {{author.name}}
-  </h3>
+
+
+
+  <h3>{{author.name}}</h3>
+
+  <h6 style="color:gray;">created: {{ author.createdUtc }}, modified: {{ author.modifiedUtc }}</h6>
+
+  <br/>
 
   <h5 *ngFor="let par of author.descriptionParts">{{ par }}</h5>
-
-  <h5>Created: {{ author.createdUtc }}</h5>
-  <h5>Modified: {{ author.modifiedUtc }}</h5>
 
   <br/><br/>
 

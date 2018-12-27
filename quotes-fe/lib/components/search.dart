@@ -46,7 +46,8 @@ class SearchComponent extends ErrorHandler with Navigable {
 
   String phrase = "";
 
-  SearchComponent(this._authorService, this._bookService, this._quoteService, this._router) {
+  SearchComponent(this._authorService, this._bookService, this._quoteService,
+      this._router) {
     _authorPageSwitcher = AuthorPageSwitcher(_authorService, this);
     _authorPageSwitcher.change(0);
     _bookPageSwitcher = BookPageSwitcher(_bookService, this);
@@ -80,11 +81,11 @@ class SearchComponent extends ErrorHandler with Navigable {
   void editBook(Book book) =>
       _router.navigate(editBookUrl(book.authorId, book.id));
 
-      void showQuote(Quote quote) =>
-          _router.navigate(showQuoteUrl(quote.authorId, quote.bookId, quote.id));
+  void showQuote(Quote quote) =>
+      _router.navigate(showQuoteUrl(quote.authorId, quote.bookId, quote.id));
 
-      void editQuote(Quote quote) =>
-          _router.navigate(editQuoteUrl(quote.authorId, quote.bookId, quote.id));
+  void editQuote(Quote quote) =>
+      _router.navigate(editQuoteUrl(quote.authorId, quote.bookId, quote.id));
 }
 
 abstract class SearchResult<T extends Page> extends PageSwitcher {

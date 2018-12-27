@@ -4,6 +4,10 @@
 
 <breadcrumbs [elements]="breadcrumbs"></breadcrumbs>
 
+<nav class="navbar navbar-light"  style="background-color: #e3f2fd;" *ngIf="book.id != null && book.id != ''">
+  <span class="navbar-brand mb-0" (click)="showBook()" style="cursor:pointer;">show</span>
+</nav>
+
 <br/>
 
 <events [events]="events"></events>

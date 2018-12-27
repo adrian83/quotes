@@ -15,6 +15,7 @@ import '../../domain/book/model.dart';
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
 import '../../domain/common/page.dart';
+import '../../domain/common/router.dart';
 import '../../routes.dart';
 
 @Component(
@@ -23,7 +24,8 @@ import '../../routes.dart';
   providers: [
     ClassProvider(AuthorService),
     ClassProvider(BookService),
-    ClassProvider(QuoteService)
+    ClassProvider(QuoteService),
+    ClassProvider(QuotesRouter)
   ],
   directives: const [coreDirectives, Breadcrumbs, Events, Pagination],
 )
@@ -34,7 +36,7 @@ class ShowBookComponent extends PageSwitcher
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
-  final Router _router;
+  final QuotesRouter _router;
 
   Author _author = Author.empty();
   Book _book = Book.empty();
@@ -78,21 +80,19 @@ class ShowBookComponent extends PageSwitcher
       .then((_) => _book = Book.empty())
       .catchError(handleError);
 
-  void showAuthor() => _router.navigate(showAuthorUrl(_book.authorId));
+  void showAuthor() => _router.showAuthor(_book.authorId);
 
   void showQuote(Quote quote) =>
-      _router.navigate(showQuoteUrl(quote.authorId, quote.bookId, quote.id));
+      _router.showQuote(quote.authorId, quote.bookId, quote.id);
 
   void editQuote(Quote quote) =>
-      _router.navigate(editQuoteUrl(quote.authorId, quote.bookId, quote.id));
+      _router.editQuote(quote.authorId, quote.bookId, quote.id);
 
-  void editBook() => _router.navigate(editBookUrl(_book.authorId, _book.id));
+  void editBook() => _router.editBook(_book.authorId, _book.id);
 
-  void createQuote() =>
-      _router.navigate(createQuoteUrl(_book.authorId, _book.id));
+  void createQuote() => _router.createQuote(_book.authorId, _book.id);
 
-  void showEvents() => _router.navigate(bookEventsUrl(_author.id, _book.id));
-
+  void showEvents() => _router.showBookEvents(_author.id, _book.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(search(), "search")];

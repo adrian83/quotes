@@ -30,7 +30,9 @@ class BookService {
       .save(book.generateId())
       .then((_) => _bookEventRepository.save(book));
 
-  Future<Book> update(Book book) => _bookRepository.update(book);
+  Future<Book> update(Book book) => _bookRepository
+      .update(book)
+      .then((book) => _bookEventRepository.update(book));
 
   Future<Book> find(String bookId) => _bookRepository.find(bookId);
 

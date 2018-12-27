@@ -11,12 +11,17 @@ import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
 import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
+import '../../domain/common/router.dart';
 import '../../route_paths.dart';
 
 @Component(
   selector: 'new-book',
   templateUrl: 'new_book.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(BookService)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(BookService),
+    ClassProvider(QuotesRouter)
+  ],
   directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
 class NewBookComponent extends ErrorHandler
@@ -24,7 +29,7 @@ class NewBookComponent extends ErrorHandler
     implements OnActivate {
   final BookService _bookService;
   final AuthorService _authorService;
-  final Router _router;
+  final QuotesRouter _router;
 
   Book _book = Book.empty();
   Author _author = Author.empty();
@@ -47,8 +52,7 @@ class NewBookComponent extends ErrorHandler
       .then((_) => _editBook(_book))
       .catchError(handleError);
 
-  void _editBook(Book book) =>
-      _router.navigate(editBookUrl(book.authorId, book.id));
+  void _editBook(Book book) => _router.editBook(book.authorId, book.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(search(), "search")];

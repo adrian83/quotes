@@ -17,21 +17,13 @@
 
 <div *ngIf="book.id != null">
 
-  <h3>
-    {{book.title}}
-    <i class="fas fa-trash pull-right" (click)="deleteBook()" style="cursor:pointer;"></i>
-    <i class="fas fa-marker pull-right" (click)="editBook()" style="margin-right:5px; cursor:pointer;"></i>
-  </h3>
+  <h3>{{book.title}}</h3>
+
+  <h6 style="color:gray;">created: {{ book.createdUtc }}, modified: {{ book.modifiedUtc }}</h6>
+
+  <br/>
 
   <h5 *ngFor="let par of book.descriptionParts">{{ par }}</h5>
-
-  <br/><br/>
-
-  <input
-    (click)="createQuote()"
-    class="btn btn-primary"
-    type="button"
-    value="new quote">
 
   <br/><br/>
 

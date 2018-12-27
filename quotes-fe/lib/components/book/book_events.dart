@@ -14,12 +14,14 @@ import '../common/navigable.dart';
 import '../../domain/book/service.dart';
 import '../../domain/book/event.dart';
 import '../../domain/common/page.dart';
+import '../../domain/common/router.dart';
 import '../../routes.dart';
 
 @Component(
   selector: 'book-events',
   templateUrl: 'book_events.template.html',
-  providers: [ClassProvider(BookService)],
+  providers: [ClassProvider(BookService),
+  ClassProvider(QuotesRouter)],
   directives: const [
     coreDirectives,
     formDirectives,
@@ -36,7 +38,7 @@ class BookEventsComponent extends PageSwitcher
   static final int pageSize = 10;
 
   final BookService _bookService;
-  final Router _router;
+  final QuotesRouter _router;
 
   BookEventsPage _bookEventPage = BookEventsPage.empty();
   String _authorId;
@@ -65,8 +67,8 @@ class BookEventsComponent extends PageSwitcher
           .then((page) => _bookEventPage = page)
           .catchError(handleError);
 
-  void showBook() => _router.navigate(showBookUrl(
-      _bookEventPage.elements.last.authorId, _bookEventPage.elements.last.id));
+  void showBook() => _router.showBook(
+      _bookEventPage.elements.last.authorId, _bookEventPage.elements.last.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(search(), "search")];

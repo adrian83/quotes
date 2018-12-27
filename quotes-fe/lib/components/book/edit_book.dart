@@ -11,12 +11,14 @@ import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
 import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
+import '../../domain/common/router.dart';
 import '../../routes.dart';
 
 @Component(
   selector: 'edit-book',
   templateUrl: 'edit_book.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(BookService)],
+  providers: [ClassProvider(AuthorService), ClassProvider(BookService),
+  ClassProvider(QuotesRouter)],
   directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
 class EditBookComponent extends ErrorHandler
@@ -24,12 +26,13 @@ class EditBookComponent extends ErrorHandler
     implements OnActivate {
   final AuthorService _authorService;
   final BookService _bookService;
+  final QuotesRouter _router;
 
   String _oldTitle = "";
   Book _book = Book.empty();
   Author _author = Author.empty();
 
-  EditBookComponent(this._authorService, this._bookService);
+  EditBookComponent(this._authorService, this._bookService, this._router);
 
   Book get book => _book;
   Author get author => _author;
@@ -49,6 +52,9 @@ class EditBookComponent extends ErrorHandler
       .then((_) => showInfo("Book '$_oldTitle' updated"))
       .then((_) => _oldTitle = _book.title)
       .catchError(handleError);
+
+
+  void showBook() => _router.showBook(_author.id, _book.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(search(), "search")];

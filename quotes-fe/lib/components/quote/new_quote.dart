@@ -13,6 +13,7 @@ import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
+import '../../domain/common/router.dart';
 import '../../route_paths.dart';
 
 @Component(
@@ -21,7 +22,8 @@ import '../../route_paths.dart';
   providers: [
     ClassProvider(AuthorService),
     ClassProvider(BookService),
-    ClassProvider(QuoteService)
+    ClassProvider(QuoteService),
+    ClassProvider(QuotesRouter)
   ],
   directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
@@ -31,7 +33,7 @@ class NewQuoteComponent extends ErrorHandler
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
-  final Router _router;
+  final QuotesRouter _router;
 
   Author _author = Author.empty();
   Book _book = Book.empty();
@@ -59,7 +61,7 @@ class NewQuoteComponent extends ErrorHandler
       .catchError(handleError);
 
   void _editQuote(Quote quote) =>
-      _router.navigate(editQuoteUrl(quote.authorId, quote.bookId, quote.id));
+      _router.editQuote(quote.authorId, quote.bookId, quote.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(search(), "search")];

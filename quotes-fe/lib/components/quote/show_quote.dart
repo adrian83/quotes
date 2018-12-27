@@ -14,6 +14,7 @@ import '../../domain/book/service.dart';
 import '../../domain/book/model.dart';
 import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
+import '../../domain/common/router.dart';
 import '../../routes.dart';
 
 import '../../tools/strings.dart';
@@ -24,7 +25,8 @@ import '../../tools/strings.dart';
   providers: [
     ClassProvider(AuthorService),
     ClassProvider(BookService),
-    ClassProvider(QuoteService)
+    ClassProvider(QuoteService),
+    ClassProvider(QuotesRouter)
   ],
   directives: const [coreDirectives, Breadcrumbs, Events, Pagination],
 )
@@ -34,7 +36,7 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
-  final Router _router;
+  final QuotesRouter _router;
 
   Author _author = Author.empty();
   Book _book = Book.empty();
@@ -57,7 +59,7 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
       .catchError(handleError);
 
   void editQuote() =>
-      _router.navigate(editQuoteUrl(_quote.authorId, _quote.bookId, _quote.id));
+      _router.editQuote(_quote.authorId, _quote.bookId, _quote.id);
 
   void deleteQuote() => _quoteService
       .delete(quote.authorId, quote.bookId, quote.id)
@@ -65,7 +67,7 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
       .then((_) => _quote = Quote.empty())
       .catchError(handleError);
 
-        void showEvents() => _router.navigate(quoteEventsUrl(_author.id, _book.id, _quote.id));
+  void showEvents() => _router.showQuoteEvents(_author.id, _book.id, _quote.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(search(), "search")];

@@ -14,13 +14,9 @@
 
 <events [events]="events"></events>
 
-
 <div *ngIf="quote.id != null">
+  <h3>{{quote.text}}</h3>
 
-<h3>
-  {{quote.text}}
-  <i class="fas fa-trash pull-right" (click)="deleteQuote()" style="cursor:pointer;"></i>
-  <i class="fas fa-marker pull-right" (click)="editQuote()" style="margin-right:5px; cursor:pointer;"></i>
-</h3>
+  <h6 style="color:gray;">created: {{ quote.createdUtc }}, modified: {{ quote.modifiedUtc }}</h6>
 
 </div>

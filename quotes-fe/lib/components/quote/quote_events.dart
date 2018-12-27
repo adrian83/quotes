@@ -14,12 +14,13 @@ import '../common/navigable.dart';
 import '../../domain/quote/service.dart';
 import '../../domain/quote/event.dart';
 import '../../domain/common/page.dart';
+import '../../domain/common/router.dart';
 import '../../routes.dart';
 
 @Component(
   selector: 'quote-events',
   templateUrl: 'quote_events.template.html',
-  providers: [ClassProvider(QuoteService)],
+  providers: [ClassProvider(QuoteService), ClassProvider(QuotesRouter)],
   directives: const [
     coreDirectives,
     formDirectives,
@@ -36,7 +37,7 @@ class QuoteEventsComponent extends PageSwitcher
   static final int pageSize = 10;
 
   final QuoteService _quoteService;
-    final Router _router;
+  final QuotesRouter _router;
 
   QuoteEventsPage _quoteEventPage = QuoteEventsPage.empty();
   String _authorId;
@@ -63,11 +64,13 @@ class QuoteEventsComponent extends PageSwitcher
 
   void _fetchPage(int pageNumber) =>
       Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
-          .then((req) => _quoteService.listEvents(_authorId, _bookId, _quoteId, req))
+          .then((req) =>
+              _quoteService.listEvents(_authorId, _bookId, _quoteId, req))
           .then((page) => _quoteEventPage = page)
           .catchError(handleError);
 
-  void showQuote() => _router.navigate(showQuoteUrl(_quoteEventPage.elements.last.authorId, _quoteEventPage.elements.last.bookId, _quoteEventPage.elements.last.id));
+  void showQuote() => _router.showQuote(_quoteEventPage.elements.last.authorId,
+      _quoteEventPage.elements.last.bookId, _quoteEventPage.elements.last.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(search(), "search")];
@@ -76,12 +79,14 @@ class QuoteEventsComponent extends PageSwitcher
     elems.add(Breadcrumb.link(showAuthorUrl(_authorId), "tmp name").last());
 
     if (_bookId == null || page.elements.length == 0) return elems;
-    elems.add(Breadcrumb.link(showBookUrl(_authorId, _bookId), "tmp title").last());
+    elems.add(
+        Breadcrumb.link(showBookUrl(_authorId, _bookId), "tmp title").last());
 
     if (_quoteId == null || page.elements.length == 0) return elems;
-    elems.add(Breadcrumb.link(showQuoteUrl(_authorId, _bookId, _quoteId), "short version").last());
+    elems.add(Breadcrumb.link(
+            showQuoteUrl(_authorId, _bookId, _quoteId), "short version")
+        .last());
 
     return elems;
   }
-
 }
