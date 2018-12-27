@@ -9,6 +9,8 @@ class Navigable {
 
   String listAuthorsUrl() => RoutePaths.listAuthors.toUrl();
 
+  String search() => RoutePaths.search.toUrl();
+
   String showAuthorUrl(String authorId) => RoutePaths.showAuthor
       .toUrl(parameters: {authorIdParam: authorId ?? missing});
 

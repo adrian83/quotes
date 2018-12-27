@@ -58,7 +58,7 @@ class AuthorEventsComponent extends PageSwitcher
   void _fetchFirstPage() => _fetchPage(0);
 
   void _fetchPage(int pageNumber) =>
-      Future.value(PageRequest.pageWithSize(pageNumber, pageSize)) 
+      Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
           .then((req) => _authorService.listEvents(_authorId, req))
           .then((page) => _authorEventPage = page)
           .catchError(handleError);
@@ -67,7 +67,7 @@ class AuthorEventsComponent extends PageSwitcher
       _router.navigate(showAuthorUrl(_authorEventPage.elements.last.id));
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+    var elems = [Breadcrumb.link(search(), "search")];
 
     if (_authorId == null || page.elements.length == 0) return elems;
     elems.add(Breadcrumb.link(showAuthorUrl(_authorId), page.elements.last.name)

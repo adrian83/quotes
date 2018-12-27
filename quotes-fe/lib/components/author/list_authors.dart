@@ -67,5 +67,6 @@ class ListAuthorsComponent extends PageSwitcher
 
   void createAuthor() => _router.navigate(createAuthorUrl());
 
-  List<Breadcrumb> get breadcrumbs => [Breadcrumb.text("authors").last()];
+  List<Breadcrumb> get breadcrumbs =>
+      [Breadcrumb.link(search(), "search").last()];
 }

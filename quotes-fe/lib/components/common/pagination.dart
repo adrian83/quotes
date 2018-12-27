@@ -1,7 +1,6 @@
-import 'dart:async';
-
 import 'package:angular/angular.dart';
 import 'package:angular_forms/angular_forms.dart';
+import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
 import '../../domain/common/page.dart';
@@ -28,50 +27,58 @@ class PageLink {
     selector: 'pagination',
     templateUrl: 'pagination.template.html',
     directives: const [formDirectives, coreDirectives])
-class Pagination implements OnInit {
+class Pagination implements OnActivate {
   static final Logger logger = Logger('Pagination');
 
+  List<PageLink> _links = [];
+  PageInfo _page;
+
   @Input()
-  PageInfo page;
+  void set page(PageInfo page) {
+    _page = page;
+    _links = _createLinks(page);
+  }
+
   @Input()
   PageSwitcher switcher;
 
-  Future<Null> ngOnInit() async {
-    logger.info("Pagination initialized. Switcher: $switcher, page: $page");
+  void onActivate(_, RouterState state) {
+    logger.info("Pagination initialized.");
   }
 
-  void changePage(int page) {
-    var pages = _pagesCount();
-    logger.info("Pages: $pages, page: $page");
-    if (page >= 0 && page < pages) {
-      switcher.change(page);
+  List<PageLink> get links => _links;
+
+  void changePage(int pageNumber) {
+    var pages = _pagesCount(_page);
+    logger.info("");
+    if (pageNumber >= 0 && pageNumber < pages) {
+      switcher.change(pageNumber);
     }
   }
 
-  int _pagesCount() {
-    var count = this.page == null ? 0 : (page.total / page.limit);
+  int _pagesCount(PageInfo page) {
+    var count = page == null ? 0 : (page.total / page.limit);
     return count.isNaN ? 0 : count.ceil();
   }
 
-  int _currentPage() {
-    var current = this.page == null ? 0 : (page.offset / page.limit);
+  int _currentPage(PageInfo page) {
+    var current = page == null ? 0 : (page.offset / page.limit);
     return current.isNaN ? 0 : current.ceil();
   }
 
-  List<PageLink> get links {
-    if (this.page == null) {
+  List<PageLink> _createLinks(PageInfo page) {
+    if (page == null) {
       return [];
     }
 
-    var pages = _pagesCount();
+    var pages = _pagesCount(page);
     logger.info("total: ${page.total}, pages: $pages");
-
 
     if (pages < 2) {
       return [];
     }
 
-    var current = _currentPage();
+    var current = _currentPage(page);
     var pageZero = current == 0;
     var lastPage = current == (pages - 1);
     var zeroPages = pages == 0;

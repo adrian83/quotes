@@ -35,5 +35,5 @@ class NewAuthorComponent extends ErrorHandler with Navigable {
   void _editAuthor(Author author) => _router.navigate(editAuthorUrl(author.id));
 
   List<Breadcrumb> get breadcrumbs =>
-      [Breadcrumb.link(listAuthorsUrl(), "authors").last()];
+      [Breadcrumb.link(search(), "search").last()];
 }

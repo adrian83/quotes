@@ -17,8 +17,8 @@ import 'components/quote/new_quote.template.dart' as new_quote_template;
 import 'components/quote/edit_quote.template.dart' as edit_quote_template;
 import 'components/quote/quote_events.template.dart' as quote_events_template;
 
-import 'info.template.dart' as info_template;
-import 'search.template.dart' as search_template;
+import 'components/info.template.dart' as info_template;
+import 'components/search.template.dart' as search_template;
 
 export 'route_paths.dart';
 

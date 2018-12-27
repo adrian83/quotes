@@ -15,6 +15,8 @@ import '../../domain/quote/service.dart';
 import '../../domain/quote/model.dart';
 import '../../route_paths.dart';
 
+import '../../tools/strings.dart';
+
 @Component(
   selector: 'edit-quote',
   templateUrl: 'edit_quote.template.html',
@@ -59,15 +61,17 @@ class EditQuoteComponent extends ErrorHandler
       .catchError(handleError);
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+    var elems = [Breadcrumb.link(search(), "search")];
 
     if (_author.id == null) return elems;
     elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
-    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), "books"));
 
     if (_book.id == null) return elems;
-    elems.add(
-        Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title).last());
+    elems.add(Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title));
+
+    if (_quote.id == null) return elems;
+    elems.add(Breadcrumb.link(showQuoteUrl(_author.id, _book.id, _quote.id),
+        shorten(_quote.text, 20)));
 
     return elems;
   }

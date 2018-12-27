@@ -36,7 +36,7 @@ class BookEventsComponent extends PageSwitcher
   static final int pageSize = 10;
 
   final BookService _bookService;
-    final Router _router;
+  final Router _router;
 
   BookEventsPage _bookEventPage = BookEventsPage.empty();
   String _authorId;
@@ -65,15 +65,19 @@ class BookEventsComponent extends PageSwitcher
           .then((page) => _bookEventPage = page)
           .catchError(handleError);
 
-  void showBook() => _router.navigate(showBookUrl(_bookEventPage.elements.last.authorId, _bookEventPage.elements.last.id));
+  void showBook() => _router.navigate(showBookUrl(
+      _bookEventPage.elements.last.authorId, _bookEventPage.elements.last.id));
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+    var elems = [Breadcrumb.link(search(), "search")];
 
     if (_authorId == null || page.elements.length == 0) return elems;
-    elems.add(Breadcrumb.link(showAuthorUrl(_authorId), "tmp name").last());
+    elems.add(Breadcrumb.link(showAuthorUrl(_authorId), "tmp name"));
+
+    if (page.elements.length == 0) return elems;
+    elems.add(
+        Breadcrumb.link(showBookUrl(_authorId, _authorId), "tmp title").last());
 
     return elems;
   }
-
 }

@@ -80,7 +80,7 @@ class ShowAuthorComponent extends PageSwitcher
   void createBook() => _router.navigate(createBookUrl(_author.id));
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(RoutePaths.listAuthors.toUrl(), "authors")];
+    var elems = [Breadcrumb.link(RoutePaths.search.toUrl(), "search")];
 
     if (_author.id == null) return elems;
     elems.add(Breadcrumb.text(_author.name).last());

@@ -42,7 +42,7 @@ class NewBookComponent extends ErrorHandler
       .catchError(handleError);
 
   void save() => _bookService
-      .create(book) 
+      .create(book)
       .then((book) => _book = book)
       .then((_) => _editBook(_book))
       .catchError(handleError);
@@ -51,11 +51,10 @@ class NewBookComponent extends ErrorHandler
       _router.navigate(editBookUrl(book.authorId, book.id));
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+    var elems = [Breadcrumb.link(search(), "search")];
 
     if (_author.id == null) return elems;
     elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
-    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), "books").last());
 
     return elems;
   }

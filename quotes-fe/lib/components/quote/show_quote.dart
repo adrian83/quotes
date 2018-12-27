@@ -68,15 +68,13 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
         void showEvents() => _router.navigate(quoteEventsUrl(_author.id, _book.id, _quote.id));
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+    var elems = [Breadcrumb.link(search(), "search")];
 
     if (_author.id == null) return elems;
     elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
-    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), "books"));
 
     if (_book.id == null) return elems;
     elems.add(Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title));
-    elems.add(Breadcrumb.link(showBookUrl(_author.id, _book.id), "quotes"));
 
     if (_quote.id == null) return elems;
     elems.add(Breadcrumb.text(shorten(_quote.text, 20)).last());

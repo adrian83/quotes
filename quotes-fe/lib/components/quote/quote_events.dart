@@ -70,15 +70,13 @@ class QuoteEventsComponent extends PageSwitcher
   void showQuote() => _router.navigate(showQuoteUrl(_quoteEventPage.elements.last.authorId, _quoteEventPage.elements.last.bookId, _quoteEventPage.elements.last.id));
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+    var elems = [Breadcrumb.link(search(), "search")];
 
     if (_authorId == null || page.elements.length == 0) return elems;
     elems.add(Breadcrumb.link(showAuthorUrl(_authorId), "tmp name").last());
-    elems.add(Breadcrumb.link(showAuthorUrl(_authorId), "books").last());
 
     if (_bookId == null || page.elements.length == 0) return elems;
     elems.add(Breadcrumb.link(showBookUrl(_authorId, _bookId), "tmp title").last());
-    elems.add(Breadcrumb.link(showBookUrl(_authorId, _bookId), "quotes").last());
 
     if (_quoteId == null || page.elements.length == 0) return elems;
     elems.add(Breadcrumb.link(showQuoteUrl(_authorId, _bookId, _quoteId), "short version").last());

@@ -55,7 +55,7 @@ class EditAuthorComponent extends ErrorHandler
   void showEvents() => _router.navigate(authorEventsUrl(_author.id));
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(listAuthorsUrl(), "authors")];
+    var elems = [Breadcrumb.link(search(), "search")];
 
     if (_author.id == null) return elems;
     elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _oldName).last());
