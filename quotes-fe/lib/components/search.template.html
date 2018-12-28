@@ -2,74 +2,85 @@
 
 <br/>
 
+<nav class="navbar navbar-light"  style="background-color: #e3f2fd;">
+  <span class="navbar-brand mb-0" (click)="createAuthor()" style="cursor:pointer;">new author</span>
+</nav>
+
+<br/>
+
 <events [events]="events"></events>
 
 <br/>
 
 <div class="input-group">
-    <input type="text"
-        class="form-control"
-        placeholder="Search for..."
-        [(ngModel)]="phrase">
+  <input type="text"
+    class="form-control"
+    placeholder="Search for..."
+    [(ngModel)]="phrase">
 
-    <span class="input-group-btn">
-        <button class="btn btn-default" type="button" (click)="executeSearch()">Search</button>
-    </span>
+  <span class="input-group-btn">
+    <button class="btn btn-default" type="button" (click)="executeSearch()">Search</button>
+  </span>
 </div>
+
 <br/><br/>
 
-
 <div *ngIf="authorPage != null && authorPage.info.total > 0">
-<h4>authors</h4>
-<ul class="list-group list-group-flush">
-  <li class="list-group-item" *ngFor="let author of authorPage.elements">
-    <h4>
-      <span style="cursor:pointer;"
-        (click)="showAuthor(author)">{{ author.name }}</span>
-      <i class="fas fa-marker pull-right"
-        (click)="editAuthor(author)"
-        style="margin-right:5px; cursor:pointer;"></i>
-    </h4>
+  <h4>authors</h4>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item" *ngFor="let author of authorPage.elements">
+      <h4>
+        <span style="cursor:pointer;"
+          (click)="showAuthor(author)">{{ author.name }}</span>
+        <i class="fas fa-marker pull-right"
+          (click)="editAuthor(author)"
+          style="margin-right:5px; cursor:pointer;"></i>
+      </h4>
 
-    <div>{{ author.shortDescription }}</div>
-  </li>
-</ul>
+      <div>{{ author.shortDescription }}</div>
+    </li>
+  </ul>
 
-<div>
-  <pagination [page]="authorPage.info" [switcher]="authorSwitcher"></pagination>
+  <div>
+    <pagination [page]="authorPage.info" [switcher]="authorSwitcher"></pagination>
+  </div>
 </div>
-</div>
+
+<br/><br/>
 
 <div *ngIf="bookPage != null && bookPage.info.total > 0">
-<h4>books</h4>
-<ul class="list-group list-group-flush">
-  <li class="list-group-item" *ngFor="let book of bookPage.elements">
-    <h4>
-      <span style="cursor:pointer;"
-        (click)="showBook(book)">{{ book.title }}</span>
-      <i class="fas fa-marker pull-right"
-        (click)="editBook(book)"
-        style="margin-right:5px; cursor:pointer;"></i>
-    </h4>
-    <div>{{ book.shortDescription }}</div>
-  </li>
-</ul>
+  <h4>books</h4>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item" *ngFor="let book of bookPage.elements">
+      <h4>
+        <span style="cursor:pointer;"
+          (click)="showBook(book)">{{ book.title }}</span>
+        <i class="fas fa-marker pull-right"
+          (click)="editBook(book)"
+          style="margin-right:5px; cursor:pointer;"></i>
+      </h4>
+      <div>{{ book.shortDescription }}</div>
+    </li>
+  </ul>
 
-<div>
-  <pagination [page]="bookPage.info" [switcher]="bookSwitcher"></pagination>
+  <div>
+    <pagination [page]="bookPage.info" [switcher]="bookSwitcher"></pagination>
+  </div>
 </div>
-</div>
+
+<br/><br/>
 
 <div *ngIf="quotePage != null && quotePage.info.total > 0">
   <h4>quotes</h4>
   <ul class="list-group list-group-flush">
     <li class="list-group-item" *ngFor="let quote of quotePage.elements">
       <h4>
-        <span style="cursor:pointer;"
-          (click)="showQuote(quote)">{{ quote.text }}</span>
         <i class="fas fa-marker pull-right"
           (click)="editQuote(quote)"
           style="margin-right:5px; cursor:pointer;"></i>
+        <p style="cursor:pointer;"
+          *ngFor="let par of quote.shortParts"
+          (click)="showQuote(quote)">{{ par }}</p>
       </h4>
     </li>
   </ul>
@@ -77,4 +88,4 @@
   <div>
     <pagination [page]="quotePage.info" [switcher]="quoteSwitcher"></pagination>
   </div>
-  </div>
+</div>

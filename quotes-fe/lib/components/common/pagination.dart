@@ -11,8 +11,7 @@ abstract class PageSwitcher {
 
 class PageLink {
   String _label;
-  bool _disabled;
-  bool _current;
+  bool _disabled, _current;
   int _page;
 
   PageLink(this._label, this._disabled, this._current, this._page);
@@ -84,10 +83,49 @@ class Pagination implements OnActivate {
     var zeroPages = pages == 0;
 
     List<PageLink> links = [];
+
     links.add(PageLink("<<", pageZero || zeroPages, false, current - 1));
 
-    for (var i = 0; i < pages; i++) {
-      links.add(PageLink("${i + 1}", false, current == i, i));
+    var show = 6;
+
+    for (var index = 0; index < pages; index++) {
+      var offset = (pages - 1) - current;
+
+      var addFirst = current > show;
+      if (index == 0 && addFirst) {
+        links.add(PageLink("${index + 1}", false, current == index, index));
+        continue;
+      }
+
+      var addLowerDots = current > show;
+      if (index == 1 && addLowerDots) {
+        links.add(PageLink("...", true, false, -1));
+        continue;
+      }
+
+      var addUpperDots = offset > show;
+      if (index == (pages - 2) && addUpperDots) {
+        links.add(PageLink("...", true, false, -1));
+        continue;
+      }
+
+      var addLast = offset > show;
+      if (index == (pages - 1) && addLast) {
+        links.add(PageLink("${index + 1}", false, current == index, index));
+        continue;
+      }
+
+      var minShow = current -
+          (addFirst ? (addLowerDots ? (show - 2) : (show - 1)) : show) -
+          (show - (offset > show ? show : offset));
+      var maxShow = current +
+          (addLast ? (addUpperDots ? (show - 2) : (show - 1)) : show) +
+          (show - (current > show ? show : current));
+
+      if (index < minShow) continue;
+      if (index > maxShow) continue;
+
+      links.add(PageLink("${index + 1}", false, current == index, index));
     }
 
     links.add(PageLink(">>", lastPage || zeroPages, false, current + 1));

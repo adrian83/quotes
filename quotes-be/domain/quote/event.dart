@@ -77,7 +77,6 @@ class QuoteEventRepository {
   }
 
   Future<void> deleteByBook(String bookId) {
-    print("dasdsdasdasd");
 
     var bookIdQ = MatchQuery("bookId", bookId);
     var operationQ = MatchQuery("operation", ESDocument.created);
@@ -97,10 +96,9 @@ class QuoteEventRepository {
 
   Future<Page<QuoteEvent>> listEvents(
       String authorId, String bookId, String quoteId, PageRequest request) {
-    var query = MatchQuery("id", quoteId);
 
     var req = SearchRequest()
-      ..query = query
+      ..query = MatchQuery("id", quoteId)
       ..size = request.limit
       ..from = request.offset
       ..sort = [SortElement.asc("modifiedUtc")];

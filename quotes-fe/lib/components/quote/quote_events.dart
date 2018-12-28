@@ -1,21 +1,21 @@
 import 'dart:async';
 
 import 'package:angular/angular.dart';
-import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
+import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
-import '../common/breadcrumb.dart';
-import '../common/error_handler.dart';
-import '../common/pagination.dart';
-import '../common/events.dart';
-import '../common/navigable.dart';
-
-import '../../domain/quote/service.dart';
-import '../../domain/quote/event.dart';
 import '../../domain/common/page.dart';
 import '../../domain/common/router.dart';
+import '../../domain/quote/event.dart';
+import '../../domain/quote/service.dart';
 import '../../routes.dart';
+import '../common/breadcrumb.dart';
+import '../common/error_handler.dart';
+import '../common/events.dart';
+import '../common/pagination.dart';
+
+import '../../tools/strings.dart';
 
 @Component(
   selector: 'quote-events',
@@ -30,7 +30,7 @@ import '../../routes.dart';
   ],
 )
 class QuoteEventsComponent extends PageSwitcher
-    with ErrorHandler, Navigable
+    with ErrorHandler
     implements OnActivate {
   static final Logger logger = Logger('QuoteEventsComponent');
 
@@ -51,9 +51,9 @@ class QuoteEventsComponent extends PageSwitcher
 
   @override
   void onActivate(_, RouterState state) {
-    _authorId = param(authorIdParam, state);
-    _bookId = param(bookIdParam, state);
-    _quoteId = param(quoteIdParam, state);
+    _authorId = _router.param(authorIdParam, state);
+    _bookId = _router.param(bookIdParam, state);
+    _quoteId = _router.param(quoteIdParam, state);
     _fetchFirstPage();
   }
 
@@ -64,8 +64,7 @@ class QuoteEventsComponent extends PageSwitcher
 
   void _fetchPage(int pageNumber) =>
       Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
-          .then((req) =>
-              _quoteService.listEvents(_authorId, _bookId, _quoteId, req))
+          .then((req) => _quoteService.listEvents(_authorId, _bookId, _quoteId, req))
           .then((page) => _quoteEventPage = page)
           .catchError(handleError);
 
@@ -73,19 +72,12 @@ class QuoteEventsComponent extends PageSwitcher
       _quoteEventPage.elements.last.bookId, _quoteEventPage.elements.last.id);
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(search(), "search")];
+    var elems = [Breadcrumb.link(_router.search(), "search")];
 
-    if (_authorId == null || page.elements.length == 0) return elems;
-    elems.add(Breadcrumb.link(showAuthorUrl(_authorId), "tmp name").last());
-
-    if (_bookId == null || page.elements.length == 0) return elems;
-    elems.add(
-        Breadcrumb.link(showBookUrl(_authorId, _bookId), "tmp title").last());
-
-    if (_quoteId == null || page.elements.length == 0) return elems;
-    elems.add(Breadcrumb.link(
-            showQuoteUrl(_authorId, _bookId, _quoteId), "short version")
-        .last());
+    if (_quoteId != null && page.elements.length > 0) {
+      var url = _router.showQuoteUrl(_authorId, _bookId, _quoteId);
+      elems.add(Breadcrumb.link(url, shorten(page.elements.last.text, 20)));
+    }
 
     return elems;
   }

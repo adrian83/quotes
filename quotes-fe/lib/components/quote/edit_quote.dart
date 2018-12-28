@@ -1,22 +1,19 @@
 import 'package:angular/angular.dart';
-import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
+import 'package:angular_router/angular_router.dart';
 
-import '../common/breadcrumb.dart';
-import '../common/events.dart';
-import '../common/error_handler.dart';
-import '../common/navigable.dart';
-
-import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
-import '../../domain/book/service.dart';
+import '../../domain/author/service.dart';
 import '../../domain/book/model.dart';
-import '../../domain/quote/service.dart';
-import '../../domain/quote/model.dart';
+import '../../domain/book/service.dart';
 import '../../domain/common/router.dart';
+import '../../domain/quote/model.dart';
+import '../../domain/quote/service.dart';
 import '../../route_paths.dart';
-
 import '../../tools/strings.dart';
+import '../common/breadcrumb.dart';
+import '../common/error_handler.dart';
+import '../common/events.dart';
 
 @Component(
   selector: 'edit-quote',
@@ -29,9 +26,7 @@ import '../../tools/strings.dart';
   ],
   directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
-class EditQuoteComponent extends ErrorHandler
-    with Navigable
-    implements OnActivate {
+class EditQuoteComponent extends ErrorHandler implements OnActivate {
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
@@ -40,6 +35,7 @@ class EditQuoteComponent extends ErrorHandler
   Author _author = Author.empty();
   Book _book = Book.empty();
   Quote _quote = Quote.empty();
+  String _oldText = "";
 
   EditQuoteComponent(
       this._authorService, this._bookService, this._quoteService, this._router);
@@ -48,37 +44,44 @@ class EditQuoteComponent extends ErrorHandler
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(param(authorIdParam, state))
+      .get(_router.param(authorIdParam, state))
       .then((author) => _author = author)
-      .then((_) => _bookService.get(_author.id, param(bookIdParam, state)))
+      .then((_) => _router.param(bookIdParam, state))
+      .then((bookId) => _bookService.get(_author.id, bookId))
       .then((book) => _book = book)
-      .then((_) => param(quoteIdParam, state))
+      .then((_) => _router.param(quoteIdParam, state))
       .then((quoteId) => _quoteService.get(_author.id, _book.id, quoteId))
       .then((quote) => _quote = quote)
+      .then((_) => _oldText = _quote.text)
       .catchError(handleError);
 
   void update() => _quoteService
       .update(_quote)
       .then((quote) => _quote = quote)
       .then((_) => showInfo("Quote '${_quote.text}' updated"))
+      .then((_) => _oldText = _quote.text)
       .catchError(handleError);
 
   void showQuote() =>
       _router.showQuote(_quote.authorId, _quote.bookId, _quote.id);
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(search(), "search")];
+    var elems = [Breadcrumb.link(_router.search(), "search")];
 
-    if (_author.id == null) return elems;
-    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
+    if (_author.id != null) {
+      var url = _router.showAuthorUrl(_author.id);
+      elems.add(Breadcrumb.link(url, _author.name));
+    }
 
-    if (_book.id == null) return elems;
-    elems.add(Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title));
+    if (_book.id != null) {
+      var url = _router.showBookUrl(_author.id, _book.id);
+      elems.add(Breadcrumb.link(url, _book.title));
+    }
 
-    if (_quote.id == null) return elems;
-    elems.add(Breadcrumb.link(showQuoteUrl(_author.id, _book.id, _quote.id),
-        shorten(_quote.text, 20)));
-
+    if (_quote.id != null) {
+      var url = _router.showQuoteUrl(_author.id, _book.id, _quote.id);
+      elems.add(Breadcrumb.link(url, shorten(_oldText, 20)));
+    }
     return elems;
   }
 }

@@ -3,8 +3,6 @@ import 'package:logging/logging.dart';
 import '../../domain/common/errors.dart';
 import '../../domain/common/event.dart';
 
-
-
 class ErrorHandler {
   static final Logger logger = Logger('ErrorHandler');
 
@@ -32,10 +30,8 @@ class ErrorHandler {
     logger.info("Errors: $e");
   }
 
-
   void showInfo(String msg) {
     logger.info("show info: $msg");
     _events.add(InfoEvent(msg));
   }
-
 }

@@ -70,7 +70,7 @@ class Page<T> {
   String toString() => jsonEncode(this);
 }
 
-const defPageSize = 2;
+const defPageSize = 3;
 
 class PageRequest {
   int _limit, _offset;

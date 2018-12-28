@@ -1,12 +1,10 @@
 import 'dart:io';
 
-import 'form.dart';
-
+import '../../domain/quote/model.dart';
+import '../../domain/quote/service.dart';
 import '../common.dart';
 import '../common/form.dart';
-
-import '../../domain/quote/service.dart';
-import '../../domain/quote/model.dart';
+import 'form.dart';
 
 class AddQuoteHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books/{bookId}/quotes";
@@ -15,7 +13,8 @@ class AddQuoteHandler extends Handler {
 
   AddQuoteHandler(this._quoteService) : super(_URL, "POST");
 
-  void execute(HttpRequest request, PathParams pathParams, UrlParams urlParams) {
+  void execute(
+      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
     var authorId = pathParams.getString("authorId");
     var bookId = pathParams.getString("bookId");
 
@@ -26,9 +25,12 @@ class AddQuoteHandler extends Handler {
     }
 
     parseForm(request, QuoteFormParser(false, false))
-        .then((form) => Quote(null, form.text, authorId.value, bookId.value, nowUtc(), nowUtc()))
+        .then((form) => fromForm(form, authorId.value, bookId.value))
         .then((quote) => _quoteService.save(quote))
         .then((quote) => created(quote, request))
         .catchError((e) => handleErrors(e, request));
   }
+
+  Quote fromForm(QuoteForm form, String authorId, String bookId) =>
+      Quote(null, form.text, authorId, bookId, nowUtc(), nowUtc());
 }

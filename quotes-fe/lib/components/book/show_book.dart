@@ -2,21 +2,19 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
-import '../common/breadcrumb.dart';
-import '../common/navigable.dart';
-import '../common/error_handler.dart';
-import '../common/pagination.dart';
-import '../common/events.dart';
-
-import '../../domain/author/service.dart';
 import '../../domain/author/model.dart';
-import '../../domain/book/service.dart';
+import '../../domain/author/service.dart';
 import '../../domain/book/model.dart';
-import '../../domain/quote/service.dart';
-import '../../domain/quote/model.dart';
+import '../../domain/book/service.dart';
 import '../../domain/common/page.dart';
 import '../../domain/common/router.dart';
+import '../../domain/quote/model.dart';
+import '../../domain/quote/service.dart';
 import '../../routes.dart';
+import '../common/breadcrumb.dart';
+import '../common/error_handler.dart';
+import '../common/events.dart';
+import '../common/pagination.dart';
 
 @Component(
   selector: 'show-book',
@@ -29,8 +27,7 @@ import '../../routes.dart';
   ],
   directives: const [coreDirectives, Breadcrumbs, Events, Pagination],
 )
-class ShowBookComponent extends PageSwitcher
-    with ErrorHandler, Navigable, OnActivate {
+class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
   static final Logger logger = Logger('ShowBookComponent');
 
   final AuthorService _authorService;
@@ -51,9 +48,10 @@ class ShowBookComponent extends PageSwitcher
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(param(authorIdParam, state))
+      .get(_router.param(authorIdParam, state))
       .then((author) => _author = author)
-      .then((_) => _bookService.get(_author.id, param(bookIdParam, state)))
+      .then((_) => _router.param(bookIdParam, state))
+      .then((bookId) => _bookService.get(_author.id, bookId))
       .then((book) => _book = book)
       .then((_) => PageRequest.page(_quotesPage.info.curent))
       .then((listReq) => _quoteService.list(_author.id, _book.id, listReq))
@@ -95,13 +93,16 @@ class ShowBookComponent extends PageSwitcher
   void showEvents() => _router.showBookEvents(_author.id, _book.id);
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(search(), "search")];
+    var elems = [Breadcrumb.link(_router.search(), "search")];
 
-    if (_author.id == null) return elems;
-    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
+    if (_author.id != null) {
+      var url = _router.showAuthorUrl(_author.id);
+      elems.add(Breadcrumb.link(url, _author.name));
+    }
 
-    if (_book.id == null) return elems;
-    elems.add(Breadcrumb.text(_book.title).last());
+    if (_book.id != null) {
+      elems.add(Breadcrumb.text(_book.title).last());
+    }
 
     return elems;
   }

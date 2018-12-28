@@ -2,22 +2,19 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
+import '../../domain/author/model.dart';
+import '../../domain/author/service.dart';
+import '../../domain/book/model.dart';
+import '../../domain/book/service.dart';
+import '../../domain/common/router.dart';
+import '../../domain/quote/model.dart';
+import '../../domain/quote/service.dart';
+import '../../routes.dart';
+import '../../tools/strings.dart';
 import '../common/breadcrumb.dart';
 import '../common/error_handler.dart';
-import '../common/pagination.dart';
 import '../common/events.dart';
-import '../common/navigable.dart';
-
-import '../../domain/author/service.dart';
-import '../../domain/author/model.dart';
-import '../../domain/book/service.dart';
-import '../../domain/book/model.dart';
-import '../../domain/quote/service.dart';
-import '../../domain/quote/model.dart';
-import '../../domain/common/router.dart';
-import '../../routes.dart';
-
-import '../../tools/strings.dart';
+import '../common/pagination.dart';
 
 @Component(
   selector: 'show-quote',
@@ -30,7 +27,7 @@ import '../../tools/strings.dart';
   ],
   directives: const [coreDirectives, Breadcrumbs, Events, Pagination],
 )
-class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
+class ShowQuoteComponent extends ErrorHandler with OnActivate {
   static final Logger logger = Logger('ShowQuoteComponent');
 
   final AuthorService _authorService;
@@ -49,11 +46,12 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(param(authorIdParam, state))
+      .get(_router.param(authorIdParam, state))
       .then((author) => _author = author)
-      .then((_) => _bookService.get(_author.id, param(bookIdParam, state)))
+      .then((_) => _router.param(bookIdParam, state))
+      .then((bookId) => _bookService.get(_author.id, bookId))
       .then((book) => _book = book)
-      .then((_) => param(quoteIdParam, state))
+      .then((_) => _router.param(quoteIdParam, state))
       .then((quoteId) => _quoteService.get(_author.id, _book.id, quoteId))
       .then((quote) => _quote = quote)
       .catchError(handleError);
@@ -70,16 +68,21 @@ class ShowQuoteComponent extends ErrorHandler with Navigable, OnActivate {
   void showEvents() => _router.showQuoteEvents(_author.id, _book.id, _quote.id);
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(search(), "search")];
+    var elems = [Breadcrumb.link(_router.search(), "search")];
 
-    if (_author.id == null) return elems;
-    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
+    if (_author.id != null) {
+      var url = _router.showAuthorUrl(_author.id);
+      elems.add(Breadcrumb.link(url, _author.name));
+    }
 
-    if (_book.id == null) return elems;
-    elems.add(Breadcrumb.link(showBookUrl(_author.id, _book.id), _book.title));
+    if (_book.id != null) {
+      var url = _router.showBookUrl(_author.id, _book.id);
+      elems.add(Breadcrumb.link(url, _book.title));
+    }
 
-    if (_quote.id == null) return elems;
-    elems.add(Breadcrumb.text(shorten(_quote.text, 20)).last());
+    if (_quote.id != null) {
+      elems.add(Breadcrumb.text(shorten(_quote.text, 20)).last());
+    }
 
     return elems;
   }

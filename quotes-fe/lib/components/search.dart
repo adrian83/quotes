@@ -1,21 +1,18 @@
 import 'package:angular/angular.dart';
 import 'package:angular_forms/angular_forms.dart';
-import 'package:angular_router/angular_router.dart';
 
-import '../domain/author/service.dart';
 import '../domain/author/model.dart';
-import '../domain/book/service.dart';
+import '../domain/author/service.dart';
 import '../domain/book/model.dart';
-import '../domain/quote/service.dart';
+import '../domain/book/service.dart';
+import '../domain/common/page.dart';
+import '../domain/common/router.dart';
 import '../domain/quote/model.dart';
-
+import '../domain/quote/service.dart';
 import 'common/breadcrumb.dart';
 import 'common/error_handler.dart';
-import 'common/pagination.dart';
 import 'common/events.dart';
-import 'common/navigable.dart';
-
-import '../domain/common/page.dart';
+import 'common/pagination.dart';
 
 @Component(
   selector: 'search',
@@ -23,7 +20,8 @@ import '../domain/common/page.dart';
   providers: [
     ClassProvider(AuthorService),
     ClassProvider(BookService),
-    ClassProvider(QuoteService)
+    ClassProvider(QuoteService),
+    ClassProvider(QuotesRouter)
   ],
   directives: const [
     coreDirectives,
@@ -33,18 +31,17 @@ import '../domain/common/page.dart';
     Pagination
   ],
 )
-class SearchComponent extends ErrorHandler with Navigable {
+class SearchComponent extends ErrorHandler {
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
-
-  final Router _router;
+  final QuotesRouter _router;
 
   AuthorPageSwitcher _authorPageSwitcher;
   BookPageSwitcher _bookPageSwitcher;
   QuotePageSwitcher _quotePageSwitcher;
 
-  String phrase = "";
+  String _phrase = "";
 
   SearchComponent(this._authorService, this._bookService, this._quoteService,
       this._router) {
@@ -54,6 +51,12 @@ class SearchComponent extends ErrorHandler with Navigable {
     _bookPageSwitcher.change(0);
     _quotePageSwitcher = QuotePageSwitcher(_quoteService, this);
     _quotePageSwitcher.change(0);
+  }
+
+  String get phrase => _phrase;
+
+  void set phrase(String p){
+    _phrase = p;
   }
 
   PageSwitcher get authorSwitcher => _authorPageSwitcher;
@@ -71,21 +74,21 @@ class SearchComponent extends ErrorHandler with Navigable {
     _quotePageSwitcher.search(phrase);
   }
 
-  void showAuthor(Author author) => _router.navigate(showAuthorUrl(author.id));
+  void createAuthor() => _router.createAuthor();
 
-  void editAuthor(Author author) => _router.navigate(editAuthorUrl(author.id));
+  void showAuthor(Author author) => _router.showAuthor(author.id);
 
-  void showBook(Book book) =>
-      _router.navigate(showBookUrl(book.authorId, book.id));
+  void editAuthor(Author author) => _router.editAuthor(author.id);
 
-  void editBook(Book book) =>
-      _router.navigate(editBookUrl(book.authorId, book.id));
+  void showBook(Book book) => _router.showBook(book.authorId, book.id);
+
+  void editBook(Book book) => _router.editBook(book.authorId, book.id);
 
   void showQuote(Quote quote) =>
-      _router.navigate(showQuoteUrl(quote.authorId, quote.bookId, quote.id));
+      _router.showQuote(quote.authorId, quote.bookId, quote.id);
 
   void editQuote(Quote quote) =>
-      _router.navigate(editQuoteUrl(quote.authorId, quote.bookId, quote.id));
+      _router.editQuote(quote.authorId, quote.bookId, quote.id);
 }
 
 abstract class SearchResult<T extends Page> extends PageSwitcher {

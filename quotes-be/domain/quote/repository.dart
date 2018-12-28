@@ -13,7 +13,7 @@ const updateQuoteStmt = "UPDATE Quote SET TEXT = @text, MODIFIED_UTC = @modified
 const getQuoteStmt = "SELECT * FROM Quote WHERE id = @id";
 const deleteQuoteStmt = "DELETE FROM Quote WHERE id = @id";
 const listBookQuotesStmt =
-    "SELECT * FROM Quote WHERE BOOK_ID = @bookId LIMIT @limit OFFSET @offset";
+    "SELECT * FROM Quote WHERE BOOK_ID = @bookId ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
 const bookQuotesCountStmt =
     "SELECT count(*) FROM Quote WHERE BOOK_ID = @bookId";
 const deleteAuthorQuotesStmt = "DELETE FROM Quote WHERE AUTHOR_ID = @authorId";
@@ -53,7 +53,7 @@ Future<Page<Quote>>findQuotes(String searchPhrase, PageRequest request) {
     };
 
     // TODO fix - use prepared statement.
-    var stmt = "SELECT * FROM Quote WHERE TEXT ILIKE '%$phrase%' LIMIT @limit OFFSET @offset";
+    var stmt = "SELECT * FROM Quote WHERE TEXT ILIKE '%$phrase%' ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
     var countStmt = "SELECT count(*) FROM Quote WHERE TEXT ILIKE '%$phrase%'";
 
     return _connection

@@ -1,6 +1,8 @@
 import '../common/page.dart';
 import '../common/model.dart';
 
+import '../../tools/strings.dart';
+
 class Quote extends Entity {
   String _text, _authorId, _bookId;
 
@@ -24,6 +26,8 @@ class Quote extends Entity {
   String get text => _text;
   String get authorId => _authorId;
   String get bookId => _bookId;
+  List<String> get textParts => _text.split("\n");
+  List<String> get shortParts => shorten(_text, 80).split("\n");
 
   void set text(String text) {
     this._text = text;

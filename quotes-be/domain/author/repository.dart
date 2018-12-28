@@ -13,9 +13,10 @@ const updateAuthorStmt =
     "UPDATE Author SET NAME = @name, DESCRIPTION = @desc, MODIFIED_UTC = @modified WHERE ID = @id";
 const getAuthorStmt = "SELECT * FROM Author WHERE id = @id";
 const deleteAuthorStmt = "DELETE FROM Author WHERE id = @id";
-const listAuthorsStmt = "SELECT * FROM Author LIMIT @limit OFFSET @offset";
+const listAuthorsStmt =
+    "SELECT * FROM Author ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
 const searchAuthorsStmt =
-    "SELECT * FROM Author WHERE NAME LIKE '%@phrase%' LIMIT @limit OFFSET @offset"; 
+    "SELECT * FROM Author WHERE NAME LIKE '%@phrase%' ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
 const authorsCountStmt = "SELECT count(*) FROM Author";
 
 class AuthorRepository {
@@ -40,9 +41,7 @@ class AuthorRepository {
       });
 
   Future<Page<Author>> findAuthors(String searchPhrase, PageRequest request) {
-
     var phrase = searchPhrase ?? "";
-    print(phrase);
 
     Map<String, Object> params = {
       "limit": request.limit,
@@ -52,21 +51,23 @@ class AuthorRepository {
 
     // TODO fix - use prepared statement.
     var stmt =
-        "SELECT * FROM Author WHERE NAME ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%' LIMIT @limit OFFSET @offset";
-    var countStmt = "SELECT count(*) FROM Author WHERE NAME ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%'";
+        "SELECT * FROM Author WHERE NAME ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%' ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
+    var countStmt =
+        "SELECT count(*) FROM Author WHERE NAME ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%'";
 
-    print(stmt);
     return _connection
         .query(stmt, substitutionValues: params)
-        .then((List<List<dynamic>> authorsData) => authorsData
-            .map((List<dynamic> authorData) => Author.fromDB(authorData))
-            .toList())
+        .then((List<List<dynamic>> authorsData) => _toAuthors(authorsData))
         .then((List<Author> authors) => _connection
             .query(countStmt)
             .then((l) => l[0][0])
             .then((total) => PageInfo(request.limit, request.offset, total))
             .then((info) => Page(info, authors)));
   }
+
+  List<Author> _toAuthors(List<List<dynamic>> authorsData) => authorsData
+      .map((List<dynamic> authorData) => Author.fromDB(authorData))
+      .toList();
 
   Future<Author> update(Author author) =>
       _connection.execute(updateAuthorStmt, substitutionValues: {

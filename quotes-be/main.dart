@@ -48,11 +48,19 @@ import 'package:postgres/postgres.dart';
 
 import 'config/config.dart';
 
+import 'dummy_data.dart';
+import 'package:logging/logging.dart';
+
 Future main(List<String> args) async {
   if (args.length == 0) {
     print("Please provide config location as a first command parameter");
     exit(1);
   }
+
+  Logger.root.level = Level.ALL;
+  Logger.root.onRecord.listen((LogRecord rec) {
+    print('${rec.loggerName}: ${rec.level.name}: ${rec.time}: ${rec.message}');
+  });
 
   String configLocation = args[0];
   Config config = await readConfig(configLocation);
@@ -145,40 +153,10 @@ Future main(List<String> args) async {
     findQuotesHandler
   ];
 
-  Author a1 = await authorService.save(Author(null, "Adam Mickiewicz",
-      "abc def", DateTime.now().toUtc(), DateTime.now().toUtc()));
-  Author a2 = await authorService.save(Author(null, "Henryk Sienkiewicz",
-      "abc def", DateTime.now().toUtc(), DateTime.now().toUtc()));
-  Author a3 = await authorService.save(Author(null, "Shakespear", "abc def",
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-
-  Book b1 = await bookService.save(Book(null, "Dziady", "Description...", a1.id,
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Pan Tadeusz", "Description...", a1.id,
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Switez", "Description...", a1.id,
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-
-  await bookService.save(Book(null, "Balladyna", "Description...", a2.id,
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Beniowski", "Description...", a2.id,
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Kordian", "Description...", a2.id,
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-
-  await bookService.save(Book(null, "Hamlet", "Description...", a3.id,
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Makbet", "Description...", a3.id,
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-  await bookService.save(Book(null, "Burza", "Description...", a3.id,
-      DateTime.now().toUtc(), DateTime.now().toUtc()));
-
-  await quoteService.save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 1",
-      a1.id, b1.id, DateTime.now().toUtc(), DateTime.now().toUtc()));
-  await quoteService.save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 2",
-      a1.id, b1.id, DateTime.now().toUtc(), DateTime.now().toUtc()));
-  await quoteService.save(Quote(null, "Ciemno wszedzie, glucho wszedzie... 3",
-      a1.id, b1.id, DateTime.now().toUtc(), DateTime.now().toUtc()));
+  // inserts dummy data
+  if (args.length > 1) {
+    insertDummyData(authorService, bookService, quoteService);
+  }
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 
@@ -202,4 +180,14 @@ Future main(List<String> args) async {
       notFoundHandler.handle(request);
     }
   }
+}
+
+void insertDummyData(AuthorService authorService, BookService bookService,
+    QuoteService quoteService) async {
+  [author1, author2, author3]
+      .forEach((author) async => await authorService.save(author));
+  [book1, book2, book3, book4]
+      .forEach((book) async => await bookService.save(book));
+  [quote1, quote2, quote3, quote4]
+      .forEach((quote) async => await quoteService.save(quote));
 }

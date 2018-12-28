@@ -1,25 +1,29 @@
 import 'dart:async';
 
 import 'package:angular/angular.dart';
-import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
+import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
+import '../../domain/author/event.dart';
+import '../../domain/author/service.dart';
+import '../../domain/common/event.dart';
+import '../../domain/common/page.dart';
+import '../../domain/common/router.dart';
+import '../../routes.dart';
 import '../common/breadcrumb.dart';
 import '../common/error_handler.dart';
-import '../common/pagination.dart';
 import '../common/events.dart';
-import '../common/navigable.dart';
-
-import '../../domain/author/service.dart';
-import '../../domain/author/event.dart';
-import '../../domain/common/page.dart';
-import '../../routes.dart';
+import '../common/pagination.dart';
 
 @Component(
   selector: 'author-events',
   templateUrl: 'author_events.template.html',
-  providers: [ClassProvider(AuthorService)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: const [
     coreDirectives,
     formDirectives,
@@ -28,27 +32,27 @@ import '../../routes.dart';
     Pagination
   ],
 )
-class AuthorEventsComponent extends PageSwitcher
-    with ErrorHandler, Navigable
-    implements OnActivate {
+class AuthorEventsComponent extends PageSwitcher implements OnActivate {
   static final Logger logger = Logger('AuthorEventsComponent');
 
   static final int pageSize = 10;
 
+  final ErrorHandler _errorHandler;
   final AuthorService _authorService;
-  final Router _router;
+  final QuotesRouter _router;
 
   AuthorEventsPage _authorEventPage = AuthorEventsPage.empty();
   String _authorId;
 
-  AuthorEventsComponent(this._authorService, this._router);
+  AuthorEventsComponent(this._authorService, this._errorHandler, this._router);
 
   PageSwitcher get switcher => this;
   AuthorEventsPage get page => _authorEventPage;
+  List<Event> get events => _errorHandler.events;
 
   @override
   void onActivate(_, RouterState state) {
-    _authorId = param(authorIdParam, state);
+    _authorId = _router.param(authorIdParam, state);
     _fetchFirstPage();
   }
 
@@ -61,18 +65,17 @@ class AuthorEventsComponent extends PageSwitcher
       Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
           .then((req) => _authorService.listEvents(_authorId, req))
           .then((page) => _authorEventPage = page)
-          .catchError(handleError);
+          .catchError(_errorHandler.handleError);
 
-  void showAuthor() =>
-      _router.navigate(showAuthorUrl(_authorEventPage.elements.last.id));
+  void showAuthor() => _router.showAuthor(_authorEventPage.elements.last.id);
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(search(), "search")];
+    var elems = [Breadcrumb.link(_router.search(), "search")];
 
-    if (_authorId == null || page.elements.length == 0) return elems;
-    elems.add(Breadcrumb.link(showAuthorUrl(_authorId), page.elements.last.name)
-        .last());
-
+    if (_authorId != null && page.elements.length > 0) {
+      var url = _router.showAuthorUrl(_authorId);
+      elems.add(Breadcrumb.link(url, page.elements.last.name).last());
+    }
     return elems;
   }
 }

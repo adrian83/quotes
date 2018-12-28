@@ -1,18 +1,16 @@
 import 'package:angular/angular.dart';
-import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
+import 'package:angular_router/angular_router.dart';
 
+import '../../domain/author/model.dart';
+import '../../domain/author/service.dart';
+import '../../domain/book/model.dart';
+import '../../domain/book/service.dart';
+import '../../domain/common/router.dart';
+import '../../route_paths.dart';
 import '../common/breadcrumb.dart';
 import '../common/error_handler.dart';
 import '../common/events.dart';
-import '../common/navigable.dart';
-
-import '../../domain/author/service.dart';
-import '../../domain/author/model.dart';
-import '../../domain/book/service.dart';
-import '../../domain/book/model.dart';
-import '../../domain/common/router.dart';
-import '../../route_paths.dart';
 
 @Component(
   selector: 'new-book',
@@ -24,9 +22,7 @@ import '../../route_paths.dart';
   ],
   directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
-class NewBookComponent extends ErrorHandler
-    with Navigable
-    implements OnActivate {
+class NewBookComponent extends ErrorHandler implements OnActivate {
   final BookService _bookService;
   final AuthorService _authorService;
   final QuotesRouter _router;
@@ -41,7 +37,7 @@ class NewBookComponent extends ErrorHandler
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(param(authorIdParam, state))
+      .get(_router.param(authorIdParam, state))
       .then((author) => _author = author)
       .then((_) => _book.authorId = _author.id)
       .catchError(handleError);
@@ -55,11 +51,12 @@ class NewBookComponent extends ErrorHandler
   void _editBook(Book book) => _router.editBook(book.authorId, book.id);
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(search(), "search")];
+    var elems = [Breadcrumb.link(_router.search(), "search")];
 
-    if (_author.id == null) return elems;
-    elems.add(Breadcrumb.link(showAuthorUrl(_author.id), _author.name));
-
+    if (_author.id != null) {
+      var url = _router.showAuthorUrl(_author.id);
+      elems.add(Breadcrumb.link(url, _author.name));
+    }
     return elems;
   }
 }

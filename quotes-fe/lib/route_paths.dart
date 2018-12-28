@@ -5,13 +5,11 @@ const bookIdParam = "bookId";
 const quoteIdParam = "quoteId";
 
 class RoutePaths {
-  static final listAuthorsPath = 'authors/show';
   static final newAuthorPath = 'authors/new';
   static final showAuthorPath = 'authors/show/:$authorIdParam';
   static final editAuthorPath = 'authors/edit/:$authorIdParam';
   static final authorEventsPath = 'authors/events/:$authorIdParam';
 
-  static final listAuthors = RoutePath(path: listAuthorsPath);
   static final newAuthor = RoutePath(path: newAuthorPath);
   static final showAuthor = RoutePath(path: showAuthorPath);
   static final editAuthor = RoutePath(path: editAuthorPath);

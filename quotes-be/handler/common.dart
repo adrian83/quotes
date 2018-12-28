@@ -1,14 +1,18 @@
-import 'dart:io';
-import 'dart:convert';
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
+import 'package:logging/logging.dart';
+
+import '../domain/common/exception.dart';
 import 'common/exception.dart';
 import 'common/form.dart';
 
-import '../domain/common/exception.dart';
-
 abstract class Handler {
-  ContentType jsonHeader = ContentType("application", "json", charset: "utf-8");
+  static final Logger logger = Logger('Handler');
+
+  static final ContentType jsonHeader =
+      ContentType("application", "json", charset: "utf-8");
 
   String _url, _method;
   RegExp _exp;
@@ -17,6 +21,8 @@ abstract class Handler {
   String _paramPattern = r"([a-z-A-Z0-9]+)";
 
   Handler(this._url, this._method) {
+    logger.info("New handler created. Method: $_method, url: $_url");
+
     var urlPatterns = _url
             .split("/")
             .map((e) => isPathParam(e) ? _paramPattern : e)
@@ -30,8 +36,6 @@ abstract class Handler {
 
     _pathParamsDesc = _pathParamsDesc
         .map((e, i) => MapEntry(e.substring(1, e.length - 1), i));
-
-    print("Url: $_url, RegExp: $urlPatterns");
   }
 
   DateTime nowUtc() => DateTime.now().toUtc();
@@ -48,11 +52,11 @@ abstract class Handler {
     if (method != this._method) {
       return false;
     }
-    print(uri);
     return _exp.hasMatch(uri);
   }
 
   void handleErrors(Object ex, HttpRequest request) {
+    logger.info("Error occured. Error: $ex");
     if (ex is SaveFailedException) {
       serverError("cannot save entity", request);
     } else if (ex is UpdateFailedException) {
@@ -67,6 +71,8 @@ abstract class Handler {
   }
 
   void handle(HttpRequest request) {
+    logger.info(
+        "New request. Method: ${request.method}, url: ${request.requestedUri}");
     var segments = request.requestedUri.pathSegments;
     var pathParams = PathParams(segments, _pathParamsDesc);
     var uriParams = UrlParams(request.requestedUri.queryParameters);

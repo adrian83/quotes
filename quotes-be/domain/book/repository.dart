@@ -15,7 +15,7 @@ const getBookStmt = "SELECT * FROM Book WHERE id = @id";
 const deleteBookStmt = "DELETE FROM Book WHERE id = @id";
 const deleteAuthorsBooks = "DELETE FROM Book WHERE AUTHOR_ID = @authorId";
 const listAuthorBooksStmt =
-    "SELECT * FROM Book WHERE AUTHOR_ID = @authorId LIMIT @limit OFFSET @offset";
+    "SELECT * FROM Book WHERE AUTHOR_ID = @authorId ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
 const authorBooksCountStmt =
     "SELECT count(*) FROM Book WHERE AUTHOR_ID = @authorId";
 
@@ -55,7 +55,7 @@ class BookRepository {
 
     // TODO fix - use prepared statement.
     var stmt =
-        "SELECT * FROM Book WHERE TITLE ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%' LIMIT @limit OFFSET @offset";
+        "SELECT * FROM Book WHERE TITLE ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%' ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
     var countStmt = "SELECT count(*) FROM Book WHERE TITLE ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%'";
 
     print(stmt);

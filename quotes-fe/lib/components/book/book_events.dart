@@ -1,27 +1,24 @@
 import 'dart:async';
 
 import 'package:angular/angular.dart';
-import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
+import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
-import '../common/breadcrumb.dart';
-import '../common/error_handler.dart';
-import '../common/pagination.dart';
-import '../common/events.dart';
-import '../common/navigable.dart';
-
-import '../../domain/book/service.dart';
 import '../../domain/book/event.dart';
+import '../../domain/book/service.dart';
 import '../../domain/common/page.dart';
 import '../../domain/common/router.dart';
 import '../../routes.dart';
+import '../common/breadcrumb.dart';
+import '../common/error_handler.dart';
+import '../common/events.dart';
+import '../common/pagination.dart';
 
 @Component(
   selector: 'book-events',
   templateUrl: 'book_events.template.html',
-  providers: [ClassProvider(BookService),
-  ClassProvider(QuotesRouter)],
+  providers: [ClassProvider(BookService), ClassProvider(QuotesRouter)],
   directives: const [
     coreDirectives,
     formDirectives,
@@ -31,7 +28,7 @@ import '../../routes.dart';
   ],
 )
 class BookEventsComponent extends PageSwitcher
-    with ErrorHandler, Navigable
+    with ErrorHandler
     implements OnActivate {
   static final Logger logger = Logger('BookEventsComponent');
 
@@ -51,8 +48,8 @@ class BookEventsComponent extends PageSwitcher
 
   @override
   void onActivate(_, RouterState state) {
-    _authorId = param(authorIdParam, state);
-    _bookId = param(bookIdParam, state);
+    _authorId = _router.param(authorIdParam, state);
+    _bookId = _router.param(bookIdParam, state);
     _fetchFirstPage();
   }
 
@@ -71,15 +68,12 @@ class BookEventsComponent extends PageSwitcher
       _bookEventPage.elements.last.authorId, _bookEventPage.elements.last.id);
 
   List<Breadcrumb> get breadcrumbs {
-    var elems = [Breadcrumb.link(search(), "search")];
+    var elems = [Breadcrumb.link(_router.search(), "search")];
 
-    if (_authorId == null || page.elements.length == 0) return elems;
-    elems.add(Breadcrumb.link(showAuthorUrl(_authorId), "tmp name"));
-
-    if (page.elements.length == 0) return elems;
-    elems.add(
-        Breadcrumb.link(showBookUrl(_authorId, _authorId), "tmp title").last());
-
+    if (page.elements.length > 0) {
+      var url = _router.showBookUrl(_authorId, _bookId);
+      elems.add(Breadcrumb.link(url, page.elements.last.title).last());
+    }
     return elems;
   }
 }
