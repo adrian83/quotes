@@ -2,8 +2,10 @@ import 'dart:io';
 
 import '../../domain/quote/model.dart';
 import '../../domain/quote/service.dart';
+import '../../tools/tuple.dart';
 import '../common.dart';
 import '../common/form.dart';
+import '../common/params.dart';
 import 'form.dart';
 
 class AddQuoteHandler extends Handler {
@@ -13,24 +15,20 @@ class AddQuoteHandler extends Handler {
 
   AddQuoteHandler(this._quoteService) : super(_URL, "POST");
 
-  void execute(
-      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-    var authorId = pathParams.getString("authorId");
-    var bookId = pathParams.getString("bookId");
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
+    var params = Params()
+      ..authorIdParam = pathParams.getString("authorId")
+      ..bookIdParam = pathParams.getString("bookId");
 
-    var errors = ParseElem.errors([authorId, bookId]);
-    if (errors.length > 0) {
-      badRequest(errors, request);
-      return;
-    }
-
-    parseForm(request, QuoteFormParser(false, false))
-        .then((form) => fromForm(form, authorId.value, bookId.value))
+    parseForm(req, QuoteFormParser(false, false))
+        .then((form) => Tuple2(form, params))
+        .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.validate()))
+        .then((tuple2) => fromForm(tuple2.e2, tuple2.e1))
         .then((quote) => _quoteService.save(quote))
-        .then((quote) => created(quote, request))
-        .catchError((e) => handleErrors(e, request));
+        .then((quote) => created(quote, req))
+        .catchError((e) => handleErrors(e, req));
   }
 
-  Quote fromForm(QuoteForm form, String authorId, String bookId) =>
-      Quote(null, form.text, authorId, bookId, nowUtc(), nowUtc());
+  Quote fromForm(Params params, QuoteForm form) => Quote(
+      null, form.text, params.authorId, params.bookId, nowUtc(), nowUtc());
 }

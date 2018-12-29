@@ -59,7 +59,7 @@ class ParseElem<T> {
   static List<ParsingError> errors(List<ParseElem> elems) {
     List<ParsingError> errors = [];
     for (var e in elems) {
-      if (e.hasError()) {
+      if (e != null && e.hasError()) {
         errors.add(e.error);
       }
     }

@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'form.dart';
-
+import '../../domain/book/model.dart';
+import '../../domain/book/service.dart';
+import '../../tools/tuple.dart';
 import '../common.dart';
 import '../common/form.dart';
-
-import '../../domain/book/service.dart';
-import '../../domain/book/model.dart';
+import '../common/params.dart';
+import 'form.dart';
 
 class AddBookHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books";
@@ -15,19 +15,18 @@ class AddBookHandler extends Handler {
 
   AddBookHandler(this._bookService) : super(_URL, "POST");
 
-  void execute(
-      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-    var authorId = pathParams.getString("authorId");
-    if (authorId.hasError()) {
-      badRequest([authorId.error], request);
-      return;
-    }
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
+    var params = Params()..authorIdParam = pathParams.getString("authorId");
 
-    parseForm(request, BookFormParser(false, false))
-        .then((form) => Book(null, form.title, form.description, authorId.value,
-            nowUtc(), nowUtc()))
+    parseForm(req, BookFormParser(false, false))
+        .then((form) => Tuple2(form, params))
+        .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.validate()))
+        .then((tuple2) => fromForm(tuple2.e2, tuple2.e1))
         .then((book) => _bookService.save(book))
-        .then((book) => created(book, request))
-        .catchError((e) => handleErrors(e, request));
+        .then((book) => created(book, req))
+        .catchError((e) => handleErrors(e, req));
   }
+
+  Book fromForm(Params params, BookForm form) => Book(
+      null, form.title, form.description, params.authorId, nowUtc(), nowUtc());
 }

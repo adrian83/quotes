@@ -1,11 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 
-import '../common.dart';
-
-import '../common/form.dart';
-
-import '../../domain/quote/service.dart';
 import '../../domain/common/model.dart';
+import '../../domain/quote/service.dart';
+import '../common.dart';
+import '../common/form.dart';
+import '../common/params.dart';
 
 class FindQuotesHandler extends Handler {
   static final _URL = r"/quotes";
@@ -14,24 +14,17 @@ class FindQuotesHandler extends Handler {
 
   FindQuotesHandler(this._quoteService) : super(_URL, "GET") {}
 
-  void execute(
-      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-    var limit = urlParams.getIntOrElse("limit", 2);
-    var offset = urlParams.getIntOrElse("offset", 0);
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
+    var params = Params()
+      ..limitParam = urlParams.getIntOrElse("limit", 2)
+      ..offsetParam = urlParams.getIntOrElse("offset", 0)
+      ..searchPhraseParam = urlParams.getOptionalString("searchPhrase");
 
-    var errors = ParseElem.errors([limit, offset]);
-    if (errors.length > 0) {
-      badRequest(errors, request);
-      return;
-    }
-
-    var searchPhrase = urlParams.getOptionalString("searchPhrase").value;
-    var req = PageRequest(limit.value, offset.value);
-
-    _quoteService
-        .findQuotes(searchPhrase, req)
-        .then((books) => ok(books, request))
-        .catchError((e) => handleErrors(e, request));
-    
+    Future.value(params)
+        .then((params) => params.validate())
+        .then((params) => _quoteService.findQuotes(
+            params.searchPhrase, PageRequest(params.limit, params.offset)))
+        .then((books) => ok(books, req))
+        .catchError((e) => handleErrors(e, req));
   }
 }
