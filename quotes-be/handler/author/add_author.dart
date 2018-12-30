@@ -5,7 +5,6 @@ import 'package:logging/logging.dart';
 import './../common.dart';
 import '../../domain/author/model.dart';
 import '../../domain/author/service.dart';
-import '../../tools/logging.dart';
 import '../common/form.dart';
 import 'form.dart';
 
@@ -18,15 +17,13 @@ class AddAuthorHandler extends Handler {
 
   AddAuthorHandler(this._authorService) : super(_URL, "POST");
 
-  Author authorFromForm(AuthorForm form) =>
-      Author(null, form.name, form.description, nowUtc(), nowUtc());
-
-  void execute(
-          HttpRequest request, PathParams pathParams, UrlParams urlParams) =>
-      parseForm(request, AuthorFormParser(false, false))
-          .then((form) => authorFromForm(form))
-          .then((author) => log(logger, author, "Create author: $author"))
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
+      parseForm(req, AuthorFormParser(false, false))
+          .then((form) => createAuthor(form))
           .then((author) => _authorService.save(author))
-          .then((author) => created(author, request))
-          .catchError((e) => handleErrors(e, request));
+          .then((author) => created(author, req))
+          .catchError((e) => handleErrors(e, req));
+
+  Author createAuthor(AuthorForm form) =>
+      Author(null, form.name, form.description, nowUtc(), nowUtc());
 }

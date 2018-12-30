@@ -1,8 +1,7 @@
 import 'package:uuid/uuid.dart';
 
-import '../common/model.dart';
-
 import '../../tools/elasticsearch/document.dart';
+import '../common/model.dart';
 
 class Quote extends Entity {
   String _text, _authorId, _bookId;
@@ -11,21 +10,18 @@ class Quote extends Entity {
       DateTime modifiedUtc, DateTime createdUtc)
       : super(id, modifiedUtc, DateTime.now().toUtc());
 
-  factory Quote.fromJson(Map<String, dynamic> json) => Quote(
-      json['id'],
-      json['text'],
-      json['authorId'],
-      json['bookId'],
-      DateTime.parse(json['modifiedUtc']),
-      DateTime.parse(json['createdUtc']));
+  Quote.fromJson(Map<String, dynamic> json)
+      : this(
+            json['id'],
+            json['text'],
+            json['authorId'],
+            json['bookId'],
+            DateTime.parse(json['modifiedUtc']),
+            DateTime.parse(json['createdUtc']));
 
-  factory Quote.fromDB(List<dynamic> row) => Quote(
-      row[0].toString().trim(),
-      row[1].toString().trim(),
-      row[2].toString().trim(),
-      row[3].toString().trim(),
-      row[4],
-      row[5]);
+  Quote.fromDB(List<dynamic> row)
+      : this(row[0].toString().trim(), row[1].toString().trim(),
+            row[2].toString().trim(), row[3].toString().trim(), row[4], row[5]);
 
   String get text => _text;
   String get authorId => _authorId;
@@ -44,23 +40,23 @@ class Quote extends Entity {
     });
 }
 
-class QuoteEvent extends ESDocument implements Jsonable {
+class QuoteEvent extends ESDocument {
   Quote _quote;
 
   QuoteEvent(String docId, String operation, this._quote)
       : super(docId, operation);
 
-  factory QuoteEvent.created(String docId, Quote quote) =>
-      QuoteEvent(docId, ESDocument.created, quote);
+  QuoteEvent.created(String docId, Quote quote)
+      : this(docId, ESDocument.created, quote);
 
-  factory QuoteEvent.modified(String docId, Quote quote) =>
-      QuoteEvent(docId, ESDocument.modified, quote);
+  QuoteEvent.modified(String docId, Quote quote)
+      : this(docId, ESDocument.modified, quote);
 
-  factory QuoteEvent.deleted(String docId, Quote quote) =>
-      QuoteEvent(docId, ESDocument.deleted, quote);
+  QuoteEvent.deleted(String docId, Quote quote)
+      : this(docId, ESDocument.deleted, quote);
 
-  factory QuoteEvent.fromJson(Map<String, dynamic> json) =>
-      QuoteEvent(json['docId'], json['operation'], Quote.fromJson(json));
+  QuoteEvent.fromJson(Map<String, dynamic> json)
+      : this(json['docId'], json['operation'], Quote.fromJson(json));
 
   Quote get quote => _quote;
 

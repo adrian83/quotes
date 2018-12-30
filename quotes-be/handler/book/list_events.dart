@@ -1,11 +1,11 @@
+import 'dart:async';
 import 'dart:io';
-
-import '../common.dart';
-
-import '../common/form.dart';
 
 import '../../domain/book/service.dart';
 import '../../domain/common/model.dart';
+import '../common.dart';
+import '../common/form.dart';
+import '../common/params.dart';
 
 class BookEventsHandler extends Handler {
   static final _URL = r"/authors/{authorId}/books/{bookId}/events";
@@ -14,24 +14,18 @@ class BookEventsHandler extends Handler {
 
   BookEventsHandler(this._bookService) : super(_URL, "GET") {}
 
-  void execute(
-      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-    var limit = urlParams.getIntOrElse("limit", 2);
-    var offset = urlParams.getIntOrElse("offset", 0);
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
+    var params = Params()
+      ..authorIdParam = pathParams.getString("authorId")
+      ..bookIdParam = pathParams.getString("bookId")
+      ..limitParam = urlParams.getIntOrElse("limit", 2)
+      ..offsetParam = urlParams.getIntOrElse("offset", 0);
 
-    var authorIdOrErr = pathParams.getString("authorId");
-    var bookIdOrErr = pathParams.getString("bookId");
-
-    var errors = ParseElem.errors([limit, offset, authorIdOrErr, bookIdOrErr]);
-    if (errors.length > 0) {
-      badRequest(errors, request);
-      return;
-    }
-
-    var req = PageRequest(limit.value, offset.value);
-
-    _bookService.listEvents(authorIdOrErr.value, bookIdOrErr.value, req)
-        .then((authors) => ok(authors, request))
-        .catchError((e) => handleErrors(e, request));
+    Future.value(params)
+        .then((params) => params.validate())
+        .then((params) => _bookService.listEvents(params.authorId,
+            params.bookId, PageRequest(params.limit, params.offset)))
+        .then((authors) => ok(authors, req))
+        .catchError((e) => handleErrors(e, req));
   }
 }

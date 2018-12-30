@@ -1,14 +1,13 @@
 import 'dart:async';
 
-import 'model.dart';
-import 'event.dart';
-import 'repository.dart';
-import '../book/repository.dart';
 import '../book/event.dart';
-import '../quote/repository.dart';
-import '../quote/event.dart';
-
+import '../book/repository.dart';
 import '../common/model.dart';
+import '../quote/event.dart';
+import '../quote/repository.dart';
+import 'event.dart';
+import 'model.dart';
+import 'repository.dart';
 
 class AuthorService {
   AuthorRepository _authorRepository;
@@ -26,21 +25,15 @@ class AuthorService {
       this._quoteRepository,
       this._quoteEventRepository);
 
-  Future<Page<Author>> findAuthors(String phrase, PageRequest request) =>
-      _authorRepository.findAuthors(phrase, request);
-
-  Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) =>
-      _authorEventRepository.listEvents(authorId, request);
-
   Future<Author> save(Author author) => _authorRepository
       .save(author.generateId())
       .then((_) => _authorEventRepository.save(author));
 
+  Future<Author> find(String authorId) => _authorRepository.find(authorId);
+
   Future<Author> update(Author author) => _authorRepository
       .update(author)
       .then((_) => _authorEventRepository.update(author));
-
-  Future<Author> find(String authorId) => _authorRepository.find(authorId);
 
   Future<void> delete(String authorId) => _authorRepository
       .delete(authorId)
@@ -49,4 +42,10 @@ class AuthorService {
       .then((_) => _bookEventRepository.deleteByAuthor(authorId))
       .then((_) => _quoteRepository.deleteByAuthor(authorId))
       .then((_) => _quoteEventRepository.deleteByAuthor(authorId));
+
+  Future<Page<Author>> findAuthors(String phrase, PageRequest request) =>
+      _authorRepository.findAuthors(phrase, request);
+
+  Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) =>
+      _authorEventRepository.listEvents(authorId, request);
 }

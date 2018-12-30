@@ -1,12 +1,12 @@
 import 'dart:io';
 
-import 'form.dart';
-
+import '../../domain/author/model.dart';
+import '../../domain/author/service.dart';
+import '../../tools/tuple.dart';
 import '../common.dart';
 import '../common/form.dart';
-
-import '../../domain/author/service.dart';
-import '../../domain/author/model.dart';
+import '../common/params.dart';
+import 'form.dart';
 
 class UpdateAuthorHandler extends Handler {
   static final _URL = r"/authors/{authorId}";
@@ -15,18 +15,18 @@ class UpdateAuthorHandler extends Handler {
 
   UpdateAuthorHandler(this._authorService) : super(_URL, "PUT") {}
 
-  void execute(
-      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-    var authorId = pathParams.getString("authorId");
-    if (authorId.hasError()) {
-      badRequest([authorId.error], request);
-      return;
-    }
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
+    var params = Params()..authorIdParam = pathParams.getString("authorId");
 
-    parseForm(request, AuthorFormParser(true, true))
-        .then((form) => Author(authorId.value, form.name, form.description, nowUtc(), form.createdUtc))
-        .then((quote) => _authorService.update(quote))
-        .then((author) => ok(author, request))
-        .catchError((e) => handleErrors(e, request));
+    parseForm(req, AuthorFormParser(true, true))
+        .then((form) => Tuple2(form, params))
+        .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.validate()))
+        .then((tuple2) => createAuthor(tuple2.e2, tuple2.e1))
+        .then((author) => _authorService.update(author))
+        .then((author) => ok(author, req))
+        .catchError((e) => handleErrors(e, req));
   }
+
+  Author createAuthor(Params params, AuthorForm form) => Author(
+      params.authorId, form.name, form.description, nowUtc(), form.createdUtc);
 }

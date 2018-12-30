@@ -30,7 +30,7 @@ class QuoteService {
       .update(quote)
       .then((quote) => _quoteEventRepository.update(quote));
 
-  Future<Quote> get(String quoteId) => _quotesRepository.find(quoteId);
+  Future<Quote> find(String quoteId) => _quotesRepository.find(quoteId);
 
   Future<void> delete(String quoteId) => _quotesRepository.delete(quoteId);
 

@@ -1,13 +1,11 @@
-import 'dart:io';
 import 'dart:async';
-
-import '../common.dart';
-
-import '../common/exception.dart';
-import '../common/form.dart';
+import 'dart:io';
 
 import '../../domain/author/service.dart';
 import '../../domain/common/model.dart';
+import '../common.dart';
+import '../common/form.dart';
+import '../common/params.dart';
 
 class AuthorEventsHandler extends Handler {
   static final _URL = r"/authors/{authorId}/events";
@@ -16,25 +14,16 @@ class AuthorEventsHandler extends Handler {
 
   AuthorEventsHandler(this._authorService) : super(_URL, "GET") {}
 
-  void execute(
-      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-    var limit = urlParams.getIntOrElse("limit", 2);
-    var offset = urlParams.getIntOrElse("offset", 0);
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
+    var params = Params()
+      ..limitParam = urlParams.getIntOrElse("limit", 2)
+      ..offsetParam = urlParams.getIntOrElse("offset", 0);
 
-    var errors = ParseElem.errors([limit, offset]);
-    if (errors.length > 0) {
-      badRequest(errors, request);
-      return;
-    }
-
-    var req = PageRequest(limit.value, offset.value);
-
-    Future.value(pathParams.getString("authorId"))
-        .then((authorId) => authorId.hasError()
-            ? throw InvalidDataException([authorId.error])
-            : authorId.value)
-        .then((authorId) => _authorService.listEvents(authorId, req))
-        .then((authors) => ok(authors, request))
-        .catchError((e) => handleErrors(e, request));
+    Future.value(params)
+        .then((params) => params.validate())
+        .then((params) => _authorService.listEvents(
+            params.authorId, PageRequest(params.limit, params.offset)))
+        .then((authors) => ok(authors, req))
+        .catchError((e) => handleErrors(e, req));
   }
 }

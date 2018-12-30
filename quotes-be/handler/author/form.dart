@@ -1,5 +1,5 @@
-import '../common/form.dart';
 import '../common/exception.dart';
+import '../common/form.dart';
 
 class AuthorForm {
   String _name, _description;

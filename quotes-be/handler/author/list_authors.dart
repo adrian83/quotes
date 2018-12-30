@@ -1,11 +1,11 @@
+import 'dart:async';
 import 'dart:io';
-
-import '../common.dart';
-
-import '../common/form.dart';
 
 import '../../domain/author/service.dart';
 import '../../domain/common/model.dart';
+import '../common.dart';
+import '../common/form.dart';
+import '../common/params.dart';
 
 class ListAuthorsHandler extends Handler {
   static final _URL = r"/authors";
@@ -14,24 +14,17 @@ class ListAuthorsHandler extends Handler {
 
   ListAuthorsHandler(this._authorService) : super(_URL, "GET") {}
 
-  void execute(
-      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-    var limit = urlParams.getIntOrElse("limit", 2);
-    var offset = urlParams.getIntOrElse("offset", 0);
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
+    var params = Params()
+      ..limitParam = urlParams.getIntOrElse("limit", 2)
+      ..offsetParam = urlParams.getIntOrElse("offset", 0)
+      ..searchPhraseParam = urlParams.getOptionalString("searchPhrase");
 
-    var errors = ParseElem.errors([limit, offset]);
-    if (errors.length > 0) {
-      badRequest(errors, request);
-      return;
-    }
-
-    var searchPhrase = urlParams.getOptionalString("searchPhrase").value;
-    var req = PageRequest(limit.value, offset.value);
-
-    _authorService
-        .findAuthors(searchPhrase, req)
-        .then((authors) => ok(authors, request))
-        .catchError((e) => handleErrors(e, request));
-    
+    Future.value(params)
+        .then((params) => params.validate())
+        .then((params) => _authorService.findAuthors(
+            params.searchPhrase, PageRequest(params.limit, params.offset)))
+        .then((authors) => ok(authors, req))
+        .catchError((e) => handleErrors(e, req));
   }
 }

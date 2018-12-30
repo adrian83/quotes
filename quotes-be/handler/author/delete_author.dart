@@ -1,12 +1,10 @@
-import 'dart:io';
 import 'dart:async';
-
-import '../common/exception.dart';
-import '../common/form.dart';
+import 'dart:io';
 
 import './../common.dart';
 import '../../domain/author/service.dart';
-
+import '../common/form.dart';
+import '../common/params.dart';
 
 class DeleteAuthorHandler extends Handler {
   static final _URL = r"/authors/{authorId}";
@@ -15,13 +13,13 @@ class DeleteAuthorHandler extends Handler {
 
   DeleteAuthorHandler(this._authorService) : super(_URL, "DELETE");
 
-  void execute(
-          HttpRequest request, PathParams pathParams, UrlParams urlParams) =>
-      Future.value(pathParams.getString("authorId"))
-          .then((authorId) => authorId.hasError()
-              ? throw InvalidDataException([authorId.error])
-              : authorId.value)
-          .then((authorId) => _authorService.delete(authorId))
-          .then((_) => ok(null, request))
-          .catchError((e) => handleErrors(e, request));
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
+    var params = Params()..authorIdParam = pathParams.getString("authorId");
+
+    Future.value(params)
+        .then((params) => params.validate())
+        .then((params) => _authorService.delete(params.authorId))
+        .then((_) => ok(null, req))
+        .catchError((e) => handleErrors(e, req));
+  }
 }

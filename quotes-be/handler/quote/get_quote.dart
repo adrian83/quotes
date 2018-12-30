@@ -21,7 +21,7 @@ class GetQuoteHandler extends Handler {
 
     Future.value(params)
         .then((params) => params.validate())
-        .then((params) => _quoteService.get(params.quoteId))
+        .then((params) => _quoteService.find(params.quoteId))
         .then((q) => ok(q, req))
         .catchError((e) => handleErrors(e, req));
   }

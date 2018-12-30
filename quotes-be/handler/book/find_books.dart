@@ -14,8 +14,7 @@ class FindBooksHandler extends Handler {
 
   FindBooksHandler(this._bookService) : super(_URL, "GET") {}
 
-  void execute(
-      HttpRequest request, PathParams pathParams, UrlParams urlParams) {
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
     var params = Params()
       ..limitParam = urlParams.getIntOrElse("limit", 2)
       ..offsetParam = urlParams.getIntOrElse("offset", 0)
@@ -25,7 +24,7 @@ class FindBooksHandler extends Handler {
         .then((params) => params.validate())
         .then((params) => _bookService.findBooks(
             params.searchPhrase, PageRequest(params.limit, params.offset)))
-        .then((books) => ok(books, request))
-        .catchError((e) => handleErrors(e, request));
+        .then((books) => ok(books, req))
+        .catchError((e) => handleErrors(e, req));
   }
 }

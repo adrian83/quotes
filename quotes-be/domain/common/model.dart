@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import '../../tools/json.dart';
+
 class Entity implements Jsonable {
   String _id;
   DateTime _modifiedUtc, _createdUtc;
@@ -52,10 +54,6 @@ class PageInfo {
       };
 
   String toString() => jsonEncode(this);
-}
-
-abstract class Jsonable {
-  Map toJson();
 }
 
 class Page<T extends Jsonable> {

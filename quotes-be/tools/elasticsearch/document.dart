@@ -1,4 +1,6 @@
-abstract class ESDocument {
+import '../json.dart';
+
+abstract class ESDocument implements Jsonable {
   static final String created = "created",
       modified = "modified",
       deleted = "deleted";
