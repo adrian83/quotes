@@ -6,6 +6,7 @@ import '../../domain/author/model.dart';
 import '../../domain/author/service.dart';
 import '../../domain/book/model.dart';
 import '../../domain/book/service.dart';
+import '../../domain/common/event.dart';
 import '../../domain/common/page.dart';
 import '../../domain/common/router.dart';
 import '../../domain/quote/model.dart';
@@ -23,28 +24,31 @@ import '../common/pagination.dart';
     ClassProvider(AuthorService),
     ClassProvider(BookService),
     ClassProvider(QuoteService),
-    ClassProvider(QuotesRouter)
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
   ],
   directives: const [coreDirectives, Breadcrumbs, Events, Pagination],
 )
-class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
+class ShowBookComponent extends PageSwitcher with OnActivate {
   static final Logger logger = Logger('ShowBookComponent');
 
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
+  final ErrorHandler _errorHandler;
   final QuotesRouter _router;
 
   Author _author = Author.empty();
   Book _book = Book.empty();
   QuotesPage _quotesPage = QuotesPage.empty();
 
-  ShowBookComponent(
-      this._authorService, this._bookService, this._quoteService, this._router);
+  ShowBookComponent(this._authorService, this._bookService, this._quoteService,
+      this._errorHandler, this._router);
 
   Book get book => _book;
   QuotesPage get quotesPage => _quotesPage;
   PageSwitcher get quotesSwitcher => this;
+  List<Event> get events => _errorHandler.events;
 
   @override
   void onActivate(_, RouterState state) => _authorService
@@ -56,27 +60,27 @@ class ShowBookComponent extends PageSwitcher with ErrorHandler, OnActivate {
       .then((_) => PageRequest.page(_quotesPage.info.curent))
       .then((listReq) => _quoteService.list(_author.id, _book.id, listReq))
       .then((page) => _quotesPage = page)
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   @override
   void change(int pageNumber) => _quoteService
       .list(_book.authorId, _book.id, PageRequest.page(pageNumber))
       .then((page) => _quotesPage = page)
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   void deleteQuote(Quote quote) => _quoteService
       .delete(quote.authorId, quote.bookId, quote.id)
-      .then((id) => showInfo("Quote '${quote.text}' removed"))
+      .then((id) => _errorHandler.showInfo("Quote '${quote.text}' removed"))
       .then((_) => _quotesPage.elements.remove(quote))
       .then((_) => _quotesPage.empty ? 0 : _quotesPage.info.curent)
       .then((pageNumber) => change(pageNumber))
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   void deleteBook() => _bookService
       .delete(_book.authorId, _book.id)
-      .then((_) => showInfo("Book '${_book.title}' deleted"))
+      .then((_) => _errorHandler.showInfo("Book '${_book.title}' deleted"))
       .then((_) => _book = Book.empty())
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   void showAuthor() => _router.showAuthor(_book.authorId);
 

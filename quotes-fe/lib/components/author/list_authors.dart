@@ -15,7 +15,11 @@ import '../common/pagination.dart';
 @Component(
   selector: 'list-authors',
   templateUrl: 'list_authors.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: const [
     coreDirectives,
     formDirectives,

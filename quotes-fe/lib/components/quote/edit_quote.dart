@@ -6,6 +6,7 @@ import '../../domain/author/model.dart';
 import '../../domain/author/service.dart';
 import '../../domain/book/model.dart';
 import '../../domain/book/service.dart';
+import '../../domain/common/event.dart';
 import '../../domain/common/router.dart';
 import '../../domain/quote/model.dart';
 import '../../domain/quote/service.dart';
@@ -22,14 +23,16 @@ import '../common/events.dart';
     ClassProvider(AuthorService),
     ClassProvider(BookService),
     ClassProvider(QuoteService),
-    ClassProvider(QuotesRouter)
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
   ],
   directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
-class EditQuoteComponent extends ErrorHandler implements OnActivate {
+class EditQuoteComponent implements OnActivate {
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
+  final ErrorHandler _errorHandler;
   final QuotesRouter _router;
 
   Author _author = Author.empty();
@@ -37,10 +40,11 @@ class EditQuoteComponent extends ErrorHandler implements OnActivate {
   Quote _quote = Quote.empty();
   String _oldText = "";
 
-  EditQuoteComponent(
-      this._authorService, this._bookService, this._quoteService, this._router);
+  EditQuoteComponent(this._authorService, this._bookService, this._quoteService,
+      this._errorHandler, this._router);
 
   Quote get quote => _quote;
+  List<Event> get events => _errorHandler.events;
 
   @override
   void onActivate(_, RouterState state) => _authorService
@@ -53,14 +57,14 @@ class EditQuoteComponent extends ErrorHandler implements OnActivate {
       .then((quoteId) => _quoteService.get(_author.id, _book.id, quoteId))
       .then((quote) => _quote = quote)
       .then((_) => _oldText = _quote.text)
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   void update() => _quoteService
       .update(_quote)
       .then((quote) => _quote = quote)
-      .then((_) => showInfo("Quote '${_quote.text}' updated"))
+      .then((_) => _errorHandler.showInfo("Quote '${_quote.text}' updated"))
       .then((_) => _oldText = _quote.text)
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   void showQuote() =>
       _router.showQuote(_quote.authorId, _quote.bookId, _quote.id);

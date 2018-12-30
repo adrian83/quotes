@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 
 import '../../domain/book/event.dart';
 import '../../domain/book/service.dart';
+import '../../domain/common/event.dart';
 import '../../domain/common/page.dart';
 import '../../domain/common/router.dart';
 import '../../routes.dart';
@@ -18,7 +19,11 @@ import '../common/pagination.dart';
 @Component(
   selector: 'book-events',
   templateUrl: 'book_events.template.html',
-  providers: [ClassProvider(BookService), ClassProvider(QuotesRouter)],
+  providers: [
+    ClassProvider(BookService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: const [
     coreDirectives,
     formDirectives,
@@ -27,24 +32,24 @@ import '../common/pagination.dart';
     Pagination
   ],
 )
-class BookEventsComponent extends PageSwitcher
-    with ErrorHandler
-    implements OnActivate {
+class BookEventsComponent extends PageSwitcher implements OnActivate {
   static final Logger logger = Logger('BookEventsComponent');
 
   static final int pageSize = 10;
 
   final BookService _bookService;
+  final ErrorHandler _errorHandler;
   final QuotesRouter _router;
 
   BookEventsPage _bookEventPage = BookEventsPage.empty();
   String _authorId;
   String _bookId;
 
-  BookEventsComponent(this._bookService, this._router);
+  BookEventsComponent(this._bookService, this._errorHandler, this._router);
 
   PageSwitcher get switcher => this;
   BookEventsPage get page => _bookEventPage;
+  List<Event> get events => _errorHandler.events;
 
   @override
   void onActivate(_, RouterState state) {
@@ -62,7 +67,7 @@ class BookEventsComponent extends PageSwitcher
       Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
           .then((req) => _bookService.listEvents(_authorId, _bookId, req))
           .then((page) => _bookEventPage = page)
-          .catchError(handleError);
+          .catchError(_errorHandler.handleError);
 
   void showBook() => _router.showBook(
       _bookEventPage.elements.last.authorId, _bookEventPage.elements.last.id);

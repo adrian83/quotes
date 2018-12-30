@@ -1,19 +1,19 @@
 import 'package:angular/angular.dart';
-import 'package:angular_router/angular_router.dart';
 import 'package:angular_forms/angular_forms.dart';
+import 'package:angular_router/angular_router.dart';
 
+import '../../domain/author/model.dart';
+import '../../domain/author/service.dart';
+import '../../domain/book/model.dart';
+import '../../domain/book/service.dart';
+import '../../domain/common/event.dart';
+import '../../domain/common/router.dart';
+import '../../domain/quote/model.dart';
+import '../../domain/quote/service.dart';
+import '../../route_paths.dart';
 import '../common/breadcrumb.dart';
 import '../common/error_handler.dart';
 import '../common/events.dart';
-
-import '../../domain/author/service.dart';
-import '../../domain/author/model.dart';
-import '../../domain/book/service.dart';
-import '../../domain/book/model.dart';
-import '../../domain/quote/service.dart';
-import '../../domain/quote/model.dart';
-import '../../domain/common/router.dart';
-import '../../route_paths.dart';
 
 @Component(
   selector: 'new-quote',
@@ -22,24 +22,27 @@ import '../../route_paths.dart';
     ClassProvider(AuthorService),
     ClassProvider(BookService),
     ClassProvider(QuoteService),
-    ClassProvider(QuotesRouter)
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
   ],
   directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
-class NewQuoteComponent extends ErrorHandler implements OnActivate {
+class NewQuoteComponent implements OnActivate {
   final AuthorService _authorService;
   final BookService _bookService;
   final QuoteService _quoteService;
+  final ErrorHandler _errorHandler;
   final QuotesRouter _router;
 
   Author _author = Author.empty();
   Book _book = Book.empty();
   Quote _quote = Quote.empty();
 
-  NewQuoteComponent(
-      this._authorService, this._bookService, this._quoteService, this._router);
+  NewQuoteComponent(this._authorService, this._bookService, this._quoteService,
+      this._errorHandler, this._router);
 
   Quote get quote => _quote;
+  List<Event> get events => _errorHandler.events;
 
   @override
   void onActivate(_, RouterState state) => _authorService
@@ -50,13 +53,13 @@ class NewQuoteComponent extends ErrorHandler implements OnActivate {
       .then((bookId) => _bookService.get(_author.id, bookId))
       .then((book) => _book = book)
       .then((_) => _quote.bookId = _book.id)
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   void save() => _quoteService
       .create(quote)
       .then((quote) => _quote = quote)
       .then((_) => _editQuote(_quote))
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   void _editQuote(Quote quote) =>
       _router.editQuote(quote.authorId, quote.bookId, quote.id);

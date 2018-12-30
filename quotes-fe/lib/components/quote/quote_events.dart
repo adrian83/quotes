@@ -5,22 +5,26 @@ import 'package:angular_forms/angular_forms.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
+import '../../domain/common/event.dart';
 import '../../domain/common/page.dart';
 import '../../domain/common/router.dart';
 import '../../domain/quote/event.dart';
 import '../../domain/quote/service.dart';
 import '../../routes.dart';
+import '../../tools/strings.dart';
 import '../common/breadcrumb.dart';
 import '../common/error_handler.dart';
 import '../common/events.dart';
 import '../common/pagination.dart';
 
-import '../../tools/strings.dart';
-
 @Component(
   selector: 'quote-events',
   templateUrl: 'quote_events.template.html',
-  providers: [ClassProvider(QuoteService), ClassProvider(QuotesRouter)],
+  providers: [
+    ClassProvider(QuoteService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: const [
     coreDirectives,
     formDirectives,
@@ -29,14 +33,13 @@ import '../../tools/strings.dart';
     Pagination
   ],
 )
-class QuoteEventsComponent extends PageSwitcher
-    with ErrorHandler
-    implements OnActivate {
+class QuoteEventsComponent extends PageSwitcher implements OnActivate {
   static final Logger logger = Logger('QuoteEventsComponent');
 
   static final int pageSize = 10;
 
   final QuoteService _quoteService;
+  final ErrorHandler _errorHandler;
   final QuotesRouter _router;
 
   QuoteEventsPage _quoteEventPage = QuoteEventsPage.empty();
@@ -44,10 +47,11 @@ class QuoteEventsComponent extends PageSwitcher
   String _bookId;
   String _quoteId;
 
-  QuoteEventsComponent(this._quoteService, this._router);
+  QuoteEventsComponent(this._quoteService, this._errorHandler, this._router);
 
   PageSwitcher get switcher => this;
   QuoteEventsPage get page => _quoteEventPage;
+  List<Event> get events => _errorHandler.events;
 
   @override
   void onActivate(_, RouterState state) {
@@ -64,9 +68,10 @@ class QuoteEventsComponent extends PageSwitcher
 
   void _fetchPage(int pageNumber) =>
       Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
-          .then((req) => _quoteService.listEvents(_authorId, _bookId, _quoteId, req))
+          .then((req) =>
+              _quoteService.listEvents(_authorId, _bookId, _quoteId, req))
           .then((page) => _quoteEventPage = page)
-          .catchError(handleError);
+          .catchError(_errorHandler.handleError);
 
   void showQuote() => _router.showQuote(_quoteEventPage.elements.last.authorId,
       _quoteEventPage.elements.last.bookId, _quoteEventPage.elements.last.id);
