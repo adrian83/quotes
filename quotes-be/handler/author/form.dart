@@ -30,31 +30,29 @@ class AuthorFormParser extends FormParser<AuthorForm> {
     List<ParsingError> errors = [];
 
     Object nameObj = rawForm["name"];
-    if (nameObj == null || nameObj.toString().trim().length == 0) {
+    String name = nameObj ?? nameObj.toString().trim();
+    if (name == null || name.length == 0) {
       errors.add(ParsingError("name", "Name cannot be empty"));
     }
 
     Object descObj = rawForm["description"];
-    if (descObj == null || descObj.toString().trim().length == 0) {
+    String description = descObj ?? descObj.toString().trim();
+    if (description == null || description.length == 0) {
       errors.add(ParsingError("description", "Description cannot be empty"));
     }
 
     Object modificationDateObj = rawForm["modifiedUtc"];
-    print("MODIFICATION DATE $modificationDateObj");
     DateTime modifiedUtc =
         parseDate(modificationDateObj, _modificationDateRequired, errors);
 
     Object creationDateObj = rawForm["createdUtc"];
-    print("CREATION DATE $creationDateObj");
     DateTime createdUtc =
         parseDate(creationDateObj, _creationDateRequired, errors);
 
     if (errors.length > 0) {
-      print("VALIDATION ERRORS");
       throw InvalidDataException(errors);
     }
 
-    return AuthorForm(
-        nameObj.toString(), descObj.toString(), modifiedUtc, createdUtc);
+    return AuthorForm(name, description, modifiedUtc, createdUtc);
   }
 }

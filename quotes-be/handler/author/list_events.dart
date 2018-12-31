@@ -16,6 +16,7 @@ class AuthorEventsHandler extends Handler {
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
     var params = Params()
+      ..authorIdParam = pathParams.getString("authorId")
       ..limitParam = urlParams.getIntOrElse("limit", 2)
       ..offsetParam = urlParams.getIntOrElse("offset", 0);
 
