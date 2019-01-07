@@ -7,12 +7,14 @@ import 'package:logging/logging.dart';
 
 import 'routes.dart';
 
+import 'tools/config.dart';
+
 @Component(
   selector: 'my-app',
   templateUrl: 'app_component.template.html',
   directives: const [coreDirectives, routerDirectives],
   exports: [RoutePaths, Routes],
-  providers: [ClassProvider(BrowserClient)],
+  providers: [ClassProvider(BrowserClient), ClassProvider(Config)],
 )
 class AppComponent {
   AppComponent() {
