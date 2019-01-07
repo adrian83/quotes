@@ -63,6 +63,7 @@ class Page<T extends Jsonable> {
   Page(this._info, this._elements);
 
   List<T> get elements => _elements;
+  PageInfo get info => _info;
 
   Map toJson() => {
         "info": _info.toJson(),
