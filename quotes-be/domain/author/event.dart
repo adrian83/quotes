@@ -10,31 +10,23 @@ import 'model.dart';
 
 DocumentDecoder<AuthorEvent> authorEventDecoder =
     (Map<String, dynamic> json) => AuthorEvent.fromJson(json);
+
 DocumentDecoder<Author> authorDecoder =
     (Map<String, dynamic> json) => Author.fromJson(json);
 
+DocumentCreator<AuthorEvent, Author> authorEventCreator =
+    (Author author) => AuthorEvent.created(Uuid().v4(), author);
+
+DocumentModifier<AuthorEvent, Author> authorEventModifier =
+    (Author author) => AuthorEvent.modified(Uuid().v4(), author);
+
+DocumentDeleter<AuthorEvent, Author> authorEventDeleter =
+    (Author author) => AuthorEvent.deleted(Uuid().v4(), author);
+
 class AuthorEventRepository extends EventRepository<AuthorEvent, Author> {
   AuthorEventRepository(ESStore<AuthorEvent> store)
-      : super(store, authorEventDecoder, authorDecoder);
-
-  Future<Author> save(Author author) => Future.value(Uuid().v4())
-      .then((eventId) => AuthorEvent.created(eventId, author))
-      .then((event) => store.index(event))
-      .then((_) => author);
-
-  Future<Author> update(Author author) => Future.value(Uuid().v4())
-      .then((eventId) => AuthorEvent.modified(eventId, author))
-      .then((event) => store.index(event))
-      .then((_) => author);
-
-  Future<void> delete(String authorId) => findNewest(authorId)
-      .then((author) {
-        author.modifiedUtc = DateTime.now().toUtc();
-        return author;
-      })
-      .then((author) => AuthorEvent.deleted(Uuid().v4(), author))
-      .then((event) => store.index(event))
-      .then((_) => authorId);
+      : super(store, authorEventDecoder, authorDecoder, authorEventCreator,
+            authorEventModifier, authorEventDeleter);
 
   Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) {
     var query = MatchQuery("id", authorId);

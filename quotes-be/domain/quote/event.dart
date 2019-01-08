@@ -11,26 +11,23 @@ import 'model.dart';
 
 DocumentDecoder<QuoteEvent> quoteEventDecoder =
     (Map<String, dynamic> json) => QuoteEvent.fromJson(json);
+
 DocumentDecoder<Quote> quoteDecoder =
     (Map<String, dynamic> json) => Quote.fromJson(json);
 
+DocumentCreator<QuoteEvent, Quote> quoteEventCreator =
+    (Quote quote) => QuoteEvent.created(Uuid().v4(), quote);
+
+DocumentModifier<QuoteEvent, Quote> quoteEventModifier =
+    (Quote quote) => QuoteEvent.modified(Uuid().v4(), quote);
+
+DocumentDeleter<QuoteEvent, Quote> quoteEventDeleter =
+    (Quote quote) => QuoteEvent.deleted(Uuid().v4(), quote);
+
 class QuoteEventRepository extends EventRepository<QuoteEvent, Quote> {
   QuoteEventRepository(ESStore<QuoteEvent> store)
-      : super(store, quoteEventDecoder, quoteDecoder);
-
-  Future<Quote> save(Quote quote) => Future.value(Uuid().v4())
-      .then((docId) => QuoteEvent.created(docId, quote))
-      .then((event) => store.index(event))
-      .then((_) => quote);
-
-  Future<Quote> update(Quote quote) => Future.value(Uuid().v4())
-      .then((docId) => QuoteEvent.modified(docId, quote))
-      .then((event) => store.index(event))
-      .then((_) => quote);
-
-  Future<void> delete(String quoteId) => findNewest(quoteId)
-      .then((quote) => QuoteEvent.deleted(Uuid().v4(), quote))
-      .then((event) => store.index(event));
+      : super(store, quoteEventDecoder, quoteDecoder, quoteEventCreator,
+            quoteEventModifier, quoteEventDeleter);
 
   Future<void> deleteByAuthor(String authorId) {
     var authorIdQ = MatchQuery("authorId", authorId);

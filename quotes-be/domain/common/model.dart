@@ -8,8 +8,6 @@ class Entity implements Jsonable {
 
   Entity(this._id, this._modifiedUtc, this._createdUtc);
 
-  String getId() => id;
-
   String get id => _id;
   DateTime get modifiedUtc => _modifiedUtc;
   DateTime get createdUtc => _createdUtc;
@@ -52,8 +50,6 @@ class PageInfo {
         "offset": _offset,
         "total": _total,
       };
-
-  String toString() => jsonEncode(this);
 }
 
 class Page<T extends Jsonable> {
@@ -69,6 +65,4 @@ class Page<T extends Jsonable> {
         "info": _info.toJson(),
         "elements": _elements.map((e) => e.toJson()).toList(),
       };
-
-  String toString() => jsonEncode(this);
 }

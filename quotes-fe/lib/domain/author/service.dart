@@ -18,8 +18,8 @@ class AuthorService extends Service<Author> {
   Future<AuthorsPage> list(PageRequest request, [String searchPhrase]) =>
       Future.value(request)
           .then((req) => pageRequestToUrlParams(req))
-          .then((params) =>
-              appendUrlParam(params, "searchPhrase", searchPhrase))
+          .then(
+              (params) => appendUrlParam(params, "searchPhrase", searchPhrase))
           .then((urlParams) => "${_config.beHost}/authors?$urlParams")
           .then((url) => getEntity(url))
           .then((json) => AuthorsPage.fromJson(json));
