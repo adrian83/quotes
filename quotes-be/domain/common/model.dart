@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import '../../tools/json.dart';
 
 class Entity implements Jsonable {

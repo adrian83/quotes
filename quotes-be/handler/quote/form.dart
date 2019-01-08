@@ -19,6 +19,8 @@ class QuoteForm {
 }
 
 class QuoteFormParser extends FormParser<QuoteForm> {
+  static final int minTextLen = 1, maxTextLen = 5000;
+
   bool _modificationDateRequired, _creationDateRequired;
 
   QuoteFormParser(this._modificationDateRequired, this._creationDateRequired);
@@ -27,17 +29,19 @@ class QuoteFormParser extends FormParser<QuoteForm> {
     List<ParsingError> errors = [];
 
     Object textObj = rawForm["text"];
-    if (textObj == null) {
+    String text = textObj ?? textObj.toString().trim();
+    if (text == null || text.isEmpty) {
       errors.add(ParsingError("text", "Text cannot be empty"));
+    } else if (text.length < minTextLen || text.length > maxTextLen) {
+      errors.add(ParsingError(
+          "text", "Text length should be between $minTextLen and $maxTextLen"));
     }
 
     Object modificationDateObj = rawForm["modifiedUtc"];
-    print("MODIFICATION DATE $modificationDateObj");
     DateTime modifiedUtc =
         parseDate(modificationDateObj, _modificationDateRequired, errors);
 
     Object creationDateObj = rawForm["createdUtc"];
-    print("CREATION DATE $creationDateObj");
     DateTime createdUtc =
         parseDate(creationDateObj, _creationDateRequired, errors);
 

@@ -21,6 +21,9 @@ class BookForm {
 }
 
 class BookFormParser extends FormParser<BookForm> {
+  static final int minTitleLen = 1, maxTitleLen = 200;
+  static final int minDescriptionLen = 1, maxDescriptionLen = 5000;
+
   bool _modificationDateRequired, _creationDateRequired;
 
   BookFormParser(this._modificationDateRequired, this._creationDateRequired);
@@ -29,22 +32,28 @@ class BookFormParser extends FormParser<BookForm> {
     List<ParsingError> errors = [];
 
     Object titleObj = rawForm["title"];
-    if (titleObj == null || titleObj.toString().trim().isEmpty) {
+    String title = titleObj ?? titleObj.toString().trim();
+    if (title == null || title.isEmpty) {
       errors.add(ParsingError("title", "Title cannot be empty"));
+    } else if (title.length < minTitleLen || title.length > maxTitleLen) {
+      errors.add(ParsingError("title",
+          "Title length should be between $minTitleLen and $maxTitleLen"));
     }
 
     Object descriptionObj = rawForm["description"];
-    if (descriptionObj == null || descriptionObj.toString().trim().isEmpty) {
-      errors.add(ParsingError("title", "Description cannot be empty"));
+    String description = descriptionObj ?? descriptionObj.toString().trim();
+    if (description == null || description.isEmpty) {
+      errors.add(ParsingError("description", "Description cannot be empty"));
+    } else if (title.length < minTitleLen || title.length > maxTitleLen) {
+      errors.add(ParsingError("description",
+          "Description length should be between $minDescriptionLen and $maxDescriptionLen"));
     }
 
     Object modificationDateObj = rawForm["modifiedUtc"];
-    print("MODIFICATION DATE $modificationDateObj");
     DateTime modifiedUtc =
         parseDate(modificationDateObj, _modificationDateRequired, errors);
 
     Object creationDateObj = rawForm["createdUtc"];
-    print("CREATION DATE $creationDateObj");
     DateTime createdUtc =
         parseDate(creationDateObj, _creationDateRequired, errors);
 

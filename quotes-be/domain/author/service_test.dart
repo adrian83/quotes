@@ -41,7 +41,9 @@ void main() {
       quoteRepositoryMock,
       quoteEventRepositoryMock);
 
-  var author = Author("abc", "John", "Great writter", DateTime.now().toUtc(),
+  var authorId = "abcd-efgh";
+
+  var author = Author(authorId, "John", "Great writter", DateTime.now().toUtc(),
       DateTime.now().toUtc());
 
   var createAuthorEvent = AuthorEvent.created("abc-def-ghi", author);
@@ -60,7 +62,8 @@ void main() {
     expect(result.id, equals(author.id));
   });
 
-  test("""exception in save method in AuthorRepository should prevent from executing save on AuthorEventRepository and result with failed Future""",
+  test(
+      "exception in save method in AuthorRepository should prevent from executing save on AuthorEventRepository and result with failed Future",
       () async {
     when(authorRepositoryMock.save(author)).thenThrow(StateError("exception"));
 
@@ -70,7 +73,9 @@ void main() {
     verifyNever(authorEventRepositoryMock.save(author));
   });
 
-  test("""exception in save method in AuthorEventRepository should result with failed Future""", () async {
+  test(
+      "exception in save method in AuthorEventRepository should result with failed Future",
+      () async {
     when(authorRepositoryMock.save(author))
         .thenAnswer((_) => Future.value(author));
     when(authorRepositoryMock.save(author)).thenThrow(StateError("exception"));
@@ -82,7 +87,6 @@ void main() {
   });
 
   test("find should find author", () async {
-    var authorId = "abc";
     when(authorRepositoryMock.find(authorId))
         .thenAnswer((_) => Future.value(author));
 
@@ -93,8 +97,9 @@ void main() {
     expect(result.id, equals(author.id));
   });
 
-  test("""exception in find method in AuthorEventRepository should result with failed Future""", () async {
-    var authorId = "abc";
+  test(
+      "exception in find method in AuthorEventRepository should result with failed Future",
+      () async {
     when(authorRepositoryMock.find(authorId))
         .thenThrow(StateError("exception"));
 
@@ -117,7 +122,8 @@ void main() {
     expect(result.id, equals(author.id));
   });
 
-  test("""exception in update method in AuthorRepository should prevent from executing update on AuthorEventRepository and result with failed Future""",
+  test(
+      "exception in update method in AuthorRepository should prevent from executing update on AuthorEventRepository and result with failed Future",
       () async {
     when(authorRepositoryMock.update(author))
         .thenThrow(StateError("exception"));
@@ -128,7 +134,9 @@ void main() {
     verifyNever(authorEventRepositoryMock.update(author));
   });
 
-  test("""exception in update method in AuthorEventRepository should result with failed Future""", () async {
+  test(
+      "exception in update method in AuthorEventRepository should result with failed Future",
+      () async {
     when(authorRepositoryMock.update(author))
         .thenAnswer((_) => Future.value(author));
     when(authorEventRepositoryMock.update(author))
@@ -155,7 +163,9 @@ void main() {
     expect(result.elements.length, equals(1));
   });
 
-  test("""exception in findAuthors method in AuthorRepository should result with failed Future""", () async {
+  test(
+      "exception in findAuthors method in AuthorRepository should result with failed Future",
+      () async {
     var phrase = "Shakespeare";
     var pageReq = PageRequest(1, 5);
 
@@ -168,7 +178,6 @@ void main() {
   });
 
   test("listEvents should return author event page", () async {
-    var authorId = "abcd-efgh";
     var pageReq = PageRequest(1, 5);
     var eventsPage =
         Page<AuthorEvent>(PageInfo(1, 5, 345), [createAuthorEvent]);
@@ -183,8 +192,9 @@ void main() {
     expect(result.elements.length, equals(1));
   });
 
-  test("""exception in listEvents method in AuthorEventRepository should result with failed Future""", () async {
-    var authorId = "abcd-efgh";
+  test(
+      "exception in listEvents method in AuthorEventRepository should result with failed Future",
+      () async {
     var pageReq = PageRequest(1, 5);
 
     when(authorEventRepositoryMock.listEvents(authorId, pageReq))
@@ -196,8 +206,6 @@ void main() {
   });
 
   test("delete should delete author", () async {
-    var authorId = "abcd-efgh";
-
     when(authorRepositoryMock.delete(authorId))
         .thenAnswer((_) => Future.value());
     when(authorEventRepositoryMock.delete(authorId))
@@ -221,9 +229,9 @@ void main() {
     verify(quoteEventRepositoryMock.deleteByAuthor(authorId));
   });
 
-  test("""exception in delete method in AuthorRepository should result with failed Future""", () async {
-    var authorId = "abcd-efgh";
-
+  test(
+      "exception in delete method in AuthorRepository should result with failed Future",
+      () async {
     when(authorRepositoryMock.delete(authorId))
         .thenThrow(StateError("exception"));
 
@@ -237,9 +245,9 @@ void main() {
     verifyNever(quoteEventRepositoryMock.deleteByAuthor(authorId));
   });
 
-  test("""exception in delete method in AuthorEventRepository should result with failed Future""", () async {
-    var authorId = "abcd-efgh";
-
+  test(
+      "exception in delete method in AuthorEventRepository should result with failed Future",
+      () async {
     when(authorRepositoryMock.delete(authorId))
         .thenAnswer((_) => Future.value());
     when(authorEventRepositoryMock.delete(authorId))
@@ -255,9 +263,9 @@ void main() {
     verifyNever(quoteEventRepositoryMock.deleteByAuthor(authorId));
   });
 
-  test("""exception in deleteByAuthor method in BookRepository should result with failed Future""", () async {
-    var authorId = "abcd-efgh";
-
+  test(
+      "exception in deleteByAuthor method in BookRepository should result with failed Future",
+      () async {
     when(authorRepositoryMock.delete(authorId))
         .thenAnswer((_) => Future.value());
     when(authorEventRepositoryMock.delete(authorId))
@@ -275,9 +283,9 @@ void main() {
     verifyNever(quoteEventRepositoryMock.deleteByAuthor(authorId));
   });
 
-  test("""exception in deleteByAuthor method in BookEventRepository should result with failed Future""", () async {
-    var authorId = "abcd-efgh";
-
+  test(
+      "exception in deleteByAuthor method in BookEventRepository should result with failed Future",
+      () async {
     when(authorRepositoryMock.delete(authorId))
         .thenAnswer((_) => Future.value());
     when(authorEventRepositoryMock.delete(authorId))
@@ -297,9 +305,9 @@ void main() {
     verifyNever(quoteEventRepositoryMock.deleteByAuthor(authorId));
   });
 
-  test("""exception in deleteByAuthor method in QuoteRepository should result with failed Future""", () async {
-    var authorId = "abcd-efgh";
-
+  test(
+      "exception in deleteByAuthor method in QuoteRepository should result with failed Future",
+      () async {
     when(authorRepositoryMock.delete(authorId))
         .thenAnswer((_) => Future.value());
     when(authorEventRepositoryMock.delete(authorId))
@@ -321,9 +329,9 @@ void main() {
     verifyNever(quoteEventRepositoryMock.deleteByAuthor(authorId));
   });
 
-  test("""exception in deleteByAuthor method in QuoteEventRepository should result with failed Future""", () async {
-    var authorId = "abcd-efgh";
-
+  test(
+      "exception in deleteByAuthor method in QuoteEventRepository should result with failed Future",
+      () async {
     when(authorRepositoryMock.delete(authorId))
         .thenAnswer((_) => Future.value());
     when(authorEventRepositoryMock.delete(authorId))

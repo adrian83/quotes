@@ -31,7 +31,9 @@ class QuoteService {
       .update(quote)
       .then((quote) => _quoteEventRepository.update(quote));
 
-  Future<void> delete(String quoteId) => _quotesRepository.delete(quoteId);
+  Future<void> delete(String quoteId) => _quotesRepository
+      .delete(quoteId)
+      .then((_) => _quoteEventRepository.delete(quoteId));
 
   Future<void> deleteByAuthor(String authorId) => _quotesRepository
       .deleteByAuthor(authorId)
