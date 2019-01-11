@@ -32,30 +32,20 @@ class AuthorRepository extends Repository<Author> {
   AuthorRepository(PostgreSQLConnection connection)
       : super(connection, authorRowDecoder);
 
-  Future<void> save(Author author) => saveByStatement(insertAuthorStmt, {
-        "id": author.id,
-        "name": author.name,
-        "desc": author.description,
-        "modified": author.modifiedUtc,
-        "created": author.createdUtc
-      });
+  Future<void> save(Author author) =>
+      saveByStatement(insertAuthorStmt, insertParams(author));
 
   Future<Author> find(String authorId) =>
-      findOneByStatement(getAuthorStmt, {"id": authorId});
+      findOneByStatement(getAuthorStmt, idParam(authorId));
 
-  Future<Page<Author>> findAuthors(String searchPhrase, PageRequest request) {
-    Map<String, Object> params = {
-      "limit": request.limit,
-      "offset": request.offset,
-      "phrase": searchPhrase ?? ""
-    };
-
-    return listAll(findAuthorsStmt(params["phrase"]), params).then(
-        (List<Author> authors) =>
-            count(findAuthorsCountStmt(params["phrase"]), {})
-                .then((total) => PageInfo(request.limit, request.offset, total))
-                .then((info) => Page(info, authors)));
-  }
+  Future<Page<Author>> findAuthors(String searchPhrase, PageRequest request) =>
+      Future.value(findByPhraseParams(searchPhrase, request))
+          .then((params) =>
+              listAll(findAuthorsStmt(orEmpty(searchPhrase)), params))
+          .then((List<Author> authors) => count(
+                  findAuthorsCountStmt(orEmpty(searchPhrase)), {})
+              .then((total) => PageInfo(request.limit, request.offset, total))
+              .then((info) => Page(info, authors)));
 
   Future<Author> update(Author author) => updateAtLeastOne(updateAuthorStmt, {
         "id": author.id,
@@ -65,5 +55,24 @@ class AuthorRepository extends Repository<Author> {
       }).then((_) => author);
 
   Future<void> delete(String authorId) =>
-      deleteAtLeastOne(deleteAuthorStmt, {"id": authorId});
+      deleteAtLeastOne(deleteAuthorStmt, idParam(authorId));
+
+  String orEmpty(String text) => text ?? "";
+
+  Map<String, Object> findByPhraseParams(String phrase, PageRequest request) =>
+      {
+        "limit": request.limit,
+        "offset": request.offset,
+        "phrase": orEmpty(phrase)
+      };
+
+  Map<String, Object> idParam(String authorId) => {"id": authorId};
+
+  Map<String, Object> insertParams(Author author) => {
+        "id": author.id,
+        "name": author.name,
+        "desc": author.description,
+        "modified": author.modifiedUtc,
+        "created": author.createdUtc
+      };
 }

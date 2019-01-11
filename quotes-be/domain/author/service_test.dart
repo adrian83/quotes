@@ -48,7 +48,7 @@ void main() {
 
   var createAuthorEvent = AuthorEvent.created("abc-def-ghi", author);
 
-  test("save should persiste author entity and author event", () async {
+  test("save should persist author entity and author event", () async {
     when(authorRepositoryMock.save(author))
         .thenAnswer((_) => Future.value(author));
     when(authorEventRepositoryMock.save(author))
