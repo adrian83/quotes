@@ -38,6 +38,13 @@ class AuthorRepository extends Repository<Author> {
   Future<Author> find(String authorId) =>
       findOneByStatement(getAuthorStmt, idParam(authorId));
 
+  Future<Author> update(Author author) =>
+      updateAtLeastOne(updateAuthorStmt, updateParams(author))
+          .then((_) => author);
+
+  Future<void> delete(String authorId) =>
+      deleteAtLeastOne(deleteAuthorStmt, idParam(authorId));
+
   Future<Page<Author>> findAuthors(String searchPhrase, PageRequest request) =>
       Future.value(findByPhraseParams(searchPhrase, request))
           .then((params) =>
@@ -46,16 +53,6 @@ class AuthorRepository extends Repository<Author> {
                   findAuthorsCountStmt(orEmpty(searchPhrase)), {})
               .then((total) => PageInfo(request.limit, request.offset, total))
               .then((info) => Page(info, authors)));
-
-  Future<Author> update(Author author) => updateAtLeastOne(updateAuthorStmt, {
-        "id": author.id,
-        "name": author.name,
-        "modified": author.modifiedUtc,
-        "desc": author.description
-      }).then((_) => author);
-
-  Future<void> delete(String authorId) =>
-      deleteAtLeastOne(deleteAuthorStmt, idParam(authorId));
 
   String orEmpty(String text) => text ?? "";
 
@@ -67,6 +64,12 @@ class AuthorRepository extends Repository<Author> {
       };
 
   Map<String, Object> idParam(String authorId) => {"id": authorId};
+
+  Map<String, Object> updateParams(Author author) => {
+        "name": author.name,
+        "modified": author.modifiedUtc,
+        "desc": author.description
+      };
 
   Map<String, Object> insertParams(Author author) => {
         "id": author.id,

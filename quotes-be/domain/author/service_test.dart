@@ -63,11 +63,12 @@ void main() {
   });
 
   test(
-      "exception in save method in AuthorRepository should prevent from executing save on AuthorEventRepository and result with failed Future",
+      "exception in save method in AuthorRepository should result with failed Future",
       () async {
-    when(authorRepositoryMock.save(author)).thenThrow(StateError("exception"));
+    when(authorRepositoryMock.save(author))
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.save(author), throwsStateError);
+    expect(authorService.save(author), throwsStateError);
 
     verify(authorRepositoryMock.save(author));
     verifyNever(authorEventRepositoryMock.save(author));
@@ -78,9 +79,10 @@ void main() {
       () async {
     when(authorRepositoryMock.save(author))
         .thenAnswer((_) => Future.value(author));
-    when(authorRepositoryMock.save(author)).thenThrow(StateError("exception"));
+    when(authorRepositoryMock.save(author))
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.save(author), throwsStateError);
+    expect(authorService.save(author), throwsStateError);
 
     verify(authorRepositoryMock.save(author));
     verifyNever(authorEventRepositoryMock.save(author));
@@ -101,9 +103,9 @@ void main() {
       "exception in find method in AuthorEventRepository should result with failed Future",
       () async {
     when(authorRepositoryMock.find(authorId))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.find(authorId), throwsStateError);
+    expect(authorService.find(authorId), throwsStateError);
 
     verify(authorRepositoryMock.find(authorId));
   });
@@ -123,12 +125,12 @@ void main() {
   });
 
   test(
-      "exception in update method in AuthorRepository should prevent from executing update on AuthorEventRepository and result with failed Future",
+      "exception in update method in AuthorRepository should result with failed Future",
       () async {
     when(authorRepositoryMock.update(author))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.update(author), throwsStateError);
+    expect(authorService.update(author), throwsStateError);
 
     verify(authorRepositoryMock.update(author));
     verifyNever(authorEventRepositoryMock.update(author));
@@ -140,9 +142,9 @@ void main() {
     when(authorRepositoryMock.update(author))
         .thenAnswer((_) => Future.value(author));
     when(authorEventRepositoryMock.update(author))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.update(author), throwsStateError);
+    expect(authorService.update(author), throwsStateError);
 
     verify(authorRepositoryMock.update(author));
     verifyNever(authorEventRepositoryMock.update(author));
@@ -170,9 +172,9 @@ void main() {
     var pageReq = PageRequest(1, 5);
 
     when(authorRepositoryMock.findAuthors(phrase, pageReq))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.findAuthors(phrase, pageReq), throwsStateError);
+    expect(authorService.findAuthors(phrase, pageReq), throwsStateError);
 
     verify(authorRepositoryMock.findAuthors(phrase, pageReq));
   });
@@ -198,9 +200,9 @@ void main() {
     var pageReq = PageRequest(1, 5);
 
     when(authorEventRepositoryMock.listEvents(authorId, pageReq))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.listEvents(authorId, pageReq), throwsStateError);
+    expect(authorService.listEvents(authorId, pageReq), throwsStateError);
 
     verify(authorEventRepositoryMock.listEvents(authorId, pageReq));
   });
@@ -233,9 +235,9 @@ void main() {
       "exception in delete method in AuthorRepository should result with failed Future",
       () async {
     when(authorRepositoryMock.delete(authorId))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.delete(authorId), throwsStateError);
+    expect(authorService.delete(authorId), throwsStateError);
 
     verify(authorRepositoryMock.delete(authorId));
     verifyNever(authorEventRepositoryMock.delete(authorId));
@@ -251,9 +253,9 @@ void main() {
     when(authorRepositoryMock.delete(authorId))
         .thenAnswer((_) => Future.value());
     when(authorEventRepositoryMock.delete(authorId))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.delete(authorId), throwsStateError);
+    expect(authorService.delete(authorId), throwsStateError);
 
     verify(authorRepositoryMock.delete(authorId));
     verifyNever(authorEventRepositoryMock.delete(authorId));
@@ -271,9 +273,9 @@ void main() {
     when(authorEventRepositoryMock.delete(authorId))
         .thenAnswer((_) => Future.value());
     when(bookRepositoryMock.deleteByAuthor(authorId))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.delete(authorId), throwsStateError);
+    expect(authorService.delete(authorId), throwsStateError);
 
     verify(authorRepositoryMock.delete(authorId));
     verify(authorEventRepositoryMock.delete(authorId));
@@ -293,9 +295,9 @@ void main() {
     when(bookRepositoryMock.deleteByAuthor(authorId))
         .thenAnswer((_) => Future.value());
     when(bookEventRepositoryMock.deleteByAuthor(authorId))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.delete(authorId), throwsStateError);
+    expect(authorService.delete(authorId), throwsStateError);
 
     verify(authorRepositoryMock.delete(authorId));
     verify(authorEventRepositoryMock.delete(authorId));
@@ -317,9 +319,9 @@ void main() {
     when(bookEventRepositoryMock.deleteByAuthor(authorId))
         .thenAnswer((_) => Future.value());
     when(quoteRepositoryMock.deleteByAuthor(authorId))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.delete(authorId), throwsStateError);
+    expect(authorService.delete(authorId), throwsStateError);
 
     verify(authorRepositoryMock.delete(authorId));
     verify(authorEventRepositoryMock.delete(authorId));
@@ -343,9 +345,9 @@ void main() {
     when(quoteRepositoryMock.deleteByAuthor(authorId))
         .thenAnswer((_) => Future.value());
     when(quoteEventRepositoryMock.deleteByAuthor(authorId))
-        .thenThrow(StateError("exception"));
+        .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(() => authorService.delete(authorId), throwsStateError);
+    expect(authorService.delete(authorId), throwsStateError);
 
     verify(authorRepositoryMock.delete(authorId));
     verify(authorEventRepositoryMock.delete(authorId));
