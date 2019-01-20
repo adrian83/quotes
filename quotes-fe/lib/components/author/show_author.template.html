@@ -30,35 +30,6 @@
 
   <br/><br/>
 
-  <ul class="list-group list-group-flush">
-
-    <li
-      class="list-group-item"
-      *ngFor="let book of booksPage.elements">
-
-      <h4>
-
-        <span
-          (click)="showBook(book)"
-          style="cursor:pointer;">{{book.title}}</span>
-
-        <i
-          class="fas fa-trash pull-right"
-          (click)="deleteBook(book)"
-          style="cursor:pointer;"></i>
-
-        <i
-          class="fas fa-marker pull-right"
-          (click)="editBook(book)"
-          style="margin-right:5px; cursor:pointer;"></i>
-
-      </h4>
-      <div>{{ book.shortDescription }}</div>
-    </li>
-  </ul>
-
-  <div>
-    <pagination [page]="booksPage.info" [switcher]="booksSwitcher"></pagination>
-  </div>
+  <author-books [author]="author" ></author-books>
 
 </div>
