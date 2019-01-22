@@ -15,7 +15,7 @@ class AuthorEventsHandler extends Handler {
   AuthorEventsHandler(this._authorService) : super(_URL, "GET") {}
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
-      Future.value(AuthorEventsParams(
+      Future.value(ListByAuthorParams(
               pathParams.getString("authorId"),
               urlParams.getIntOrElse("limit", 2),
               urlParams.getIntOrElse("offset", 0)))

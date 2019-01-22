@@ -22,8 +22,8 @@ class AuthorForm {
 }
 
 class AuthorFormParser extends FormParser<AuthorForm> {
-static final int minNameLen = 1, maxNameLen = 200;
-static final int minDescriptionLen = 1, maxDescriptionLen = 5000;
+  static final int minNameLen = 1, maxNameLen = 200;
+  static final int minDescriptionLen = 1, maxDescriptionLen = 5000;
 
   bool _modificationDateRequired, _creationDateRequired;
 
@@ -36,16 +36,19 @@ static final int minDescriptionLen = 1, maxDescriptionLen = 5000;
     String name = nameObj ?? nameObj.toString().trim();
     if (name == null || name.isEmpty) {
       errors.add(ParsingError("name", "Name cannot be empty"));
-    } else if(name.length < minNameLen || name.length > maxNameLen) {
-      errors.add(ParsingError("name", "Name length should be between $minNameLen and $maxNameLen"));
+    } else if (name.length < minNameLen || name.length > maxNameLen) {
+      errors.add(ParsingError(
+          "name", "Name length should be between $minNameLen and $maxNameLen"));
     }
 
     Object descObj = rawForm["description"];
     String description = descObj ?? descObj.toString().trim();
     if (description == null || description.length == 0) {
       errors.add(ParsingError("description", "Description cannot be empty"));
-    } else if(description.length < minDescriptionLen || description.length > maxDescriptionLen) {
-      errors.add(ParsingError("description", "Description length should be between $minNameLen and $maxNameLen"));
+    } else if (description.length < minDescriptionLen ||
+        description.length > maxDescriptionLen) {
+      errors.add(ParsingError("description",
+          "Description length should be between $minNameLen and $maxNameLen"));
     }
 
     Object modificationDateObj = rawForm["modifiedUtc"];

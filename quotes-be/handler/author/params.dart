@@ -25,27 +25,30 @@ class AuthorIdParams {
   }
 }
 
-class AuthorEventsValidParams extends PageValidParams {
+class ListByAuthorValidParams extends PageValidParams {
   String _authorId;
 
-  AuthorEventsValidParams(this._authorId, int limit, int offset)
+  ListByAuthorValidParams(this._authorId, int limit, int offset)
       : super(limit, offset);
 
   String get authorId => _authorId;
 }
 
-class AuthorEventsParams extends PageParams {
+class ListByAuthorParams extends PageParams {
   ParseElem<String> _authorId;
 
-  AuthorEventsParams(this._authorId, ParseElem<int> limit, ParseElem<int> offset) : super(limit, offset);
+  ListByAuthorParams(
+      this._authorId, ParseElem<int> limit, ParseElem<int> offset)
+      : super(limit, offset);
 
-  AuthorEventsValidParams validate() {
+  ListByAuthorValidParams validate() {
     var fields = [_authorId, limit, offset];
     var errors = ParseElem.errors(fields);
     if (errors.length > 0) {
       throw InvalidDataException(errors);
     }
-    return AuthorEventsValidParams(_authorId.value, limit.value, offset.value);
+    return ListByAuthorValidParams(_authorId.value, limit.value, offset.value);
   }
-}
 
+  ParseElem<String> get authorId => _authorId;
+}

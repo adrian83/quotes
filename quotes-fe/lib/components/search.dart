@@ -10,9 +10,7 @@ import 'quote/quote_search.dart';
 @Component(
   selector: 'search',
   templateUrl: 'search.template.html',
-  providers: [
-    ClassProvider(QuotesRouter)
-  ],
+  providers: [ClassProvider(QuotesRouter)],
   directives: const [
     coreDirectives,
     formDirectives,
@@ -27,7 +25,7 @@ class SearchComponent extends ErrorHandler {
   String _phrase = "";
   String _curentPhrase = "";
 
-  SearchComponent(  this._router) {}
+  SearchComponent(this._router) {}
 
   String get phrase => _phrase;
   String get curentPhrase => _curentPhrase;
@@ -36,7 +34,7 @@ class SearchComponent extends ErrorHandler {
     _curentPhrase = p;
   }
 
-    void set phrase(String p) {
+  void set phrase(String p) {
     _phrase = p;
   }
 
