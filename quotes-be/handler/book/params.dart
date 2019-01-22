@@ -1,28 +1,30 @@
 import '../common/exception.dart';
 import '../common/form.dart';
 import '../author/params.dart';
-class BookIdValidParams {
-  String _authorId, _bookId;
 
-  BookIdValidParams(this._authorId, this._bookId);
+class BookIdValidParams extends AuthorIdValidParams {
+  String _bookId;
 
-  String get authorId => _authorId;
+  BookIdValidParams(String authorId, this._bookId) : super(authorId);
+
   String get bookId => _bookId;
 }
 
-class BookIdParams {
-  ParseElem<String> _authorId, _bookId;
+class BookIdParams extends AuthorIdParams {
+  ParseElem<String> _bookId;
 
-  BookIdParams(this._authorId, this._bookId);
+  BookIdParams(ParseElem<String> authorId, this._bookId) : super(authorId);
 
   BookIdValidParams validate() {
-    var fields = [_authorId, _bookId];
+    var fields = [authorId, _bookId];
     var errors = ParseElem.errors(fields);
     if (errors.length > 0) {
       throw InvalidDataException(errors);
     }
-    return BookIdValidParams(_authorId.value, _bookId.value);
+    return BookIdValidParams(authorId.value, _bookId.value);
   }
+
+  ParseElem<String> get bookId => _bookId;
 }
 
 class ListByBookValidParams extends ListByAuthorValidParams {
@@ -37,7 +39,9 @@ class ListByBookValidParams extends ListByAuthorValidParams {
 class ListByBookParams extends ListByAuthorParams {
   ParseElem<String> _bookId;
 
-  ListByBookParams(ParseElem<String> authorId, this._bookId, ParseElem<int> limit, ParseElem<int> offset) : super(authorId, limit, offset);
+  ListByBookParams(ParseElem<String> authorId, this._bookId,
+      ParseElem<int> limit, ParseElem<int> offset)
+      : super(authorId, limit, offset);
 
   ListByBookValidParams validate() {
     var fields = [authorId, _bookId, limit, offset];
@@ -45,6 +49,9 @@ class ListByBookParams extends ListByAuthorParams {
     if (errors.length > 0) {
       throw InvalidDataException(errors);
     }
-    return ListByBookValidParams(authorId.value, _bookId.value, limit.value, offset.value);
+    return ListByBookValidParams(
+        authorId.value, _bookId.value, limit.value, offset.value);
   }
+
+  ParseElem<String> get bookId => _bookId;
 }

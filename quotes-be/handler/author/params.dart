@@ -23,6 +23,8 @@ class AuthorIdParams {
     }
     return AuthorIdValidParams(_authorId.value);
   }
+
+  ParseElem<String> get authorId => _authorId;
 }
 
 class ListByAuthorValidParams extends PageValidParams {

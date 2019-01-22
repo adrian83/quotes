@@ -5,7 +5,7 @@ import '../../domain/quote/service.dart';
 import '../../tools/tuple.dart';
 import '../common.dart';
 import '../common/form.dart';
-import '../common/params.dart';
+import 'params.dart';
 import 'form.dart';
 
 class UpdateQuoteHandler extends Handler {
@@ -15,21 +15,25 @@ class UpdateQuoteHandler extends Handler {
 
   UpdateQuoteHandler(this._quoteService) : super(_URL, "PUT") {}
 
-  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
-    var params = Params()
-      ..authorIdParam = pathParams.getString("authorId")
-      ..bookIdParam = pathParams.getString("bookId")
-      ..quoteIdParam = pathParams.getString("quoteId");
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
+      parseForm(req, QuoteFormParser(true, true))
+          .then((form) => Tuple2(
+              form,
+              QuoteIdParams(
+                  pathParams.getString("authorId"),
+                  pathParams.getString("bookId"),
+                  pathParams.getString("quoteId"))))
+          .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.validate()))
+          .then((tuple2) => createQuote(tuple2.e2, tuple2.e1))
+          .then((quote) => _quoteService.update(quote))
+          .then((quote) => ok(quote, req))
+          .catchError((e) => handleErrors(e, req));
 
-    parseForm(req, QuoteFormParser(true, true))
-        .then((form) => Tuple2(form, params))
-        .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.validate()))
-        .then((tuple2) => createQuote(tuple2.e2, tuple2.e1))
-        .then((quote) => _quoteService.update(quote))
-        .then((quote) => ok(quote, req))
-        .catchError((e) => handleErrors(e, req));
-  }
-
-  Quote createQuote(Params params, QuoteForm form) => Quote(params.quoteId,
-      form.text, params.authorId, params.bookId, nowUtc(), form.createdUtc);
+  Quote createQuote(QuoteIdValidParams params, QuoteForm form) => Quote(
+      params.quoteId,
+      form.text,
+      params.authorId,
+      params.bookId,
+      nowUtc(),
+      form.createdUtc);
 }

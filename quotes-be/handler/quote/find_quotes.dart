@@ -14,17 +14,14 @@ class FindQuotesHandler extends Handler {
 
   FindQuotesHandler(this._quoteService) : super(_URL, "GET") {}
 
-  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) {
-    var params = Params()
-      ..limitParam = urlParams.getIntOrElse("limit", 2)
-      ..offsetParam = urlParams.getIntOrElse("offset", 0)
-      ..searchPhraseParam = urlParams.getOptionalString("searchPhrase");
-
-    Future.value(params)
-        .then((params) => params.validate())
-        .then((params) => _quoteService.findQuotes(
-            params.searchPhrase, PageRequest(params.limit, params.offset)))
-        .then((books) => ok(books, req))
-        .catchError((e) => handleErrors(e, req));
-  }
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
+      Future.value(SearchParams(
+              urlParams.getOptionalString("searchPhrase"),
+              urlParams.getIntOrElse("limit", 2),
+              urlParams.getIntOrElse("offset", 0)))
+          .then((params) => params.validate())
+          .then((params) => _quoteService.findQuotes(
+              params.searchPhrase, PageRequest(params.limit, params.offset)))
+          .then((books) => ok(books, req))
+          .catchError((e) => handleErrors(e, req));
 }
