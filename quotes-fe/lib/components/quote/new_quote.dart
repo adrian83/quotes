@@ -46,11 +46,11 @@ class NewQuoteComponent implements OnActivate {
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(_router.param(authorIdParam, state))
+      .find(_router.param(authorIdParam, state))
       .then((author) => _author = author)
       .then((_) => _quote.authorId = _author.id)
       .then((_) => _router.param(bookIdParam, state))
-      .then((bookId) => _bookService.get(_author.id, bookId))
+      .then((bookId) => _bookService.find(_author.id, bookId))
       .then((book) => _book = book)
       .then((_) => _quote.bookId = _book.id)
       .catchError(_errorHandler.handleError);

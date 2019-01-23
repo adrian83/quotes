@@ -39,7 +39,7 @@ class BookSearchComponent implements PageSwitcher {
     _phrase = p;
 
     _bookService
-        .find(_phrase, PageRequest.page(_booksPage.info.curent))
+        .listBooks(_phrase, PageRequest.page(_booksPage.info.curent))
         .then((page) => _booksPage = page)
         .catchError(_errorHandler.handleError);
   }
@@ -50,7 +50,7 @@ class BookSearchComponent implements PageSwitcher {
 
   @override
   void change(int pageNumber) => _bookService
-      .find(_phrase, PageRequest.page(pageNumber))
+      .listBooks(_phrase, PageRequest.page(pageNumber))
       .then((page) => _booksPage = page)
       .catchError(_errorHandler.handleError);
 

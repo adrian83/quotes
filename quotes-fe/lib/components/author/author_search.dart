@@ -39,7 +39,7 @@ class AuthorSearchComponent implements PageSwitcher {
     _phrase = p;
 
     _authorService
-        .list(PageRequest.page(_authorsPage.info.curent), _phrase)
+        .listAuthors(_phrase, PageRequest.page(_authorsPage.info.curent))
         .then((page) => _authorsPage = page)
         .catchError(_errorHandler.handleError);
   }
@@ -50,7 +50,7 @@ class AuthorSearchComponent implements PageSwitcher {
 
   @override
   void change(int pageNumber) => _authorService
-      .list(PageRequest.page(pageNumber), _phrase)
+      .listAuthors(_phrase, PageRequest.page(pageNumber))
       .then((page) => _authorsPage = page)
       .catchError(_errorHandler.handleError);
 

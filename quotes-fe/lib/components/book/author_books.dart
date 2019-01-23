@@ -40,7 +40,7 @@ class AuthorBooksComponent implements PageSwitcher {
     _author = a;
 
     _bookService
-        .list(_author.id, PageRequest.page(_booksPage.info.curent))
+        .listAuthorBooks(_author.id, PageRequest.page(_booksPage.info.curent))
         .then((page) => _booksPage = page)
         .catchError(_errorHandler.handleError);
   }
@@ -52,7 +52,7 @@ class AuthorBooksComponent implements PageSwitcher {
 
   @override
   void change(int pageNumber) => _bookService
-      .list(_author.id, PageRequest.page(pageNumber))
+      .listAuthorBooks(_author.id, PageRequest.page(pageNumber))
       .then((page) => _booksPage = page)
       .catchError(_errorHandler.handleError);
 

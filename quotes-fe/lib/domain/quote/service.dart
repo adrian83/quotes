@@ -14,13 +14,13 @@ class QuoteService extends Service<Quote> {
 
   QuoteService(BrowserClient http, this._config) : super(http);
 
-  Future<QuotesPage> list(String authorId, String bookId, PageRequest request) {
+  Future<QuotesPage> listBookQuotes(String authorId, String bookId, PageRequest request) {
     var url =
         "${_config.beHost}/authors/$authorId/books/$bookId/quotes?${this.pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
   }
 
-  Future<QuotesPage> find(String searchPhrase, PageRequest request) {
+  Future<QuotesPage> listQuotes(String searchPhrase, PageRequest request) {
     var url =
         "${_config.beHost}/quotes?${this.pageRequestToUrlParams(request)}";
     url = appendUrlParam(url, "searchPhrase", searchPhrase);
@@ -34,7 +34,7 @@ class QuoteService extends Service<Quote> {
     return getEntity(url).then((json) => QuoteEventsPage.fromJson(json));
   }
 
-  Future<Quote> get(String authorId, String bookId, String quoteId) {
+  Future<Quote> find(String authorId, String bookId, String quoteId) {
     var url =
         "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
     return getEntity(url).then((json) => Quote.fromJson(json));

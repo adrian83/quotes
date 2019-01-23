@@ -7,12 +7,12 @@ import '../common.dart';
 import '../common/form.dart';
 import '../common/params.dart';
 
-class ListAuthorsHandler extends Handler {
+class FindAuthorsHandler extends Handler {
   static final _URL = r"/authors";
 
   AuthorService _authorService;
 
-  ListAuthorsHandler(this._authorService) : super(_URL, "GET") {}
+  FindAuthorsHandler(this._authorService) : super(_URL, "GET") {}
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(SearchParams(

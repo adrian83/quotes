@@ -42,7 +42,7 @@ class NewBookComponent implements OnActivate {
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(_router.param(authorIdParam, state))
+      .find(_router.param(authorIdParam, state))
       .then((author) => _author = author)
       .then((_) => _book.authorId = _author.id)
       .catchError(_errorHandler.handleError);

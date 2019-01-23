@@ -7,7 +7,6 @@ import 'event.dart';
 
 import '../common/service.dart';
 import '../common/page.dart';
-
 import '../../tools/config.dart';
 
 class AuthorService extends Service<Author> {
@@ -15,7 +14,7 @@ class AuthorService extends Service<Author> {
 
   AuthorService(BrowserClient http, this._config) : super(http);
 
-  Future<AuthorsPage> list(PageRequest request, [String searchPhrase]) =>
+  Future<AuthorsPage> listAuthors(String searchPhrase, PageRequest request) =>
       Future.value(request)
           .then((req) => pageRequestToUrlParams(req))
           .then(
@@ -40,7 +39,7 @@ class AuthorService extends Service<Author> {
     return updateEntity(url, author).then((json) => Author.fromJson(json));
   }
 
-  Future<Author> get(String id) {
+  Future<Author> find(String id) {
     var url = "${_config.beHost}/authors/$id";
     return getEntity(url).then((json) => Author.fromJson(json));
   }

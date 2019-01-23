@@ -45,7 +45,7 @@ class ShowAuthorComponent extends OnActivate {
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(_router.param(authorIdParam, state))
+      .find(_router.param(authorIdParam, state))
       .then((author) => _author = author)
       .catchError(_errorHandler.handleError);
 

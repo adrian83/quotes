@@ -11,16 +11,6 @@ class QuoteService {
 
   QuoteService(this._quotesRepository, this._quoteEventRepository);
 
-  Future<Page<Quote>> findBookQuotes(String bookId, PageRequest request) =>
-      _quotesRepository.findBookQuotes(bookId, request);
-
-  Future<Page<Quote>> findQuotes(String searchPhrase, PageRequest request) =>
-      _quotesRepository.findQuotes(searchPhrase, request);
-
-  Future<Page<QuoteEvent>> listEvents(String authorId, String bookId,
-          String quoteId, PageRequest request) =>
-      _quoteEventRepository.listEvents(authorId, bookId, quoteId, request);
-
   Future<Quote> save(Quote quote) => _quotesRepository
       .save(quote.generateId())
       .then((quote) => _quoteEventRepository.save(quote));
@@ -34,6 +24,16 @@ class QuoteService {
   Future<void> delete(String quoteId) => _quotesRepository
       .delete(quoteId)
       .then((_) => _quoteEventRepository.delete(quoteId));
+
+  Future<Page<Quote>> findBookQuotes(String bookId, PageRequest request) =>
+      _quotesRepository.findBookQuotes(bookId, request);
+
+  Future<Page<Quote>> findQuotes(String searchPhrase, PageRequest request) =>
+      _quotesRepository.findQuotes(searchPhrase, request);
+
+  Future<Page<QuoteEvent>> listEvents(String authorId, String bookId,
+          String quoteId, PageRequest request) =>
+      _quoteEventRepository.listEvents(authorId, bookId, quoteId, request);
 
   Future<void> deleteByAuthor(String authorId) => _quotesRepository
       .deleteByAuthor(authorId)

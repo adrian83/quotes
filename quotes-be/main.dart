@@ -12,7 +12,7 @@ import './handler/quote/get_quote.dart';
 import './handler/quote/list_events.dart';
 import './handler/quote/find_quotes.dart';
 
-import './handler/author/list_authors.dart';
+import './handler/author/find_authors.dart';
 import './handler/author/add_author.dart';
 import './handler/author/update_author.dart';
 import './handler/author/get_author.dart';
@@ -108,7 +108,7 @@ Future main(List<String> args) async {
   var optionsHandler = OptionsHandler();
 
   var addAuthorHandler = AddAuthorHandler(authorService);
-  var listAuthorsHandler = ListAuthorsHandler(authorService);
+  var findAuthorsHandler = FindAuthorsHandler(authorService);
   var getAuthorHandler = GetAuthorHandler(authorService);
   var updateAuthorHandler = UpdateAuthorHandler(authorService);
   var deleteAuthorHandler = DeleteAuthorHandler(authorService);
@@ -136,7 +136,7 @@ Future main(List<String> args) async {
     getAuthorHandler,
     updateAuthorHandler,
     deleteAuthorHandler,
-    listAuthorsHandler,
+    findAuthorsHandler,
     addBookHandler,
     getBookHandler,
     updateBookHandler,

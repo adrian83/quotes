@@ -39,7 +39,7 @@ class QuoteSearchComponent implements PageSwitcher {
     _phrase = p;
 
     _quoteService
-        .find(_phrase, PageRequest.page(_quotesPage.info.curent))
+        .listQuotes(_phrase, PageRequest.page(_quotesPage.info.curent))
         .then((page) => _quotesPage = page)
         .catchError(_errorHandler.handleError);
   }
@@ -50,7 +50,7 @@ class QuoteSearchComponent implements PageSwitcher {
 
   @override
   void change(int pageNumber) => _quoteService
-      .find(_phrase, PageRequest.page(pageNumber))
+      .listQuotes(_phrase, PageRequest.page(pageNumber))
       .then((page) => _quotesPage = page)
       .catchError(_errorHandler.handleError);
 

@@ -50,13 +50,13 @@ class ShowQuoteComponent implements OnActivate {
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(_router.param(authorIdParam, state))
+      .find(_router.param(authorIdParam, state))
       .then((author) => _author = author)
       .then((_) => _router.param(bookIdParam, state))
-      .then((bookId) => _bookService.get(_author.id, bookId))
+      .then((bookId) => _bookService.find(_author.id, bookId))
       .then((book) => _book = book)
       .then((_) => _router.param(quoteIdParam, state))
-      .then((quoteId) => _quoteService.get(_author.id, _book.id, quoteId))
+      .then((quoteId) => _quoteService.find(_author.id, _book.id, quoteId))
       .then((quote) => _quote = quote)
       .catchError(_errorHandler.handleError);
 

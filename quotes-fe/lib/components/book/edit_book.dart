@@ -43,10 +43,10 @@ class EditBookComponent extends ErrorHandler implements OnActivate {
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(state.parameters[authorIdParam])
+      .find(state.parameters[authorIdParam])
       .then((author) => _author = author)
       .then((_) => _router.param(bookIdParam, state))
-      .then((bookId) => _bookService.get(_author.id, bookId))
+      .then((bookId) => _bookService.find(_author.id, bookId))
       .then((book) => _book = book)
       .then((_) => _oldTitle = _book.title)
       .catchError(handleError);

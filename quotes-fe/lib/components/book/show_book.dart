@@ -51,10 +51,10 @@ class ShowBookComponent extends OnActivate {
 
   @override
   void onActivate(_, RouterState state) => _authorService
-      .get(_router.param(authorIdParam, state))
+      .find(_router.param(authorIdParam, state))
       .then((author) => _author = author)
       .then((_) => _router.param(bookIdParam, state))
-      .then((bookId) => _bookService.get(_author.id, bookId))
+      .then((bookId) => _bookService.find(_author.id, bookId))
       .then((book) => _book = book)
       .catchError(_errorHandler.handleError);
 
