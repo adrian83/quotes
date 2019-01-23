@@ -51,13 +51,13 @@ class Service<T> {
 
   String pageRequestToUrlParams(PageRequest request) =>
       ["limit=${request.limit}", "offset=${request.offset}"].join("&");
-  
+
   String appendUrlParam(String params, String kay, String value) {
-    if(value == null || value == "") {
+    if (value == null || value == "") {
       return params;
     }
     var pair = "$kay=$value";
-    if (params == null || params == ""){
+    if (params == null || params == "") {
       return pair;
     }
     return "$params&$pair";

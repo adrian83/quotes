@@ -40,7 +40,8 @@ class SearchValidParams extends PageValidParams {
 class SearchParams extends PageParams {
   ParseElem<String> _searchPhrase;
 
-  SearchParams(this._searchPhrase, ParseElem<int> limit, ParseElem<int> offset) : super(limit, offset);
+  SearchParams(this._searchPhrase, ParseElem<int> limit, ParseElem<int> offset)
+      : super(limit, offset);
 
   SearchValidParams validate() {
     var fields = [_searchPhrase, _limit, _offset];
@@ -51,4 +52,3 @@ class SearchParams extends PageParams {
     return SearchValidParams(_searchPhrase.value, _limit.value, _offset.value);
   }
 }
-

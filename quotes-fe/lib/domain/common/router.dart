@@ -73,8 +73,8 @@ class QuotesRouter {
   String editBookUrl(String authorId, String bookId) =>
       RoutePaths.editBook.toUrl(parameters: _mapFromParams2(authorId, bookId));
 
-  String bookEventsUrl(String authorId, String bookId) =>
-      RoutePaths.bookEvents.toUrl(parameters: _mapFromParams2(authorId, bookId));
+  String bookEventsUrl(String authorId, String bookId) => RoutePaths.bookEvents
+      .toUrl(parameters: _mapFromParams2(authorId, bookId));
 
   String showQuoteUrl(String authorId, String bookId, String quoteId) =>
       RoutePaths.showQuote

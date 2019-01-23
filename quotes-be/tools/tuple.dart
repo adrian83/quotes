@@ -1,6 +1,4 @@
-
-
-class Tuple2<T1,T2>{
+class Tuple2<T1, T2> {
   T1 _e1;
   T2 _e2;
 
@@ -8,5 +6,4 @@ class Tuple2<T1,T2>{
 
   T1 get e1 => _e1;
   T2 get e2 => _e2;
-
 }

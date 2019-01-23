@@ -1,4 +1,3 @@
-
 const asc = "asc";
 const desc = "desc";
 
@@ -44,9 +43,7 @@ class BoolQuery extends Query {
 
   factory BoolQuery.must(Query must) => BoolQuery(must);
 
-  Map toJson() => {
-        "bool": _must.toJson()
-      };
+  Map toJson() => {"bool": _must.toJson()};
 }
 
 class MustQuery extends Query {
@@ -64,8 +61,6 @@ class JustQuery extends Query {
 
   Map toJson() => {"query": _query.toJson()};
 }
-
-
 
 class SortElement {
   String _field, _dir;

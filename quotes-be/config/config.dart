@@ -9,12 +9,9 @@ class PostgresConfig {
   PostgresConfig(
       this._host, this._port, this._database, this._user, this._password);
 
-  factory PostgresConfig.fromJson(Map<String, dynamic> json) => PostgresConfig(
-      json['host'],
-      json['port'],
-      json['database'],
-      json['user'],
-      json['password']);
+  PostgresConfig.fromJson(Map<String, dynamic> json)
+      : this(json['host'], json['port'], json['database'], json['user'],
+            json['password']);
 
   String get host => _host;
   String get database => _database;
@@ -30,9 +27,9 @@ class ElasticsearchConfig {
   ElasticsearchConfig(this._host, this._port, this._authorsIndex,
       this._booksIndex, this._quotesIndex);
 
-  factory ElasticsearchConfig.fromJson(Map<String, dynamic> json) =>
-      ElasticsearchConfig(json['host'], json['port'], json['authorsIndex'],
-          json['booksIndex'], json['quotesIndex']);
+  ElasticsearchConfig.fromJson(Map<String, dynamic> json)
+      : this(json['host'], json['port'], json['authorsIndex'],
+            json['booksIndex'], json['quotesIndex']);
 
   String get host => _host;
   String get authorsIndex => _authorsIndex;
@@ -52,9 +49,9 @@ class Config {
 
   Config(this._elasticsearch, this._postgres);
 
-  factory Config.fromJson(Map<String, dynamic> json) => Config(
-      ElasticsearchConfig.fromJson(json['elasticsearch']),
-      PostgresConfig.fromJson(json['postgres']));
+  Config.fromJson(Map<String, dynamic> json)
+      : this(ElasticsearchConfig.fromJson(json['elasticsearch']),
+            PostgresConfig.fromJson(json['postgres']));
 
   ElasticsearchConfig get elasticsearch => _elasticsearch;
   PostgresConfig get postgres => _postgres;

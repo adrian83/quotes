@@ -21,7 +21,8 @@ class QuoteService extends Service<Quote> {
   }
 
   Future<QuotesPage> find(String searchPhrase, PageRequest request) {
-    var url = "${_config.beHost}/quotes?${this.pageRequestToUrlParams(request)}";
+    var url =
+        "${_config.beHost}/quotes?${this.pageRequestToUrlParams(request)}";
     url = appendUrlParam(url, "searchPhrase", searchPhrase);
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
   }
@@ -34,7 +35,8 @@ class QuoteService extends Service<Quote> {
   }
 
   Future<Quote> get(String authorId, String bookId, String quoteId) {
-    var url = "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
+    var url =
+        "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
     return getEntity(url).then((json) => Quote.fromJson(json));
   }
 
@@ -45,12 +47,14 @@ class QuoteService extends Service<Quote> {
   }
 
   Future<Quote> create(Quote quote) {
-    var url = "${_config.beHost}/authors/${quote.authorId}/books/${quote.bookId}/quotes";
+    var url =
+        "${_config.beHost}/authors/${quote.authorId}/books/${quote.bookId}/quotes";
     return createEntity(url, quote).then((json) => Quote.fromJson(json));
   }
 
   Future<String> delete(String authorId, String bookId, String quoteId) {
-    var url = "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
+    var url =
+        "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
     return deleteEntity(url).then((_) => quoteId);
   }
 }

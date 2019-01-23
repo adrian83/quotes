@@ -4,7 +4,8 @@ import 'route_paths.dart';
 import 'components/author/show_author.template.dart' as show_author_template;
 import 'components/author/edit_author.template.dart' as edit_author_template;
 import 'components/author/new_author.template.dart' as new_author_template;
-import 'components/author/author_events.template.dart' as author_events_template;
+import 'components/author/author_events.template.dart'
+    as author_events_template;
 
 import 'components/book/show_book.template.dart' as show_book_template;
 import 'components/book/edit_book.template.dart' as edit_book_template;
@@ -22,8 +23,6 @@ import 'components/search.template.dart' as search_template;
 export 'route_paths.dart';
 
 class Routes {
-
-
   static final showAuthor = RouteDefinition(
     routePath: RoutePaths.showAuthor,
     component: show_author_template.ShowAuthorComponentNgFactory,
@@ -84,12 +83,12 @@ class Routes {
     component: quote_events_template.QuoteEventsComponentNgFactory,
   );
 
-    static final info = RouteDefinition(
+  static final info = RouteDefinition(
     routePath: RoutePaths.info,
     component: info_template.InfoComponentNgFactory,
   );
 
-    static final search = RouteDefinition(
+  static final search = RouteDefinition(
     routePath: RoutePaths.search,
     component: search_template.SearchComponentNgFactory,
   );

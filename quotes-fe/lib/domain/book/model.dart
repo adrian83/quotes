@@ -39,11 +39,9 @@ class Book extends Entity {
     this._description = desc;
   }
 
-  Map toJson() => super.toJson()..addAll({
-        "title": _title,
-        "authorId": _authorId,
-        "description": _description
-      });
+  Map toJson() => super.toJson()
+    ..addAll(
+        {"title": _title, "authorId": _authorId, "description": _description});
 }
 
 JsonDecoder<Book> _bookJsonDecoder =

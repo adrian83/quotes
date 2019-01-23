@@ -21,7 +21,13 @@ import '../book/author_books.dart';
     ClassProvider(QuotesRouter),
     ClassProvider(ErrorHandler)
   ],
-  directives: const [coreDirectives, Events, Breadcrumbs, Pagination, AuthorBooksComponent],
+  directives: const [
+    coreDirectives,
+    Events,
+    Breadcrumbs,
+    Pagination,
+    AuthorBooksComponent
+  ],
 )
 class ShowAuthorComponent extends OnActivate {
   static final Logger logger = Logger('ShowAuthorComponent');
@@ -32,8 +38,7 @@ class ShowAuthorComponent extends OnActivate {
 
   Author _author = Author.empty();
 
-  ShowAuthorComponent(
-      this._authorService, this._errorHandler, this._router);
+  ShowAuthorComponent(this._authorService, this._errorHandler, this._router);
 
   Author get author => _author;
   List<Event> get events => _errorHandler.events;

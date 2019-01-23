@@ -34,7 +34,8 @@ class EditBookComponent extends ErrorHandler implements OnActivate {
   Book _book = Book.empty();
   Author _author = Author.empty();
 
-  EditBookComponent(this._authorService, this._bookService, this._errorHandler, this._router);
+  EditBookComponent(
+      this._authorService, this._bookService, this._errorHandler, this._router);
 
   Book get book => _book;
   Author get author => _author;

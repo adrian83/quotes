@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'config/config.dart';
 
-
 const esVersion = "6.4.1";
 const configPath = "./infra/local.json";
 
@@ -30,9 +29,8 @@ class Command {
   String _app;
   List<String> _params;
 
-  Command(String cmdString){
-    var words = cmdString.split(" ")
-    ..removeWhere((w) => w.length == 0);
+  Command(String cmdString) {
+    var words = cmdString.split(" ")..removeWhere((w) => w.length == 0);
     _app = words[0];
     _params = words.sublist(1);
   }
@@ -62,8 +60,8 @@ void main(List<String> args) async {
       break;
 
     case runInfrastructure:
-
-      Command("docker run -d -p 9200:${config.elasticsearch.port} -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:$esVersion").exec();
+      Command("docker run -d -p 9200:${config.elasticsearch.port} -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:$esVersion")
+          .exec();
 
       await File(postgresEnvTemplatePath)
           .readAsString()
@@ -74,7 +72,8 @@ void main(List<String> args) async {
           .then((content) => File(postgresEnvPath).writeAsStringSync(content))
           .catchError((e) => print(e));
 
-      Command("docker run -p 5432:${config.postgres.port} --env-file=$postgresEnvPath -d postgres:$postgresVersion").exec();
+      Command("docker run -p 5432:${config.postgres.port} --env-file=$postgresEnvPath -d postgres:$postgresVersion")
+          .exec();
 
       break;
 
@@ -88,7 +87,8 @@ void main(List<String> args) async {
 
       Command("docker cp $postgresInitScript $containerName:/file.sql").exec();
 
-      Command("docker exec $containerName psql ${config.postgres.database} ${config.postgres.user} -f /file.sql").exec();
+      Command("docker exec $containerName psql ${config.postgres.database} ${config.postgres.user} -f /file.sql")
+          .exec();
 
       break;
 
@@ -96,5 +96,4 @@ void main(List<String> args) async {
       printMenu();
       return;
   }
-
 }
