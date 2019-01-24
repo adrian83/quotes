@@ -47,6 +47,10 @@ class QuotesRouter {
 
   // -----
 
+  void showSearch() => _router.navigate(search());
+
+  // -----
+
   String param(String name, RouterState state) => state.parameters[name];
 
   // -----
