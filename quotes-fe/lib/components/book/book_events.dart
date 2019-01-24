@@ -56,6 +56,7 @@ class BookEventsComponent extends PageSwitcher implements OnActivate {
     _authorId = _router.param(authorIdParam, state);
     _bookId = _router.param(bookIdParam, state);
     _fetchFirstPage();
+    logger.info("activated for book with id: $_bookId");
   }
 
   @override

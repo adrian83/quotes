@@ -37,11 +37,8 @@ class QuoteSearchComponent implements PageSwitcher {
   @Input()
   void set phrase(String p) {
     _phrase = p;
-
-    _quoteService
-        .listQuotes(_phrase, PageRequest.page(_quotesPage.info.curent))
-        .then((page) => _quotesPage = page)
-        .catchError(_errorHandler.handleError);
+    change(_quotesPage.info.curent);
+    logger.info("searching for quotes with phrase $_phrase");
   }
 
   QuotesPage get page => _quotesPage;

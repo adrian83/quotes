@@ -37,11 +37,8 @@ class BookSearchComponent implements PageSwitcher {
   @Input()
   void set phrase(String p) {
     _phrase = p;
-
-    _bookService
-        .listBooks(_phrase, PageRequest.page(_booksPage.info.curent))
-        .then((page) => _booksPage = page)
-        .catchError(_errorHandler.handleError);
+    change(_booksPage.info.curent);
+    logger.info("searching for books with phrase $_phrase");
   }
 
   BooksPage get page => _booksPage;

@@ -54,6 +54,7 @@ class AuthorEventsComponent extends PageSwitcher implements OnActivate {
   void onActivate(_, RouterState state) {
     _authorId = _router.param(authorIdParam, state);
     _fetchFirstPage();
+    logger.info("activated for author with id:$_authorId");
   }
 
   @override
@@ -71,7 +72,6 @@ class AuthorEventsComponent extends PageSwitcher implements OnActivate {
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(_router.search(), "search")];
-
     if (_authorId != null && page.elements.length > 0) {
       var url = _router.showAuthorUrl(_authorId);
       elems.add(Breadcrumb.link(url, page.elements.last.name).last());

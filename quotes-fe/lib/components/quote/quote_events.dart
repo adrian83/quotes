@@ -59,6 +59,7 @@ class QuoteEventsComponent extends PageSwitcher implements OnActivate {
     _bookId = _router.param(bookIdParam, state);
     _quoteId = _router.param(quoteIdParam, state);
     _fetchFirstPage();
+    logger.info("activated for quote with id: $_quoteId");
   }
 
   @override

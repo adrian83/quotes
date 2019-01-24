@@ -38,12 +38,8 @@ class BookQuotesComponent implements PageSwitcher {
   @Input()
   void set book(Book b) {
     _book = b;
-
-    _quoteService
-        .listBookQuotes(
-            _book.authorId, _book.id, PageRequest.page(_quotesPage.info.curent))
-        .then((page) => _quotesPage = page)
-        .catchError(_errorHandler.handleError);
+    change(_quotesPage.info.curent);
+    logger.info("searching for quotes from book with id: ${_book.id}");
   }
 
   QuotesPage get page => _quotesPage;

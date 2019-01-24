@@ -38,11 +38,8 @@ class AuthorBooksComponent implements PageSwitcher {
   @Input()
   void set author(Author a) {
     _author = a;
-
-    _bookService
-        .listAuthorBooks(_author.id, PageRequest.page(_booksPage.info.curent))
-        .then((page) => _booksPage = page)
-        .catchError(_errorHandler.handleError);
+    change(_booksPage.info.curent);
+    logger.info("searching for books written by author with id: ${_author.id}");
   }
 
   BooksPage get page => _booksPage;
