@@ -5,24 +5,16 @@ environment:
   sdk: '>=2.0.0-dev.64.2 <3.0.0'
 dependencies:
   angular: ^5.0.0
-  angular_router: ^2.0.0-alpha+19
+  angular_router: ^2.0.0-alpha+21
   angular_forms: ^2.0.0
-  
-  analyzer: ^0.32.6
+  analyzer: ^0.34.0
   front_end: ^0.1.4+2
   kernel: ^0.3.4+2
-
   logging: ^0.11.3+2
   uuid: ^1.0.3
-# #docregion dev_dependencies, build-dependencies
 dev_dependencies:
-  # #enddocregion build-dependencies
-  angular_test: ^2.0.0-beta
-  # #docregion build-dependencies
-  build_runner: ^0.9.0
+  angular_test: ^2.0.0
+  build_runner: ^1.0.0
   build_test: ^0.10.2
   build_web_compilers: ^0.4.0
-
-  # #enddocregion build-dependencies
   test: ^1.0.0
-# #enddocregion dev_dependencies
