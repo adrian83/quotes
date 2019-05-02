@@ -4,7 +4,7 @@ import 'common.dart';
 import 'common/form.dart';
 
 class OptionsHandler extends Handler {
-  OptionsHandler() : super(r"/{anything}", "OPTIONS");
+  OptionsHandler() : super(); 
 
   void execute(
       HttpRequest request, PathParams pathParams, UrlParams urlParams) async {

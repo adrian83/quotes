@@ -11,11 +11,9 @@ import 'form.dart';
 class AddAuthorHandler extends Handler {
   static final Logger logger = Logger('AddAuthorHandler');
 
-  static final _URL = r"/authors";
-
   AuthorService _authorService;
 
-  AddAuthorHandler(this._authorService) : super(_URL, "POST");
+  AddAuthorHandler(this._authorService) : super(); 
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       parseForm(req, AuthorFormParser(false, false))

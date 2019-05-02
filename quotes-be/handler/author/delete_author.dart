@@ -7,11 +7,9 @@ import '../../domain/author/service.dart';
 import '../common/form.dart';
 
 class DeleteAuthorHandler extends Handler {
-  static final _URL = r"/authors/{authorId}";
-
   AuthorService _authorService;
 
-  DeleteAuthorHandler(this._authorService) : super(_URL, "DELETE");
+  DeleteAuthorHandler(this._authorService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(AuthorIdParams(pathParams.getString("authorId")))

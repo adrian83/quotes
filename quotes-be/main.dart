@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import './handler/common.dart';
+import 'config/config.dart';
+
+import './handler/router.dart';
 import './handler/not_found.dart';
 import './handler/options.dart';
 import './handler/quote/list_quotes.dart';
@@ -45,10 +47,6 @@ import './domain/book/repository.dart';
 import 'tools/elasticsearch/store.dart';
 
 import 'package:postgres/postgres.dart';
-
-import 'config/config.dart';
-
-import 'dummy_data.dart';
 import 'package:logging/logging.dart';
 
 Future main(List<String> args) async {
@@ -104,6 +102,17 @@ Future main(List<String> args) async {
       quoteRepository, quoteEventRepository);
   var quoteService = QuoteService(quoteRepository, quoteEventRepository);
 
+  var router = createRouter(authorService, bookService, quoteService);
+
+  HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
+
+  await for (HttpRequest request in server) {
+    router.handleRequest(request);
+  }
+}
+
+Router createRouter(AuthorService authorService, BookService bookService,
+    QuoteService quoteService) {
   var notFoundHandler = NotFoundHandler();
   var optionsHandler = OptionsHandler();
 
@@ -130,64 +139,46 @@ Future main(List<String> args) async {
   var quoteEventsHandler = QuoteEventsHandler(quoteService);
   var findQuotesHandler = FindQuotesHandler(quoteService);
 
-  var handlers = [
-    authorEventsHandler,
-    addAuthorHandler,
-    getAuthorHandler,
-    updateAuthorHandler,
-    deleteAuthorHandler,
-    findAuthorsHandler,
-    addBookHandler,
-    getBookHandler,
-    updateBookHandler,
-    deleteBookHandler,
-    bookEventsHandler,
-    listBooksHandler,
-    findBooksHandler,
-    addQuoteHandler,
-    getQuoteHandler,
-    updateQuoteHandler,
-    deleteQuoteHandler,
-    listQuotesHandler,
-    quoteEventsHandler,
-    findQuotesHandler
-  ];
+  Router router = Router();
 
-  // inserts dummy data
-  if (args.length > 1) {
-    insertDummyData(authorService, bookService, quoteService);
-  }
+  router.notFoundHandler = notFoundHandler;
 
-  HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
+  router.registerRoute(r"/{anything}", "OPTIONS", optionsHandler);
 
-  await for (HttpRequest request in server) {
-    var found = false;
+  router.registerRoute(r"/authors", "POST", addAuthorHandler);
+  router.registerRoute(r"/authors/{authorId}", "GET", getAuthorHandler);
+  router.registerRoute(r"/authors/{authorId}", "PUT", updateAuthorHandler);
+  router.registerRoute(r"/authors/{authorId}", "DELETE", deleteAuthorHandler);
+  router.registerRoute(r"/authors", "GET", findAuthorsHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/events", "GET", authorEventsHandler);
 
-    for (Handler handler in handlers) {
-      if (handler.canHandle(request.uri.path, request.method)) {
-        handler.handle(request);
-        found = true;
-        break;
-      }
-    }
+  router.registerRoute(r"/authors/{authorId}/books", "POST", addBookHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}", "GET", getBookHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}", "PUT", updateBookHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}", "DELETE", deleteBookHandler);
+  router.registerRoute(r"/authors/{authorId}/books", "GET", listBooksHandler);
+  router.registerRoute(r"/books", "GET", findBooksHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}/events", "GET", bookEventsHandler);
 
-    if (request.method == "OPTIONS") {
-      optionsHandler.handle(request);
-      continue;
-    }
-
-    if (!found) {
-      notFoundHandler.handle(request);
-    }
-  }
-}
-
-void insertDummyData(AuthorService authorService, BookService bookService,
-    QuoteService quoteService) async {
-  [author1, author2, author3]
-      .forEach((author) async => await authorService.save(author));
-  [book1, book2, book3, book4]
-      .forEach((book) async => await bookService.save(book));
-  [quote1, quote2, quote3, quote4]
-      .forEach((quote) async => await quoteService.save(quote));
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}/quotes", "POST", addQuoteHandler);
+  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}",
+      "GET", getQuoteHandler);
+  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}",
+      "PUT", updateQuoteHandler);
+  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}",
+      "DELETE", deleteQuoteHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}/quotes", "GET", listQuotesHandler);
+  router.registerRoute(r"/quotes", "GET", findQuotesHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}/events",
+      "GET",
+      quoteEventsHandler);
+  return router;
 }

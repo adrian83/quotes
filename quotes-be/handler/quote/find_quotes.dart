@@ -8,11 +8,9 @@ import '../common/form.dart';
 import '../common/params.dart';
 
 class FindQuotesHandler extends Handler {
-  static final _URL = r"/quotes";
-
   QuoteService _quoteService;
 
-  FindQuotesHandler(this._quoteService) : super(_URL, "GET") {}
+  FindQuotesHandler(this._quoteService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(SearchParams(

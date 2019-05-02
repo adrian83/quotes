@@ -9,11 +9,9 @@ import 'params.dart';
 import 'form.dart';
 
 class UpdateQuoteHandler extends Handler {
-  static final _URL = r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}";
-
   QuoteService _quoteService;
 
-  UpdateQuoteHandler(this._quoteService) : super(_URL, "PUT") {}
+  UpdateQuoteHandler(this._quoteService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       parseForm(req, QuoteFormParser(true, true))

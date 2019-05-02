@@ -8,11 +8,9 @@ import '../common/form.dart';
 import 'params.dart';
 
 class DeleteBookHandler extends Handler {
-  static final _URL = r"/authors/{authorId}/books/{bookId}";
-
   BookService _bookService;
 
-  DeleteBookHandler(this._bookService) : super(_URL, "DELETE");
+  DeleteBookHandler(this._bookService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(BookIdParams(

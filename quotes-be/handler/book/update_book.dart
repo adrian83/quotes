@@ -9,11 +9,9 @@ import 'params.dart';
 import 'form.dart';
 
 class UpdateBookHandler extends Handler {
-  static final _URL = r"/authors/{authorId}/books/{bookId}";
-
   BookService _bookService;
 
-  UpdateBookHandler(this._bookService) : super(_URL, "PUT");
+  UpdateBookHandler(this._bookService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       parseForm(req, BookFormParser(true, true))

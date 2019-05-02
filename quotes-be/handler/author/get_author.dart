@@ -7,11 +7,9 @@ import '../common/form.dart';
 import 'params.dart';
 
 class GetAuthorHandler extends Handler {
-  static final _URL = r"/authors/{authorId}";
-
   AuthorService _authorService;
 
-  GetAuthorHandler(this._authorService) : super(_URL, "GET");
+  GetAuthorHandler(this._authorService) : super(); 
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(AuthorIdParams(pathParams.getString("authorId")))

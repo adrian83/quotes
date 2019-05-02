@@ -8,12 +8,9 @@ import '../common/form.dart';
 import 'params.dart';
 
 class QuoteEventsHandler extends Handler {
-  static final _URL =
-      r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}/events";
-
   QuoteService _quoteService;
 
-  QuoteEventsHandler(this._quoteService) : super(_URL, "GET") {}
+  QuoteEventsHandler(this._quoteService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(ListByQuoteParams(

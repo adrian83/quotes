@@ -7,11 +7,9 @@ import '../common/form.dart';
 import 'params.dart';
 
 class GetBookHandler extends Handler {
-  static final _URL = r"/authors/{authorId}/books/{bookId}";
-
   BookService _bookService;
 
-  GetBookHandler(this._bookService) : super(_URL, "GET");
+  GetBookHandler(this._bookService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(BookIdParams(

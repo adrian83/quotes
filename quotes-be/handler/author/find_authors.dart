@@ -8,11 +8,9 @@ import '../common/form.dart';
 import '../common/params.dart';
 
 class FindAuthorsHandler extends Handler {
-  static final _URL = r"/authors";
-
   AuthorService _authorService;
 
-  FindAuthorsHandler(this._authorService) : super(_URL, "GET") {}
+  FindAuthorsHandler(this._authorService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(SearchParams(

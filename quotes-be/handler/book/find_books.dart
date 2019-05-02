@@ -8,11 +8,9 @@ import '../common/form.dart';
 import '../common/params.dart';
 
 class FindBooksHandler extends Handler {
-  static final _URL = r"/books";
-
   BookService _bookService;
 
-  FindBooksHandler(this._bookService) : super(_URL, "GET") {}
+  FindBooksHandler(this._bookService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(SearchParams(

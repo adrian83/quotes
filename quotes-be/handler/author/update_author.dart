@@ -9,11 +9,9 @@ import 'form.dart';
 import 'params.dart';
 
 class UpdateAuthorHandler extends Handler {
-  static final _URL = r"/authors/{authorId}";
-
   AuthorService _authorService;
 
-  UpdateAuthorHandler(this._authorService) : super(_URL, "PUT") {}
+  UpdateAuthorHandler(this._authorService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       parseForm(req, AuthorFormParser(true, true))

@@ -8,11 +8,9 @@ import '../common/form.dart';
 import '../author/params.dart';
 
 class ListBooksHandler extends Handler {
-  static final _URL = r"/authors/{authorId}/books";
-
   BookService _bookService;
 
-  ListBooksHandler(this._bookService) : super(_URL, "GET");
+  ListBooksHandler(this._bookService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(ListByAuthorParams(

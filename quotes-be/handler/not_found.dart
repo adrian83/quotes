@@ -8,7 +8,7 @@ import 'common.dart';
 class NotFoundHandler extends Handler {
   static final Logger logger = Logger('NotFoundHandler');
 
-  NotFoundHandler() : super(r"/{anything}", null);
+  NotFoundHandler() : super(); //r"/{anything}", null);
 
   void execute(
       HttpRequest req, PathParams pathParams, UrlParams urlParams) async {

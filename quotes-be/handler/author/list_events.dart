@@ -8,11 +8,9 @@ import '../common/form.dart';
 import 'params.dart';
 
 class AuthorEventsHandler extends Handler {
-  static final _URL = r"/authors/{authorId}/events";
-
   AuthorService _authorService;
 
-  AuthorEventsHandler(this._authorService) : super(_URL, "GET") {}
+  AuthorEventsHandler(this._authorService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(ListByAuthorParams(
