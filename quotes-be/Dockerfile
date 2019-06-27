@@ -1,7 +1,7 @@
 FROM debian:testing-slim
 
-ADD . /quotes/
-WORKDIR /quotes
+ADD . /quotes-be/
+WORKDIR /quotes-be
 
 
 RUN apt-get update

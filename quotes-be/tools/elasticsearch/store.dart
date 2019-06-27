@@ -25,8 +25,7 @@ class ESStore<T extends ESDocument> {
   String _deleteByQueryUri() =>
       "$_protocol://$_host:$_port/$_index/$_type/_delete_by_query";
 
-  static final Decode<IndexResult> _indexResDecoder =
-      (Map<String, dynamic> json) => IndexResult.fromJson(json);
+  static final Decode<IndexResult> _indexResDecoder = (Map<String, dynamic> json) => IndexResult.fromJson(json);
   static final Decode<UpdateResult> _updateResDecoder =
       (Map<String, dynamic> json) => UpdateResult.fromJson(json);
   static final Decode<GetResult> _getResDecoder =

@@ -60,8 +60,8 @@ void main(List<String> args) async {
       break;
 
     case runInfrastructure:
-      Command("docker run -d -p 9200:${config.elasticsearch.port} -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:$esVersion")
-          .exec();
+      //Command("docker run -d -p 9200:${config.elasticsearch.port} -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:$esVersion")
+      //    .exec();
 
       await File(postgresEnvTemplatePath)
           .readAsString()

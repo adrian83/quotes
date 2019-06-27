@@ -7,11 +7,10 @@
     "quotesIndex": "quotes1"
   },
   "postgres": {
-    "host": "localhost",
+    "host": "postgres",
     "port": 5432,
-    "database": "quotes1",
+    "database": "quotes",
     "user": "root",
-    "password": "secret",
-    "reconnectDelaySec": 20
+    "password": "secret"
   }
 }

@@ -1,0 +1,15 @@
+version: '3'
+services:
+
+  postgres:
+    image: postgres:11.1
+    volumes:
+      - ./quotes-be/infra/db.sql:/docker-entrypoint-initdb.d/10-init.sql
+  web:
+    build: .
+    ports:
+    - "5000:5000"
+    links:
+    - postgres
+    depends_on:
+    - postgres

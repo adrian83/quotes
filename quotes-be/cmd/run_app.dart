@@ -1,53 +1,40 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'config/config.dart';
+import './common.dart';
 
-import './handler/router.dart';
-import './handler/not_found.dart';
-import './handler/options.dart';
-import './handler/quote/list_quotes.dart';
-import './handler/quote/add_quote.dart';
-import './handler/quote/update_quote.dart';
-import './handler/quote/delete_quote.dart';
-import './handler/quote/get_quote.dart';
-import './handler/quote/list_events.dart';
-import './handler/quote/find_quotes.dart';
+import '../config/config.dart';
 
-import './handler/author/find_authors.dart';
-import './handler/author/add_author.dart';
-import './handler/author/update_author.dart';
-import './handler/author/get_author.dart';
-import './handler/author/delete_author.dart';
-import './handler/author/list_events.dart';
+import '../handler/router.dart';
+import '../handler/not_found.dart';
+import '../handler/options.dart';
+import '../handler/quote/list_quotes.dart';
+import '../handler/quote/add_quote.dart';
+import '../handler/quote/update_quote.dart';
+import '../handler/quote/delete_quote.dart';
+import '../handler/quote/get_quote.dart';
+import '../handler/quote/list_events.dart';
+import '../handler/quote/find_quotes.dart';
 
-import './handler/book/list_books.dart';
-import './handler/book/add_book.dart';
-import './handler/book/delete_book.dart';
-import './handler/book/get_book.dart';
-import './handler/book/update_book.dart';
-import './handler/book/list_events.dart';
-import './handler/book/find_books.dart';
+import '../handler/author/find_authors.dart';
+import '../handler/author/add_author.dart';
+import '../handler/author/update_author.dart';
+import '../handler/author/get_author.dart';
+import '../handler/author/delete_author.dart';
+import '../handler/author/list_events.dart';
 
-import './domain/author/model.dart';
-import './domain/author/service.dart';
-import './domain/author/event.dart';
-import './domain/author/repository.dart';
+import '../handler/book/list_books.dart';
+import '../handler/book/add_book.dart';
+import '../handler/book/delete_book.dart';
+import '../handler/book/get_book.dart';
+import '../handler/book/update_book.dart';
+import '../handler/book/list_events.dart';
+import '../handler/book/find_books.dart';
 
-import './domain/quote/model.dart';
-import './domain/quote/service.dart';
-import './domain/quote/event.dart';
-import './domain/quote/repository.dart';
+import '../domain/author/service.dart';
+import '../domain/quote/service.dart';
+import '../domain/book/service.dart';
 
-import './domain/book/model.dart';
-import './domain/book/service.dart';
-import './domain/book/event.dart';
-import './domain/book/repository.dart';
-
-import 'tools/elasticsearch/store.dart';
-
-import 'package:postgres/postgres.dart';
-import 'package:logging/logging.dart';
 
 Future main(List<String> args) async {
   if (args.length == 0) {
@@ -55,54 +42,17 @@ Future main(List<String> args) async {
     exit(1);
   }
 
-  Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen((LogRecord rec) {
-    print('${rec.loggerName}: ${rec.level.name}: ${rec.time}: ${rec.message}');
-  });
+  initLogger();
 
-  String configLocation = args[0];
-  Config config = await readConfig(configLocation);
+  Config config = await readConfig(args[0]);
 
-  var dbConfig = config.postgres;
+  var connection = await createConnection(config.postgres);
 
-  PostgreSQLConnection connection = PostgreSQLConnection(
-      dbConfig.host, dbConfig.port, dbConfig.database,
-      username: dbConfig.user, password: dbConfig.password);
-  await connection.open();
+  var repositories = createRepositories(connection);
+  var eventRepositories = createEventRepositories(config.elasticsearch);
+  var services = createServices(repositories, eventRepositories);
 
-  AuthorRepository authorRepository = AuthorRepository(connection);
-  BookRepository bookRepository = BookRepository(connection);
-  QuoteRepository quoteRepository = QuoteRepository(connection);
-
-  HttpClient client = HttpClient();
-
-  var esConfig = config.elasticsearch;
-
-  var authorEsStore = ESStore<AuthorEvent>(
-      client, esConfig.host, esConfig.port, esConfig.authorsIndex);
-
-  var bookEsStore = ESStore<BookEvent>(
-      client, esConfig.host, esConfig.port, esConfig.booksIndex);
-
-  var quoteEsStore = ESStore<QuoteEvent>(
-      client, esConfig.host, esConfig.port, esConfig.quotesIndex);
-
-  var authorEventRepository = AuthorEventRepository(authorEsStore);
-  var bookEventRepository = BookEventRepository(bookEsStore);
-  var quoteEventRepository = QuoteEventRepository(quoteEsStore);
-
-  var authorService = AuthorService(
-      authorRepository,
-      authorEventRepository,
-      bookRepository,
-      bookEventRepository,
-      quoteRepository,
-      quoteEventRepository);
-  var bookService = BookService(bookRepository, bookEventRepository,
-      quoteRepository, quoteEventRepository);
-  var quoteService = QuoteService(quoteRepository, quoteEventRepository);
-
-  var router = createRouter(authorService, bookService, quoteService);
+  var router = createRouter(services.authorService, services.bookService, services.quoteService);
 
   HttpServer server = await HttpServer.bind(InternetAddress.loopbackIPv4, 5050);
 

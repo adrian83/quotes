@@ -1,28 +1,13 @@
 import 'dart:async';
 import 'dart:io';
 
-import './domain/author/model.dart';
-import './domain/author/service.dart';
-import './domain/author/event.dart';
-import './domain/author/repository.dart';
+import './common.dart';
 
-import './domain/quote/model.dart';
-import './domain/quote/service.dart';
-import './domain/quote/event.dart';
-import './domain/quote/repository.dart';
+import '../domain/author/model.dart';
+import '../domain/quote/model.dart';
+import '../domain/book/model.dart';
 
-import './domain/book/model.dart';
-import './domain/book/service.dart';
-import './domain/book/event.dart';
-import './domain/book/repository.dart';
-
-import 'tools/elasticsearch/store.dart';
-
-import 'package:postgres/postgres.dart';
-
-import 'config/config.dart';
-
-import 'package:logging/logging.dart';
+import '../config/config.dart';
 
 DateTime utcNow() => DateTime.now().toUtc();
 
@@ -100,63 +85,37 @@ Hear a foot fall; we now are near his cell.""";
 
 var quote4 = Quote(null, quote4Text, author1.id, book3.id, utcNow(), utcNow());
 
+//
+// MAIN
+//
 Future main(List<String> args) async {
   if (args.length == 0) {
     print("Please provide config location as a first command parameter");
     exit(1);
   }
 
-  Logger.root.level = Level.ALL;
-  Logger.root.onRecord.listen((LogRecord rec) {
-    print('${rec.loggerName}: ${rec.level.name}: ${rec.time}: ${rec.message}');
-  });
+  initLogger();
 
-  String configLocation = args[0];
-  Config config = await readConfig(configLocation);
+  Config config = await readConfig(args[0]);
 
-  var dbConfig = config.postgres;
+  var connection = await createConnection(config.postgres);
 
-  PostgreSQLConnection connection = PostgreSQLConnection(
-      dbConfig.host, dbConfig.port, dbConfig.database,
-      username: dbConfig.user, password: dbConfig.password);
-  await connection.open();
+  var repositories = createRepositories(connection);
+  var eventRepositories = createEventRepositories(config.elasticsearch);
+  var services = createServices(repositories, eventRepositories);
 
-  AuthorRepository authorRepository = AuthorRepository(connection);
-  BookRepository bookRepository = BookRepository(connection);
-  QuoteRepository quoteRepository = QuoteRepository(connection);
+  for (var author in [author1, author2, author3]) {
+    await services.authorService.save(author);
+  }
 
-  HttpClient client = HttpClient();
+  for (var book in [book1, book2, book3, book4]) {
+    await services.bookService.save(book);
+  }
 
-  var esConfig = config.elasticsearch;
+  for (var quote in [quote1, quote2, quote3, quote4]) {
+    await await services.quoteService.save(quote);
+  }
 
-  var authorEsStore = ESStore<AuthorEvent>(
-      client, esConfig.host, esConfig.port, esConfig.authorsIndex);
-
-  var bookEsStore = ESStore<BookEvent>(
-      client, esConfig.host, esConfig.port, esConfig.booksIndex);
-
-  var quoteEsStore = ESStore<QuoteEvent>(
-      client, esConfig.host, esConfig.port, esConfig.quotesIndex);
-
-  var authorEventRepository = AuthorEventRepository(authorEsStore);
-  var bookEventRepository = BookEventRepository(bookEsStore);
-  var quoteEventRepository = QuoteEventRepository(quoteEsStore);
-
-  var authorService = AuthorService(
-      authorRepository,
-      authorEventRepository,
-      bookRepository,
-      bookEventRepository,
-      quoteRepository,
-      quoteEventRepository);
-  var bookService = BookService(bookRepository, bookEventRepository,
-      quoteRepository, quoteEventRepository);
-  var quoteService = QuoteService(quoteRepository, quoteEventRepository);
-
-  [author1, author2, author3]
-      .forEach((author) async => await authorService.save(author));
-  [book1, book2, book3, book4]
-      .forEach((book) async => await bookService.save(book));
-  [quote1, quote2, quote3, quote4]
-      .forEach((quote) async => await quoteService.save(quote));
+  print("end");
+  exit(0);
 }
