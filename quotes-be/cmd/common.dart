@@ -64,33 +64,34 @@ EventRepositories createEventRepositories(ElasticsearchConfig config) {
   var authorEsStore = ESStore<AuthorEvent>(
       client, config.host, config.port, config.authorsIndex);
 
-  var bookEsStore = ESStore<BookEvent>(
-      client, config.host, config.port, config.booksIndex);
+  var bookEsStore =
+      ESStore<BookEvent>(client, config.host, config.port, config.booksIndex);
 
-  var quoteEsStore = ESStore<QuoteEvent>(
-      client, config.host, config.port, config.quotesIndex);
+  var quoteEsStore =
+      ESStore<QuoteEvent>(client, config.host, config.port, config.quotesIndex);
 
   var authorEventRepository = AuthorEventRepository(authorEsStore);
   var bookEventRepository = BookEventRepository(bookEsStore);
   var quoteEventRepository = QuoteEventRepository(quoteEsStore);
 
-  return EventRepositories(authorEventRepository, bookEventRepository, quoteEventRepository);
+  return EventRepositories(
+      authorEventRepository, bookEventRepository, quoteEventRepository);
 }
 
 class Services {
-AuthorService _authorService;
-BookService _bookService;
-QuoteService _quoteService;
+  AuthorService _authorService;
+  BookService _bookService;
+  QuoteService _quoteService;
 
-Services(this._authorService, this._bookService, this._quoteService);
+  Services(this._authorService, this._bookService, this._quoteService);
 
-AuthorService get authorService => _authorService;
-BookService  get bookService => _bookService;
-QuoteService  get quoteService => _quoteService;
-
+  AuthorService get authorService => _authorService;
+  BookService get bookService => _bookService;
+  QuoteService get quoteService => _quoteService;
 }
 
-Services createServices(Repositories repositories, EventRepositories eventRepositories) {
+Services createServices(
+    Repositories repositories, EventRepositories eventRepositories) {
   var authorService = AuthorService(
       repositories.authorRepository,
       eventRepositories.authorRepository,
@@ -98,22 +99,18 @@ Services createServices(Repositories repositories, EventRepositories eventReposi
       eventRepositories.bookRepository,
       repositories.quoteRepository,
       eventRepositories.quoteRepository);
-      
+
   var bookService = BookService(
-    repositories.bookRepository,
-     eventRepositories.bookRepository,
-      repositories.quoteRepository, 
+      repositories.bookRepository,
+      eventRepositories.bookRepository,
+      repositories.quoteRepository,
       eventRepositories.quoteRepository);
 
   var quoteService = QuoteService(
-    repositories.quoteRepository, 
-    eventRepositories.quoteRepository);
+      repositories.quoteRepository, eventRepositories.quoteRepository);
 
   return Services(authorService, bookService, quoteService);
 }
-
-
-
 
 void initLogger() {
   Logger.root.level = Level.ALL;
