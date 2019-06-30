@@ -14,6 +14,7 @@ class ESStore<T extends ESDocument> {
   String _host, _index, _protocol = "http", _type = "doc";
   int _port;
 
+  String _statsUri() => "$_protocol://$_host:$_port/_stats";
   String _indexUri(String id) =>
       "$_protocol://$_host:$_port/$_index/$_type/$id";
   String _getUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id";
@@ -25,7 +26,8 @@ class ESStore<T extends ESDocument> {
   String _deleteByQueryUri() =>
       "$_protocol://$_host:$_port/$_index/$_type/_delete_by_query";
 
-  static final Decode<IndexResult> _indexResDecoder = (Map<String, dynamic> json) => IndexResult.fromJson(json);
+  static final Decode<IndexResult> _indexResDecoder =
+      (Map<String, dynamic> json) => IndexResult.fromJson(json);
   static final Decode<UpdateResult> _updateResDecoder =
       (Map<String, dynamic> json) => UpdateResult.fromJson(json);
   static final Decode<GetResult> _getResDecoder =
@@ -84,6 +86,11 @@ class ESStore<T extends ESDocument> {
         print("List query ${jsonEncode(searchRequest)}");
         return withBody(req, jsonEncode(searchRequest));
       }).then((HttpClientResponse resp) => decode(resp, _searchResDecoder));
+
+  Future<bool> active() => _client
+      .getUrl(Uri.parse(_statsUri()))
+      .then((HttpClientRequest req) => req.close())
+      .then((HttpClientResponse resp) => resp.statusCode == 200);
 
   Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) =>
       response.transform(utf8.decoder).join().then((content) {

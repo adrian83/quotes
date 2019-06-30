@@ -58,7 +58,7 @@ class EventRepositories {
   QuoteEventRepository get quoteRepository => _quoteRepository;
 }
 
-EventRepositories createEventRepositories(ElasticsearchConfig config) {
+Future<EventRepositories> createEventRepositories(ElasticsearchConfig config)async  {
   HttpClient client = HttpClient();
 
   var authorEsStore = ESStore<AuthorEvent>(
@@ -74,8 +74,25 @@ EventRepositories createEventRepositories(ElasticsearchConfig config) {
   var bookEventRepository = BookEventRepository(bookEsStore);
   var quoteEventRepository = QuoteEventRepository(quoteEsStore);
 
-  return EventRepositories(
-      authorEventRepository, bookEventRepository, quoteEventRepository);
+  for (var i = 0; i < 10; i++) {
+
+
+    var error = false;
+    var active = await authorEsStore.active().catchError((e) {
+      print("error $e");
+      error = true;
+    });
+    if (!error && active) {
+      return EventRepositories(authorEventRepository, bookEventRepository, quoteEventRepository);
+    } 
+    sleep(Duration(seconds: config.reconnectDelaySec));
+  }
+
+  throw ArgumentError("cannot create PostgreSQLConnection");
+
+
+
+  
 }
 
 class Services {

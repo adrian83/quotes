@@ -1,16 +1,18 @@
 {
   "elasticsearch": {
-    "host": "localhost",
+    "host": "elasticsearch",
     "port": 9200,
     "authorsIndex": "authors1",
     "booksIndex": "books1",
-    "quotesIndex": "quotes1"
+    "quotesIndex": "quotes1",
+    "reconnectDelaySec": 20
   },
   "postgres": {
     "host": "postgres",
     "port": 5432,
     "database": "quotes",
-    "user": "root",
-    "password": "secret"
+    "user": "postgres",
+    "password": "secret",
+    "reconnectDelaySec": 20
   }
 }

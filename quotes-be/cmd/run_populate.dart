@@ -101,7 +101,7 @@ Future main(List<String> args) async {
   var connection = await createConnection(config.postgres);
 
   var repositories = createRepositories(connection);
-  var eventRepositories = createEventRepositories(config.elasticsearch);
+  var eventRepositories = await createEventRepositories(config.elasticsearch);
   var services = createServices(repositories, eventRepositories);
 
   for (var author in [author1, author2, author3]) {

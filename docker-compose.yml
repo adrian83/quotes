@@ -1,15 +1,41 @@
 version: '3'
 services:
+  elasticsearch:
+    image: elasticsearch:6.4.1
+    ports:
+    - "9200:9200"
+    - "9300:9300"
+    environment:
+      - cluster.name=demo-es
+      - discovery.type=single-node
+      - http.cors.enabled=true
+      - http.cors.allow-credentials=true
+      - http.cors.allow-headers=X-Requested-With,X-Auth-Token,Content-Type,Content-Length,Authorization
+      - http.cors.allow-origin=/https?:\/\/localhost(:[0-9]+)?/
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
 
   postgres:
     image: postgres:11.1
     volumes:
-      - ./quotes-be/infra/db.sql:/docker-entrypoint-initdb.d/10-init.sql
-  web:
-    build: .
+      - ./quotes-be/infra/db.sql:/docker-entrypoint-initdb.d/1_init.sql
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: secret
+      POSTGRES_USER: postgres
+      POSTGRES_DB: quotes
+
+  backend:
+    build: ./quotes-be/
     ports:
-    - "5000:5000"
+    - "5050:5050"
     links:
     - postgres
+    - elasticsearch
     depends_on:
     - postgres
+    - elasticsearch
+

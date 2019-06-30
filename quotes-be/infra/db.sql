@@ -1,5 +1,5 @@
 
-CREATE DATABASE quotes;
+
 
 CREATE TABLE Author (
    ID           CHAR(100) PRIMARY KEY   NOT NULL,

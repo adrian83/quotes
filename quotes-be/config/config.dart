@@ -23,19 +23,20 @@ class PostgresConfig {
 
 class ElasticsearchConfig {
   String _host, _authorsIndex, _booksIndex, _quotesIndex;
-  int _port;
+  int _port, _reconnectDelaySec;
 
   ElasticsearchConfig(this._host, this._port, this._authorsIndex,
-      this._booksIndex, this._quotesIndex);
+      this._booksIndex, this._quotesIndex, this._reconnectDelaySec);
 
   ElasticsearchConfig.fromJson(Map<String, dynamic> json)
       : this(json['host'], json['port'], json['authorsIndex'],
-            json['booksIndex'], json['quotesIndex']);
+            json['booksIndex'], json['quotesIndex'], json['reconnectDelaySec']);
 
   String get host => _host;
   String get authorsIndex => _authorsIndex;
   String get booksIndex => _booksIndex;
   String get quotesIndex => _quotesIndex;
+  int get reconnectDelaySec => _reconnectDelaySec;
   int get port => _port;
 }
 

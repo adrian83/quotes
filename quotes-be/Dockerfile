@@ -16,6 +16,7 @@ RUN sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debia
 RUN apt-get update
 RUN apt-get install dart -y
 
+ENV PATH "$PATH:$HOME/.pub-cache/bin"
 ENV PATH "$PATH:/usr/lib/dart/bin"
 
 RUN pub global activate webdev
@@ -23,7 +24,15 @@ RUN pub global activate webdev
 RUN dart --version
 RUN pub --version
 
+ENV PATH "$PATH:$HOME/.pub-cache/bin"
+ENV PATH "$PATH:/usr/lib/dart/bin"
 
 RUN pwd
 RUN ls -al
+
+RUN pub get
+
+EXPOSE 5050
+CMD ["dart", "./cmd/run_app.dart", "./infra/docker.json"]
+
 
