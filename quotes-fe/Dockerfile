@@ -1,7 +1,7 @@
 FROM debian:testing-slim
 
-ADD . /quotes/
-WORKDIR /quotes
+ADD . /quotes-fe/
+WORKDIR /quotes-fe
 
 
 RUN apt-get update
@@ -16,14 +16,29 @@ RUN sh -c 'curl https://storage.googleapis.com/download.dartlang.org/linux/debia
 RUN apt-get update
 RUN apt-get install dart -y
 
+ENV PATH "$PATH:$HOME/.pub-cache/bin"
 ENV PATH "$PATH:/usr/lib/dart/bin"
 
 RUN pub global activate webdev
 
+RUN ls $HOME/.pub-cache/bin
+
+ENV PATH "$PATH:$HOME/.pub-cache/bin"
+ENV PATH "$PATH:/usr/lib/dart/bin"
+
+
 RUN dart --version
 RUN pub --version
-
-
+RUN $HOME/.pub-cache/bin/webdev --version
 RUN pwd
-RUN ls -al
+
+RUN cd $HOME/.pub-cache/bin/ && pwd
+
+
+RUN pub get
+RUN pub run build_runner build
+
+EXPOSE 8080
+CMD ["/root/.pub-cache/bin/webdev", "serve", "--hostname", "0.0.0.0"]
+
 

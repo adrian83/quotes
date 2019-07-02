@@ -35,11 +35,16 @@ import '../domain/author/service.dart';
 import '../domain/quote/service.dart';
 import '../domain/book/service.dart';
 
+import './run_populate.dart';
 
 Future main(List<String> args) async {
   if (args.length == 0) {
     print("Please provide config location as a first command parameter");
     exit(1);
+  }
+
+  if(args.length == 2){
+    await populate(args[0]);
   }
 
   initLogger();

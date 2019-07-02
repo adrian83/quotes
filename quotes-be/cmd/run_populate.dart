@@ -94,9 +94,16 @@ Future main(List<String> args) async {
     exit(1);
   }
 
+  await populate(args[0]);
+
+  //exit(0);
+}
+
+Future<void> populate(String configPath) async {
+
   initLogger();
 
-  Config config = await readConfig(args[0]);
+  Config config = await readConfig(configPath);
 
   var connection = await createConnection(config.postgres);
 
@@ -117,5 +124,4 @@ Future main(List<String> args) async {
   }
 
   print("end");
-  exit(0);
 }

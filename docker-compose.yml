@@ -39,3 +39,11 @@ services:
     - postgres
     - elasticsearch
 
+  frontend:
+    build: ./quotes-fe/
+    ports:
+    - "8080:8080"
+    links:
+    - backend
+    depends_on:
+    - backend

@@ -33,6 +33,7 @@ RUN ls -al
 RUN pub get
 
 EXPOSE 5050
-CMD ["dart", "./cmd/run_app.dart", "./infra/docker.json"]
+
+CMD ["dart", "./cmd/run_app.dart", "./infra/docker.json", "populate"]
 
 
