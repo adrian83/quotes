@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'config/config.dart';
+import 'lib/config/config.dart';
 
 const esVersion = "6.4.1";
 const configPath = "./infra/local.json";
@@ -87,7 +87,8 @@ void main(List<String> args) async {
 
       Command("docker cp $postgresInitScript $containerName:/file.sql").exec();
 
-      Command("docker exec $containerName psql ${config.postgres.database} ${config.postgres.user} -f /file.sql").exec();
+      Command("docker exec $containerName psql ${config.postgres.database} ${config.postgres.user} -f /file.sql")
+          .exec();
 
       break;
 

@@ -34,6 +34,6 @@ RUN pub get
 
 EXPOSE 5050
 
-CMD ["dart", "./cmd/run_app.dart", "./infra/docker.json", "populate"]
+CMD ["dart", "./bin/run_app.dart", "./infra/docker.json", "populate"]
 
 
