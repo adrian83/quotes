@@ -38,18 +38,32 @@ class ElasticsearchConfig {
   int get port => _port;
 }
 
+class ServerConfig {
+  String _host;
+  int _port;
+
+  ServerConfig(this._host, this._port);
+
+  ServerConfig.fromJson(Map<String, dynamic> json) : this(json['host'], json['port']);
+
+  String get host => _host;
+  int get port => _port;
+}
+
 Future<Config> readConfig(String path) =>
     File(path).readAsString().then((str) => jsonDecode(str)).then((json) => Config.fromJson(json));
 
 class Config {
   ElasticsearchConfig _elasticsearch;
   PostgresConfig _postgres;
+  ServerConfig _server;
 
-  Config(this._elasticsearch, this._postgres);
+  Config(this._elasticsearch, this._postgres, this._server);
 
   Config.fromJson(Map<String, dynamic> json)
-      : this(ElasticsearchConfig.fromJson(json['elasticsearch']), PostgresConfig.fromJson(json['postgres']));
+      : this(ElasticsearchConfig.fromJson(json['elasticsearch']), PostgresConfig.fromJson(json['postgres']), ServerConfig.fromJson(json['server']));
 
   ElasticsearchConfig get elasticsearch => _elasticsearch;
   PostgresConfig get postgres => _postgres;
+  ServerConfig get server => _server;
 }

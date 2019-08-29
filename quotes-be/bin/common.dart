@@ -29,7 +29,8 @@ class Repositories {
   BookRepository _bookRepository;
   QuoteRepository _quoteRepository;
 
-  Repositories(this._authorRepository, this._bookRepository, this._quoteRepository);
+  Repositories(
+      this._authorRepository, this._bookRepository, this._quoteRepository);
 
   AuthorRepository get authorRepository => _authorRepository;
   BookRepository get bookRepository => _bookRepository;
@@ -49,35 +50,37 @@ class EventRepositories {
   BookEventRepository _bookRepository;
   QuoteEventRepository _quoteRepository;
 
-  EventRepositories(this._authorRepository, this._bookRepository, this._quoteRepository);
+  EventRepositories(
+      this._authorRepository, this._bookRepository, this._quoteRepository);
 
   AuthorEventRepository get authorRepository => _authorRepository;
   BookEventRepository get bookRepository => _bookRepository;
   QuoteEventRepository get quoteRepository => _quoteRepository;
 }
 
-Future<EventRepositories> createEventRepositories(ElasticsearchConfig config) async {
+Future<EventRepositories> createEventRepositories(
+    ElasticsearchConfig config) async {
+      
   HttpClient client = HttpClient();
 
-  var authorEsStore = ESStore<AuthorEvent>(client, config.host, config.port, config.authorsIndex);
+  var host = config.host;
+  var port = config.port;
 
-  var bookEsStore = ESStore<BookEvent>(client, config.host, config.port, config.booksIndex);
+  var authorEs = ESStore<AuthorEvent>(client, host, port, config.authorsIndex);
+  var bookEs = ESStore<BookEvent>(client, host, port, config.booksIndex);
+  var quoteEs = ESStore<QuoteEvent>(client, host, port, config.quotesIndex);
 
-  var quoteEsStore = ESStore<QuoteEvent>(client, config.host, config.port, config.quotesIndex);
-
-  var authorEventRepository = AuthorEventRepository(authorEsStore);
-  var bookEventRepository = BookEventRepository(bookEsStore);
-  var quoteEventRepository = QuoteEventRepository(quoteEsStore);
+  var authorEventRepo = AuthorEventRepository(authorEs);
+  var bookEventRepo = BookEventRepository(bookEs);
+  var quoteEventRepo = QuoteEventRepository(quoteEs);
 
   for (var i = 0; i < 10; i++) {
-    var error = false;
-    var active = await authorEsStore.active().catchError((e) {
-      print("error $e");
-      error = true;
-    });
-    if (!error && active) {
-      return EventRepositories(authorEventRepository, bookEventRepository, quoteEventRepository);
+    var active = await authorEs.active().catchError((_) => false);
+
+    if (active) {
+      return EventRepositories(authorEventRepo, bookEventRepo, quoteEventRepo);
     }
+
     sleep(Duration(seconds: config.reconnectDelaySec));
   }
 
@@ -96,7 +99,8 @@ class Services {
   QuoteService get quoteService => _quoteService;
 }
 
-Services createServices(Repositories repositories, EventRepositories eventRepositories) {
+Services createServices(
+    Repositories repositories, EventRepositories eventRepositories) {
   var authorService = AuthorService(
       repositories.authorRepository,
       eventRepositories.authorRepository,
@@ -105,10 +109,14 @@ Services createServices(Repositories repositories, EventRepositories eventReposi
       repositories.quoteRepository,
       eventRepositories.quoteRepository);
 
-  var bookService = BookService(repositories.bookRepository, eventRepositories.bookRepository,
-      repositories.quoteRepository, eventRepositories.quoteRepository);
+  var bookService = BookService(
+      repositories.bookRepository,
+      eventRepositories.bookRepository,
+      repositories.quoteRepository,
+      eventRepositories.quoteRepository);
 
-  var quoteService = QuoteService(repositories.quoteRepository, eventRepositories.quoteRepository);
+  var quoteService = QuoteService(
+      repositories.quoteRepository, eventRepositories.quoteRepository);
 
   return Services(authorService, bookService, quoteService);
 }
@@ -124,18 +132,18 @@ void initLogger() {
 // TODO: make it better
 Future<PostgreSQLConnection> createConnection(PostgresConfig config) async {
   for (var i = 0; i < 10; i++) {
-    PostgreSQLConnection connection = PostgreSQLConnection(config.host, config.port, config.database,
+    PostgreSQLConnection connection = PostgreSQLConnection(
+        config.host, config.port, config.database,
         username: config.user, password: config.password);
 
-    var error = false;
-    await connection.open().catchError((e) {
-      print("error $e");
-      error = true;
-      sleep(Duration(seconds: config.reconnectDelaySec));
-    });
-    if (!error) {
+    var connected =
+        await connection.open().then((_) => true).catchError((_) => false);
+
+    if (connected) {
       return connection;
     }
+
+    sleep(Duration(seconds: config.reconnectDelaySec));
   }
 
   throw ArgumentError("cannot create PostgreSQLConnection");

@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:quotes/config/config.dart' as prefix0;
+
 import './common.dart';
 
 import '../lib/config/config.dart';
@@ -58,12 +60,15 @@ Future main(List<String> args) async {
   var services = createServices(repositories, eventRepositories);
 
   var router = createRouter(services.authorService, services.bookService, services.quoteService);
-
-  HttpServer server = await HttpServer.bind("0.0.0.0", 5050);
+  var server = await createServer(config.server);
 
   await for (HttpRequest request in server) {
     router.handleRequest(request);
   }
+}
+
+Future<HttpServer> createServer(ServerConfig config) async {
+  return HttpServer.bind(config.host, config.port);
 }
 
 Router createRouter(AuthorService authorService, BookService bookService, QuoteService quoteService) {
