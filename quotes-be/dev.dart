@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'lib/config/config.dart';
+import './lib/config/config.dart';
 
 const esVersion = "6.4.1";
 const configPath = "./infra/local.json";
@@ -46,6 +46,7 @@ class Command {
 }
 
 void main(List<String> args) async {
+
   if (args.length == 0) {
     printMenu();
     return;

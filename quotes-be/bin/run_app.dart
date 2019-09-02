@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:quotes/config/config.dart' as prefix0;
-
 import './common.dart';
 
 import '../lib/config/config.dart';
@@ -37,6 +35,8 @@ import '../lib/domain/author/service.dart';
 import '../lib/domain/quote/service.dart';
 import '../lib/domain/book/service.dart';
 
+import '../lib/web/server.dart';
+
 import './run_populate.dart';
 
 Future main(List<String> args) async {
@@ -60,15 +60,9 @@ Future main(List<String> args) async {
   var services = createServices(repositories, eventRepositories);
 
   var router = createRouter(services.authorService, services.bookService, services.quoteService);
-  var server = await createServer(config.server);
 
-  await for (HttpRequest request in server) {
-    router.handleRequest(request);
-  }
-}
-
-Future<HttpServer> createServer(ServerConfig config) async {
-  return HttpServer.bind(config.host, config.port);
+  var server = Server(config.server, router);
+  server.start();
 }
 
 Router createRouter(AuthorService authorService, BookService bookService, QuoteService quoteService) {
