@@ -4,6 +4,8 @@ import 'dart:io';
 import './../common.dart';
 import '../../domain/author/service.dart';
 import '../common/form.dart';
+import '../response.dart';
+import '../error_handler.dart';
 import 'params.dart';
 
 class GetAuthorHandler extends Handler {

@@ -10,18 +10,9 @@ import 'common/form.dart';
 import 'response.dart';
 
 
-abstract class Handler {
-  static final Logger logger = Logger('Handler');
 
-  
-
-  Handler();
-
-  DateTime nowUtc() => DateTime.now().toUtc();
-
-
-
-
-  void execute(HttpRequest request, PathParams pathParams, UrlParams urlParams);
-
-}
+  Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) => req
+      .transform(utf8.decoder)
+      .join()
+      .then((content) => jsonDecode(content) as Map)
+      .then((data) => parser.parse(data));

@@ -4,6 +4,7 @@ import 'package:logging/logging.dart';
 
 import 'common/form.dart';
 import 'common.dart';
+import 'response.dart';
 
 class NotFoundHandler extends Handler {
   static final Logger logger = Logger('NotFoundHandler');
