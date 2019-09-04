@@ -20,8 +20,10 @@ class IndexResult extends BasicResult {
 
   IndexResult(String index, String type, String id, this._result, this._version) : super(index, type, id);
 
-  factory IndexResult.fromJson(Map<String, dynamic> json) =>
-      IndexResult(json['_index'], json['_type'], json['_id'], json['result'], json['_version']);
+  factory IndexResult.fromJson(Map<String, dynamic> json) {
+      print(json);
+      return IndexResult(json['_index'], json['_type'], json['_id'], json['result'], json['_version']);
+  }
 
   String get result => _result;
 }

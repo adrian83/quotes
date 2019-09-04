@@ -22,6 +22,7 @@ import '../lib/handler/author/update_author.dart';
 import '../lib/handler/author/get_author.dart';
 import '../lib/handler/author/delete_author.dart';
 import '../lib/handler/author/list_events.dart';
+import '../lib/handler/author.dart';
 
 import '../lib/handler/book/list_books.dart';
 import '../lib/handler/book/add_book.dart';
@@ -92,18 +93,24 @@ Router createRouter(AuthorService authorService, BookService bookService, QuoteS
   var quoteEventsHandler = QuoteEventsHandler(quoteService);
   var findQuotesHandler = FindQuotesHandler(quoteService);
 
+  // new
+  var authorHandler = AuthorHandler(authorService);
+
   Router router = Router();
 
   router.notFoundHandler = notFoundHandler;
 
   router.registerRoute(r"/{anything}", "OPTIONS", optionsHandler);
 
-  router.registerRoute(r"/authors", "POST", addAuthorHandler);
-  router.registerRoute(r"/authors/{authorId}", "GET", getAuthorHandler);
+  //router.registerRoute(r"/authors", "POST", addAuthorHandler);
+  //router.registerRoute(r"/authors/{authorId}", "GET", getAuthorHandler);
   router.registerRoute(r"/authors/{authorId}", "PUT", updateAuthorHandler);
   router.registerRoute(r"/authors/{authorId}", "DELETE", deleteAuthorHandler);
   router.registerRoute(r"/authors", "GET", findAuthorsHandler);
   router.registerRoute(r"/authors/{authorId}/events", "GET", authorEventsHandler);
+
+  router.registerRouteV2(r"/authors", "POST", authorHandler.persist);
+  router.registerRouteV2(r"/authors/{authorId}", "GET", authorHandler.find);
 
   router.registerRoute(r"/authors/{authorId}/books", "POST", addBookHandler);
   router.registerRoute(r"/authors/{authorId}/books/{bookId}", "GET", getBookHandler);

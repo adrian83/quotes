@@ -8,6 +8,7 @@ import '../domain/common/exception.dart';
 import 'common/exception.dart';
 import 'common/form.dart';
 import 'response.dart';
+import '../internal/elasticsearch/exception.dart';
 
 
 
@@ -21,6 +22,8 @@ import 'response.dart';
       notFound(request);
     } else if (ex is InvalidDataException) {
       badRequest(ex.errors, request);
+    } else if (ex is IndexingFailedException) {
+      serverError(ex.message, request);
     } else {
       serverError("unknown error ${ex}", request);
     }

@@ -36,19 +36,19 @@ class ESStore<T extends ESDocument> {
       .postUrl(Uri.parse(_indexUri(doc.eventId)))
       .then((req) => withBody(req, jsonEncode(doc)))
       .then((resp) => decode(resp, _indexResDecoder))
-      .then((ir) => ir.result != created ? throw SaveFailedException() : ir);
+      .then((ir) => ir.result != created ? throw IndexingFailedException("Cannot index ${doc.eventId} ${ir.result}") : ir);
 
   Future<UpdateResult> update(T doc) => _client
       .postUrl(Uri.parse(_updateUri(doc.eventId)))
       .then((req) => withBody(req, jsonEncode(UpdateDoc(doc))))
       .then((resp) => decode(resp, _updateResDecoder))
-      .then((ur) => ur.result != updated ? throw UpdateFailedException() : ur);
+      .then((ur) => ur.result != updated ? throw DocUpdateFailedException() : ur);
 
   Future<GetResult> get(String id) => _client
       .getUrl(Uri.parse(_getUri(id)))
       .then((req) => req.close())
       .then((resp) => decode(resp, _getResDecoder))
-      .then((gr) => !gr.found ? throw FindFailedException() : gr);
+      .then((gr) => !gr.found ? throw DocFindFailedException() : gr);
 
   Future<DeleteResult> delete(String id) => _client
       .deleteUrl(Uri.parse(_deleteUri(id)))

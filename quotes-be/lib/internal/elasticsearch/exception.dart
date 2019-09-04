@@ -1,5 +1,12 @@
-class SaveFailedException implements Exception {}
+class IndexingFailedException implements Exception {
 
-class UpdateFailedException implements Exception {}
+  String _msg;
 
-class FindFailedException implements Exception {}
+  IndexingFailedException(this._msg);
+
+  String get message => this._msg;
+}
+
+class DocUpdateFailedException implements Exception {}
+
+class DocFindFailedException implements Exception {}

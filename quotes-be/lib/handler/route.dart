@@ -6,8 +6,6 @@ import 'handler.dart';
 import 'common/form.dart';
 
 
-
-
 class RouteV2 {
   static final Logger logger = Logger('Route');
 
@@ -15,12 +13,12 @@ class RouteV2 {
 
   String _url, _method;
   RegExp _exp;
-  HandlerV2<HttpRequest, PathParams, UrlParams> _handler;
+  HandlerV2 _handler;
 
   Map<String, int> _pathParamsDesc;
 
   RouteV2(this._url, this._method, this._handler) {
-    logger.info("New handler created. Method: $_method, url: $_url");
+    logger.info("New Route created. Method: $_method, url: $_url");
 
     var urlPatterns = _url.split("/").map((e) => _isPathParam(e) ? paramPattern : e).join("/") + r"[/]?$";
 
@@ -34,13 +32,8 @@ class RouteV2 {
 
   bool _isPathParam(String elem) => elem.startsWith("{") && elem.endsWith("}");
 
-  bool canHandle(String uri, String method) {
-    if (method != this._method) {
-      return false;
-    }
-    return _exp.hasMatch(uri);
-  }
-
+  bool canHandle(String uri, String method) => method == this._method && _exp.hasMatch(uri);
+ 
   void handle(HttpRequest request) {
     logger.info("New request. Method: ${request.method}, url: ${request.requestedUri}");
     var segments = request.requestedUri.pathSegments;

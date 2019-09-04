@@ -7,9 +7,11 @@ import '../domain/author/model.dart';
 import '../domain/author/service.dart';
 import 'common/form.dart';
 import 'author/form.dart';
+import 'author/params.dart';
 import 'form.dart';
 import 'response.dart';
 import 'error_handler.dart';
+
 
 class AuthorHandler {
   static final Logger logger = Logger('AuthorHandler');
@@ -18,8 +20,14 @@ class AuthorHandler {
 
   AuthorHandler(this._authorService) : super();
 
-  void persist(HttpRequest request, PathParams pathParams, UrlParams urlParams) =>
+  void find(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
+      Future.value(AuthorIdParams(pathParams.getString("authorId")))
+          .then((params) => params.validate())
+          .then((params) => _authorService.find(params.authorId))
+          .then((a) => ok(a, req))
+          .catchError((e) => handleErrors(e, req));
 
+  void persist(HttpRequest request, PathParams pathParams, UrlParams urlParams) =>
     parseForm(request, AuthorFormParser(false, false))
            .then(createAuthor)
            .then(_authorService.save)
