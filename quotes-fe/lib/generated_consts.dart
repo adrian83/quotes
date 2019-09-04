@@ -1,1 +1,1 @@
-const backendHost = "backend:5050";
+const backendHost = "http://localhost:5050";
