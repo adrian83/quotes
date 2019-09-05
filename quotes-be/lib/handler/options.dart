@@ -7,7 +7,8 @@ import 'response.dart';
 class OptionsHandler extends Handler {
   OptionsHandler() : super();
 
-  void execute(HttpRequest request, PathParams pathParams, UrlParams urlParams) async {
+  void execute(
+      HttpRequest request, PathParams pathParams, UrlParams urlParams) async {
     ok(null, request);
   }
 }

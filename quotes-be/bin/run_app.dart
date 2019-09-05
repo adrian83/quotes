@@ -16,13 +16,7 @@ import '../lib/handler/quote/get_quote.dart';
 import '../lib/handler/quote/list_events.dart';
 import '../lib/handler/quote/find_quotes.dart';
 
-import '../lib/handler/author/find_authors.dart';
-import '../lib/handler/author/add_author.dart';
-import '../lib/handler/author/update_author.dart';
-import '../lib/handler/author/get_author.dart';
-import '../lib/handler/author/delete_author.dart';
-import '../lib/handler/author/list_events.dart';
-import '../lib/handler/author.dart';
+import '../lib/handler/author/author.dart';
 
 import '../lib/handler/book/list_books.dart';
 import '../lib/handler/book/add_book.dart';
@@ -60,22 +54,17 @@ Future main(List<String> args) async {
   var eventRepositories = await createEventRepositories(config.elasticsearch);
   var services = createServices(repositories, eventRepositories);
 
-  var router = createRouter(services.authorService, services.bookService, services.quoteService);
+  var router = createRouter(
+      services.authorService, services.bookService, services.quoteService);
 
   var server = Server(config.server, router);
   server.start();
 }
 
-Router createRouter(AuthorService authorService, BookService bookService, QuoteService quoteService) {
+Router createRouter(AuthorService authorService, BookService bookService,
+    QuoteService quoteService) {
   var notFoundHandler = NotFoundHandler();
   var optionsHandler = OptionsHandler();
-
-  var addAuthorHandler = AddAuthorHandler(authorService);
-  var findAuthorsHandler = FindAuthorsHandler(authorService);
-  var getAuthorHandler = GetAuthorHandler(authorService);
-  var updateAuthorHandler = UpdateAuthorHandler(authorService);
-  var deleteAuthorHandler = DeleteAuthorHandler(authorService);
-  var authorEventsHandler = AuthorEventsHandler(authorService);
 
   var addBookHandler = AddBookHandler(bookService);
   var listBooksHandler = ListBooksHandler(bookService);
@@ -102,30 +91,41 @@ Router createRouter(AuthorService authorService, BookService bookService, QuoteS
 
   router.registerRoute(r"/{anything}", "OPTIONS", optionsHandler);
 
-  //router.registerRoute(r"/authors", "POST", addAuthorHandler);
-  //router.registerRoute(r"/authors/{authorId}", "GET", getAuthorHandler);
-  router.registerRoute(r"/authors/{authorId}", "PUT", updateAuthorHandler);
-  router.registerRoute(r"/authors/{authorId}", "DELETE", deleteAuthorHandler);
-  router.registerRoute(r"/authors", "GET", findAuthorsHandler);
-  router.registerRoute(r"/authors/{authorId}/events", "GET", authorEventsHandler);
-
   router.registerRouteV2(r"/authors", "POST", authorHandler.persist);
   router.registerRouteV2(r"/authors/{authorId}", "GET", authorHandler.find);
+  router.registerRouteV2(r"/authors/{authorId}", "PUT", authorHandler.update);
+  router.registerRouteV2(
+      r"/authors/{authorId}", "DELETE", authorHandler.delete);
+  router.registerRouteV2(r"/authors", "GET", authorHandler.search);
+  router.registerRouteV2(
+      r"/authors/{authorId}/events", "GET", authorHandler.listEvents);
 
   router.registerRoute(r"/authors/{authorId}/books", "POST", addBookHandler);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}", "GET", getBookHandler);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}", "PUT", updateBookHandler);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}", "DELETE", deleteBookHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}", "GET", getBookHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}", "PUT", updateBookHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}", "DELETE", deleteBookHandler);
   router.registerRoute(r"/authors/{authorId}/books", "GET", listBooksHandler);
   router.registerRoute(r"/books", "GET", findBooksHandler);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/events", "GET", bookEventsHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}/events", "GET", bookEventsHandler);
 
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes", "POST", addQuoteHandler);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}", "GET", getQuoteHandler);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}", "PUT", updateQuoteHandler);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}", "DELETE", deleteQuoteHandler);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes", "GET", listQuotesHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}/quotes", "POST", addQuoteHandler);
+  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}",
+      "GET", getQuoteHandler);
+  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}",
+      "PUT", updateQuoteHandler);
+  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}",
+      "DELETE", deleteQuoteHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}/quotes", "GET", listQuotesHandler);
   router.registerRoute(r"/quotes", "GET", findQuotesHandler);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}/events", "GET", quoteEventsHandler);
+  router.registerRoute(
+      r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}/events",
+      "GET",
+      quoteEventsHandler);
   return router;
 }

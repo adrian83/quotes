@@ -15,7 +15,8 @@ class DeleteBookHandler extends Handler {
   DeleteBookHandler(this._bookService) : super();
 
   void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
-      Future.value(BookIdParams(pathParams.getString("authorId"), pathParams.getString("bookId")))
+      Future.value(BookIdParams(
+              pathParams.getString("authorId"), pathParams.getString("bookId")))
           .then((params) => params.validate())
           .then((params) => _bookService.delete(params.bookId))
           .then((_) => ok(null, req))

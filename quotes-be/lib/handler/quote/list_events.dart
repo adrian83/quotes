@@ -14,15 +14,19 @@ class QuoteEventsHandler extends Handler {
 
   QuoteEventsHandler(this._quoteService) : super();
 
-  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) => Future.value(ListByQuoteParams(
-          pathParams.getString("authorId"),
-          pathParams.getString("bookId"),
-          pathParams.getString("quoteId"),
-          urlParams.getIntOrElse("limit", 2),
-          urlParams.getIntOrElse("offset", 0)))
-      .then((params) => params.validate())
-      .then((params) => _quoteService.listEvents(
-          params.authorId, params.bookId, params.quoteId, PageRequest(params.limit, params.offset)))
-      .then((events) => ok(events, req))
-      .catchError((e) => handleErrors(e, req));
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
+      Future.value(ListByQuoteParams(
+              pathParams.getString("authorId"),
+              pathParams.getString("bookId"),
+              pathParams.getString("quoteId"),
+              urlParams.getIntOrElse("limit", 2),
+              urlParams.getIntOrElse("offset", 0)))
+          .then((params) => params.validate())
+          .then((params) => _quoteService.listEvents(
+              params.authorId,
+              params.bookId,
+              params.quoteId,
+              PageRequest(params.limit, params.offset)))
+          .then((events) => ok(events, req))
+          .catchError((e) => handleErrors(e, req));
 }

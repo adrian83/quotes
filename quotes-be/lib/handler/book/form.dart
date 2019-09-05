@@ -36,7 +36,8 @@ class BookFormParser extends FormParser<BookForm> {
     if (title == null || title.isEmpty) {
       errors.add(ParsingError("title", "Title cannot be empty"));
     } else if (title.length < minTitleLen || title.length > maxTitleLen) {
-      errors.add(ParsingError("title", "Title length should be between $minTitleLen and $maxTitleLen"));
+      errors.add(ParsingError("title",
+          "Title length should be between $minTitleLen and $maxTitleLen"));
     }
 
     Object descriptionObj = rawForm["description"];
@@ -44,20 +45,23 @@ class BookFormParser extends FormParser<BookForm> {
     if (description == null || description.isEmpty) {
       errors.add(ParsingError("description", "Description cannot be empty"));
     } else if (title.length < minTitleLen || title.length > maxTitleLen) {
-      errors.add(ParsingError(
-          "description", "Description length should be between $minDescriptionLen and $maxDescriptionLen"));
+      errors.add(ParsingError("description",
+          "Description length should be between $minDescriptionLen and $maxDescriptionLen"));
     }
 
     Object modificationDateObj = rawForm["modifiedUtc"];
-    DateTime modifiedUtc = parseDate(modificationDateObj, _modificationDateRequired, errors);
+    DateTime modifiedUtc =
+        parseDate(modificationDateObj, _modificationDateRequired, errors);
 
     Object creationDateObj = rawForm["createdUtc"];
-    DateTime createdUtc = parseDate(creationDateObj, _creationDateRequired, errors);
+    DateTime createdUtc =
+        parseDate(creationDateObj, _creationDateRequired, errors);
 
     if (errors.length > 0) {
       throw InvalidDataException(errors);
     }
 
-    return BookForm(titleObj.toString(), descriptionObj.toString(), modifiedUtc, createdUtc);
+    return BookForm(titleObj.toString(), descriptionObj.toString(), modifiedUtc,
+        createdUtc);
   }
 }

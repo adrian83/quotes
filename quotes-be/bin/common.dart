@@ -60,7 +60,6 @@ class EventRepositories {
 
 Future<EventRepositories> createEventRepositories(
     ElasticsearchConfig config) async {
-      
   HttpClient client = HttpClient();
 
   var host = config.host;

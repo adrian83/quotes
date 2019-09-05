@@ -9,19 +9,10 @@ import 'common/exception.dart';
 import 'common/form.dart';
 import 'response.dart';
 
-
 abstract class Handler {
   static final Logger logger = Logger('Handler');
 
-  
-
   Handler();
 
-  DateTime nowUtc() => DateTime.now().toUtc();
-
-
-
-
   void execute(HttpRequest request, PathParams pathParams, UrlParams urlParams);
-
 }

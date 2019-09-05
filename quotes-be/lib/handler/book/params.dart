@@ -30,7 +30,8 @@ class BookIdParams extends AuthorIdParams {
 class ListByBookValidParams extends ListByAuthorValidParams {
   String _bookId;
 
-  ListByBookValidParams(String authorId, this._bookId, int limit, int offset) : super(authorId, limit, offset);
+  ListByBookValidParams(String authorId, this._bookId, int limit, int offset)
+      : super(authorId, limit, offset);
 
   String get bookId => _bookId;
 }
@@ -38,7 +39,8 @@ class ListByBookValidParams extends ListByAuthorValidParams {
 class ListByBookParams extends ListByAuthorParams {
   ParseElem<String> _bookId;
 
-  ListByBookParams(ParseElem<String> authorId, this._bookId, ParseElem<int> limit, ParseElem<int> offset)
+  ListByBookParams(ParseElem<String> authorId, this._bookId,
+      ParseElem<int> limit, ParseElem<int> offset)
       : super(authorId, limit, offset);
 
   ListByBookValidParams validate() {
@@ -47,7 +49,8 @@ class ListByBookParams extends ListByAuthorParams {
     if (errors.length > 0) {
       throw InvalidDataException(errors);
     }
-    return ListByBookValidParams(authorId.value, _bookId.value, limit.value, offset.value);
+    return ListByBookValidParams(
+        authorId.value, _bookId.value, limit.value, offset.value);
   }
 
   ParseElem<String> get bookId => _bookId;

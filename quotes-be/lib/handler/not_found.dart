@@ -11,7 +11,8 @@ class NotFoundHandler extends Handler {
 
   NotFoundHandler() : super(); //r"/{anything}", null);
 
-  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) async {
+  void execute(
+      HttpRequest req, PathParams pathParams, UrlParams urlParams) async {
     logger.info("Not found. Method: ${req.method}, url: ${req.requestedUri}");
     notFound(req);
   }

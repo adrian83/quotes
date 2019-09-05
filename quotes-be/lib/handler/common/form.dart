@@ -41,7 +41,9 @@ abstract class FormParser<F> {
   // todo introduce Either or Tuple2
   DateTime parseDate(Object dateObj, bool required, List<ParsingError> errors) {
     print("DATE $dateObj");
-    String dateStr = (dateObj != null && dateObj.toString().trim().length > 0) ? dateObj.toString().trim() : null;
+    String dateStr = (dateObj != null && dateObj.toString().trim().length > 0)
+        ? dateObj.toString().trim()
+        : null;
 
     DateTime date = null;
     if (required && dateStr == null) {
@@ -117,8 +119,10 @@ class PathParams {
   Map<String, String> _params;
 
   PathParams(List<String> segments, Map<String, int> desc) {
-    var entries =
-        desc.entries.where((e) => e.value < segments.length).map((e) => MapEntry(e.key, segments[e.value])).toList();
+    var entries = desc.entries
+        .where((e) => e.value < segments.length)
+        .map((e) => MapEntry(e.key, segments[e.value]))
+        .toList();
     _params = Map<String, String>.fromEntries(entries);
   }
 

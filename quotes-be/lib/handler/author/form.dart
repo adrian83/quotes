@@ -5,7 +5,8 @@ class AuthorForm {
   String _name, _description;
   DateTime _modifiedUtc, _createdUtc;
 
-  AuthorForm(this._name, this._description, this._modifiedUtc, this._createdUtc);
+  AuthorForm(
+      this._name, this._description, this._modifiedUtc, this._createdUtc);
 
   String get name => _name;
   String get description => _description;
@@ -24,7 +25,8 @@ class AuthorFormParser extends FormParser<AuthorForm> {
   static final int minNameLen = 1, maxNameLen = 200;
   static final nameLabel = "name";
   static final emptyNameMsg = "Name cannot be empty";
-  static final invalidNameMsg = "Name length should be between $minNameLen and $maxNameLen";
+  static final invalidNameMsg =
+      "Name length should be between $minNameLen and $maxNameLen";
 
   static final emptyNameError = ParsingError(nameLabel, emptyNameMsg);
   static final invalidNameError = ParsingError(nameLabel, invalidNameMsg);
@@ -32,10 +34,13 @@ class AuthorFormParser extends FormParser<AuthorForm> {
   static final int minDescriptionLen = 1, maxDescriptionLen = 5000;
   static final descriptionLabel = "description";
   static final emptyDescriptionMsg = "Description cannot be empty";
-  static final invalidDescriptionMsg = "Description length should be between $minDescriptionLen and $maxDescriptionLen";
+  static final invalidDescriptionMsg =
+      "Description length should be between $minDescriptionLen and $maxDescriptionLen";
 
-  static final emptyDescriptionError = ParsingError(descriptionLabel, emptyDescriptionMsg);
-  static final invalidDescriptionError = ParsingError(descriptionLabel, invalidDescriptionMsg);
+  static final emptyDescriptionError =
+      ParsingError(descriptionLabel, emptyDescriptionMsg);
+  static final invalidDescriptionError =
+      ParsingError(descriptionLabel, invalidDescriptionMsg);
 
   bool _modificationDateRequired, _creationDateRequired;
 
@@ -44,7 +49,8 @@ class AuthorFormParser extends FormParser<AuthorForm> {
   bool empty(String str) => str == null || str.length == 0;
   bool shorter(String str, int limit) => str.length < limit;
   bool longer(String str, int limit) => str.length > limit;
-  bool lenNotIn(String str, int min, int max) => shorter(str, min) || longer(str, max);
+  bool lenNotIn(String str, int min, int max) =>
+      shorter(str, min) || longer(str, max);
 
   ParsingError first(List<Function> funcs) {
     for (var f in funcs) {
@@ -66,16 +72,21 @@ class AuthorFormParser extends FormParser<AuthorForm> {
     String description = getString(descriptionLabel, rawForm);
     var descErr = first([
       () => empty(description) ? emptyDescriptionError : null,
-      () => lenNotIn(description, minDescriptionLen, maxDescriptionLen) ? invalidDescriptionError : null
+      () => lenNotIn(description, minDescriptionLen, maxDescriptionLen)
+          ? invalidDescriptionError
+          : null
     ]);
 
-    List<ParsingError> errors = [nameErr, descErr]..removeWhere((err) => err == null);
+    List<ParsingError> errors = [nameErr, descErr]
+      ..removeWhere((err) => err == null);
 
     Object modificationDateObj = rawForm["modifiedUtc"];
-    DateTime modifiedUtc = parseDate(modificationDateObj, _modificationDateRequired, errors);
+    DateTime modifiedUtc =
+        parseDate(modificationDateObj, _modificationDateRequired, errors);
 
     Object creationDateObj = rawForm["createdUtc"];
-    DateTime createdUtc = parseDate(creationDateObj, _creationDateRequired, errors);
+    DateTime createdUtc =
+        parseDate(creationDateObj, _creationDateRequired, errors);
 
     if (errors.length > 0) {
       throw InvalidDataException(errors);

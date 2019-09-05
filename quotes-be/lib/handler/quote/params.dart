@@ -5,7 +5,8 @@ import '../book/params.dart';
 class QuoteIdValidParams extends BookIdValidParams {
   String _quoteId;
 
-  QuoteIdValidParams(String authorId, String bookId, this._quoteId) : super(authorId, bookId);
+  QuoteIdValidParams(String authorId, String bookId, this._quoteId)
+      : super(authorId, bookId);
 
   String get quoteId => _quoteId;
 }
@@ -13,7 +14,9 @@ class QuoteIdValidParams extends BookIdValidParams {
 class QuoteIdParams extends BookIdParams {
   ParseElem<String> _quoteId;
 
-  QuoteIdParams(ParseElem<String> authorId, ParseElem<String> bookId, this._quoteId) : super(authorId, bookId);
+  QuoteIdParams(
+      ParseElem<String> authorId, ParseElem<String> bookId, this._quoteId)
+      : super(authorId, bookId);
 
   QuoteIdValidParams validate() {
     var fields = [authorId, bookId, _quoteId];
@@ -28,7 +31,8 @@ class QuoteIdParams extends BookIdParams {
 class ListByQuoteValidParams extends ListByBookValidParams {
   String _quoteId;
 
-  ListByQuoteValidParams(String authorId, String bookId, this._quoteId, int limit, int offset)
+  ListByQuoteValidParams(
+      String authorId, String bookId, this._quoteId, int limit, int offset)
       : super(authorId, bookId, limit, offset);
 
   String get quoteId => _quoteId;
@@ -37,8 +41,8 @@ class ListByQuoteValidParams extends ListByBookValidParams {
 class ListByQuoteParams extends ListByBookParams {
   ParseElem<String> _quoteId;
 
-  ListByQuoteParams(
-      ParseElem<String> authorId, ParseElem<String> bookId, this._quoteId, ParseElem<int> limit, ParseElem<int> offset)
+  ListByQuoteParams(ParseElem<String> authorId, ParseElem<String> bookId,
+      this._quoteId, ParseElem<int> limit, ParseElem<int> offset)
       : super(authorId, bookId, limit, offset);
 
   ListByQuoteValidParams validate() {
@@ -47,6 +51,7 @@ class ListByQuoteParams extends ListByBookParams {
     if (errors.length > 0) {
       throw InvalidDataException(errors);
     }
-    return ListByQuoteValidParams(authorId.value, bookId.value, _quoteId.value, limit.value, offset.value);
+    return ListByQuoteValidParams(authorId.value, bookId.value, _quoteId.value,
+        limit.value, offset.value);
   }
 }

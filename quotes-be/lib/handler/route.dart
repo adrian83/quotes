@@ -5,7 +5,6 @@ import 'package:logging/logging.dart';
 import 'handler.dart';
 import 'common/form.dart';
 
-
 class RouteV2 {
   static final Logger logger = Logger('Route');
 
@@ -20,22 +19,29 @@ class RouteV2 {
   RouteV2(this._url, this._method, this._handler) {
     logger.info("New Route created. Method: $_method, url: $_url");
 
-    var urlPatterns = _url.split("/").map((e) => _isPathParam(e) ? paramPattern : e).join("/") + r"[/]?$";
+    var urlPatterns = _url
+            .split("/")
+            .map((e) => _isPathParam(e) ? paramPattern : e)
+            .join("/") +
+        r"[/]?$";
 
     _exp = RegExp(urlPatterns);
 
     _pathParamsDesc = _url.split("/").asMap().map((i, e) => MapEntry(e, i - 1))
       ..removeWhere((e, i) => !_isPathParam(e));
 
-    _pathParamsDesc = _pathParamsDesc.map((e, i) => MapEntry(e.substring(1, e.length - 1), i));
+    _pathParamsDesc = _pathParamsDesc
+        .map((e, i) => MapEntry(e.substring(1, e.length - 1), i));
   }
 
   bool _isPathParam(String elem) => elem.startsWith("{") && elem.endsWith("}");
 
-  bool canHandle(String uri, String method) => method == this._method && _exp.hasMatch(uri);
- 
+  bool canHandle(String uri, String method) =>
+      method == this._method && _exp.hasMatch(uri);
+
   void handle(HttpRequest request) {
-    logger.info("New request. Method: ${request.method}, url: ${request.requestedUri}");
+    logger.info(
+        "New request. Method: ${request.method}, url: ${request.requestedUri}");
     var segments = request.requestedUri.pathSegments;
     var pathParams = PathParams(segments, _pathParamsDesc);
     var urlParams = UrlParams(request.requestedUri.queryParameters);

@@ -1,5 +1,4 @@
 class IndexingFailedException implements Exception {
-
   String _msg;
 
   IndexingFailedException(this._msg);

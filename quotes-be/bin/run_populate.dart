@@ -38,17 +38,20 @@ var book1 = Book(null, "Hamlet", book1Desc, author1.id, utcNow(), utcNow());
 var book2Desc =
     """[From Wikipedia] Macbeth (Medieval Gaelic: Mac Bethad mac Findlaích; Modern Gaelic: MacBheatha mac Fhionnlaigh; nicknamed Rí Deircc, "the Red King"; c. 1005 – 15 August 1057) was King of Scots from 1040 until his death. He was titled King of Alba during his life, and ruled over only a portion of present-day Scotland.""";
 
-var book2 = Book(null, "Macbeth, King of Scotland", book2Desc, author1.id, utcNow(), utcNow());
+var book2 = Book(null, "Macbeth, King of Scotland", book2Desc, author1.id,
+    utcNow(), utcNow());
 
 var book3Desc =
     """[From Wikipedia] The Tempest is a play by William Shakespeare, believed to have been written in 1610–1611, and thought by many critics to be the last play that Shakespeare wrote alone. It is set on a remote island, where the sorcerer Prospero, rightful Duke of Milan, plots to restore his daughter Miranda to her rightful place using illusion and skillful manipulation. He conjures up a storm, the eponymous tempest, to cause his usurping brother Antonio and the complicit King Alonso of Naples to believe they are shipwrecked and marooned on the island. There, his machinations bring about the revelation of Antonio's lowly nature, the redemption of the King, and the marriage of Miranda to Alonso's son, Ferdinand.""";
 
-var book3 = Book(null, "The Tempest", book3Desc, author1.id, utcNow(), utcNow());
+var book3 =
+    Book(null, "The Tempest", book3Desc, author1.id, utcNow(), utcNow());
 
 var book4Desc =
     """[From Wikipedia] A Midsummer Night's Dream is a comedy written by William Shakespeare in 1595/96. It portrays the events surrounding the marriage of Theseus, the Duke of Athens, to Hippolyta (the former queen of the Amazons). These include the adventures of four young Athenian lovers and a group of six amateur actors (the mechanicals) who are controlled and manipulated by the fairies who inhabit the forest in which most of the play is set. The play is one of Shakespeare's most popular works for the stage and is widely performed across the world.""";
 
-var book4 = Book(null, "A Midsummer Night's Dream", book4Desc, author1.id, utcNow(), utcNow());
+var book4 = Book(null, "A Midsummer Night's Dream", book4Desc, author1.id,
+    utcNow(), utcNow());
 
 var quote1Text = """Where the bee sucks, there suck I;
 In a cowslip's bell I lie;

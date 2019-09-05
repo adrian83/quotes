@@ -18,8 +18,11 @@ class Entity implements Jsonable {
     _modifiedUtc = md;
   }
 
-  Map toJson() =>
-      {"id": _id, "createdUtc": _createdUtc.toIso8601String(), "modifiedUtc": _modifiedUtc.toIso8601String()};
+  Map toJson() => {
+        "id": _id,
+        "createdUtc": _createdUtc.toIso8601String(),
+        "modifiedUtc": _modifiedUtc.toIso8601String()
+      };
 }
 
 class PageRequest {

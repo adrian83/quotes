@@ -17,15 +17,23 @@ class AuthorService {
   QuoteRepository _quoteRepository;
   QuoteEventRepository _quoteEventRepository;
 
-  AuthorService(this._authorRepository, this._authorEventRepository, this._bookRepository, this._bookEventRepository,
-      this._quoteRepository, this._quoteEventRepository);
+  AuthorService(
+      this._authorRepository,
+      this._authorEventRepository,
+      this._bookRepository,
+      this._bookEventRepository,
+      this._quoteRepository,
+      this._quoteEventRepository);
 
-  Future<Author> save(Author author) => _authorRepository.save(author).then((_) => _authorEventRepository.save(author));
+  Future<Author> save(Author author) => _authorRepository
+      .save(author)
+      .then((_) => _authorEventRepository.save(author));
 
   Future<Author> find(String authorId) => _authorRepository.find(authorId);
 
-  Future<Author> update(Author author) =>
-      _authorRepository.update(author).then((_) => _authorEventRepository.update(author));
+  Future<Author> update(Author author) => _authorRepository
+      .update(author)
+      .then((_) => _authorEventRepository.update(author));
 
   Future<void> delete(String authorId) => _authorRepository
       .delete(authorId)

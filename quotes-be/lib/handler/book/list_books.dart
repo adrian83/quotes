@@ -14,10 +14,14 @@ class ListBooksHandler extends Handler {
 
   ListBooksHandler(this._bookService) : super();
 
-  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) => Future.value(ListByAuthorParams(
-          pathParams.getString("authorId"), urlParams.getIntOrElse("limit", 2), urlParams.getIntOrElse("offset", 0)))
-      .then((params) => params.validate())
-      .then((params) => _bookService.findAuthorBooks(params.authorId, PageRequest(params.limit, params.offset)))
-      .then((books) => ok(books, req))
-      .catchError((e) => handleErrors(e, req));
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
+      Future.value(ListByAuthorParams(
+              pathParams.getString("authorId"),
+              urlParams.getIntOrElse("limit", 2),
+              urlParams.getIntOrElse("offset", 0)))
+          .then((params) => params.validate())
+          .then((params) => _bookService.findAuthorBooks(
+              params.authorId, PageRequest(params.limit, params.offset)))
+          .then((books) => ok(books, req))
+          .catchError((e) => handleErrors(e, req));
 }

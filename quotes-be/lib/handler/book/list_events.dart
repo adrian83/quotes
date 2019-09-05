@@ -14,14 +14,15 @@ class BookEventsHandler extends Handler {
 
   BookEventsHandler(this._bookService) : super();
 
-  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) => Future.value(ListByBookParams(
-          pathParams.getString("authorId"),
-          pathParams.getString("bookId"),
-          urlParams.getIntOrElse("limit", 2),
-          urlParams.getIntOrElse("offset", 0)))
-      .then((params) => params.validate())
-      .then(
-          (params) => _bookService.listEvents(params.authorId, params.bookId, PageRequest(params.limit, params.offset)))
-      .then((authors) => ok(authors, req))
-      .catchError((e) => handleErrors(e, req));
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
+      Future.value(ListByBookParams(
+              pathParams.getString("authorId"),
+              pathParams.getString("bookId"),
+              urlParams.getIntOrElse("limit", 2),
+              urlParams.getIntOrElse("offset", 0)))
+          .then((params) => params.validate())
+          .then((params) => _bookService.listEvents(params.authorId,
+              params.bookId, PageRequest(params.limit, params.offset)))
+          .then((authors) => ok(authors, req))
+          .catchError((e) => handleErrors(e, req));
 }

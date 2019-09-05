@@ -13,10 +13,11 @@ class DeleteQuoteHandler extends Handler {
 
   DeleteQuoteHandler(this._quoteService) : super();
 
-  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) => Future.value(QuoteIdParams(
-          pathParams.getString("authorId"), pathParams.getString("bookId"), pathParams.getString("quoteId")))
-      .then((params) => params.validate())
-      .then((params) => _quoteService.delete(params.quoteId))
-      .then((_) => ok(null, req))
-      .catchError((e) => handleErrors(e, req));
+  void execute(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
+      Future.value(QuoteIdParams(pathParams.getString("authorId"),
+              pathParams.getString("bookId"), pathParams.getString("quoteId")))
+          .then((params) => params.validate())
+          .then((params) => _quoteService.delete(params.quoteId))
+          .then((_) => ok(null, req))
+          .catchError((e) => handleErrors(e, req));
 }

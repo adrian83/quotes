@@ -31,7 +31,8 @@ class PageParams {
 class SearchValidParams extends PageValidParams {
   String _searchPhrase;
 
-  SearchValidParams(this._searchPhrase, int limit, int offset) : super(limit, offset);
+  SearchValidParams(this._searchPhrase, int limit, int offset)
+      : super(limit, offset);
 
   String get searchPhrase => _searchPhrase;
 }
@@ -39,7 +40,8 @@ class SearchValidParams extends PageValidParams {
 class SearchParams extends PageParams {
   ParseElem<String> _searchPhrase;
 
-  SearchParams(this._searchPhrase, ParseElem<int> limit, ParseElem<int> offset) : super(limit, offset);
+  SearchParams(this._searchPhrase, ParseElem<int> limit, ParseElem<int> offset)
+      : super(limit, offset);
 
   SearchValidParams validate() {
     var fields = [_searchPhrase, _limit, _offset];
