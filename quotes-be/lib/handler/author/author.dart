@@ -21,7 +21,7 @@ class AuthorHandler {
 
   AuthorService _authorService;
 
-  AuthorHandler(this._authorService) : super();
+  AuthorHandler(this._authorService);
 
   void find(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       Future.value(AuthorIdParams(pathParams.getString("authorId")))

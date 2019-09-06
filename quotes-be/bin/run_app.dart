@@ -17,14 +17,7 @@ import '../lib/handler/quote/list_events.dart';
 import '../lib/handler/quote/find_quotes.dart';
 
 import '../lib/handler/author/author.dart';
-
-import '../lib/handler/book/list_books.dart';
-import '../lib/handler/book/add_book.dart';
-import '../lib/handler/book/delete_book.dart';
-import '../lib/handler/book/get_book.dart';
-import '../lib/handler/book/update_book.dart';
-import '../lib/handler/book/list_events.dart';
-import '../lib/handler/book/find_books.dart';
+import '../lib/handler/book/book.dart';
 
 import '../lib/domain/author/service.dart';
 import '../lib/domain/quote/service.dart';
@@ -66,13 +59,7 @@ Router createRouter(AuthorService authorService, BookService bookService,
   var notFoundHandler = NotFoundHandler();
   var optionsHandler = OptionsHandler();
 
-  var addBookHandler = AddBookHandler(bookService);
-  var listBooksHandler = ListBooksHandler(bookService);
-  var getBookHandler = GetBookHandler(bookService);
-  var updateBookHandler = UpdateBookHandler(bookService);
-  var deleteBookHandler = DeleteBookHandler(bookService);
-  var bookEventsHandler = BookEventsHandler(bookService);
-  var findBooksHandler = FindBooksHandler(bookService);
+
 
   var addQuoteHandler = AddQuoteHandler(quoteService);
   var listQuotesHandler = ListQuotesHandler(quoteService);
@@ -84,6 +71,7 @@ Router createRouter(AuthorService authorService, BookService bookService,
 
   // new
   var authorHandler = AuthorHandler(authorService);
+  var bookHandler = BookHandler(bookService);
 
   Router router = Router();
 
@@ -94,23 +82,18 @@ Router createRouter(AuthorService authorService, BookService bookService,
   router.registerRouteV2(r"/authors", "POST", authorHandler.persist);
   router.registerRouteV2(r"/authors/{authorId}", "GET", authorHandler.find);
   router.registerRouteV2(r"/authors/{authorId}", "PUT", authorHandler.update);
-  router.registerRouteV2(
-      r"/authors/{authorId}", "DELETE", authorHandler.delete);
+  router.registerRouteV2(r"/authors/{authorId}", "DELETE", authorHandler.delete);
   router.registerRouteV2(r"/authors", "GET", authorHandler.search);
-  router.registerRouteV2(
-      r"/authors/{authorId}/events", "GET", authorHandler.listEvents);
+  router.registerRouteV2(r"/authors/{authorId}/events", "GET", authorHandler.listEvents);
 
-  router.registerRoute(r"/authors/{authorId}/books", "POST", addBookHandler);
-  router.registerRoute(
-      r"/authors/{authorId}/books/{bookId}", "GET", getBookHandler);
-  router.registerRoute(
-      r"/authors/{authorId}/books/{bookId}", "PUT", updateBookHandler);
-  router.registerRoute(
-      r"/authors/{authorId}/books/{bookId}", "DELETE", deleteBookHandler);
-  router.registerRoute(r"/authors/{authorId}/books", "GET", listBooksHandler);
-  router.registerRoute(r"/books", "GET", findBooksHandler);
-  router.registerRoute(
-      r"/authors/{authorId}/books/{bookId}/events", "GET", bookEventsHandler);
+  router.registerRouteV2(r"/authors/{authorId}/books", "POST", bookHandler.persist);
+  router.registerRouteV2(r"/authors/{authorId}/books/{bookId}", "GET", bookHandler.find);
+  router.registerRouteV2(r"/authors/{authorId}/books/{bookId}", "PUT", bookHandler.update);
+  router.registerRouteV2(r"/authors/{authorId}/books/{bookId}", "DELETE", bookHandler.delete);
+  router.registerRouteV2(r"/authors/{authorId}/books", "GET", bookHandler.listByAuthor);
+  router.registerRouteV2(r"/books", "GET", bookHandler.search);
+  router.registerRouteV2(r"/authors/{authorId}/books/{bookId}/events", "GET", bookHandler.listEvents);
+
 
   router.registerRoute(
       r"/authors/{authorId}/books/{bookId}/quotes", "POST", addQuoteHandler);
