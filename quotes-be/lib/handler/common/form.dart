@@ -126,6 +126,8 @@ class PathParams {
     _params = Map<String, String>.fromEntries(entries);
   }
 
+  String getValue(String name) => _params[name];
+
   ParseElem<String> getString(String name) {
     var obj = _params[name];
     if (obj == null) {

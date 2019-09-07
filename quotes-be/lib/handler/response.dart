@@ -2,9 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:quotes/handler/author/params.dart';
+
 import '../domain/common/exception.dart';
 import 'common/exception.dart';
 import 'common/form.dart';
+
+import 'param.dart';
 
 ContentType jsonHeader = ContentType("application", "json", charset: "utf-8");
 
@@ -17,6 +21,10 @@ void notFound(HttpRequest request) {
 }
 
 void badRequest(List<ParsingError> errors, HttpRequest request) {
+  write(errors, HttpStatus.badRequest, request);
+}
+
+void badRequest2(List<Violation> errors, HttpRequest request) {
   write(errors, HttpStatus.badRequest, request);
 }
 

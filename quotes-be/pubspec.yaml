@@ -2,7 +2,7 @@ name: quotes
 description: simple crud app
 version: 0.0.1
 environment:
-  sdk: '>=2.2.0'
+  sdk: '>=2.2.3'
 dependencies:
   uuid: ^1.0.3
   postgres: ^1.0.2

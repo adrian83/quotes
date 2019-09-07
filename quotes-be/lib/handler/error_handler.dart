@@ -9,6 +9,7 @@ import 'common/exception.dart';
 import 'common/form.dart';
 import 'response.dart';
 import '../internal/elasticsearch/exception.dart';
+import './param.dart';
 
 void handleErrors(Object ex, HttpRequest request) {
   //logger.info("Error occured. Error: $ex");
@@ -22,6 +23,8 @@ void handleErrors(Object ex, HttpRequest request) {
     badRequest(ex.errors, request);
   } else if (ex is IndexingFailedException) {
     serverError(ex.message, request);
+  } else if (ex is InvalidInputException) {
+    badRequest2(ex.violation, request);
   } else {
     serverError("unknown error ${ex}", request);
   }

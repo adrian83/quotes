@@ -9,11 +9,14 @@ import '../common/params.dart';
 import '../error_handler.dart';
 import '../form.dart';
 import '../response.dart';
+import '../param.dart';
 import '../../common/time.dart';
 import '../../common/tuple.dart';
 import '../../domain/author/model.dart';
 import '../../domain/author/service.dart';
 import '../../domain/common/model.dart';
+
+var requiredAuthorId = ParamData("authorId", "authorId cannot be empty");
 
 
 class AuthorHandler {
@@ -23,13 +26,13 @@ class AuthorHandler {
 
   AuthorHandler(this._authorService);
 
-  void find(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
-      Future.value(AuthorIdParams(pathParams.getString("authorId")))
-          .then((params) => params.validate())
-          .then((params) => _authorService.find(params.authorId))
+  void find(HttpRequest req, PathParams pathParams, UrlParams urlParams) => 
+    Future.value(PathParam1(pathParams, notEmptyString, requiredAuthorId))
+          .then((param) => param.transform())
+          .then((box) => _authorService.find(box.e1))
           .then((a) => ok(a, req))
           .catchError((e) => handleErrors(e, req));
-
+  
   void persist(
           HttpRequest request, PathParams pathParams, UrlParams urlParams) =>
       parseForm(request, AuthorFormParser(false, false))
@@ -39,9 +42,9 @@ class AuthorHandler {
           .catchError((e) => handleErrors(e, request));
 
   void delete(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
-      Future.value(AuthorIdParams(pathParams.getString("authorId")))
-          .then((params) => params.validate())
-          .then((params) => _authorService.delete(params.authorId))
+    Future.value(PathParam1(pathParams, notEmptyString, requiredAuthorId))
+          .then((param) => param.transform())
+          .then((params) => _authorService.delete(params.e1))
           .then((_) => ok(null, req))
           .catchError((e) => handleErrors(e, req));
 
@@ -71,15 +74,15 @@ class AuthorHandler {
   void update(HttpRequest req, PathParams pathParams, UrlParams urlParams) =>
       parseForm(req, AuthorFormParser(true, true))
           .then((form) =>
-              Tuple2(form, AuthorIdParams(pathParams.getString("authorId"))))
-          .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.validate()))
+              Tuple2(form, PathParam1(pathParams, notEmptyString, requiredAuthorId)))
+          .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.transform()))
           .then((tuple2) => createAuthor(tuple2.e2, tuple2.e1))
           .then((author) => _authorService.update(author))
           .then((author) => ok(author, req))
           .catchError((e) => handleErrors(e, req));
 
-  Author createAuthor(AuthorIdValidParams params, AuthorForm form) => Author(
-      params.authorId, form.name, form.description, nowUtc(), form.createdUtc);
+  Author createAuthor(Tuple1<String> authorIdBox, AuthorForm form) => Author(
+      authorIdBox.e1, form.name, form.description, nowUtc(), form.createdUtc);
 
   Author formToAuthor(AuthorForm form) =>
       Author.create(form.name, form.description);

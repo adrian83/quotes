@@ -75,7 +75,8 @@ class AuthorRepository extends Repository<Author> {
   Map<String, Object> updateParams(Author author) => {
         nameParam: author.name,
         modifiedParam: author.modifiedUtc,
-        descParam: author.description
+        descParam: author.description,
+        idParam: author.id
       };
 
   Map<String, Object> insertParams(Author author) => {
