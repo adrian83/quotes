@@ -7,7 +7,7 @@ import 'params.dart';
 import '../author/params.dart';
 import '../common/form.dart';
 import '../common/params.dart';
-import '../error_handler.dart';
+import '../error.dart';
 import '../form.dart';
 import '../response.dart';
 import '../../common/time.dart';
@@ -31,7 +31,7 @@ class BookHandler {
           .then((form) =>
               Tuple2(form, AuthorIdParams(pathParams.getString("authorId"))))
           .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.validate()))
-          .then((tuple2) => formToAuthor(tuple2.e2, tuple2.e1))
+          .then((tuple2) => formToBook(tuple2.e2, tuple2.e1))
           .then((book) => _bookService.save(book))
           .then((book) => created(book, req))
           .catchError((e) => handleErrors(e, req));
@@ -106,7 +106,7 @@ class BookHandler {
       nowUtc(),
       form.createdUtc);
 
-  Book formToAuthor(AuthorIdValidParams params, BookForm form) => Book(
+  Book formToBook(AuthorIdValidParams params, BookForm form) => Book(
       null, form.title, form.description, params.authorId, nowUtc(), nowUtc());
 
 }

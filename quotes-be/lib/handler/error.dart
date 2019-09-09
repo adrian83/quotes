@@ -1,18 +1,13 @@
-import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 
-import 'package:logging/logging.dart';
-
-import '../domain/common/exception.dart';
-import 'common/exception.dart';
-import 'common/form.dart';
+import 'param.dart';
 import 'response.dart';
+import 'common/exception.dart';
+import '../domain/common/exception.dart';
 import '../internal/elasticsearch/exception.dart';
-import './param.dart';
+
 
 void handleErrors(Object ex, HttpRequest request) {
-  //logger.info("Error occured. Error: $ex");
   if (ex is SaveFailedException) {
     serverError("cannot save entity", request);
   } else if (ex is UpdateFailedException) {

@@ -78,9 +78,14 @@ class ParseElem<T> {
 }
 
 class UrlParams {
-  Map<String, String> params;
+  Map<String, String> params = {};
 
   UrlParams(this.params);
+
+  int get size => params.length;
+
+  String getValue(String name) => params[name];
+
 
   ParseElem<int> getIntOrElse(String name, int defaultVal) {
     var obj = params[name];
@@ -116,7 +121,9 @@ class UrlParams {
 }
 
 class PathParams {
-  Map<String, String> _params;
+  Map<String, String> _params = {};
+
+  int get size => _params.length;
 
   PathParams(List<String> segments, Map<String, int> desc) {
     var entries = desc.entries
