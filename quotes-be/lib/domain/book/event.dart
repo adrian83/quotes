@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:uuid/uuid.dart';
 
-import '../../internal/elasticsearch/document.dart';
-import '../../internal/elasticsearch/search.dart';
-import '../../internal/elasticsearch/store.dart';
+import '../../infrastructure/elasticsearch/document.dart';
+import '../../infrastructure/elasticsearch/search.dart';
+import '../../infrastructure/elasticsearch/store.dart';
 import '../common/event.dart';
 import '../common/model.dart';
 import 'model.dart';

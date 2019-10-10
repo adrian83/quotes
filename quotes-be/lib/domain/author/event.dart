@@ -2,18 +2,15 @@ import 'dart:async';
 
 import 'package:uuid/uuid.dart';
 
-import '../../internal/elasticsearch/search.dart';
-import '../../internal/elasticsearch/store.dart';
+import '../../infrastructure/elasticsearch/search.dart';
+import '../../infrastructure/elasticsearch/store.dart';
 import '../common/event.dart';
-import '../common/model.dart';
+import '../common/model.dart'; 
 import 'model.dart';
 
-DocumentDecoder<AuthorEvent> eventDecoder =
-    (Map<String, dynamic> json) => AuthorEvent.fromJson(json);
-DocumentDecoder<Author> decoder =
-    (Map<String, dynamic> json) => Author.fromJson(json);
-DocumentCreator<AuthorEvent, Author> eventCreator =
-    (Author author) => AuthorEvent.created(Uuid().v4(), author);
+var eventDecoder = (Map<String, dynamic> json) => AuthorEvent.fromJson(json);
+var decoder = (Map<String, dynamic> json) => Author.fromJson(json);
+var eventCreator = (Author author) => AuthorEvent.created(Uuid().v4(), author);
 DocumentModifier<AuthorEvent, Author> eventModifier =
     (Author author) => AuthorEvent.modified(Uuid().v4(), author);
 DocumentDeleter<AuthorEvent, Author> eventDeleter =

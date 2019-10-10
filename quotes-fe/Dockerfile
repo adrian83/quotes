@@ -36,7 +36,7 @@ RUN cd $HOME/.pub-cache/bin/ && pwd
 
 
 RUN pub get
-RUN pub run build_runner build
+RUN pub run build_runner build --delete-conflicting-outputs
 
 EXPOSE 8080
 CMD ["/root/.pub-cache/bin/webdev", "serve", "--hostname", "0.0.0.0"]

@@ -22,7 +22,7 @@ import '../lib/domain/book/service.dart';
 
 import '../lib/config/config.dart';
 
-import '../lib/internal/elasticsearch/store.dart';
+import '../lib/infrastructure/elasticsearch/store.dart';
 
 class Repositories {
   AuthorRepository _authorRepository;

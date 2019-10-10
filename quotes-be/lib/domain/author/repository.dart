@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:postgres/postgres.dart';
-import 'package:uuid/uuid.dart';
 
 import '../common/model.dart';
 import '../common/repository.dart';

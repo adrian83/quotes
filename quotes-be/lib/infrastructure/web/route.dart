@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:logging/logging.dart';
 
 import 'handler.dart';
-import 'common/form.dart';
+import 'param.dart';
 
 class Route {
   static final Logger logger = Logger('Route');
@@ -46,6 +46,8 @@ class Route {
     var segments = request.requestedUri.pathSegments;
     var pathParams = PathParams(segments, _pathParamsDesc);
     var urlParams = UrlParams(request.requestedUri.queryParameters);
-    _handler(request, pathParams, urlParams);
+    var params = Params(pathParams, urlParams);
+    _handler(request, params);
   }
+
 }

@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-import '../../internal/elasticsearch/document.dart';
+import '../../infrastructure/elasticsearch/document.dart';
 import '../common/model.dart';
 
 class Book extends Entity {
@@ -10,7 +10,10 @@ class Book extends Entity {
       DateTime modifiedUtc, DateTime createdUtc)
       : super(id, modifiedUtc, createdUtc);
 
-  Book.create(String id, this._title, this._description)
+  Book.create(this._title, this._description, this._authorId)
+      : super(Uuid().v4(), DateTime.now().toUtc(), DateTime.now().toUtc());
+
+  Book.update(String id, this._title, this._description, this._authorId)
       : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
 
   Book.fromJson(Map<String, dynamic> json)

@@ -4,7 +4,7 @@ import 'package:logging/logging.dart';
 
 import 'route.dart';
 import 'handler.dart';
-import 'common/form.dart';
+import 'param.dart';
 
 class Router {
 
@@ -30,6 +30,6 @@ class Router {
     }
 
     logger.info("Not found. Method: ${request.method}, url: ${request.requestedUri}");
-    _notFoundHandler(request, PathParams([], {}), UrlParams({}));
+    _notFoundHandler(request, Params.empty());
   }
 }

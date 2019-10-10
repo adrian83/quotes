@@ -5,18 +5,15 @@ import "package:mockito/mockito.dart";
 
 import "handler.dart";
 import "route.dart";
-import 'common/form.dart';
+import 'param.dart';
 
 
 
 Handler generateHandler(Map<String, String> pathParamsMap, Map<String, String> urlParamsMap) {
 
-  return (HttpRequest request, PathParams pathParams, UrlParams urlParams) {
-    expect(pathParams.size, equals(pathParamsMap.length));
-    pathParamsMap.forEach((k, v) => expect(v, equals(pathParams.getValue(k))));
-
-    expect(urlParams.size, equals(urlParamsMap.length));
-    urlParamsMap.forEach((k, v) => expect(v, equals(urlParams.getValue(k))));
+  return (HttpRequest request, Params params) {
+    expect(params.size, equals(pathParamsMap.length));
+    pathParamsMap.forEach((k, v) => expect(v, equals(params.getValue(k))));
   };
 }
 

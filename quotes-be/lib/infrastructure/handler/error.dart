@@ -1,10 +1,9 @@
 import 'dart:io';
 
-import 'param.dart';
-import 'response.dart';
-import 'common/exception.dart';
-import '../domain/common/exception.dart';
-import '../internal/elasticsearch/exception.dart';
+import '../web/param.dart';
+import '../web/response.dart';
+import '../../domain/common/exception.dart';
+import '../../infrastructure/elasticsearch/exception.dart';
 
 
 void handleErrors(Object ex, HttpRequest request) {
@@ -14,12 +13,10 @@ void handleErrors(Object ex, HttpRequest request) {
     serverError("cannot update entity", request);
   } else if (ex is FindFailedException) {
     notFound(request);
-  } else if (ex is InvalidDataException) {
-    badRequest(ex.errors, request);
   } else if (ex is IndexingFailedException) {
     serverError(ex.message, request);
   } else if (ex is InvalidInputException) {
-    badRequest2(ex.violation, request);
+    badRequest(ex.violation, request);
   } else {
     serverError("unknown error ${ex}", request);
   }

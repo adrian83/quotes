@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'param.dart';
-import 'common/form.dart';
 
 
 ContentType jsonHeader = ContentType("application", "json", charset: "utf-8");
@@ -22,11 +21,7 @@ void notFound(HttpRequest request) {
   write(null, HttpStatus.notFound, request);
 }
 
-void badRequest(List<ParsingError> errors, HttpRequest request) {
-  write(errors, HttpStatus.badRequest, request);
-}
-
-void badRequest2(List<Violation> errors, HttpRequest request) {
+void badRequest(List<Violation> errors, HttpRequest request) {
   write(errors, HttpStatus.badRequest, request);
 }
 

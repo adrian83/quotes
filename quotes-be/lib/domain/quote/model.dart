@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-import '../../internal/elasticsearch/document.dart';
+import '../../infrastructure/elasticsearch/document.dart';
 import '../common/model.dart';
 
 class Quote extends Entity {
@@ -9,6 +9,12 @@ class Quote extends Entity {
   Quote(String id, this._text, this._authorId, this._bookId,
       DateTime modifiedUtc, DateTime createdUtc)
       : super(id, modifiedUtc, DateTime.now().toUtc());
+
+  Quote.create(this._text, this._authorId, this._bookId)
+      : super(Uuid().v4(), DateTime.now().toUtc(), DateTime.now().toUtc());
+
+  Quote.update(String id, this._text, this._authorId, this._bookId)
+      : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
 
   Quote.fromJson(Map<String, dynamic> json)
       : this(

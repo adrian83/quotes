@@ -5,19 +5,17 @@ import './common.dart';
 
 import '../lib/config/config.dart';
 
-import '../lib/handler/router.dart';
-import '../lib/handler/handler.dart';
-
-
-import '../lib/handler/author/author.dart';
-import '../lib/handler/book/book.dart';
-import '../lib/handler/quote/quote.dart';
-
 import '../lib/domain/author/service.dart';
 import '../lib/domain/quote/service.dart';
 import '../lib/domain/book/service.dart';
 
-import '../lib/web/server.dart';
+import '../lib/infrastructure/handler/author/author.dart';
+import '../lib/infrastructure/handler/book/book.dart';
+import '../lib/infrastructure/handler/quote/quote.dart';
+
+import '../lib/infrastructure/web/handler.dart';
+import '../lib/infrastructure/web/router.dart';
+import '../lib/infrastructure/web/server.dart';
 
 import './run_populate.dart';
 

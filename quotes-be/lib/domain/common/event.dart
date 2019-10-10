@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import '../../internal/elasticsearch/document.dart';
-import '../../internal/elasticsearch/response.dart';
-import '../../internal/elasticsearch/search.dart';
-import '../../internal/elasticsearch/store.dart';
+import '../../infrastructure/elasticsearch/document.dart';
+import '../../infrastructure/elasticsearch/response.dart';
+import '../../infrastructure/elasticsearch/search.dart';
+import '../../infrastructure/elasticsearch/store.dart';
 import 'model.dart';
 
 typedef DocumentDecoder<T> = T Function(Map<String, dynamic> doc);

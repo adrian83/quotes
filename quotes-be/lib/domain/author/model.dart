@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-import '../../internal/elasticsearch/document.dart';
+import '../../infrastructure/elasticsearch/document.dart';
 import '../common/model.dart';
 
 var idLabel = 'id';
@@ -18,6 +18,9 @@ class Author extends Entity {
 
   Author.create(this._name, this._description)
       : super(Uuid().v4(), DateTime.now().toUtc(), DateTime.now().toUtc());
+
+  Author.update(String id, this._name, this._description)
+      : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
 
   Author.fromJson(Map<String, dynamic> json)
       : this(
@@ -41,7 +44,7 @@ class Author extends Entity {
 var eventIdLabel = 'eventId';
 var operationLabel = 'operation';
 
-class AuthorEvent extends ESDocument {
+class AuthorEvent extends ESDocument { 
   Author _author;
 
   AuthorEvent(String eventId, String operation, this._author)
