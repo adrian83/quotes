@@ -7,7 +7,6 @@ import 'handler.dart';
 import 'param.dart';
 
 class Router {
-
   static final Logger logger = Logger('AuthorHandler');
 
   List<Route> _routes = [];

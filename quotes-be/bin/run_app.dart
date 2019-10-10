@@ -39,16 +39,13 @@ Future main(List<String> args) async {
   var eventRepositories = await createEventRepositories(config.elasticsearch);
   var services = createServices(repositories, eventRepositories);
 
-  var router = createRouter(
-      services.authorService, services.bookService, services.quoteService);
+  var router = createRouter(services.authorService, services.bookService, services.quoteService);
 
   var server = Server(config.server, router);
   server.start();
 }
 
-Router createRouter(AuthorService authorService, BookService bookService,
-    QuoteService quoteService) {
-
+Router createRouter(AuthorService authorService, BookService bookService, QuoteService quoteService) {
   var authorHandler = AuthorHandler(authorService);
   var bookHandler = BookHandler(bookService);
   var quoteHandler = QuoteHandler(quoteService);

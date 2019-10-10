@@ -18,22 +18,13 @@ class AuthorService {
   QuoteEventRepository _quoteEventRepository;
 
   AuthorService(
-      this._authorRepository,
-      this._authorEventRepository,
-      this._bookRepository,
-      this._bookEventRepository,
-      this._quoteRepository,
-      this._quoteEventRepository);
+      this._authorRepository, this._authorEventRepository, this._bookRepository, this._bookEventRepository, this._quoteRepository, this._quoteEventRepository);
 
-  Future<Author> save(Author author) => _authorRepository
-      .save(author)
-      .then((_) => _authorEventRepository.save(author));
+  Future<Author> save(Author author) => _authorRepository.save(author).then((_) => _authorEventRepository.save(author));
 
   Future<Author> find(String authorId) => _authorRepository.find(authorId);
 
-  Future<Author> update(Author author) => _authorRepository
-      .update(author)
-      .then((_) => _authorEventRepository.update(author));
+  Future<Author> update(Author author) => _authorRepository.update(author).then((_) => _authorEventRepository.update(author));
 
   Future<void> delete(String authorId) => _authorRepository
       .delete(authorId)
@@ -43,9 +34,7 @@ class AuthorService {
       .then((_) => _quoteRepository.deleteByAuthor(authorId))
       .then((_) => _quoteEventRepository.deleteByAuthor(authorId));
 
-  Future<Page<Author>> findAuthors(String searchPhrase, PageRequest request) =>
-      _authorRepository.findAuthors(searchPhrase, request);
+  Future<Page<Author>> findAuthors(String searchPhrase, PageRequest request) => _authorRepository.findAuthors(searchPhrase, request);
 
-  Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) =>
-      _authorEventRepository.listEvents(authorId, request);
+  Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) => _authorEventRepository.listEvents(authorId, request);
 }

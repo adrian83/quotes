@@ -15,8 +15,8 @@ bool empty(String str) => str == null || str.length == 0;
 bool shorter(String str, int limit) => str.length < limit;
 bool longer(String str, int limit) => str.length > limit;
 
-Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) =>
-  req.toList()
+Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) => req
+    .toList()
     .then((lol) => lol.map((l) => String.fromCharCodes(l)))
     .then((los) => los.join())
     .then((content) => jsonDecode(content) as Map)
@@ -24,8 +24,8 @@ Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) =>
     .then(orThrowException);
 
 F orThrowException<F>(Tuple2<F, List<Violation>> tuple) {
-  if(tuple.e2 != null) {
+  if (tuple.e2 != null) {
     throw InvalidInputException(tuple.e2);
   }
-  return tuple.e1; 
+  return tuple.e1;
 }

@@ -5,7 +5,6 @@ import '../web/response.dart';
 import '../../domain/common/exception.dart';
 import '../../infrastructure/elasticsearch/exception.dart';
 
-
 void handleErrors(Object ex, HttpRequest request) {
   if (ex is SaveFailedException) {
     serverError("cannot save entity", request);

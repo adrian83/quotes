@@ -3,7 +3,6 @@ import 'dart:io';
 import 'router.dart';
 import '../../config/config.dart';
 
-
 class Server {
   ServerConfig config;
   Router router;

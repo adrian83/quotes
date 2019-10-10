@@ -29,8 +29,7 @@ class Repositories {
   BookRepository _bookRepository;
   QuoteRepository _quoteRepository;
 
-  Repositories(
-      this._authorRepository, this._bookRepository, this._quoteRepository);
+  Repositories(this._authorRepository, this._bookRepository, this._quoteRepository);
 
   AuthorRepository get authorRepository => _authorRepository;
   BookRepository get bookRepository => _bookRepository;
@@ -50,16 +49,14 @@ class EventRepositories {
   BookEventRepository _bookRepository;
   QuoteEventRepository _quoteRepository;
 
-  EventRepositories(
-      this._authorRepository, this._bookRepository, this._quoteRepository);
+  EventRepositories(this._authorRepository, this._bookRepository, this._quoteRepository);
 
   AuthorEventRepository get authorRepository => _authorRepository;
   BookEventRepository get bookRepository => _bookRepository;
   QuoteEventRepository get quoteRepository => _quoteRepository;
 }
 
-Future<EventRepositories> createEventRepositories(
-    ElasticsearchConfig config) async {
+Future<EventRepositories> createEventRepositories(ElasticsearchConfig config) async {
   HttpClient client = HttpClient();
 
   var host = config.host;
@@ -98,24 +95,13 @@ class Services {
   QuoteService get quoteService => _quoteService;
 }
 
-Services createServices(
-    Repositories repositories, EventRepositories eventRepositories) {
-  var authorService = AuthorService(
-      repositories.authorRepository,
-      eventRepositories.authorRepository,
-      repositories.bookRepository,
-      eventRepositories.bookRepository,
-      repositories.quoteRepository,
-      eventRepositories.quoteRepository);
+Services createServices(Repositories repositories, EventRepositories eventRepositories) {
+  var authorService = AuthorService(repositories.authorRepository, eventRepositories.authorRepository, repositories.bookRepository,
+      eventRepositories.bookRepository, repositories.quoteRepository, eventRepositories.quoteRepository);
 
-  var bookService = BookService(
-      repositories.bookRepository,
-      eventRepositories.bookRepository,
-      repositories.quoteRepository,
-      eventRepositories.quoteRepository);
+  var bookService = BookService(repositories.bookRepository, eventRepositories.bookRepository, repositories.quoteRepository, eventRepositories.quoteRepository);
 
-  var quoteService = QuoteService(
-      repositories.quoteRepository, eventRepositories.quoteRepository);
+  var quoteService = QuoteService(repositories.quoteRepository, eventRepositories.quoteRepository);
 
   return Services(authorService, bookService, quoteService);
 }
@@ -131,12 +117,9 @@ void initLogger() {
 // TODO: make it better
 Future<PostgreSQLConnection> createConnection(PostgresConfig config) async {
   for (var i = 0; i < 10; i++) {
-    PostgreSQLConnection connection = PostgreSQLConnection(
-        config.host, config.port, config.database,
-        username: config.user, password: config.password);
+    PostgreSQLConnection connection = PostgreSQLConnection(config.host, config.port, config.database, username: config.user, password: config.password);
 
-    var connected =
-        await connection.open().then((_) => true).catchError((_) => false);
+    var connected = await connection.open().then((_) => true).catchError((_) => false);
 
     if (connected) {
       return connection;

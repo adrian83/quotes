@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'param.dart';
 
-
 ContentType jsonHeader = ContentType("application", "json", charset: "utf-8");
 
 String acceptOriginHeader = "Access-Control-Allow-Origin";
