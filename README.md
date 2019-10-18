@@ -26,5 +26,5 @@ Simple CRUD application. Application written with: Dart 2.5, AngularDart 6, Elas
 
 ### MISC
 1. In case of problem with running Elsticsearch docker image please run: `sudo sysctl -w vm.max_map_count=262144`
-2. Format code with dartfmt: `dartfmt -w -l 120`
+2. Format code with dartfmt: `dartfmt -w -l 160 --fix .`
  

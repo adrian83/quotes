@@ -37,7 +37,7 @@ class QuoteSearchComponent implements PageSwitcher {
   @Input()
   void set phrase(String p) {
     _phrase = p;
-    change(_quotesPage.info.curent);
+    change(0);
     logger.info("searching for quotes with phrase $_phrase");
   }
 

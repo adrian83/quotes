@@ -37,7 +37,7 @@ class AuthorSearchComponent implements PageSwitcher {
   @Input()
   void set phrase(String phrase) {
     _phrase = phrase;
-    change(_authorsPage.info.curent);
+    change(0);
     logger.info("searching for authors with phrase $_phrase");
   }
 

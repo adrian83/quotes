@@ -37,7 +37,7 @@ class BookSearchComponent implements PageSwitcher {
   @Input()
   void set phrase(String p) {
     _phrase = p;
-    change(_booksPage.info.curent);
+    change(0);
     logger.info("searching for books with phrase $_phrase");
   }
 
