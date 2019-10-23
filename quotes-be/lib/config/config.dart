@@ -4,22 +4,22 @@ import 'dart:convert';
 
 class PostgresConfig {
   String host, database, user, password;
-  int port, reconnectDelaySec;
+  int port;
 
-  PostgresConfig(this.host, this.port, this.database, this.user, this.password, this.reconnectDelaySec);
+  PostgresConfig(this.host, this.port, this.database, this.user, this.password);
 
   PostgresConfig.fromJson(Map<String, dynamic> json)
-      : this(json['host'], json['port'], json['database'], json['user'], json['password'], json['reconnectDelaySec']);
+      : this(json['host'], json['port'], json['database'], json['user'], json['password']);
 }
 
 class ElasticsearchConfig {
   String host, authorsIndex, booksIndex, quotesIndex;
-  int port, reconnectDelaySec;
+  int port;
 
-  ElasticsearchConfig(this.host, this.port, this.authorsIndex, this.booksIndex, this.quotesIndex, this.reconnectDelaySec);
+  ElasticsearchConfig(this.host, this.port, this.authorsIndex, this.booksIndex, this.quotesIndex);
 
   ElasticsearchConfig.fromJson(Map<String, dynamic> json)
-      : this(json['host'], json['port'], json['authorsIndex'], json['booksIndex'], json['quotesIndex'], json['reconnectDelaySec']);
+      : this(json['host'], json['port'], json['authorsIndex'], json['booksIndex'], json['quotesIndex']);
 }
 
 class ServerConfig {

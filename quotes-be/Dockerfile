@@ -12,4 +12,4 @@ RUN pub global activate webdev
 
 EXPOSE 5050
 
-CMD ["dart", "./bin/run_app.dart", "./infra/docker.json", "populate"]
+CMD ["bash", "start.sh"]

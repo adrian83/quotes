@@ -8,8 +8,7 @@
     "port": 9200,
     "authorsIndex": "authors1",
     "booksIndex": "books1",
-    "quotesIndex": "quotes1",
-    "reconnectDelaySec": 20
+    "quotesIndex": "quotes1"
   },
   "postgres": {
     "host": "localhost",
