@@ -61,8 +61,6 @@ void initLogger() {
   });
 }
 
-
-
 Router createRouter(AuthorService authorService, BookService bookService, QuoteService quoteService) {
   var authorHandler = AuthorHandler(authorService);
   var bookHandler = BookHandler(bookService);
@@ -101,15 +99,12 @@ Router createRouter(AuthorService authorService, BookService bookService, QuoteS
 }
 
 Future<PostgreSQLConnection> createConnection(PostgresConfig config) async {
+  PostgreSQLConnection connection = PostgreSQLConnection(config.host, config.port, config.database, username: config.user, password: config.password);
 
-  PostgreSQLConnection connection = PostgreSQLConnection(config.host, 
-      config.port, config.database, username: config.user, password: config.password);
-  
   await connection.open();
 
   return connection;
 }
-
 
 class Repositories {
   AuthorRepository _authorRepository;
@@ -182,5 +177,3 @@ Services createServices(Repositories repositories, EventRepositories eventReposi
 
   return Services(authorService, bookService, quoteService);
 }
-
-

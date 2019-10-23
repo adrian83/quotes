@@ -8,8 +8,7 @@ class PostgresConfig {
 
   PostgresConfig(this.host, this.port, this.database, this.user, this.password);
 
-  PostgresConfig.fromJson(Map<String, dynamic> json)
-      : this(json['host'], json['port'], json['database'], json['user'], json['password']);
+  PostgresConfig.fromJson(Map<String, dynamic> json) : this(json['host'], json['port'], json['database'], json['user'], json['password']);
 }
 
 class ElasticsearchConfig {
@@ -18,8 +17,7 @@ class ElasticsearchConfig {
 
   ElasticsearchConfig(this.host, this.port, this.authorsIndex, this.booksIndex, this.quotesIndex);
 
-  ElasticsearchConfig.fromJson(Map<String, dynamic> json)
-      : this(json['host'], json['port'], json['authorsIndex'], json['booksIndex'], json['quotesIndex']);
+  ElasticsearchConfig.fromJson(Map<String, dynamic> json) : this(json['host'], json['port'], json['authorsIndex'], json['booksIndex'], json['quotesIndex']);
 }
 
 class ServerConfig {
