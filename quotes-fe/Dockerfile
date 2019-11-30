@@ -13,4 +13,4 @@ RUN pub global activate webdev
 RUN pub run build_runner build --delete-conflicting-outputs
 
 EXPOSE 8080
-CMD ["/root/.pub-cache/bin/webdev", "serve", "--hostname", "0.0.0.0"]
+CMD ["/root/.pub-cache/bin/webdev", "serve", "--hostname", "0.0.0.0", "--release"]
