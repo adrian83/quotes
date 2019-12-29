@@ -21,6 +21,7 @@ fe-get:
 
 fe-build:
 	echo "building frontend"
+	cd quotes-fe && pub run build_runner clean
 	cd quotes-fe && webdev build
 
 fe-run: 
