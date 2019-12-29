@@ -15,25 +15,30 @@ deps:
 fe-format:
 	cd quotes-fe && dartfmt -w -l 160 --fix .
 
-be-format:
-	cd quotes-be && dartfmt -w -l 160 --fix .
-
-fe-get: fe-format
+fe-get:
 	echo "getting frontend dependencies" 
 	cd quotes-fe && pub get 
 
-be-get: be-format
-	echo "getting backend dependencies" 
-	cd quotes-be && pub get 
-
-fe-build: fe-get 
+fe-build:
 	echo "building frontend"
 	cd quotes-fe && webdev build
 
-fe-run: fe-build
+fe-run: 
 	echo "running frontend"
 	cd quotes-fe && webdev serve
 
-be-run: be-get
+fe-all: fe-format fe-get fe-build fe-run
+
+
+be-format:
+	cd quotes-be && dartfmt -w -l 160 --fix .
+
+be-get: 
+	echo "getting backend dependencies" 
+	cd quotes-be && pub get 
+	
+be-run: 
 	echo "running frontend"
 	cd quotes-be && dart bin/run_app.dart infra/local.json
+
+be-all: be-format be-get be-run
