@@ -16,26 +16,19 @@ class RoutePaths {
   static final authorEvents = RoutePath(path: authorEventsPath);
 
   static final newBookPath = 'authors/show/:$authorIdParam/books/new';
-  static final showBookPath =
-      'authors/show/:$authorIdParam/books/show/:$bookIdParam';
-  static final editBookPath =
-      'authors/show/:$authorIdParam/books/edit/:$bookIdParam';
-  static final bookEventsPath =
-      'authors/show/:$authorIdParam/books/events/:$bookIdParam';
+  static final showBookPath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam';
+  static final editBookPath = 'authors/show/:$authorIdParam/books/edit/:$bookIdParam';
+  static final bookEventsPath = 'authors/show/:$authorIdParam/books/events/:$bookIdParam';
 
   static final newBook = RoutePath(path: newBookPath);
   static final showBook = RoutePath(path: showBookPath);
   static final editBook = RoutePath(path: editBookPath);
   static final bookEvents = RoutePath(path: bookEventsPath);
 
-  static final newQuotePath =
-      'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/new';
-  static final showQuotePath =
-      'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/show/:$quoteIdParam';
-  static final editQuotePath =
-      'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/edit/:$quoteIdParam';
-  static final quoteEventsPath =
-      'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/events/:$quoteIdParam';
+  static final newQuotePath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/new';
+  static final showQuotePath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/show/:$quoteIdParam';
+  static final editQuotePath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/edit/:$quoteIdParam';
+  static final quoteEventsPath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/events/:$quoteIdParam';
 
   static final newQuote = RoutePath(path: newQuotePath);
   static final showQuote = RoutePath(path: showQuotePath);

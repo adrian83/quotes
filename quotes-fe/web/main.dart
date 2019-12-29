@@ -4,7 +4,6 @@ import 'package:quotes_fe/app_component.template.dart' as ng;
 
 import 'main.template.dart' as self;
 
-
 @GenerateInjector(routerProvidersHash)
 final InjectorFactory injector = self.injector$Injector;
 

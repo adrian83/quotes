@@ -15,12 +15,8 @@ import '../common/pagination.dart';
 @Component(
   selector: 'book-quotes',
   templateUrl: 'book_quotes.template.html',
-  providers: [
-    ClassProvider(QuoteService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [coreDirectives, formDirectives, Events, Pagination],
+  providers: [ClassProvider(QuoteService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, formDirectives, Events, Pagination],
 )
 class BookQuotesComponent implements PageSwitcher {
   static final Logger logger = Logger('BookQuotesComponent');
@@ -61,9 +57,7 @@ class BookQuotesComponent implements PageSwitcher {
       .then((pageNumber) => change(pageNumber))
       .catchError(_errorHandler.handleError);
 
-  void showQuote(Quote quote) =>
-      _router.showQuote(quote.authorId, quote.bookId, quote.id);
+  void showQuote(Quote quote) => _router.showQuote(quote.authorId, quote.bookId, quote.id);
 
-  void editQuote(Quote quote) =>
-      _router.editQuote(quote.authorId, quote.bookId, quote.id);
+  void editQuote(Quote quote) => _router.editQuote(quote.authorId, quote.bookId, quote.id);
 }

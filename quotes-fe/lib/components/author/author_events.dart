@@ -19,18 +19,8 @@ import '../common/pagination.dart';
 @Component(
   selector: 'author-events',
   templateUrl: 'author_events.template.html',
-  providers: [
-    ClassProvider(AuthorService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [
-    coreDirectives,
-    formDirectives,
-    Events,
-    Breadcrumbs,
-    Pagination
-  ],
+  providers: [ClassProvider(AuthorService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, formDirectives, Events, Breadcrumbs, Pagination],
 )
 class AuthorEventsComponent extends PageSwitcher implements OnActivate {
   static final Logger logger = Logger('AuthorEventsComponent');
@@ -62,11 +52,10 @@ class AuthorEventsComponent extends PageSwitcher implements OnActivate {
 
   void _fetchFirstPage() => _fetchPage(0);
 
-  void _fetchPage(int pageNumber) =>
-      Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
-          .then((req) => _authorService.listEvents(_authorId, req))
-          .then((page) => _authorEventPage = page)
-          .catchError(_errorHandler.handleError);
+  void _fetchPage(int pageNumber) => Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
+      .then((req) => _authorService.listEvents(_authorId, req))
+      .then((page) => _authorEventPage = page)
+      .catchError(_errorHandler.handleError);
 
   void showAuthor() => _router.showAuthor(_authorEventPage.elements.last.id);
 

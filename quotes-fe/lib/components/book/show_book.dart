@@ -18,19 +18,8 @@ import '../quote/book_quotes.dart';
 @Component(
   selector: 'show-book',
   templateUrl: 'show_book.template.html',
-  providers: [
-    ClassProvider(AuthorService),
-    ClassProvider(BookService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [
-    coreDirectives,
-    Breadcrumbs,
-    Events,
-    Pagination,
-    BookQuotesComponent
-  ],
+  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, Breadcrumbs, Events, Pagination, BookQuotesComponent],
 )
 class ShowBookComponent extends OnActivate {
   static final Logger logger = Logger('ShowBookComponent');
@@ -43,8 +32,7 @@ class ShowBookComponent extends OnActivate {
   Author _author = Author.empty();
   Book _book = Book.empty();
 
-  ShowBookComponent(
-      this._authorService, this._bookService, this._errorHandler, this._router);
+  ShowBookComponent(this._authorService, this._bookService, this._errorHandler, this._router);
 
   Book get book => _book;
   List<Event> get events => _errorHandler.events;

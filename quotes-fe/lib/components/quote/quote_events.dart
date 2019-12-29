@@ -20,18 +20,8 @@ import '../common/pagination.dart';
 @Component(
   selector: 'quote-events',
   templateUrl: 'quote_events.template.html',
-  providers: [
-    ClassProvider(QuoteService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [
-    coreDirectives,
-    formDirectives,
-    Events,
-    Breadcrumbs,
-    Pagination
-  ],
+  providers: [ClassProvider(QuoteService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, formDirectives, Events, Breadcrumbs, Pagination],
 )
 class QuoteEventsComponent extends PageSwitcher implements OnActivate {
   static final Logger logger = Logger('QuoteEventsComponent');
@@ -67,15 +57,12 @@ class QuoteEventsComponent extends PageSwitcher implements OnActivate {
 
   void _fetchFirstPage() => _fetchPage(0);
 
-  void _fetchPage(int pageNumber) =>
-      Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
-          .then((req) =>
-              _quoteService.listEvents(_authorId, _bookId, _quoteId, req))
-          .then((page) => _quoteEventPage = page)
-          .catchError(_errorHandler.handleError);
+  void _fetchPage(int pageNumber) => Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
+      .then((req) => _quoteService.listEvents(_authorId, _bookId, _quoteId, req))
+      .then((page) => _quoteEventPage = page)
+      .catchError(_errorHandler.handleError);
 
-  void showQuote() => _router.showQuote(_quoteEventPage.elements.last.authorId,
-      _quoteEventPage.elements.last.bookId, _quoteEventPage.elements.last.id);
+  void showQuote() => _router.showQuote(_quoteEventPage.elements.last.authorId, _quoteEventPage.elements.last.bookId, _quoteEventPage.elements.last.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(_router.search(), "search")];

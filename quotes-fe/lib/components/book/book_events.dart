@@ -19,18 +19,8 @@ import '../common/pagination.dart';
 @Component(
   selector: 'book-events',
   templateUrl: 'book_events.template.html',
-  providers: [
-    ClassProvider(BookService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [
-    coreDirectives,
-    formDirectives,
-    Events,
-    Breadcrumbs,
-    Pagination
-  ],
+  providers: [ClassProvider(BookService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, formDirectives, Events, Breadcrumbs, Pagination],
 )
 class BookEventsComponent extends PageSwitcher implements OnActivate {
   static final Logger logger = Logger('BookEventsComponent');
@@ -64,14 +54,12 @@ class BookEventsComponent extends PageSwitcher implements OnActivate {
 
   void _fetchFirstPage() => _fetchPage(0);
 
-  void _fetchPage(int pageNumber) =>
-      Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
-          .then((req) => _bookService.listEvents(_authorId, _bookId, req))
-          .then((page) => _bookEventPage = page)
-          .catchError(_errorHandler.handleError);
+  void _fetchPage(int pageNumber) => Future.value(PageRequest.pageWithSize(pageNumber, pageSize))
+      .then((req) => _bookService.listEvents(_authorId, _bookId, req))
+      .then((page) => _bookEventPage = page)
+      .catchError(_errorHandler.handleError);
 
-  void showBook() => _router.showBook(
-      _bookEventPage.elements.last.authorId, _bookEventPage.elements.last.id);
+  void showBook() => _router.showBook(_bookEventPage.elements.last.authorId, _bookEventPage.elements.last.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(_router.search(), "search")];

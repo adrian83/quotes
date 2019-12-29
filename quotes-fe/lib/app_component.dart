@@ -12,7 +12,7 @@ import 'tools/config.dart';
 @Component(
   selector: 'my-app',
   templateUrl: 'app_component.template.html',
-  directives: const [coreDirectives, routerDirectives],
+  directives: [coreDirectives, routerDirectives],
   exports: [RoutePaths, Routes],
   providers: [ClassProvider(BrowserClient), ClassProvider(Config)],
 )
@@ -20,8 +20,7 @@ class AppComponent {
   AppComponent() {
     Logger.root.level = Level.ALL;
     Logger.root.onRecord.listen((LogRecord rec) {
-      print(
-          '${rec.loggerName}: ${rec.level.name}: ${rec.time}: ${rec.message}');
+      print('${rec.loggerName}: ${rec.level.name}: ${rec.time}: ${rec.message}');
     });
   }
 }

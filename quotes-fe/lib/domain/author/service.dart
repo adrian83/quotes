@@ -14,18 +14,15 @@ class AuthorService extends Service<Author> {
 
   AuthorService(BrowserClient http, this._config) : super(http);
 
-  Future<AuthorsPage> listAuthors(String searchPhrase, PageRequest request) =>
-      Future.value(request)
-          .then((req) => pageRequestToUrlParams(req))
-          .then(
-              (params) => appendUrlParam(params, "searchPhrase", searchPhrase))
-          .then((urlParams) => "${_config.beHost}/authors?$urlParams")
-          .then((url) => getEntity(url))
-          .then((json) => AuthorsPage.fromJson(json));
+  Future<AuthorsPage> listAuthors(String searchPhrase, PageRequest request) => Future.value(request)
+      .then((req) => pageRequestToUrlParams(req))
+      .then((params) => appendUrlParam(params, "searchPhrase", searchPhrase))
+      .then((urlParams) => "${_config.beHost}/authors?$urlParams")
+      .then((url) => getEntity(url))
+      .then((json) => AuthorsPage.fromJson(json));
 
   Future<AuthorEventsPage> listEvents(String authorId, PageRequest request) {
-    var url =
-        "${_config.beHost}/authors/${authorId}/events?${this.pageRequestToUrlParams(request)}";
+    var url = "${_config.beHost}/authors/${authorId}/events?${this.pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => AuthorEventsPage.fromJson(json));
   }
 

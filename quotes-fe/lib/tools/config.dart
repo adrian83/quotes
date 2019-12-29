@@ -1,4 +1,3 @@
-
 import '../generated_consts.dart';
 
 class Config {

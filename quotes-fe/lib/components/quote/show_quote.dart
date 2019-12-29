@@ -20,14 +20,8 @@ import '../common/pagination.dart';
 @Component(
   selector: 'show-quote',
   templateUrl: 'show_quote.template.html',
-  providers: [
-    ClassProvider(AuthorService),
-    ClassProvider(BookService),
-    ClassProvider(QuoteService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [coreDirectives, Breadcrumbs, Events, Pagination],
+  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuoteService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, Breadcrumbs, Events, Pagination],
 )
 class ShowQuoteComponent implements OnActivate {
   static final Logger logger = Logger('ShowQuoteComponent');
@@ -42,8 +36,7 @@ class ShowQuoteComponent implements OnActivate {
   Book _book = Book.empty();
   Quote _quote = Quote.empty();
 
-  ShowQuoteComponent(this._authorService, this._bookService, this._quoteService,
-      this._errorHandler, this._router);
+  ShowQuoteComponent(this._authorService, this._bookService, this._quoteService, this._errorHandler, this._router);
 
   Quote get quote => _quote;
   List<Event> get events => _errorHandler.events;
@@ -60,13 +53,11 @@ class ShowQuoteComponent implements OnActivate {
       .then((quote) => _quote = quote)
       .catchError(_errorHandler.handleError);
 
-  void editQuote() =>
-      _router.editQuote(_quote.authorId, _quote.bookId, _quote.id);
+  void editQuote() => _router.editQuote(_quote.authorId, _quote.bookId, _quote.id);
 
   void deleteQuote() => _quoteService
       .delete(quote.authorId, quote.bookId, quote.id)
-      .then((_) =>
-          _errorHandler.showInfo("Quote '${shorten(_quote.text, 20)}' deleted"))
+      .then((_) => _errorHandler.showInfo("Quote '${shorten(_quote.text, 20)}' deleted"))
       .then((_) => _quote = Quote.empty())
       .catchError(_errorHandler.handleError);
 

@@ -18,14 +18,8 @@ import '../common/events.dart';
 @Component(
   selector: 'new-quote',
   templateUrl: 'new_quote.template.html',
-  providers: [
-    ClassProvider(AuthorService),
-    ClassProvider(BookService),
-    ClassProvider(QuoteService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
+  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuoteService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
 class NewQuoteComponent implements OnActivate {
   final AuthorService _authorService;
@@ -38,8 +32,7 @@ class NewQuoteComponent implements OnActivate {
   Book _book = Book.empty();
   Quote _quote = Quote.empty();
 
-  NewQuoteComponent(this._authorService, this._bookService, this._quoteService,
-      this._errorHandler, this._router);
+  NewQuoteComponent(this._authorService, this._bookService, this._quoteService, this._errorHandler, this._router);
 
   Quote get quote => _quote;
   List<Event> get events => _errorHandler.events;
@@ -55,14 +48,9 @@ class NewQuoteComponent implements OnActivate {
       .then((_) => _quote.bookId = _book.id)
       .catchError(_errorHandler.handleError);
 
-  void save() => _quoteService
-      .create(quote)
-      .then((quote) => _quote = quote)
-      .then((_) => _editQuote(_quote))
-      .catchError(_errorHandler.handleError);
+  void save() => _quoteService.create(quote).then((quote) => _quote = quote).then((_) => _editQuote(_quote)).catchError(_errorHandler.handleError);
 
-  void _editQuote(Quote quote) =>
-      _router.editQuote(quote.authorId, quote.bookId, quote.id);
+  void _editQuote(Quote quote) => _router.editQuote(quote.authorId, quote.bookId, quote.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(_router.search(), "search")];

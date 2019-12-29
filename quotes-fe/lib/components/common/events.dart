@@ -4,15 +4,7 @@ import 'package:angular/angular.dart';
 
 import '../../domain/common/event.dart';
 
-@Component(
-    selector: 'events',
-    templateUrl: 'events.template.html',
-    directives: const [
-      coreDirectives,
-      InvalidDataComponent,
-      InfoComponent,
-      ErrorComponent
-    ])
+@Component(selector: 'events', templateUrl: 'events.template.html', directives: [coreDirectives, InvalidDataComponent, InfoComponent, ErrorComponent])
 class Events {
   @Input()
   List<Event> events;
@@ -41,7 +33,7 @@ class Events {
               (click)="hide()">
         <span aria-hidden="true">&times;</span>
       </button>
-    </div>''', directives: const [coreDirectives])
+    </div>''', directives: [coreDirectives])
 class InvalidDataComponent {
   @Input()
   InvalidDataEvent event;
@@ -65,7 +57,7 @@ class InvalidDataComponent {
               (click)="hide()">
         <span aria-hidden="true">&times;</span>
       </button>
-    </div>''', directives: const [coreDirectives])
+    </div>''', directives: [coreDirectives])
 class InfoComponent {
   @Input()
   InfoEvent event;
@@ -88,7 +80,7 @@ class InfoComponent {
               (click)="hide()">
         <span aria-hidden="true">&times;</span>
       </button>
-    </div>''', directives: const [coreDirectives])
+    </div>''', directives: [coreDirectives])
 class ErrorComponent {
   @Input()
   ErrorEvent event;

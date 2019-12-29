@@ -14,12 +14,8 @@ import '../common/pagination.dart';
 @Component(
   selector: 'author-search',
   templateUrl: 'author_search.template.html',
-  providers: [
-    ClassProvider(AuthorService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [coreDirectives, formDirectives, Events, Pagination],
+  providers: [ClassProvider(AuthorService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, formDirectives, Events, Pagination],
 )
 class AuthorSearchComponent implements PageSwitcher {
   static final Logger logger = Logger('AuthorSearchComponent');
@@ -46,10 +42,8 @@ class AuthorSearchComponent implements PageSwitcher {
   List<Event> get events => _errorHandler.events;
 
   @override
-  void change(int pageNumber) => _authorService
-      .listAuthors(_phrase, PageRequest.page(pageNumber))
-      .then((page) => _authorsPage = page)
-      .catchError(_errorHandler.handleError);
+  void change(int pageNumber) =>
+      _authorService.listAuthors(_phrase, PageRequest.page(pageNumber)).then((page) => _authorsPage = page).catchError(_errorHandler.handleError);
 
   void showAuthor(Author author) => _router.showAuthor(author.id);
 

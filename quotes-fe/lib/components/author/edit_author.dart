@@ -15,12 +15,8 @@ import '../common/events.dart';
 @Component(
   selector: 'edit-author',
   templateUrl: 'edit_author.template.html',
-  providers: [
-    ClassProvider(AuthorService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [
+  providers: [ClassProvider(AuthorService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [
     coreDirectives,
     formDirectives,
     Events,

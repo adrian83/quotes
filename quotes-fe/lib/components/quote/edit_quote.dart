@@ -19,14 +19,8 @@ import '../common/events.dart';
 @Component(
   selector: 'edit-quote',
   templateUrl: 'edit_quote.template.html',
-  providers: [
-    ClassProvider(AuthorService),
-    ClassProvider(BookService),
-    ClassProvider(QuoteService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
+  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuoteService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
 class EditQuoteComponent implements OnActivate {
   final AuthorService _authorService;
@@ -40,8 +34,7 @@ class EditQuoteComponent implements OnActivate {
   Quote _quote = Quote.empty();
   String _oldText = "";
 
-  EditQuoteComponent(this._authorService, this._bookService, this._quoteService,
-      this._errorHandler, this._router);
+  EditQuoteComponent(this._authorService, this._bookService, this._quoteService, this._errorHandler, this._router);
 
   Quote get quote => _quote;
   List<Event> get events => _errorHandler.events;
@@ -66,8 +59,7 @@ class EditQuoteComponent implements OnActivate {
       .then((_) => _oldText = _quote.text)
       .catchError(_errorHandler.handleError);
 
-  void showQuote() =>
-      _router.showQuote(_quote.authorId, _quote.bookId, _quote.id);
+  void showQuote() => _router.showQuote(_quote.authorId, _quote.bookId, _quote.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(_router.search(), "search")];

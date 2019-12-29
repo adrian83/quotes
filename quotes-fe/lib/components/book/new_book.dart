@@ -16,13 +16,8 @@ import '../common/events.dart';
 @Component(
   selector: 'new-book',
   templateUrl: 'new_book.template.html',
-  providers: [
-    ClassProvider(AuthorService),
-    ClassProvider(BookService),
-    ClassProvider(QuotesRouter),
-    ClassProvider(ErrorHandler)
-  ],
-  directives: const [coreDirectives, formDirectives, Breadcrumbs, Events],
+  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  directives: [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
 class NewBookComponent implements OnActivate {
   final BookService _bookService;
@@ -33,8 +28,7 @@ class NewBookComponent implements OnActivate {
   Book _book = Book.empty();
   Author _author = Author.empty();
 
-  NewBookComponent(
-      this._authorService, this._bookService, this._errorHandler, this._router);
+  NewBookComponent(this._authorService, this._bookService, this._errorHandler, this._router);
 
   Book get book => _book;
   Author get author => _author;
@@ -47,11 +41,7 @@ class NewBookComponent implements OnActivate {
       .then((_) => _book.authorId = _author.id)
       .catchError(_errorHandler.handleError);
 
-  void save() => _bookService
-      .create(book)
-      .then((book) => _book = book)
-      .then((_) => _editBook(_book))
-      .catchError(_errorHandler.handleError);
+  void save() => _bookService.create(book).then((book) => _book = book).then((_) => _editBook(_book)).catchError(_errorHandler.handleError);
 
   void _editBook(Book book) => _router.editBook(book.authorId, book.id);
 

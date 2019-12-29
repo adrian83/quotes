@@ -6,8 +6,7 @@ import 'package:quotes_fe/app_component.template.dart' as ng;
 import 'package:test/test.dart';
 
 void main() {
-  final testBed =
-      NgTestBed.forComponent<AppComponent>(ng.AppComponentNgFactory);
+  final testBed = NgTestBed.forComponent<AppComponent>(ng.AppComponentNgFactory);
   NgTestFixture<AppComponent> fixture;
 
   setUp(() async {

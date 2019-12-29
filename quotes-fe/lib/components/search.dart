@@ -11,13 +11,7 @@ import 'quote/quote_search.dart';
   selector: 'search',
   templateUrl: 'search.template.html',
   providers: [ClassProvider(QuotesRouter)],
-  directives: const [
-    coreDirectives,
-    formDirectives,
-    AuthorSearchComponent,
-    BookSearchComponent,
-    QuoteSearchComponent
-  ],
+  directives: [coreDirectives, formDirectives, AuthorSearchComponent, BookSearchComponent, QuoteSearchComponent],
 )
 class SearchComponent extends ErrorHandler {
   final QuotesRouter _router;

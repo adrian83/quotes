@@ -15,8 +15,7 @@ class BookService extends Service<Book> {
   BookService(BrowserClient http, this._config) : super(http);
 
   Future<BooksPage> listAuthorBooks(String authorId, PageRequest request) {
-    var url =
-        "${_config.beHost}/authors/$authorId/books?${this.pageRequestToUrlParams(request)}";
+    var url = "${_config.beHost}/authors/$authorId/books?${this.pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => BooksPage.fromJson(json));
   }
 
@@ -26,10 +25,8 @@ class BookService extends Service<Book> {
     return getEntity(url).then((json) => BooksPage.fromJson(json));
   }
 
-  Future<BookEventsPage> listEvents(
-      String authorId, String bookId, PageRequest request) {
-    var url =
-        "${_config.beHost}/authors/$authorId/books/$bookId/events?${this.pageRequestToUrlParams(request)}";
+  Future<BookEventsPage> listEvents(String authorId, String bookId, PageRequest request) {
+    var url = "${_config.beHost}/authors/$authorId/books/$bookId/events?${this.pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => BookEventsPage.fromJson(json));
   }
 

@@ -2,8 +2,7 @@ import 'dart:async';
 
 import 'package:build/build.dart';
 
-Builder constantBuilder(BuilderOptions options) =>
-    ConstantBuilder(options.config);
+Builder constantBuilder(BuilderOptions options) => ConstantBuilder(options.config);
 
 class ConstantBuilder implements Builder {
   static String _constantsFile = 'generated_consts.dart';
@@ -18,12 +17,8 @@ class ConstantBuilder implements Builder {
       };
 
   @override
-  Future<void> build(BuildStep buildStep) => buildStep.writeAsString(
-      AssetId(
-          buildStep.inputId.package, 'lib/${ConstantBuilder._constantsFile}'),
-      Future.value(values.entries
-          .map((e) => _toDartConstantDeclaration(e.key, e.value))
-          .join()));
+  Future<void> build(BuildStep buildStep) => buildStep.writeAsString(AssetId(buildStep.inputId.package, 'lib/${ConstantBuilder._constantsFile}'),
+      Future.value(values.entries.map((e) => _toDartConstantDeclaration(e.key, e.value)).join()));
 
   String _toDartConstantDeclaration(String name, dynamic value) {
     if (value is String) {

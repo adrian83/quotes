@@ -22,10 +22,7 @@ class PageLink {
   int get page => this._page;
 }
 
-@Component(
-    selector: 'pagination',
-    templateUrl: 'pagination.template.html',
-    directives: const [formDirectives, coreDirectives])
+@Component(selector: 'pagination', templateUrl: 'pagination.template.html', directives: [formDirectives, coreDirectives])
 class Pagination implements OnActivate {
   static final Logger logger = Logger('Pagination');
 
@@ -115,12 +112,8 @@ class Pagination implements OnActivate {
         continue;
       }
 
-      var minShow = current -
-          (addFirst ? (addLowerDots ? (show - 2) : (show - 1)) : show) -
-          (show - (offset > show ? show : offset));
-      var maxShow = current +
-          (addLast ? (addUpperDots ? (show - 2) : (show - 1)) : show) +
-          (show - (current > show ? show : current));
+      var minShow = current - (addFirst ? (addLowerDots ? (show - 2) : (show - 1)) : show) - (show - (offset > show ? show : offset));
+      var maxShow = current + (addLast ? (addUpperDots ? (show - 2) : (show - 1)) : show) + (show - (current > show ? show : current));
 
       if (index < minShow) continue;
       if (index > maxShow) continue;

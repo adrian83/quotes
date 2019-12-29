@@ -6,18 +6,10 @@ import '../../tools/strings.dart';
 class Book extends Entity {
   String _title, _description, _authorId;
 
-  Book(String id, this._title, this._description, this._authorId,
-      DateTime modifiedUtc, DateTime createdUtc)
-      : super(id, modifiedUtc, createdUtc);
+  Book(String id, this._title, this._description, this._authorId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
 
   Book.fromJson(Map<String, dynamic> json)
-      : this(
-            json['id'],
-            json['title'],
-            json['description'],
-            json['authorId'],
-            DateTime.parse(json["modifiedUtc"]),
-            DateTime.parse(json["createdUtc"]));
+      : this(json['id'], json['title'], json['description'], json['authorId'], DateTime.parse(json["modifiedUtc"]), DateTime.parse(json["createdUtc"]));
 
   Book.empty() : this(null, "", "", null, nowUtc(), nowUtc());
 
@@ -39,19 +31,15 @@ class Book extends Entity {
     this._description = desc;
   }
 
-  Map toJson() => super.toJson()
-    ..addAll(
-        {"title": _title, "authorId": _authorId, "description": _description});
+  Map toJson() => super.toJson()..addAll({"title": _title, "authorId": _authorId, "description": _description});
 }
 
-JsonDecoder<Book> _bookJsonDecoder =
-    (Map<String, dynamic> json) => Book.fromJson(json);
+JsonDecoder<Book> _bookJsonDecoder = (Map<String, dynamic> json) => Book.fromJson(json);
 
 class BooksPage extends Page<Book> {
   BooksPage(PageInfo info, List<Book> elements) : super(info, elements);
 
   BooksPage.empty() : super(PageInfo(0, 0, 0), List<Book>());
 
-  BooksPage.fromJson(Map<String, dynamic> json)
-      : super.fromJson(_bookJsonDecoder, json);
+  BooksPage.fromJson(Map<String, dynamic> json) : super.fromJson(_bookJsonDecoder, json);
 }

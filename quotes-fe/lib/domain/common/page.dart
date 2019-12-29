@@ -5,8 +5,7 @@ class PageInfo {
 
   PageInfo(this._limit, this._offset, this._total);
 
-  factory PageInfo.fromJson(Map<String, dynamic> json) =>
-      PageInfo(json['limit'], json['offset'], json['total']);
+  factory PageInfo.fromJson(Map<String, dynamic> json) => PageInfo(json['limit'], json['offset'], json['total']);
 
   int get limit => _limit;
   int get offset => _offset;
@@ -77,11 +76,9 @@ class PageRequest {
 
   PageRequest(this._limit, this._offset);
 
-  PageRequest.page(int pageNumber)
-      : this(defPageSize, defPageSize * pageNumber);
+  PageRequest.page(int pageNumber) : this(defPageSize, defPageSize * pageNumber);
 
-  PageRequest.pageWithSize(int pageNumber, int size)
-      : this(size, size * pageNumber);
+  PageRequest.pageWithSize(int pageNumber, int size) : this(size, size * pageNumber);
 
   int get limit => this._limit;
   int get offset => this._offset;
