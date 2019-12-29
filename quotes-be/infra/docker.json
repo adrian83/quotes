@@ -6,9 +6,9 @@
   "elasticsearch": {
     "host": "elasticsearch",
     "port": 9200,
-    "authorsIndex": "authors1",
-    "booksIndex": "books1",
-    "quotesIndex": "quotes1"
+    "authorsIndex": "authors",
+    "booksIndex": "books",
+    "quotesIndex": "quotes"
   },
   "postgres": {
     "host": "postgres",
