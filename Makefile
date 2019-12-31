@@ -3,11 +3,18 @@
 docker:
 	sudo systemctl start docker
 
+compose-build:
+	sudo docker-compose build
+
+compose-up:
+	sudo docker-compose up
+
 deps:
 	echo "starting elasticsearch image (version 6.4.1)"
 	docker run -d -p 9200:9200 -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:6.4.1
 	echo "starting postgres image (version 11.1)"
-	docker run -p 5432:5432 --env-file=quotes-be/infra/env.db -d --name=quotes_postgres postgres:latest
+	docker rm quotes_postgres
+	docker run -p 5432:5432 --env-file=quotes-be/infra/env.db -d --name=quotes_postgres postgres:11.1
 	sleep 5
 	docker cp quotes-be/infra/db.sql quotes_postgres:/file.sql
 	docker exec quotes_postgres psql quotes root -f /file.sql
