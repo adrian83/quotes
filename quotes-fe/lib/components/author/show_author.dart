@@ -2,16 +2,16 @@ import 'package:angular/angular.dart';
 import 'package:angular_router/angular_router.dart';
 import 'package:logging/logging.dart';
 
-import '../../domain/author/model.dart';
-import '../../domain/author/service.dart';
-import '../../domain/common/event.dart';
-import '../../domain/common/router.dart';
-import '../../routes.dart';
-import '../common/breadcrumb.dart';
-import '../common/error_handler.dart';
-import '../common/events.dart';
-import '../common/pagination.dart';
-import '../book/author_books.dart';
+import 'package:quotes_fe/domain/author/model.dart';
+import 'package:quotes_fe/domain/author/service.dart';
+import 'package:quotes_fe/domain/common/event.dart';
+import 'package:quotes_fe/domain/common/router.dart';
+import 'package:quotes_fe/routes.dart';
+import 'package:quotes_fe/components/common/breadcrumb.dart';
+import 'package:quotes_fe/components/common/error_handler.dart';
+import 'package:quotes_fe/components/common/events.dart';
+import 'package:quotes_fe/components/common/pagination.dart';
+import 'package:quotes_fe/components/book/author_books.dart';
 
 @Component(
   selector: 'show-author',

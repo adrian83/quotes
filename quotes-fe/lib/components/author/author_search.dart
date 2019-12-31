@@ -2,14 +2,14 @@ import 'package:angular/angular.dart';
 import 'package:angular_forms/angular_forms.dart';
 import 'package:logging/logging.dart';
 
-import '../../domain/common/event.dart';
-import '../../domain/common/page.dart';
-import '../../domain/common/router.dart';
-import '../../domain/author/model.dart';
-import '../../domain/author/service.dart';
-import '../common/error_handler.dart';
-import '../common/events.dart';
-import '../common/pagination.dart';
+import 'package:quotes_fe/domain/common/event.dart';
+import 'package:quotes_fe/domain/common/page.dart';
+import 'package:quotes_fe/domain/common/router.dart';
+import 'package:quotes_fe/domain/author/model.dart';
+import 'package:quotes_fe/domain/author/service.dart';
+import 'package:quotes_fe/components/common/error_handler.dart';
+import 'package:quotes_fe/components/common/events.dart';
+import 'package:quotes_fe/components/common/pagination.dart';
 
 @Component(
   selector: 'author-search',
