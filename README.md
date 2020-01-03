@@ -6,7 +6,7 @@ Simple CRUD application written in: Dart 2.5, AngularDart 6, Elasticsearch 6.4, 
 #### Short version
 1. Run `docker-compose up`
 2. Navigate in brawser to `localhost:8080`
-3. (Optional) Put some content into database `make db-init`
+3. (Optional) Put some content into database `make be-init`
 
 #### Longer version
 1. Start infrastructure (Elasticsearch and Postgres): `make deps`
