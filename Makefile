@@ -16,8 +16,8 @@ deps:
 	docker rm quotes_postgres
 	docker run -p 5432:5432 --env-file=quotes-be/infra/env.db -d --name=quotes_postgres postgres:11.1
 	sleep 5
-	docker cp quotes-be/infra/db.sql quotes_postgres:/file.sql
-	docker exec quotes_postgres psql quotes root -f /file.sql
+	docker cp quotes-be/infra/db.sql quotes_postgres:/schema.sql
+	docker exec quotes_postgres psql quotes root -f /schema.sql
 
 fe-format:
 	cd quotes-fe && dartfmt -w -l 160 --fix .
@@ -46,7 +46,13 @@ be-get:
 	cd quotes-be && pub get 
 	
 be-run: 
-	echo "running frontend"
+	echo "running backend"
 	cd quotes-be && dart bin/run_app.dart infra/local.json
+
+be-init:
+	echo "Init db"
+	./quotes-be/infra/init.sh
+	
+
 
 be-all: be-format be-get be-run
