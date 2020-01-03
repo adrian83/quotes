@@ -40,10 +40,9 @@ abstract class EventRepository<EVENT extends ESDocument, ENTITY extends Entity> 
 
   Future<ENTITY> findNewest(String entityId) {
     var query = MatchQuery("id", entityId);
-
     var request = SearchRequest.oneByQuery(query)..sort = [SortElement.desc("modifiedUtc")];
 
-    return _store.list(request).then((resp) => resp.hits).then((hits) => _entityDecoder(hits.hits[0].source));
+    return _store.list(request).then((resp) => resp.hits).then((hits) => hits.hits[0].source).then((hit) => _entityDecoder(hit));
   }
 
   Future<Page<EVENT>> listEventsByQuery(Query query, PageRequest request) {

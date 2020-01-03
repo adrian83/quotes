@@ -9,3 +9,5 @@ class IndexingFailedException implements Exception {
 class DocUpdateFailedException implements Exception {}
 
 class DocFindFailedException implements Exception {}
+
+class IndexNotFoundException implements Exception {}

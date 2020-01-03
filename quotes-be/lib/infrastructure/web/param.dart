@@ -98,11 +98,11 @@ class PathParam1<T> {
   Tuple2<Tuple1<T>, List<Violation>> validate() {
     var value = this._params.getValue(_paramData1.name);
 
-    logger.info("Value of ${_paramData1.name} is $value");
+    //logger.info("Value of ${_paramData1.name} is $value");
 
     var result = this._transformer1(value, _paramData1.name, _paramData1.errorMsg);
 
-    logger.info("Transformation value of ${_paramData1.name} is ${result.e1}");
+    //logger.info("Transformation value of ${_paramData1.name} is ${result.e1}");
 
     var box = Tuple1<T>(result.e1);
     List<Violation> violations = result.e2 == null ? [] : [result.e2];
