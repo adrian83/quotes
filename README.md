@@ -13,7 +13,7 @@ Simple CRUD application written in: Dart 2.5, AngularDart 6, Elasticsearch 6.4, 
 #### Steps
 1. Run `docker-compose up`
 2. Navigate in browser to `localhost:8080`
-3. (Optional) Put some content into database `make db-init`
+3. (Optional) Put some content into database `make be-init`
 
 ### Running locally
 
