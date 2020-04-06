@@ -11,7 +11,6 @@ echo "$AUTHOR3"
 echo ""
 
 AUTHOR3_ID=`echo $AUTHOR3 | jq .id  | cut -d "\"" -f 2`
-#echo "$AUTHOR3_ID"
 
 echo ""
 echo ""
@@ -33,13 +32,11 @@ echo "$BOOK4"
 echo ""
 
 BOOK3_ID=`echo $BOOK3 | jq .id  | cut -d "\"" -f 2`
-#echo "$BOOK4_ID"
 
 echo ""
 echo ""
 echo ""
 echo ""
-
 
 QUOTE1=$(curl -d '{"text":"Where the bee sucks, there suck I; \nIn a cowslip'\''s bell I lie; \nThere I couch when owls do cry. \nOn the bat'\''s back I do fly \nAfter summer merrily. \nMerrily, merrily, shall I live now, \nUnder the blossom that hangs on the bough."}' -H "Content-Type: application/json" -X POST http://localhost:5050/authors/"$AUTHOR3_ID"/books/"$BOOK3_ID"/quotes )
 echo "$QUOTE1"

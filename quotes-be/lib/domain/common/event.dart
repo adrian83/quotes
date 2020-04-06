@@ -40,17 +40,15 @@ abstract class EventRepository<EVENT extends ESDocument, ENTITY extends Entity> 
 
   Future<ENTITY> findNewest(String entityId) {
     var query = MatchQuery("id", entityId);
-    var request = SearchRequest.oneByQuery(query)..sort = [SortElement.desc("modifiedUtc")];
+    var sort = SortElement.desc("modifiedUtc");
+    var request = SearchRequest.oneByQuery(query, [sort]);
 
     return _store.list(request).then((resp) => resp.hits).then((hits) => hits.hits[0].source).then((hit) => _entityDecoder(hit));
   }
 
   Future<Page<EVENT>> listEventsByQuery(Query query, PageRequest request) {
-    var req = SearchRequest()
-      ..query = query
-      ..size = request.limit
-      ..from = request.offset
-      ..sort = [SortElement.asc("modifiedUtc")];
+    var sort = SortElement.asc("modifiedUtc");
+    var req = SearchRequest(query, [sort], request.offset, request.limit);
 
     return store.list(req).then((resp) => resp.hits).then((hits) {
       var authors = _fromDocuments(hits.hits);

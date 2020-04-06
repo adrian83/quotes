@@ -2,126 +2,99 @@ const asc = "asc";
 const desc = "desc";
 
 const maxSize = 10000;
+const defaultOffset = 0;
+const defaultSize = 10;
 
 abstract class Query {
   Map toJson();
 }
 
 class MatchAllQuery extends Query {
-  Map toJson() {
-    var map = Map<String, Object>();
-    map["match_all"] = Map<String, String>();
-    return map;
-  }
+  Map toJson() => {"match_all": Map<String, String>()};
 }
 
 class MatchQuery<T> extends Query {
-  String _field;
-  T _value;
+  String field;
+  T value;
 
-  MatchQuery(this._field, this._value);
+  MatchQuery(this.field, this.value);
 
   Map toJson() => {
-        "match": {this._field: this._value}
+        "match": {this.field: this.value}
       };
 }
 
 class TermsQuery<T> extends Query {
-  String _field;
-  List<T> _values;
+  String field;
+  List<T> values;
 
-  TermsQuery(this._field, this._values);
+  TermsQuery(this.field, this.values);
 
   Map toJson() => {
-        "terms": {this._field: this._values}
+        "terms": {this.field: this.values}
       };
 }
 
 class BoolQuery extends Query {
-  Query _must;
-  BoolQuery(this._must);
+  Query must;
+
+  BoolQuery(this.must);
 
   factory BoolQuery.must(Query must) => BoolQuery(must);
 
-  Map toJson() => {"bool": _must.toJson()};
+  Map toJson() => {"bool": must.toJson()};
 }
 
 class MustQuery extends Query {
-  List<Query> _queries;
+  List<Query> queries;
 
-  MustQuery(this._queries);
+  MustQuery(this.queries);
 
-  Map toJson() => {"must": _queries.map((e) => e.toJson()).toList()};
+  Map toJson() => {"must": queries.map((e) => e.toJson()).toList()};
 }
 
 class JustQuery extends Query {
-  Query _query;
+  Query query;
 
-  JustQuery(this._query);
+  JustQuery(this.query);
 
-  Map toJson() => {"query": _query.toJson()};
+  Map toJson() => {"query": query.toJson()};
 }
 
 class SortElement {
-  String _field, _dir;
+  String field, dir;
 
-  SortElement.asc(this._field) {
-    _dir = asc;
-  }
+  SortElement(this.field, this.dir);
 
-  SortElement.desc(this._field) {
-    _dir = desc;
-  }
+  factory SortElement.asc(String field) => SortElement(field, asc);
+
+  factory SortElement.desc(String field) => SortElement(field, desc);
 
   Map toJson() => {
-        _field: {"order": _dir}
+        field: {"order": dir}
       };
 }
 
 class SearchRequest {
-  int _from = 0, _size = 10;
-  Query _query;
-  List<SortElement> _sort;
+  int from = 0, size = 10;
+  Query query;
+  List<SortElement> sort;
 
-  SearchRequest.all() {
-    _query = MatchAllQuery();
-  }
+  SearchRequest(this.query, this.sort, this.from, this.size);
 
-  SearchRequest.allByQuery(Query query) {
-    _query = query;
-    _size = maxSize;
-  }
+  factory SearchRequest.all() => SearchRequest(MatchAllQuery(), [], defaultOffset, defaultSize);
 
-  SearchRequest.oneByQuery(Query query) {
-    _query = query;
-    _size = 1;
-  }
+  factory SearchRequest.allByQuery(Query query) => SearchRequest(query, [], defaultOffset, maxSize);
 
-  SearchRequest();
-
-  void set from(int f) {
-    _from = f;
-  }
-
-  void set size(int s) {
-    _size = s;
-  }
-
-  void set query(Query q) {
-    _query = q;
-  }
-
-  void set sort(List<SortElement> elems) {
-    _sort = elems;
-  }
+  factory SearchRequest.oneByQuery(Query query, List<SortElement> sort) => SearchRequest(query, sort, defaultOffset, 1);
 
   Map toJson() {
     var map = Map<String, Object>();
-    map["size"] = _size;
-    map["from"] = _from;
-    map["query"] = _query.toJson();
-    if (_sort != null && _sort.length > 0) {
-      map["sort"] = _sort;
+    map["size"] = size;
+    map["from"] = from;
+    map["query"] = query.toJson();
+    if (sort != null && sort.length > 0) {
+      map["sort"] = sort;
     }
     return map;
   }
