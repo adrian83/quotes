@@ -28,8 +28,9 @@ fe-get:
 
 fe-build:
 	echo "building frontend"
-	cd quotes-fe && pub run build_runner clean
-	cd quotes-fe && webdev build
+	#cd quotes-fe && pub run build_runner clean
+	cd quotes-fe && webdev build 
+	#-- --delete-conflicting-outputs
 
 fe-run: 
 	echo "running frontend"
