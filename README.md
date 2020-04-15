@@ -1,5 +1,5 @@
 # QUOTES
-Simple CRUD application written in: Dart 2.5, AngularDart 6, Elasticsearch 6.4, Postgres 11.1.
+Simple CRUD application written in: Dart 2.7, AngularDart 6, Elasticsearch 6.4, Postgres 11.1.
 
 
 ## Running
@@ -14,6 +14,7 @@ Simple CRUD application written in: Dart 2.5, AngularDart 6, Elasticsearch 6.4, 
 1. Run `docker-compose up`
 2. Navigate in browser to `localhost:8080`
 3. (Optional) Put some content into database `make be-init`
+4. Navigate in browser to `localhost:8080`
 
 ### Running locally
 
@@ -26,7 +27,8 @@ Simple CRUD application written in: Dart 2.5, AngularDart 6, Elasticsearch 6.4, 
 1. Start infrastructure (Elasticsearch and Postgres): `make deps`
 2. Start backend: `make be-all`
 3. Start frontend: `make fe-all`
-4. Navigate in browser to `localhost:8080`
+4. (Optional) Put some content into database `make be-init`
+5. Navigate in browser to `localhost:8080`
 
 
 ### Misc
