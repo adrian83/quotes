@@ -15,14 +15,14 @@
     <div class="form-group">
       <label for="textLabel">Text</label>
 
-      <input
-        type="text"
-        class="form-control"
-        id="inputText"
-        aria-describedby="textLabel"
+      <textarea 
+        class="form-control" 
+        [(ngModel)]="quote.text"
         placeholder="Enter text"
-        [(ngModel)]="quote.text">
-
+        aria-describedby="textLabel"
+        id="inputText" 
+        rows="5"></textarea>
+        
     </div>
 
     <input
