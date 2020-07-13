@@ -6,7 +6,7 @@ import '../common/model.dart';
 class Quote extends Entity {
   String _text, _authorId, _bookId;
 
-  Quote(String id, this._text, this._authorId, this._bookId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, DateTime.now().toUtc());
+  Quote(String id, this._text, this._authorId, this._bookId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
 
   Quote.create(this._text, this._authorId, this._bookId) : super(Uuid().v4(), DateTime.now().toUtc(), DateTime.now().toUtc());
 
@@ -33,6 +33,10 @@ class Quote extends Entity {
       "authorId": _authorId,
       "bookId": _bookId,
     });
+
+  String toString() {
+    return "Quote [id: $id, text: $text, authorId: $authorId, bookiId: $bookId, modifiedUtc: $modifiedUtc, createdUtc: $createdUtc]";
+  }
 }
 
 class QuoteEvent extends ESDocument {

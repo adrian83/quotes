@@ -1,16 +1,29 @@
 const asc = "asc";
 const desc = "desc";
 
-const maxSize = 10000;
+const matchAllQ = "match_all";
+const matchQ = "match";
+const termsQ = "terms";
+const queryQ = "query";
+const orderQ = "order";
+const sizeQ = "size";
+const fromQ = "from";
+const sortQ = "sort";
+const mustQ = "must";
+const boolQ = "bool";
+
+const defaultSort = "_id";
 const defaultOffset = 0;
 const defaultSize = 10;
+const maxSize = 10000;
+
 
 abstract class Query {
   Map toJson();
 }
 
 class MatchAllQuery extends Query {
-  Map toJson() => {"match_all": Map<String, String>()};
+  Map toJson() => {matchAllQ: Map<String, String>()};
 }
 
 class MatchQuery<T> extends Query {
@@ -20,7 +33,7 @@ class MatchQuery<T> extends Query {
   MatchQuery(this.field, this.value);
 
   Map toJson() => {
-        "match": {this.field: this.value}
+        matchQ: {this.field: this.value}
       };
 }
 
@@ -31,7 +44,7 @@ class TermsQuery<T> extends Query {
   TermsQuery(this.field, this.values);
 
   Map toJson() => {
-        "terms": {this.field: this.values}
+        termsQ: {this.field: this.values}
       };
 }
 
@@ -42,7 +55,7 @@ class BoolQuery extends Query {
 
   factory BoolQuery.must(Query must) => BoolQuery(must);
 
-  Map toJson() => {"bool": must.toJson()};
+  Map toJson() => {boolQ: must.toJson()};
 }
 
 class MustQuery extends Query {
@@ -50,7 +63,7 @@ class MustQuery extends Query {
 
   MustQuery(this.queries);
 
-  Map toJson() => {"must": queries.map((e) => e.toJson()).toList()};
+  Map toJson() => {mustQ: queries.map((e) => e.toJson()).toList()};
 }
 
 class JustQuery extends Query {
@@ -58,7 +71,7 @@ class JustQuery extends Query {
 
   JustQuery(this.query);
 
-  Map toJson() => {"query": query.toJson()};
+  Map toJson() => {queryQ: query.toJson()};
 }
 
 class SortElement {
@@ -71,7 +84,7 @@ class SortElement {
   factory SortElement.desc(String field) => SortElement(field, desc);
 
   Map toJson() => {
-        field: {"order": dir}
+        field: {orderQ: dir}
       };
 }
 
@@ -88,14 +101,5 @@ class SearchRequest {
 
   factory SearchRequest.oneByQuery(Query query, List<SortElement> sort) => SearchRequest(query, sort, defaultOffset, 1);
 
-  Map toJson() {
-    var map = Map<String, Object>();
-    map["size"] = size;
-    map["from"] = from;
-    map["query"] = query.toJson();
-    if (sort != null && sort.length > 0) {
-      map["sort"] = sort;
-    }
-    return map;
-  }
+  Map toJson() => {sizeQ: size, fromQ: from, queryQ: query.toJson(), sortQ: (sort != null && sort.length > 0) ? sort : defaultSort};
 }

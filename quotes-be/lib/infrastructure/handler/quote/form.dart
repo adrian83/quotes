@@ -14,23 +14,21 @@ var invalidTextViolation = Violation("text", "Text length should be between $min
 
 class NewQuoteFormParser extends FormParser<NewQuoteForm> {
   Tuple2<NewQuoteForm, List<Violation>> parse(Map rawForm) {
-    List<Violation> violations = [];
-    var text;
-
     var textObj = rawForm["text"];
-    if (!isString(textObj)) {
-      violations.add(invalidTextViolation);
-    } else {
-      text = textObj.toString();
-      if (shorter(text, minTextLen) || longer(text, maxTextLen)) {
-        violations.add(invalidTextViolation);
-      }
-    }
-
-    if (violations.length > 0) {
-      return Tuple2(null, violations);
-    }
-
-    return Tuple2(NewQuoteForm(text), null);
+    var tuple = validateText(textObj);
+    var violations = tuple.e2 == null ? null : [tuple.e2];
+    return Tuple2(NewQuoteForm(tuple.e1), violations);
   }
+}
+
+Tuple2<String, Violation> validateText(Object rawText) {
+  if (isString(rawText)) {
+    var text = rawText.toString();
+    if (shorter(text, minTextLen) || longer(text, maxTextLen)) {
+      return Tuple2(null, invalidTextViolation);
+    }
+    return Tuple2(text, null);
+  }
+
+  return Tuple2(null, invalidTextViolation);
 }

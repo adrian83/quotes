@@ -57,11 +57,14 @@ abstract class EventRepository<EVENT extends ESDocument, ENTITY extends Entity> 
     });
   }
 
-  Future<void> deleteByQuery(Query query) => store
-      .list(SearchRequest.allByQuery(query))
-      .then((resp) => resp.hits)
-      .then((hits) => hits.hits.map((d) => _entityDecoder(d.source)).toList())
-      .then((events) => events.map((event) => delete(event.id)));
+  // TODO fix this
+  Future<void> deleteByQuery(Query query) {
+    return store
+        .list(SearchRequest.allByQuery(query))
+        .then((resp) => resp.hits)
+        .then((hits) => hits.hits.map((d) => _entityDecoder(d.source)).toList())
+        .then((events) => events.map((event) => delete(event.id)));
+  }
 
   List<EVENT> _fromDocuments(List<SearchHit> hits) => hits.map((h) => _eventDecoder(h.source)).toList();
 }

@@ -68,12 +68,16 @@ class QuoteHandler {
   void update(HttpRequest req, Params params) => parseForm(req, NewQuoteFormParser())
       .then((form) => Tuple2(form, PathParam3(params, notEmptyString, requiredAuthorId, notEmptyString, requiredBookId, notEmptyString, requiredQuoteId)))
       .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.transform()))
-      .then((tuple2) => createQuote(tuple2.e2, tuple2.e1))
+      .then((tuple2) => updatedQuote(tuple2.e2, tuple2.e1))
       .then((quote) => _quoteService.update(quote))
       .then((quote) => ok(quote, req))
       .catchError((e) => handleErrors(e, req));
 
-  Quote createQuote(Tuple3<String, String, String> params, NewQuoteForm form) => Quote.update(params.e3, form.text, params.e1, params.e2);
+  Quote updatedQuote(Tuple3<String, String, String> params, NewQuoteForm form) => Quote.update(params.e3, form.text, params.e1, params.e2);
 
-  Quote formToQuote(Tuple2<String, String> params, NewQuoteForm form) => Quote.create(form.text, params.e1, params.e2);
+  Quote formToQuote(Tuple2<String, String> params, NewQuoteForm form) => Quote.create(
+        form.text,
+        params.e1,
+        params.e2,
+      );
 }

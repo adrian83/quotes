@@ -24,7 +24,7 @@ Future<F> parseForm<F>(HttpRequest req, FormParser<F> parser) => req
     .then(orThrowException);
 
 F orThrowException<F>(Tuple2<F, List<Violation>> tuple) {
-  if (tuple.e2 != null) {
+  if (tuple.e2 != null && tuple.e2.isEmpty) {
     throw InvalidInputException(tuple.e2);
   }
   return tuple.e1;

@@ -1,13 +1,36 @@
-class IndexingFailedException implements Exception {
-  String _msg;
+import 'response.dart';
 
-  IndexingFailedException(this._msg);
+class IndexingFailedException<T> implements Exception {
+  IndexResult result;
+  T document;
 
-  String get message => this._msg;
+  IndexingFailedException(this.document, this.result);
+
+  String toString() {
+    return "IndexingFailedException [document: $document, result: $result]";
+  }
 }
 
-class DocUpdateFailedException implements Exception {}
+class DocUpdateFailedException<T> implements Exception {
+  UpdateResult result;
+  T document;
 
-class DocFindFailedException implements Exception {}
+  DocUpdateFailedException(this.document, this.result);
+
+  String toString() {
+    return "DocUpdateFailedException [document: $document, result: $result]";
+  }
+}
+
+class DocFindFailedException implements Exception {
+  GetResult result;
+  String id;
+
+  DocFindFailedException(this.id, this.result);
+
+  String toString() {
+    return "DocFindFailedException [document id: $id, result: $result]";
+  }
+}
 
 class IndexNotFoundException implements Exception {}
