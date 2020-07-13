@@ -19,7 +19,7 @@ import '../../domain/common/event.dart';
   providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
   directives: [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
-class EditBookComponent extends ErrorHandler implements OnActivate {
+class EditBookComponent implements OnActivate {
   final AuthorService _authorService;
   final BookService _bookService;
   final ErrorHandler _errorHandler;
@@ -43,14 +43,14 @@ class EditBookComponent extends ErrorHandler implements OnActivate {
       .then((bookId) => _bookService.find(_author.id, bookId))
       .then((book) => _book = book)
       .then((_) => _oldTitle = _book.title)
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   void update() => _bookService
       .update(_book)
       .then((book) => _book = book)
-      .then((_) => showInfo("Book '$_oldTitle' updated"))
+      .then((_) => _errorHandler.showInfo("Book '$_oldTitle' updated"))
       .then((_) => _oldTitle = _book.title)
-      .catchError(handleError);
+      .catchError(_errorHandler.handleError);
 
   void showBook() => _router.showBook(_author.id, _book.id);
 
