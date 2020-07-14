@@ -1,24 +1,23 @@
 import '../../common/json.dart';
 
+const idF = "id";
+const createdUtcF = "createdUtc";
+const modifiedUtcF = "modifiedUtc";
+
 class Entity implements Jsonable {
-  String _id;
+  String id;
   DateTime _modifiedUtc, _createdUtc;
 
-  Entity(this._id, this._modifiedUtc, this._createdUtc);
+  Entity(this.id, this._modifiedUtc, this._createdUtc);
 
-  String get id => _id;
   DateTime get modifiedUtc => _modifiedUtc;
   DateTime get createdUtc => _createdUtc;
-
-  void set id(String id) {
-    this._id = id;
-  }
 
   void set modifiedUtc(DateTime md) {
     _modifiedUtc = md;
   }
 
-  Map toJson() => {"id": _id, "createdUtc": _createdUtc.toIso8601String(), "modifiedUtc": _modifiedUtc.toIso8601String()};
+  Map toJson() => {idF: id, createdUtcF: _createdUtc.toIso8601String(), modifiedUtcF: _modifiedUtc.toIso8601String()};
 }
 
 class PageRequest {

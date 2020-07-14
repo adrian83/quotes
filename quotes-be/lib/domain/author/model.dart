@@ -5,9 +5,11 @@ import '../common/model.dart';
 
 var idLabel = 'id';
 var nameLabel = 'name';
+var eventIdLabel = 'eventId';
+var operationLabel = 'operation';
+var createdUtcLabel = 'createdUtc';
 var descriptionLabel = 'description';
 var modifiedUtcLabel = 'modifiedUtc';
-var createdUtcLabel = 'createdUtc';
 
 class Author extends Entity {
   String name, description;
@@ -24,10 +26,9 @@ class Author extends Entity {
   Author.fromDB(List<dynamic> row) : this(row[0].toString().trim(), row[1].toString().trim(), row[2].toString().trim(), row[3], row[4]);
 
   Map toJson() => super.toJson()..addAll({nameLabel: name, descriptionLabel: description});
-}
 
-var eventIdLabel = 'eventId';
-var operationLabel = 'operation';
+  String toString() => "Author [id: $id, name: $name, description: $description, modifiedUtc: $modifiedUtc, createdUtc: $createdUtc]";
+}
 
 class AuthorEvent extends ESDocument {
   Author author;
@@ -43,4 +44,6 @@ class AuthorEvent extends ESDocument {
   AuthorEvent.fromJson(Map<String, dynamic> json) : this(json[eventIdLabel], json[operationLabel], Author.fromJson(json));
 
   Map toJson() => super.toJson()..addAll(author.toJson());
+
+  String toString() => "AuthorEvent [eventId: $eventId, operation: $operation, modifiedUtc: $modifiedUtc, author: $author]";
 }

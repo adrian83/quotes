@@ -62,7 +62,7 @@ class BookHandler {
   void update(HttpRequest req, Params params) => parseForm(req, NewBookFormParser())
       .then((form) => Tuple2(form, PathParam2(params, notEmptyString, requiredAuthorId, notEmptyString, requiredBookId)))
       .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.transform()))
-      .then((tuple2) => createBook(tuple2.e2, tuple2.e1))
+      .then((tuple2) => updateBook(tuple2.e2, tuple2.e1))
       .then((book) => _bookService.update(book))
       .then((book) => ok(book, req))
       .catchError((e) => handleErrors(e, req));
@@ -70,11 +70,11 @@ class BookHandler {
   void listEvents(HttpRequest req, Params params) => Future.value(PathParam4(
           params, notEmptyString, requiredAuthorId, notEmptyString, requiredBookId, positiveInteger, positivePageLimit, positiveInteger, positivePageOffset))
       .then((params) => params.transform())
-      .then((params) => _bookService.listEvents(params.e1, params.e2, PageRequest(params.e3, params.e3)))
+      .then((params) => _bookService.listEvents(params.e1, params.e2, PageRequest(params.e3, params.e4)))
       .then((authors) => ok(authors, req))
       .catchError((e) => handleErrors(e, req));
 
-  Book createBook(Tuple2<String, String> params, NewBookForm form) => Book.update(params.e2, form.title, form.description, params.e1);
+  Book updateBook(Tuple2<String, String> params, NewBookForm form) => Book.update(params.e2, form.title, form.description, params.e1);
 
   Book formToBook(Tuple1<String> authorIdBox, NewBookForm form) => Book.create(form.title, form.description, authorIdBox.e1);
 }

@@ -17,7 +17,6 @@ const defaultOffset = 0;
 const defaultSize = 10;
 const maxSize = 10000;
 
-
 abstract class Query {
   Map toJson();
 }

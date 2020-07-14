@@ -15,7 +15,7 @@ class BookService {
 
   BookService(this._bookRepository, this._bookEventRepository, this._quoteRepository, this._quoteEventRepository);
 
-  Future<Book> save(Book book) => _bookRepository.save(book.generateId()).then((_) => _bookEventRepository.save(book));
+  Future<Book> save(Book book) => _bookRepository.save(book).then((_) => _bookEventRepository.save(book));
 
   Future<Book> find(String bookId) => _bookRepository.find(bookId);
 
