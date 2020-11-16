@@ -24,13 +24,13 @@ fe-format:
 
 fe-get:
 	echo "getting frontend dependencies" 
-	cd quotes-fe && pub get 
+	cd quotes-fe && pub upgrade && pub get 
 
 fe-build:
 	echo "building frontend"
 	#cd quotes-fe && pub run build_runner clean
-	cd quotes-fe && webdev build 
-	#-- --delete-conflicting-outputs
+	rm quotes-fe/lib/generated_consts.dart ||:
+	cd quotes-fe && webdev build # --delete-conflicting-outputs
 
 fe-run: 
 	echo "running frontend"
@@ -44,7 +44,7 @@ be-format:
 
 be-get: 
 	echo "getting backend dependencies" 
-	cd quotes-be && pub get 
+	cd quotes-be && pub upgrade && pub get 
 	
 be-run: 
 	echo "running backend"
