@@ -38,11 +38,12 @@ class BookRepository extends Repository<Book> {
               .then((total) => PageInfo(request.limit, request.offset, total))
               .then((info) => Page(info, books)));
 
-  Future<Page<Book>> findBooks(String searchPhrase, PageRequest request) {
-    Map<String, Object> params = {"limit": request.limit, "offset": request.offset, "phrase": searchPhrase ?? ""};
+  Future<Page<Book>> findBooks(String? searchPhrase, PageRequest request) {
+    var phrase = searchPhrase ?? "";
+    Map<String, Object> params = {"limit": request.limit, "offset": request.offset};
 
-    return listAll(findBooksStmt(params["phrase"]), params).then((List<Book> books) =>
-        count(findBooksCountStmt(params["phrase"]), {}).then((total) => PageInfo(request.limit, request.offset, total)).then((info) => Page(info, books)));
+    return listAll(findBooksStmt(phrase), params).then((List<Book> books) =>
+        count(findBooksCountStmt(phrase), {}).then((total) => PageInfo(request.limit, request.offset, total)).then((info) => Page(info, books)));
   }
 
   Future<void> save(Book book) => saveByStatement(insertBookStmt,

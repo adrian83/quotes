@@ -66,9 +66,7 @@ Router createRouter(AuthorService authorService, BookService bookService, QuoteS
   var bookHandler = BookHandler(bookService);
   var quoteHandler = QuoteHandler(quoteService);
 
-  Router router = Router();
-
-  router.notFoundHandler = resourceNotFound;
+  Router router = Router(resourceNotFound);
 
   router.registerRoute(r"/{anything}", "OPTIONS", options);
 

@@ -8,6 +8,8 @@ class UrlParams {
   Map<String, String> params = {};
 
   UrlParams(this.params);
+
+  UrlParams.empty() : this(Map<String, String>());
 }
 
 class PathParams {
@@ -17,19 +19,21 @@ class PathParams {
     var entries = desc.entries.where((e) => e.value < segments.length).map((e) => MapEntry(e.key, segments[e.value])).toList();
     params = Map<String, String>.fromEntries(entries);
   }
+
+  PathParams.empty() : this(List.empty(), Map<String, int>());
 }
 
 class Params {
   Map<String, String> params = {};
 
   Params(PathParams path, UrlParams url) {
-    if (url != null) params.addAll(url.params);
-    if (path != null) params.addAll(path.params);
+    params.addAll(url.params);
+    params.addAll(path.params);
   }
 
-  Params.empty() : this(null, null);
+  Params.empty() : this(PathParams.empty(), UrlParams.empty());
 
-  String getValue(String name) => params[name];
+  String? getValue(String name) => params[name];
   int get size => params.length;
 }
 

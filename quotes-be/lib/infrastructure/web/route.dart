@@ -13,10 +13,10 @@ class Route {
   static final String slash = r"/";
 
   String _url, _method;
-  RegExp _exp;
+  RegExp _exp = RegExp(""); // TODO
   Handler _handler;
 
-  Map<String, int> _pathParamsDesc;
+  Map<String, int> _pathParamsDesc = Map<String, int>();
 
   Route(this._url, this._method, this._handler) {
     logger.info("New Route created. Method: $_method, url: $_url");

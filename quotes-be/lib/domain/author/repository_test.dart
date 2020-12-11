@@ -10,6 +10,9 @@ import 'repository.dart';
 
 class PostgreSQLConnectionMock extends Mock implements PostgreSQLConnection {}
 
+class PostgreSQLResultMock extends Mock implements PostgreSQLResult {}
+
+
 void main() {
   var postgreSQLConnectionMock = PostgreSQLConnectionMock();
 
@@ -58,7 +61,7 @@ void main() {
   });
 
   test("find should return author entity", () async {
-    when(postgreSQLConnectionMock.query(getAuthorStmt, substitutionValues: {"id": authorId})).thenAnswer((_) => Future.value([authorRow]));
+    when(postgreSQLConnectionMock.query(getAuthorStmt, substitutionValues: {"id": authorId})).thenAnswer((_) => Future.value(PostgreSQLResultMock()));
 
     var result = await authorRepository.find(authorId);
 
@@ -110,11 +113,9 @@ void main() {
   });
 
   test("findAuthors should return authors page", () async {
-    when(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams)).thenAnswer((_) => Future.value([authorRow]));
+    when(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams)).thenAnswer((_) => Future.value(PostgreSQLResultMock()));
 
-    when(postgreSQLConnectionMock.query(findAuthorsCountStmt(searchPhrase), substitutionValues: {})).thenAnswer((_) => Future.value([
-          [authorsCount]
-        ]));
+    when(postgreSQLConnectionMock.query(findAuthorsCountStmt(searchPhrase), substitutionValues: {})).thenAnswer((_) => Future.value(PostgreSQLResultMock()));
 
     var result = await authorRepository.findAuthors(searchPhrase, searchReq);
 
@@ -139,7 +140,7 @@ void main() {
   });
 
   test("findAuthors should return failed Future if getting authors count fails", () async {
-    when(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams)).thenAnswer((_) => Future.value([authorRow]));
+    when(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams)).thenAnswer((_) => Future.value(PostgreSQLResultMock()));
 
     when(postgreSQLConnectionMock.query(findAuthorsCountStmt(searchPhrase), substitutionValues: {})).thenAnswer((_) => Future.error(StateError("exception")));
 
