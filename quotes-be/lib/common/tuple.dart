@@ -3,6 +3,10 @@ class Tuple1<T1> {
 
   Tuple1(this.e1);
 
+  void ifElem1Exists(Function(T1) f) {
+    if(e1 != null) f(e1!);
+  }
+
   String toString() => "Tuple1 [e1: $e1]";
 }
 
@@ -10,6 +14,10 @@ class Tuple2<T1, T2> extends Tuple1<T1> {
   T2? e2;
 
   Tuple2(T1? e1, this.e2) : super(e1);
+
+  void ifElem2Exists(Function(T2) f) {
+    if(e2 != null) f(e2!);
+  }
 
   String toString() => "Tuple2 [e1: $e1, e2: $e2]";
 }

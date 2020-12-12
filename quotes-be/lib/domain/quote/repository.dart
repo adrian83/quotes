@@ -33,16 +33,23 @@ RowDecoder<Quote> quoteRowDecoder = (List<dynamic> row) => Quote.fromDB(row);
 class QuoteRepository extends Repository<Quote> {
   QuoteRepository(PostgreSQLConnection connection) : super(connection, quoteRowDecoder);
 
-  Future<Page<Quote>> findBookQuotes(String bookId, PageRequest request) =>
-      listAll(listBookQuotesStmt, {"limit": request.limit, "offset": request.offset, "bookId": bookId}).then((List<Quote> quotes) =>
-          count(bookQuotesCountStmt, {"bookId": bookId}).then((total) => PageInfo(request.limit, request.offset, total)).then((info) => Page(info, quotes)));
+  Future<Page<Quote>> findBookQuotes(ListQuotesFromBookRequest request) {
+    var limit = request.pageRequest.limit;
+    var offset = request.pageRequest.offset;
+      
+      return listAll(listBookQuotesStmt, {"limit": limit, "offset": offset, "bookId": request.bookId}).then((List<Quote> quotes) =>
+          count(bookQuotesCountStmt, {"bookId": request.bookId}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, quotes)));
+  }
 
-  Future<Page<Quote>> findQuotes(String? searchPhrase, PageRequest request) {
-    var phrase = searchPhrase ?? "";
-    Map<String, Object> params = {"limit": request.limit, "offset": request.offset};
+  Future<Page<Quote>> findQuotes(SearchQuoteRequest request) {
+    var phrase = request.searchPhrase ?? "";
+    var limit = request.pageRequest.limit;
+    var offset = request.pageRequest.offset;
+
+    Map<String, Object> params = {"limit": limit, "offset": offset};
 
     return listAll(findQuotesStmt(phrase), params).then((List<Quote> quotes) =>
-        count(findQuotesCountStmt(phrase), {}).then((total) => PageInfo(request.limit, request.offset, total)).then((info) => Page(info, quotes)));
+        count(findQuotesCountStmt(phrase), {}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, quotes)));
   }
 
   Future<Quote> save(Quote quote) => saveByStatement(insertQuoteStmt, {

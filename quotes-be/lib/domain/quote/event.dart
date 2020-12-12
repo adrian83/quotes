@@ -36,8 +36,8 @@ class QuoteEventRepository extends EventRepository<QuoteEvent, Quote> {
     return super.deleteByQuery(query);
   }
 
-  Future<Page<QuoteEvent>> listEvents(String authorId, String bookId, String quoteId, PageRequest request) {
-    var query = MatchQuery("id", quoteId);
-    return super.listEventsByQuery(query, request);
+  Future<Page<QuoteEvent>> listEvents(ListEventsByQuoteRequest request) {
+    var query = MatchQuery("id", request.quoteId);
+    return super.listEventsByQuery(query, request.pageRequest);
   }
 }
