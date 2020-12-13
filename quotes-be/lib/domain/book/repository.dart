@@ -32,18 +32,24 @@ RowDecoder<Book> bookRowDecoder = (List<dynamic> row) => Book.fromDB(row);
 class BookRepository extends Repository<Book> {
   BookRepository(PostgreSQLConnection connection) : super(connection, bookRowDecoder);
 
-  Future<Page<Book>> findAuthorBooks(String authorId, PageRequest request) =>
-      listAll(listAuthorBooksStmt, {"limit": request.limit, "offset": request.offset, "authorId": authorId}).then((List<Book> books) =>
-          count(authorBooksCountStmt, {"authorId": authorId})
-              .then((total) => PageInfo(request.limit, request.offset, total))
-              .then((info) => Page(info, books)));
+  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorRequest request) {
+    var limit = request.pageRequest.limit;
+    var offset = request.pageRequest.offset;
 
-  Future<Page<Book>> findBooks(String? searchPhrase, PageRequest request) {
-    var phrase = searchPhrase ?? "";
-    Map<String, Object> params = {"limit": request.limit, "offset": request.offset};
+      return listAll(listAuthorBooksStmt, {"limit": limit, "offset": offset, "authorId": request.authorId}).then((List<Book> books) =>
+          count(authorBooksCountStmt, {"authorId": request.authorId})
+              .then((total) => PageInfo(limit, offset, total))
+              .then((info) => Page(info, books)));
+  }
+
+  Future<Page<Book>> findBooks(SearchEntityRequest request) {
+    var phrase = request.searchPhrase ?? "";
+    var limit = request.pageRequest.limit;
+    var offset = request.pageRequest.offset;
+    Map<String, Object> params = {"limit": limit, "offset": offset};
 
     return listAll(findBooksStmt(phrase), params).then((List<Book> books) =>
-        count(findBooksCountStmt(phrase), {}).then((total) => PageInfo(request.limit, request.offset, total)).then((info) => Page(info, books)));
+        count(findBooksCountStmt(phrase), {}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, books)));
   }
 
   Future<void> save(Book book) => saveByStatement(insertBookStmt,

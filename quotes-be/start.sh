@@ -6,4 +6,4 @@ echo "Waiting for postgres and elasticsearch"
 sleep 20
 
 # APPLICATION
-dart ./bin/run_app.dart ./infra/docker.json # populate
+dart '--enable-experiment=non-nullable' ./bin/run_app.dart ./infra/docker.json # populate

@@ -47,3 +47,22 @@ class AuthorEvent extends ESDocument {
 
   String toString() => "AuthorEvent [eventId: $eventId, operation: $operation, modifiedUtc: $modifiedUtc, author: $author]";
 }
+
+class ListAuthorsRequest {
+    late PageRequest pageRequest;
+
+      ListAuthorsRequest(int offset, int limit){
+pageRequest = PageRequest(limit, offset);
+  }
+}
+
+class ListEventsByAuthorRequest {
+    String authorId;
+    late PageRequest pageRequest;
+
+      ListEventsByAuthorRequest(this.authorId, int offset, int limit){
+pageRequest = PageRequest(limit, offset);
+  }
+}
+
+

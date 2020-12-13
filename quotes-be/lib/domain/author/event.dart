@@ -17,8 +17,8 @@ DocumentDeleter<AuthorEvent, Author> eventDeleter = (Author author) => AuthorEve
 class AuthorEventRepository extends EventRepository<AuthorEvent, Author> {
   AuthorEventRepository(ESStore<AuthorEvent> store) : super(store, eventDecoder, authorDecoder, eventCreator, eventModifier, eventDeleter);
 
-  Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) {
-    var query = MatchQuery("id", authorId);
-    return super.listEventsByQuery(query, request);
+  Future<Page<AuthorEvent>> listEvents(ListEventsByAuthorRequest request) {
+    var query = MatchQuery("id", request.authorId);
+    return super.listEventsByQuery(query, request.pageRequest);
   }
 }

@@ -12,11 +12,11 @@ import '../../../domain/book/model.dart';
 import '../../../domain/book/service.dart';
 import '../../../domain/common/model.dart';
 
-var requiredAuthorId = ParamData("authorId", "authorId cannot be empty");
-var requiredBookId = ParamData("bookId", "bookId cannot be empty");
-var optionalSearchPhrase = ParamData("searchPhrase", "");
-var positivePageLimit = ParamData("limit", "limit should be a positive integer");
-var positivePageOffset = ParamData("offset", "offset should be a positive integer");
+// var requiredAuthorId = ParamData("authorId", "authorId cannot be empty");
+// var requiredBookId = ParamData("bookId", "bookId cannot be empty");
+// var optionalSearchPhrase = ParamData("searchPhrase", "");
+// var positivePageLimit = ParamData("limit", "limit should be a positive integer");
+// var positivePageOffset = ParamData("offset", "offset should be a positive integer");
 
 class BookHandler {
   static final Logger logger = Logger('BookHandler');
@@ -25,56 +25,42 @@ class BookHandler {
 
   BookHandler(this._bookService);
 
-  void persist(HttpRequest req, Params params) => parseForm(req, NewBookFormParser())
-      .then((form) => Tuple2(form, PathParam1(params, notEmptyString, requiredAuthorId)))
-      .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.transform()))
-      .then((tuple2) => formToBook(tuple2.e2, tuple2.e1))
-      .then((book) => _bookService.save(book))
+  void persist(HttpRequest req, Params params) => readForm(req)
+      .then((form) => PersistBookParams(form, params))
+      .then((persistParams) => _bookService.save(persistParams.toBook()))
       .then((book) => created(book, req))
       .catchError((e) => handleErrors(e, req));
 
-  void delete(HttpRequest req, Params params) => Future.value(PathParam2(params, notEmptyString, requiredAuthorId, notEmptyString, requiredBookId))
-      .then((params) => params.transform())
-      .then((params) => _bookService.delete(params.e2))
+  void delete(HttpRequest req, Params params) => Future.value(DeleteBookParams(params))
+      .then((deleteParams) => _bookService.delete(deleteParams.getBookId()))
       .then((_) => ok(null, req))
       .catchError((e) => handleErrors(e, req));
 
-  void search(HttpRequest req, Params params) =>
-      Future.value(PathParam3(params, optionalString, optionalSearchPhrase, positiveInteger, positivePageLimit, positiveInteger, positivePageOffset))
-          .then((params) => params.transform())
-          .then((params) => _bookService.findBooks(params.e1, PageRequest(params.e2, params.e3)))
+  void search(HttpRequest req, Params params) => readForm(req)
+          .then((form) => SearchParams(form, params))
+          .then((searchParams) => _bookService.findBooks(searchParams.toSearchEntityRequest()))
           .then((books) => ok(books, req))
           .catchError((e) => handleErrors(e, req));
 
-  void find(HttpRequest req, Params params) => Future.value(PathParam2(params, notEmptyString, requiredAuthorId, notEmptyString, requiredBookId))
-      .then((params) => params.transform())
-      .then((params) => _bookService.find(params.e2))
+  void find(HttpRequest req, Params params) => Future.value(FindBookParams(params))
+      .then((findParams) => _bookService.find(findParams.getBookId()))
       .then((book) => ok(book, req))
       .catchError((e) => handleErrors(e, req));
 
   void listByAuthor(HttpRequest req, Params params) =>
-      Future.value(PathParam3(params, notEmptyString, requiredAuthorId, positiveInteger, positivePageLimit, positiveInteger, positivePageOffset))
-          .then((params) => params.transform())
-          .then((params) => _bookService.findAuthorBooks(params.e1, PageRequest(params.e2, params.e3)))
+      Future.value(ListBooksByAuthorParams(params))
+          .then((params) => _bookService.findAuthorBooks(params.toListBooksByAuthorRequest()))
           .then((books) => ok(books, req))
           .catchError((e) => handleErrors(e, req));
 
-  void update(HttpRequest req, Params params) => parseForm(req, NewBookFormParser())
-      .then((form) => Tuple2(form, PathParam2(params, notEmptyString, requiredAuthorId, notEmptyString, requiredBookId)))
-      .then((tuple2) => Tuple2(tuple2.e1, tuple2.e2.transform()))
-      .then((tuple2) => updateBook(tuple2.e2, tuple2.e1))
-      .then((book) => _bookService.update(book))
+  void update(HttpRequest req, Params params) => readForm(req)
+      .then((form) => UpdateBookParams(form, params))
+      .then((updateParams) => _bookService.update(updateParams.toBook()))
       .then((book) => ok(book, req))
       .catchError((e) => handleErrors(e, req));
 
-  void listEvents(HttpRequest req, Params params) => Future.value(PathParam4(
-          params, notEmptyString, requiredAuthorId, notEmptyString, requiredBookId, positiveInteger, positivePageLimit, positiveInteger, positivePageOffset))
-      .then((params) => params.transform())
-      .then((params) => _bookService.listEvents(params.e1, params.e2, PageRequest(params.e3, params.e4)))
+  void listEvents(HttpRequest req, Params params) => Future.value(ListEventsByBookParams(params))
+      .then((params) => _bookService.listEvents(params.toListEventsByBookRequest()))
       .then((authors) => ok(authors, req))
       .catchError((e) => handleErrors(e, req));
-
-  Book updateBook(Tuple2<String, String> params, NewBookForm form) => Book.update(params.e2, form.title, form.description, params.e1);
-
-  Book formToBook(Tuple1<String> authorIdBox, NewBookForm form) => Book.create(form.title, form.description, authorIdBox.e1);
 }

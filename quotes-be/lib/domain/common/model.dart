@@ -59,3 +59,12 @@ class Page<T extends Jsonable> {
         "elements": _elements.map((e) => e.toJson()).toList(),
       };
 }
+
+class SearchEntityRequest{ 
+  String? searchPhrase;
+  late PageRequest pageRequest;
+
+  SearchEntityRequest(this.searchPhrase, int offset, int limit){
+pageRequest = PageRequest(limit, offset);
+  }
+}

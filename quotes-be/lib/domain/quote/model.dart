@@ -52,15 +52,6 @@ class QuoteEvent extends ESDocument {
 
 
 
-class SearchQuoteRequest{ 
-  String? searchPhrase;
-  late PageRequest pageRequest;
-
-  SearchQuoteRequest(this.searchPhrase, int offset, int limit){
-pageRequest = PageRequest(limit, offset);
-  }
-}
-
 class ListEventsByQuoteRequest {
   String authorId, bookId, quoteId;
     late PageRequest pageRequest;

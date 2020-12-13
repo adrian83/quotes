@@ -42,13 +42,20 @@ class AuthorRepository extends Repository<Author> {
 
   Future<void> delete(String authorId) => deleteAtLeastOne(deleteAuthorStmt, idParameter(authorId));
 
-  Future<Page<Author>> findAuthors(String searchPhrase, PageRequest request) => Future.value(findByPhraseParams(searchPhrase, request))
-      .then((params) => listAll(findAuthorsStmt(orEmpty(searchPhrase)), params))
-      .then((List<Author> authors) => count(findAuthorsCountStmt(orEmpty(searchPhrase)), {})
-          .then((total) => PageInfo(request.limit, request.offset, total))
-          .then((info) => Page(info, authors)));
+  Future<Page<Author>> findAuthors(SearchEntityRequest request) {
+        var phrase = request.searchPhrase ?? "";
+    var limit = request.pageRequest.limit;
+    var offset = request.pageRequest.offset;
 
-  String orEmpty(String text) => text ?? "";
+
+    return Future.value(findByPhraseParams(phrase, request.pageRequest))
+      .then((params) => listAll(findAuthorsStmt(phrase), params))
+      .then((List<Author> authors) => count(findAuthorsCountStmt(phrase), {})
+          .then((total) => PageInfo(limit, offset, total))
+          .then((info) => Page(info, authors)));
+  }
+
+  String orEmpty(String? text) => text ?? "";
 
   Map<String, Object> findByPhraseParams(String phrase, PageRequest request) =>
       {limitParam: request.limit, offsetParam: request.offset, phraseParam: orEmpty(phrase)};

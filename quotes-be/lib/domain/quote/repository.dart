@@ -41,7 +41,7 @@ class QuoteRepository extends Repository<Quote> {
           count(bookQuotesCountStmt, {"bookId": request.bookId}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, quotes)));
   }
 
-  Future<Page<Quote>> findQuotes(SearchQuoteRequest request) {
+  Future<Page<Quote>> findQuotes(SearchEntityRequest request) {
     var phrase = request.searchPhrase ?? "";
     var limit = request.pageRequest.limit;
     var offset = request.pageRequest.offset;

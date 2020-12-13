@@ -4,10 +4,10 @@ abstract class ESDocument implements Jsonable {
   static final String created = "created", modified = "modified", deleted = "deleted";
 
   String eventId, operation;
-  DateTime modifiedUtc;
+  late DateTime modifiedUtc;
 
-  ESDocument(this.eventId, this.operation, [DateTime modDateUtc]) {
-    modifiedUtc = modDateUtc == null ? DateTime.now().toUtc() : modDateUtc;
+  ESDocument(this.eventId, this.operation) { //, [DateTime modDateUtc]) {
+    modifiedUtc = DateTime.now().toUtc(); // modDateUtc == null ? DateTime.now().toUtc() : modDateUtc;
   }
 
   Map toJson() => {"eventId": eventId, "operation": operation, "modifiedUtc": modifiedUtc.toIso8601String()};

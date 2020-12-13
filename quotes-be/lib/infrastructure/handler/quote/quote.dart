@@ -27,9 +27,8 @@ class QuoteHandler {
           .catchError((e) => handleErrors(e, req));
 
   void search(HttpRequest req, Params params) => readForm(req)
-      
-          .then((form) => SearchQuotesParams(form, params))
-          .then((searchParams) => _quoteService.findQuotes(searchParams.toSearchQuoteRequest()))
+          .then((form) => SearchParams(form, params))
+          .then((searchParams) => _quoteService.findQuotes(searchParams.toSearchEntityRequest()))
           .then((books) => ok(books, req))
           .catchError((e) => handleErrors(e, req));
 

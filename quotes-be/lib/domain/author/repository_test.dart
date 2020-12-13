@@ -30,9 +30,11 @@ void main() {
 
   var searchPhrase = "test";
 
-  var searchReq = PageRequest(5, 0);
+  var pageRequest = PageRequest(5, 0);
 
-  var pageParams = {"limit": searchReq.limit, "offset": searchReq.offset, "phrase": searchPhrase};
+  var searchReq = SearchEntityRequest(null, pageRequest.offset, pageRequest.limit);
+
+  var pageParams = {"limit": pageRequest.limit, "offset": pageRequest.offset, "phrase": searchPhrase};
 
   var authorsCount = 15;
 
@@ -113,18 +115,19 @@ void main() {
   });
 
   test("findAuthors should return authors page", () async {
+
     when(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams)).thenAnswer((_) => Future.value(PostgreSQLResultMock()));
 
     when(postgreSQLConnectionMock.query(findAuthorsCountStmt(searchPhrase), substitutionValues: {})).thenAnswer((_) => Future.value(PostgreSQLResultMock()));
 
-    var result = await authorRepository.findAuthors(searchPhrase, searchReq);
+    var result = await authorRepository.findAuthors(searchReq);
 
     verify(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams));
 
     verify(postgreSQLConnectionMock.query(findAuthorsCountStmt(searchPhrase), substitutionValues: {}));
 
-    expect(result.info.limit, equals(searchReq.limit));
-    expect(result.info.offset, equals(searchReq.offset));
+    expect(result.info.limit, equals(searchReq.pageRequest.limit));
+    expect(result.info.offset, equals(searchReq.pageRequest.offset));
     expect(result.info.total, equals(authorsCount));
   });
 
@@ -132,7 +135,7 @@ void main() {
     when(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams))
         .thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(authorRepository.findAuthors(searchPhrase, searchReq), throwsStateError);
+    expect(authorRepository.findAuthors(searchReq), throwsStateError);
 
     verifyNever(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams));
 
@@ -144,7 +147,7 @@ void main() {
 
     when(postgreSQLConnectionMock.query(findAuthorsCountStmt(searchPhrase), substitutionValues: {})).thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(authorRepository.findAuthors(searchPhrase, searchReq), throwsStateError);
+    expect(authorRepository.findAuthors(searchReq), throwsStateError);
 
     verify(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams));
 

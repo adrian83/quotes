@@ -29,9 +29,9 @@ class BookService {
 
   Future<void> deleteByAuthor(String authorId) => _bookRepository.deleteByAuthor(authorId).then((_) => _bookEventRepository.deleteByAuthor(authorId));
 
-  Future<Page<Book>> findAuthorBooks(String authorId, PageRequest request) => _bookRepository.findAuthorBooks(authorId, request);
+  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorRequest request) => _bookRepository.findAuthorBooks(request);
 
-  Future<Page<Book>> findBooks(String searchPhrase, PageRequest request) => _bookRepository.findBooks(searchPhrase, request);
+  Future<Page<Book>> findBooks(SearchEntityRequest request) => _bookRepository.findBooks(request);
 
-  Future<Page<BookEvent>> listEvents(String authorId, String bookId, PageRequest request) => _bookEventRepository.listEvents(authorId, bookId, request);
+  Future<Page<BookEvent>> listEvents(ListEventsByBookRequest request) => _bookEventRepository.listEvents(request);
 }

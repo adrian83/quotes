@@ -29,8 +29,8 @@ class BookEventRepository extends EventRepository<BookEvent, Book> {
     return super.deleteByQuery(query);
   }
 
-  Future<Page<BookEvent>> listEvents(String authorId, String bookId, PageRequest request) {
-    var query = MatchQuery("id", bookId);
-    return super.listEventsByQuery(query, request);
+  Future<Page<BookEvent>> listEvents(ListEventsByBookRequest request) {
+    var query = MatchQuery("id", request.bookId);
+    return super.listEventsByQuery(query, request.pageRequest);
   }
 }

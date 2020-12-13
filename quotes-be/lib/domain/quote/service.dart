@@ -19,9 +19,9 @@ class QuoteService {
 
   Future<void> delete(String quoteId) => _quotesRepository.delete(quoteId).then((_) => _quoteEventRepository.delete(quoteId));
 
-  Future<Page<Quote>> findBookQuotes(String bookId, PageRequest request) => _quotesRepository.findBookQuotes(bookId, request);
+  Future<Page<Quote>> findBookQuotes(ListQuotesFromBookRequest request) => _quotesRepository.findBookQuotes(request);
 
-  Future<Page<Quote>> findQuotes(SearchQuoteRequest request) => _quotesRepository.findQuotes(request);
+  Future<Page<Quote>> findQuotes(SearchEntityRequest request) => _quotesRepository.findQuotes(request);
 
   Future<Page<QuoteEvent>> listEvents(ListEventsByQuoteRequest request) => _quoteEventRepository.listEvents(request);
 

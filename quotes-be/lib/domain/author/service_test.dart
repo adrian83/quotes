@@ -124,13 +124,14 @@ void main() {
   test("findAuthors should return authors page", () async {
     var phrase = "Shakespeare";
     var pageReq = PageRequest(1, 5);
+    var searchReq = SearchEntityRequest(phrase, pageReq.offset, pageReq.limit);
     var authorsPage = Page<Author>(PageInfo(1, 5, 345), [author]);
 
-    when(authorRepoMock.findAuthors(phrase, pageReq)).thenAnswer((_) => Future.value(authorsPage));
+    when(authorRepoMock.findAuthors(searchReq)).thenAnswer((_) => Future.value(authorsPage));
 
-    var result = await authorService.findAuthors(phrase, pageReq);
+    var result = await authorService.findAuthors(searchReq);
 
-    verify(authorRepoMock.findAuthors(phrase, pageReq));
+    verify(authorRepoMock.findAuthors(searchReq));
 
     expect(result.elements.length, equals(1));
   });
@@ -138,35 +139,38 @@ void main() {
   test("exception in findAuthors method in AuthorRepository should result with failed Future", () async {
     var phrase = "Shakespeare";
     var pageReq = PageRequest(1, 5);
+    var searchReq = SearchEntityRequest(phrase, pageReq.offset, pageReq.limit);
 
-    when(authorRepoMock.findAuthors(phrase, pageReq)).thenAnswer((_) => Future.error(StateError("exception")));
+    when(authorRepoMock.findAuthors(searchReq)).thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(authorService.findAuthors(phrase, pageReq), throwsStateError);
+    expect(authorService.findAuthors(searchReq), throwsStateError);
 
-    verify(authorRepoMock.findAuthors(phrase, pageReq));
+    verify(authorRepoMock.findAuthors(searchReq));
   });
 
   test("listEvents should return author event page", () async {
     var pageReq = PageRequest(1, 5);
+    var listReq = ListEventsByAuthorRequest(authorId, pageReq.offset, pageReq.limit);
     var eventsPage = Page<AuthorEvent>(PageInfo(1, 5, 345), [createAuthorEvent]);
 
-    when(authorEventRepoMock.listEvents(authorId, pageReq)).thenAnswer((_) => Future.value(eventsPage));
+    when(authorEventRepoMock.listEvents(listReq)).thenAnswer((_) => Future.value(eventsPage));
 
-    var result = await authorService.listEvents(authorId, pageReq);
+    var result = await authorService.listEvents(listReq);
 
-    verify(authorEventRepoMock.listEvents(authorId, pageReq));
+    verify(authorEventRepoMock.listEvents(listReq));
 
     expect(result.elements.length, equals(1));
   });
 
   test("exception in listEvents method in AuthorEventRepository should result with failed Future", () async {
     var pageReq = PageRequest(1, 5);
+    var listReq = ListEventsByAuthorRequest(authorId, pageReq.offset, pageReq.limit);
 
-    when(authorEventRepoMock.listEvents(authorId, pageReq)).thenAnswer((_) => Future.error(StateError("exception")));
+    when(authorEventRepoMock.listEvents(listReq)).thenAnswer((_) => Future.error(StateError("exception")));
 
-    expect(authorService.listEvents(authorId, pageReq), throwsStateError);
+    expect(authorService.listEvents(listReq), throwsStateError);
 
-    verify(authorEventRepoMock.listEvents(authorId, pageReq));
+    verify(authorEventRepoMock.listEvents(listReq));
   });
 
   test("delete should delete author", () async {

@@ -34,7 +34,7 @@ class AuthorService {
       .then((_) => _quoteRepository.deleteByAuthor(authorId))
       .then((_) => _quoteEventRepository.deleteByAuthor(authorId));
 
-  Future<Page<Author>> findAuthors(String searchPhrase, PageRequest request) => _authorRepository.findAuthors(searchPhrase, request);
+  Future<Page<Author>> findAuthors(SearchEntityRequest request) => _authorRepository.findAuthors(request);
 
-  Future<Page<AuthorEvent>> listEvents(String authorId, PageRequest request) => _authorEventRepository.listEvents(authorId, request);
+  Future<Page<AuthorEvent>> listEvents(ListEventsByAuthorRequest request) => _authorEventRepository.listEvents(request);
 }
