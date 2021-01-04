@@ -6,7 +6,8 @@ abstract class ESDocument implements Jsonable {
   String eventId, operation;
   late DateTime modifiedUtc;
 
-  ESDocument(this.eventId, this.operation) { //, [DateTime modDateUtc]) {
+  ESDocument(this.eventId, this.operation) {
+    //, [DateTime modDateUtc]) {
     modifiedUtc = DateTime.now().toUtc(); // modDateUtc == null ? DateTime.now().toUtc() : modDateUtc;
   }
 

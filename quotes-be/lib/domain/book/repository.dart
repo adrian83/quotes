@@ -36,10 +36,8 @@ class BookRepository extends Repository<Book> {
     var limit = request.pageRequest.limit;
     var offset = request.pageRequest.offset;
 
-      return listAll(listAuthorBooksStmt, {"limit": limit, "offset": offset, "authorId": request.authorId}).then((List<Book> books) =>
-          count(authorBooksCountStmt, {"authorId": request.authorId})
-              .then((total) => PageInfo(limit, offset, total))
-              .then((info) => Page(info, books)));
+    return listAll(listAuthorBooksStmt, {"limit": limit, "offset": offset, "authorId": request.authorId}).then((List<Book> books) =>
+        count(authorBooksCountStmt, {"authorId": request.authorId}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, books)));
   }
 
   Future<Page<Book>> findBooks(SearchEntityRequest request) {
@@ -48,8 +46,8 @@ class BookRepository extends Repository<Book> {
     var offset = request.pageRequest.offset;
     Map<String, Object> params = {"limit": limit, "offset": offset};
 
-    return listAll(findBooksStmt(phrase), params).then((List<Book> books) =>
-        count(findBooksCountStmt(phrase), {}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, books)));
+    return listAll(findBooksStmt(phrase), params)
+        .then((List<Book> books) => count(findBooksCountStmt(phrase), {}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, books)));
   }
 
   Future<void> save(Book book) => saveByStatement(insertBookStmt,

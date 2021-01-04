@@ -13,7 +13,7 @@ var invalidDescViolation = Violation("description", "Description length should b
 
 class PersistBookParams {
   String? authorId, title, description;
-  
+
   PersistBookParams(Map form, Params params) {
     this.title = form["title"];
     this.description = form["description"];
@@ -26,27 +26,26 @@ class PersistBookParams {
     var titleOrError = notEmptyString("title", this.title);
     titleOrError.ifElem2Exists((err) => violations.add(err));
 
-        var descriptionOrError = notEmptyString("description", this.description);
+    var descriptionOrError = notEmptyString("description", this.description);
     descriptionOrError.ifElem2Exists((err) => violations.add(err));
 
     var locationOrError = validateAuthorLocation(authorId);
     locationOrError.ifElem2Exists((vls) => violations.addAll(vls));
 
-    if(violations.isNotEmpty){
+    if (violations.isNotEmpty) {
       throw InvalidInputException(violations);
     }
 
-return Book.create(titleOrError.e1!, descriptionOrError.e1!, locationOrError.e1!);
+    return Book.create(titleOrError.e1!, descriptionOrError.e1!, locationOrError.e1!);
   }
 }
 
-class UpdateBookParams extends PersistBookParams{
+class UpdateBookParams extends PersistBookParams {
   String? bookId;
-  
-  UpdateBookParams(Map form, Params params) :
-    this.bookId = params.getValue("bookId"),
-    super(form, params);
-  
+
+  UpdateBookParams(Map form, Params params)
+      : this.bookId = params.getValue("bookId"),
+        super(form, params);
 
   Book toBook() {
     List<Violation> violations = [];
@@ -54,13 +53,13 @@ class UpdateBookParams extends PersistBookParams{
     var titleOrError = notEmptyString("title", this.title);
     titleOrError.ifElem2Exists((err) => violations.add(err));
 
-        var descriptionOrError = notEmptyString("description", this.description);
+    var descriptionOrError = notEmptyString("description", this.description);
     descriptionOrError.ifElem2Exists((err) => violations.add(err));
 
     var locationOrError = validateBookLocation(authorId, bookId);
     locationOrError.ifElem3Exists((vls) => violations.addAll(vls));
 
-    if(violations.isNotEmpty){
+    if (violations.isNotEmpty) {
       throw InvalidInputException(violations);
     }
 
@@ -68,11 +67,9 @@ class UpdateBookParams extends PersistBookParams{
   }
 }
 
-
-
 class FindBookParams {
   String? authorId, bookId;
-  
+
   FindBookParams(Params params) {
     this.authorId = params.getValue("authorId");
     this.bookId = params.getValue("bookId");
@@ -81,10 +78,10 @@ class FindBookParams {
   String getBookId() {
     List<Violation> violations = [];
 
-var locationOrError = validateBookLocation(authorId, bookId);
-locationOrError.ifElem3Exists((vls) => violations.addAll(vls));
+    var locationOrError = validateBookLocation(authorId, bookId);
+    locationOrError.ifElem3Exists((vls) => violations.addAll(vls));
 
-    if(violations.isNotEmpty){
+    if (violations.isNotEmpty) {
       throw InvalidInputException(violations);
     }
 
@@ -93,29 +90,28 @@ locationOrError.ifElem3Exists((vls) => violations.addAll(vls));
 }
 
 class DeleteBookParams extends FindBookParams {
-
   DeleteBookParams(Params params) : super(params);
 }
 
 class ListBooksByAuthorParams {
   String? authorId, limit, offset;
 
- ListBooksByAuthorParams(Params params) {
+  ListBooksByAuthorParams(Params params) {
     this.authorId = params.getValue("authorId");
     this.limit = params.getValue("limit");
     this.offset = params.getValue("offset");
- }
+  }
 
   ListBooksByAuthorRequest toListBooksByAuthorRequest() {
-        List<Violation> violations = [];
+    List<Violation> violations = [];
 
     var locationOrError = validateAuthorLocation(authorId);
     locationOrError.ifElem2Exists((vls) => violations.addAll(vls));
 
-var pageDataOrError = validatePageRequest(offset, limit);
-pageDataOrError.ifElem3Exists((vls) => violations.addAll(vls));
+    var pageDataOrError = validatePageRequest(offset, limit);
+    pageDataOrError.ifElem3Exists((vls) => violations.addAll(vls));
 
-    if(violations.isNotEmpty){
+    if (violations.isNotEmpty) {
       throw InvalidInputException(violations);
     }
 
@@ -123,30 +119,29 @@ pageDataOrError.ifElem3Exists((vls) => violations.addAll(vls));
   }
 }
 
-
 class ListEventsByBookParams {
   String? authorId, bookId, limit, offset;
 
- ListEventsByBookParams(Params params) {
+  ListEventsByBookParams(Params params) {
     this.authorId = params.getValue("authorId");
     this.bookId = params.getValue("bookId");
     this.limit = params.getValue("limit");
     this.offset = params.getValue("offset");
- }
+  }
 
   ListEventsByBookRequest toListEventsByBookRequest() {
-        List<Violation> violations = [];
+    List<Violation> violations = [];
 
-var locationOrError = validateBookLocation(authorId, bookId);
-locationOrError.ifElem3Exists((vls) => violations.addAll(vls));
+    var locationOrError = validateBookLocation(authorId, bookId);
+    locationOrError.ifElem3Exists((vls) => violations.addAll(vls));
 
-var pageDataOrError = validatePageRequest(offset, limit);
-pageDataOrError.ifElem3Exists((vls) => violations.addAll(vls));
+    var pageDataOrError = validatePageRequest(offset, limit);
+    pageDataOrError.ifElem3Exists((vls) => violations.addAll(vls));
 
-    if(violations.isNotEmpty){
+    if (violations.isNotEmpty) {
       throw InvalidInputException(violations);
     }
 
-    return ListEventsByBookRequest(locationOrError.e1!, locationOrError.e2!,  pageDataOrError.e1!, pageDataOrError.e2!);
+    return ListEventsByBookRequest(locationOrError.e1!, locationOrError.e2!, pageDataOrError.e1!, pageDataOrError.e2!);
   }
 }

@@ -36,7 +36,7 @@ class AuthorHandler {
       .catchError((e) => handleErrors(e, req));
 
   void persist(HttpRequest req, Params params) => readForm(req)
-      .then((form) => PersistAuthorParams(form,params))
+      .then((form) => PersistAuthorParams(form, params))
       .then((params) => _authorService.save(params.toAuthor()))
       .then((author) => created(author, req))
       .catchError((e) => handleErrors(e, req));
@@ -46,16 +46,16 @@ class AuthorHandler {
       .then((_) => ok(null, req))
       .catchError((e) => handleErrors(e, req));
 
-  void search(HttpRequest req, Params params) =>readForm(req)
-          .then((form) => SearchParams(form, params))
-          .then((params) => _authorService.findAuthors(params.toSearchEntityRequest()))
-          .then((authors) => ok(authors, req))
-          .catchError((e) => handleErrors(e, req));
+  void search(HttpRequest req, Params params) => readForm(req)
+      .then((form) => SearchParams(form, params))
+      .then((params) => _authorService.findAuthors(params.toSearchEntityRequest()))
+      .then((authors) => ok(authors, req))
+      .catchError((e) => handleErrors(e, req));
 
   void listEvents(HttpRequest req, Params params) => Future.value(ListEventsByAuthorParams(params))
-          .then((params) => _authorService.listEvents(params.toListEventsByAuthorRequest()))
-          .then((authors) => ok(authors, req))
-          .catchError((e) => handleErrors(e, req));
+      .then((params) => _authorService.listEvents(params.toListEventsByAuthorRequest()))
+      .then((authors) => ok(authors, req))
+      .catchError((e) => handleErrors(e, req));
 
   void update(HttpRequest req, Params params) => readForm(req)
       .then((form) => UpdateAuthorParams(form, params))

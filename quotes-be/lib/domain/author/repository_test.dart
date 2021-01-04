@@ -12,7 +12,6 @@ class PostgreSQLConnectionMock extends Mock implements PostgreSQLConnection {}
 
 class PostgreSQLResultMock extends Mock implements PostgreSQLResult {}
 
-
 void main() {
   var postgreSQLConnectionMock = PostgreSQLConnectionMock();
 
@@ -115,7 +114,6 @@ void main() {
   });
 
   test("findAuthors should return authors page", () async {
-
     when(postgreSQLConnectionMock.query(findAuthorsStmt(searchPhrase), substitutionValues: pageParams)).thenAnswer((_) => Future.value(PostgreSQLResultMock()));
 
     when(postgreSQLConnectionMock.query(findAuthorsCountStmt(searchPhrase), substitutionValues: {})).thenAnswer((_) => Future.value(PostgreSQLResultMock()));

@@ -7,8 +7,6 @@ import '../../web/form.dart';
 import '../../web/param.dart';
 import '../../web/response.dart';
 
-
-
 class QuoteHandler {
   QuoteService _quoteService;
 
@@ -20,23 +18,21 @@ class QuoteHandler {
       .then((quote) => created(quote, req))
       .catchError((e) => handleErrors(e, req));
 
-  void delete(HttpRequest req, Params params) => 
-      Future.value(DeleteQuoteParams(params))
-          .then((deleteParams) => _quoteService.delete(deleteParams.getQuoteId()))
-          .then((_) => ok(null, req))
-          .catchError((e) => handleErrors(e, req));
+  void delete(HttpRequest req, Params params) => Future.value(DeleteQuoteParams(params))
+      .then((deleteParams) => _quoteService.delete(deleteParams.getQuoteId()))
+      .then((_) => ok(null, req))
+      .catchError((e) => handleErrors(e, req));
 
   void search(HttpRequest req, Params params) => readForm(req)
-          .then((form) => SearchParams(form, params))
-          .then((searchParams) => _quoteService.findQuotes(searchParams.toSearchEntityRequest()))
-          .then((books) => ok(books, req))
-          .catchError((e) => handleErrors(e, req));
+      .then((form) => SearchParams(form, params))
+      .then((searchParams) => _quoteService.findQuotes(searchParams.toSearchEntityRequest()))
+      .then((books) => ok(books, req))
+      .catchError((e) => handleErrors(e, req));
 
-  void find(HttpRequest req, Params params) =>
-      Future.value(FindQuoteParams(params))
-          .then((findParams) => _quoteService.find(findParams.getQuoteId()))
-          .then((q) => ok(q, req))
-          .catchError((e) => handleErrors(e, req));
+  void find(HttpRequest req, Params params) => Future.value(FindQuoteParams(params))
+      .then((findParams) => _quoteService.find(findParams.getQuoteId()))
+      .then((q) => ok(q, req))
+      .catchError((e) => handleErrors(e, req));
 
   void listEvents(HttpRequest req, Params params) => Future.value(ListEventsByQuoteParams(params))
       .then((eventsParams) => _quoteService.listEvents(eventsParams.toListEventsByQuoteRequest()))

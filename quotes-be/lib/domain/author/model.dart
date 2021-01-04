@@ -49,20 +49,18 @@ class AuthorEvent extends ESDocument {
 }
 
 class ListAuthorsRequest {
-    late PageRequest pageRequest;
+  late PageRequest pageRequest;
 
-      ListAuthorsRequest(int offset, int limit){
-pageRequest = PageRequest(limit, offset);
+  ListAuthorsRequest(int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
   }
 }
 
 class ListEventsByAuthorRequest {
-    String authorId;
-    late PageRequest pageRequest;
+  String authorId;
+  late PageRequest pageRequest;
 
-      ListEventsByAuthorRequest(this.authorId, int offset, int limit){
-pageRequest = PageRequest(limit, offset);
+  ListEventsByAuthorRequest(this.authorId, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
   }
 }
-
-

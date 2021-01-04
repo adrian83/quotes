@@ -50,22 +50,20 @@ class QuoteEvent extends ESDocument {
   String toString() => "QuoteEvent [eventId: $eventId, operation: $operation, modifiedUtc: $modifiedUtc, quote: $quote]";
 }
 
-
-
 class ListEventsByQuoteRequest {
   String authorId, bookId, quoteId;
-    late PageRequest pageRequest;
+  late PageRequest pageRequest;
 
-      ListEventsByQuoteRequest(this.authorId, this.bookId, this.quoteId, int offset, int limit){
-pageRequest = PageRequest(limit, offset);
+  ListEventsByQuoteRequest(this.authorId, this.bookId, this.quoteId, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
   }
 }
 
 class ListQuotesFromBookRequest {
-    String authorId, bookId;
-    late PageRequest pageRequest;
+  String authorId, bookId;
+  late PageRequest pageRequest;
 
-      ListQuotesFromBookRequest(this.authorId, this.bookId, int offset, int limit){
-pageRequest = PageRequest(limit, offset);
+  ListQuotesFromBookRequest(this.authorId, this.bookId, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
   }
 }

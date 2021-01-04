@@ -36,9 +36,9 @@ class QuoteRepository extends Repository<Quote> {
   Future<Page<Quote>> findBookQuotes(ListQuotesFromBookRequest request) {
     var limit = request.pageRequest.limit;
     var offset = request.pageRequest.offset;
-      
-      return listAll(listBookQuotesStmt, {"limit": limit, "offset": offset, "bookId": request.bookId}).then((List<Quote> quotes) =>
-          count(bookQuotesCountStmt, {"bookId": request.bookId}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, quotes)));
+
+    return listAll(listBookQuotesStmt, {"limit": limit, "offset": offset, "bookId": request.bookId}).then((List<Quote> quotes) =>
+        count(bookQuotesCountStmt, {"bookId": request.bookId}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, quotes)));
   }
 
   Future<Page<Quote>> findQuotes(SearchEntityRequest request) {
@@ -48,8 +48,8 @@ class QuoteRepository extends Repository<Quote> {
 
     Map<String, Object> params = {"limit": limit, "offset": offset};
 
-    return listAll(findQuotesStmt(phrase), params).then((List<Quote> quotes) =>
-        count(findQuotesCountStmt(phrase), {}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, quotes)));
+    return listAll(findQuotesStmt(phrase), params).then(
+        (List<Quote> quotes) => count(findQuotesCountStmt(phrase), {}).then((total) => PageInfo(limit, offset, total)).then((info) => Page(info, quotes)));
   }
 
   Future<Quote> save(Quote quote) => saveByStatement(insertQuoteStmt, {

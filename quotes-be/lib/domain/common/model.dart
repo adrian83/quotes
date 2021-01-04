@@ -60,11 +60,11 @@ class Page<T extends Jsonable> {
       };
 }
 
-class SearchEntityRequest{ 
+class SearchEntityRequest {
   String? searchPhrase;
   late PageRequest pageRequest;
 
-  SearchEntityRequest(this.searchPhrase, int offset, int limit){
-pageRequest = PageRequest(limit, offset);
+  SearchEntityRequest(this.searchPhrase, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
   }
 }

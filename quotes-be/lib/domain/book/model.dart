@@ -45,22 +45,20 @@ class BookEvent extends ESDocument {
   String toString() => "BookEvent [eventId: $eventId, operation: $operation, modifiedUtc: $modifiedUtc, book: $book]";
 }
 
-
 class ListBooksByAuthorRequest {
-    String authorId;
-    late PageRequest pageRequest;
+  String authorId;
+  late PageRequest pageRequest;
 
-      ListBooksByAuthorRequest(this.authorId, int offset, int limit){
-pageRequest = PageRequest(limit, offset);
+  ListBooksByAuthorRequest(this.authorId, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
   }
 }
 
 class ListEventsByBookRequest {
-    String authorId, bookId;
-    late PageRequest pageRequest;
+  String authorId, bookId;
+  late PageRequest pageRequest;
 
-      ListEventsByBookRequest(this.authorId, this.bookId, int offset, int limit){
-pageRequest = PageRequest(limit, offset);
+  ListEventsByBookRequest(this.authorId, this.bookId, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
   }
 }
-

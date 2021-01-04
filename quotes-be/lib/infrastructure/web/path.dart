@@ -90,7 +90,7 @@ PathParameter3<String, int, int> createSearchParams(Params params, String name1,
 }
 
 Tuple2<int, Violation> parseIntParam(String name, String? strValue) {
-  if(empty(strValue)){
+  if (empty(strValue)) {
     return Tuple2(null, Violation(name, "empty parameter"));
   }
 

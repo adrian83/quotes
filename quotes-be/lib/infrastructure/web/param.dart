@@ -54,7 +54,6 @@ class Violation {
       };
 }
 
-
 Tuple2<int, Violation> positiveInteger(String value, String name, String errorMsg) {
   var violation = Violation(name, errorMsg);
 

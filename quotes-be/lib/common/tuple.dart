@@ -4,7 +4,7 @@ class Tuple1<T1> {
   Tuple1(this.e1);
 
   void ifElem1Exists(Function(T1) f) {
-    if(e1 != null) f(e1!);
+    if (e1 != null) f(e1!);
   }
 
   String toString() => "Tuple1 [e1: $e1]";
@@ -16,7 +16,7 @@ class Tuple2<T1, T2> extends Tuple1<T1> {
   Tuple2(T1? e1, this.e2) : super(e1);
 
   void ifElem2Exists(Function(T2) f) {
-    if(e2 != null) f(e2!);
+    if (e2 != null) f(e2!);
   }
 
   String toString() => "Tuple2 [e1: $e1, e2: $e2]";
@@ -28,7 +28,7 @@ class Tuple3<T1, T2, T3> extends Tuple2<T1, T2> {
   Tuple3(T1? e1, T2? e2, this.e3) : super(e1, e2);
 
   void ifElem3Exists(Function(T3) f) {
-    if(e3 != null) f(e3!);
+    if (e3 != null) f(e3!);
   }
 
   String toString() => "Tuple3 [e1: $e1, e2: $e2, e3: $e3]";
@@ -40,7 +40,7 @@ class Tuple4<T1, T2, T3, T4> extends Tuple3<T1, T2, T3> {
   Tuple4(T1? e1, T2? e2, T3? e3, this.e4) : super(e1, e2, e3);
 
   void ifElem4Exists(Function(T4) f) {
-    if(e4 != null) f(e4!);
+    if (e4 != null) f(e4!);
   }
 
   String toString() => "Tuple4 [e1: $e1, e2: $e2, e3: $e3, e4: $e4]";
@@ -52,7 +52,7 @@ class Tuple5<T1, T2, T3, T4, T5> extends Tuple4<T1, T2, T3, T4> {
   Tuple5(T1? e1, T2? e2, T3? e3, T4? e4, this.e5) : super(e1, e2, e3, e4);
 
   void ifElem5Exists(Function(T5) f) {
-    if(e5 != null) f(e5!);
+    if (e5 != null) f(e5!);
   }
 
   String toString() => "Tuple5 [e1: $e1, e2: $e2, e3: $e3, e4: $e4, e5: $e5]";

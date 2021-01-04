@@ -37,21 +37,20 @@ class BookHandler {
       .catchError((e) => handleErrors(e, req));
 
   void search(HttpRequest req, Params params) => readForm(req)
-          .then((form) => SearchParams(form, params))
-          .then((searchParams) => _bookService.findBooks(searchParams.toSearchEntityRequest()))
-          .then((books) => ok(books, req))
-          .catchError((e) => handleErrors(e, req));
+      .then((form) => SearchParams(form, params))
+      .then((searchParams) => _bookService.findBooks(searchParams.toSearchEntityRequest()))
+      .then((books) => ok(books, req))
+      .catchError((e) => handleErrors(e, req));
 
   void find(HttpRequest req, Params params) => Future.value(FindBookParams(params))
       .then((findParams) => _bookService.find(findParams.getBookId()))
       .then((book) => ok(book, req))
       .catchError((e) => handleErrors(e, req));
 
-  void listByAuthor(HttpRequest req, Params params) =>
-      Future.value(ListBooksByAuthorParams(params))
-          .then((params) => _bookService.findAuthorBooks(params.toListBooksByAuthorRequest()))
-          .then((books) => ok(books, req))
-          .catchError((e) => handleErrors(e, req));
+  void listByAuthor(HttpRequest req, Params params) => Future.value(ListBooksByAuthorParams(params))
+      .then((params) => _bookService.findAuthorBooks(params.toListBooksByAuthorRequest()))
+      .then((books) => ok(books, req))
+      .catchError((e) => handleErrors(e, req));
 
   void update(HttpRequest req, Params params) => readForm(req)
       .then((form) => UpdateBookParams(form, params))
