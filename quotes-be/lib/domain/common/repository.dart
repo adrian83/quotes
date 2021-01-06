@@ -1,41 +1,48 @@
 import 'dart:async';
 
-import 'package:postgres/postgres.dart';
+import '../../infrastructure/elasticsearch/search.dart';
+import '../../infrastructure/elasticsearch/store.dart';
+import '../../infrastructure/elasticsearch/document.dart';
 
-import 'exception.dart';
+import '../common/model.dart';
+import 'model.dart';
 
-typedef RowDecoder<T> = T Function(List<dynamic> row);
+typedef Decoder<T> = T Function(Map<String, dynamic> json);
 
-class Repository<T> {
-  PostgreSQLConnection _connection;
-  RowDecoder<T> _rowDecoder;
+class Repository<T extends Document> {
+  ESStore<T> _store;
+  Decoder<T> _fromJson;
 
-  Repository(this._connection, this._rowDecoder);
+  Repository(this._store, this._fromJson);
 
-  PostgreSQLConnection get connection => _connection;
+  Future<void> save(T doc) {
+    return _store.index(doc).then((ir) => doc);
+  }
 
-  Future<void> saveByStatement(String insertStatement, Map<String, Object> params) => _connection.execute(insertStatement, substitutionValues: params);
+  Future<T> find(String docId) {
+    return _store.get(docId).then((gr) => _fromJson(gr.source));
+  }
 
-  Future<T> findOneByStatement(String findStmt, Map<String, Object> params) =>
-      _connection.query(findStmt, substitutionValues: params).then((List<List<dynamic>> entitiesData) {
-        if (entitiesData.length == 0) throw FindFailedException();
-        return _rowDecoder(entitiesData[0]);
-      });
+  Future<T> update(T doc) {
+    return _store.index(doc).then((ir) => doc);
+  }
 
-  Future<void> updateAtLeastOne(String updateStmt, Map<String, Object> params) => connection.execute(updateStmt, substitutionValues: params).then((count) {
-        if (count == 0) throw FindFailedException();
-      });
+  Future<void> delete(String docId) {
+    return _store.delete(docId);
+  }
 
-  Future<int> deleteAll(String deleteStmt, Map<String, Object> params) => connection.execute(deleteStmt, substitutionValues: params);
+  Future<Page<T>> findDocuments(Query query, PageRequest pageRequest) {
+    var sort = SortElement.asc("_id");
+    var req = SearchRequest(query, [sort], pageRequest.offset, pageRequest.limit);
 
-  Future<List<T>> listAll(String selectStmt, Map<String, Object> params) =>
-      _connection.query(selectStmt, substitutionValues: params).then((List<List<dynamic>> entitiesData) => toEntities(entitiesData));
+    return _store.list(req).then((resp) => resp.hits).then((hits) {
+      var docs = hits.hits.map((h) => _fromJson(h.source)).toList();
+      var info = PageInfo(pageRequest.limit, pageRequest.offset, hits.total);
+      return Page<T>(info, docs);
+    });
+  }
 
-  Future<void> deleteAtLeastOne(String deleteStmt, Map<String, Object> params) => deleteAll(deleteStmt, params).then((count) {
-        if (count == 0) throw FindFailedException();
-      });
-
-  Future<int> count(String countStmt, Map<String, Object> params) => connection.query(countStmt, substitutionValues: params).then((l) => l[0][0]);
-
-  List<T> toEntities(List<List<dynamic>> entitiesData) => entitiesData.map((List<dynamic> entityData) => _rowDecoder(entityData)).toList();
+  Future<void> deleteDocuments(Query query) {
+    return _store.deleteByQuery(query);
+  }
 }

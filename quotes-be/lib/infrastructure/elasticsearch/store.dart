@@ -9,7 +9,7 @@ import 'exception.dart';
 
 typedef Decode<T> = T Function(Map<String, dynamic> json);
 
-class ESStore<T extends ESDocument> {
+class ESStore<T extends Document> {
   HttpClient _client;
   String _host, _index, _protocol = "http", _type = "doc";
   int _port;
@@ -32,13 +32,13 @@ class ESStore<T extends ESDocument> {
   ESStore(this._client, this._host, this._port, this._index);
 
   Future<IndexResult> index(T doc) => _client
-      .postUrl(Uri.parse(_indexUri(doc.eventId)))
+      .postUrl(Uri.parse(_indexUri(doc.getId())))
       .then((req) => withBody(req, jsonEncode(doc)))
       .then((resp) => decode(resp, _indexResDecoder))
       .then((ir) => ir.result != created ? throw IndexingFailedException(doc, ir) : ir);
 
   Future<UpdateResult> update(T doc) => _client
-      .postUrl(Uri.parse(_updateUri(doc.eventId)))
+      .postUrl(Uri.parse(_updateUri(doc.getId())))
       .then((req) => withBody(req, jsonEncode(UpdateDoc(doc))))
       .then((resp) => decode(resp, _updateResDecoder))
       .then((ur) => ur.result != updated ? throw DocUpdateFailedException(doc, ur) : ur);

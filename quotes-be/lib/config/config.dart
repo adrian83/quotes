@@ -1,22 +1,18 @@
 import 'dart:io';
 import 'dart:convert';
 
-class PostgresConfig {
-  String host, database, user, password;
-  int port;
-
-  PostgresConfig(this.host, this.port, this.database, this.user, this.password);
-
-  PostgresConfig.fromJson(Map<String, dynamic> json) : this(json['host'], json['port'], json['database'], json['user'], json['password']);
-}
-
 class ElasticsearchConfig {
-  String host, authorsIndex, booksIndex, quotesIndex;
+  String host;
+  String authorsIndex, booksIndex, quotesIndex;
+  String authorEventsIndex, bookEventsIndex, quoteEventsIndex;
   int port;
 
-  ElasticsearchConfig(this.host, this.port, this.authorsIndex, this.booksIndex, this.quotesIndex);
+  ElasticsearchConfig(
+      this.host, this.port, this.authorsIndex, this.booksIndex, this.quotesIndex, this.authorEventsIndex, this.bookEventsIndex, this.quoteEventsIndex);
 
-  ElasticsearchConfig.fromJson(Map<String, dynamic> json) : this(json['host'], json['port'], json['authorsIndex'], json['booksIndex'], json['quotesIndex']);
+  ElasticsearchConfig.fromJson(Map<String, dynamic> json)
+      : this(json['host'], json['port'], json['authorsIndex'], json['booksIndex'], json['quotesIndex'], json['authorEventsIndex'], json['bookEventsIndex'],
+            json['quoteEventsIndex']);
 }
 
 class ServerConfig {
@@ -32,11 +28,9 @@ Future<Config> readConfig(String path) => File(path).readAsString().then((str) =
 
 class Config {
   ElasticsearchConfig elasticsearch;
-  PostgresConfig postgres;
   ServerConfig server;
 
-  Config(this.elasticsearch, this.postgres, this.server);
+  Config(this.elasticsearch, this.server);
 
-  Config.fromJson(Map<String, dynamic> json)
-      : this(ElasticsearchConfig.fromJson(json['elasticsearch']), PostgresConfig.fromJson(json['postgres']), ServerConfig.fromJson(json['server']));
+  Config.fromJson(Map<String, dynamic> json) : this(ElasticsearchConfig.fromJson(json['elasticsearch']), ServerConfig.fromJson(json['server']));
 }

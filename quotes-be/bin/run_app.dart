@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:logging/logging.dart';
-import 'package:postgres/postgres.dart';
 
 import '../lib/config/config.dart';
 
@@ -42,11 +41,8 @@ Future main(List<String> args) async {
 
   Config config = await readConfig(args[0]);
 
-  var connection = await createConnection(config.postgres);
-
-  var repositories = createRepositories(connection);
-  var eventRepositories = createEventRepositories(config.elasticsearch);
-  var services = createServices(repositories, eventRepositories);
+  var repositories = createRepositories(config.elasticsearch);
+  var services = createServices(repositories);
 
   var router = createRouter(services.authorService, services.bookService, services.quoteService);
 
@@ -96,61 +92,39 @@ Router createRouter(AuthorService authorService, BookService bookService, QuoteS
   return router;
 }
 
-Future<PostgreSQLConnection> createConnection(PostgresConfig config) async {
-  PostgreSQLConnection connection = PostgreSQLConnection(config.host, config.port, config.database, username: config.user, password: config.password);
-
-  await connection.open();
-
-  return connection;
-}
-
 class Repositories {
-  AuthorRepository _authorRepository;
-  BookRepository _bookRepository;
-  QuoteRepository _quoteRepository;
+  AuthorRepository authorRepository;
+  BookRepository bookRepository;
+  QuoteRepository quoteRepository;
+  AuthorEventRepository authorEventsRepository;
+  BookEventRepository bookEventsRepository;
+  QuoteEventRepository quoteEventsRepository;
 
-  Repositories(this._authorRepository, this._bookRepository, this._quoteRepository);
-
-  AuthorRepository get authorRepository => _authorRepository;
-  BookRepository get bookRepository => _bookRepository;
-  QuoteRepository get quoteRepository => _quoteRepository;
+  Repositories(
+      this.authorRepository, this.bookRepository, this.quoteRepository, this.authorEventsRepository, this.bookEventsRepository, this.quoteEventsRepository);
 }
 
-Repositories createRepositories(PostgreSQLConnection connection) {
-  AuthorRepository authorRepository = AuthorRepository(connection);
-  BookRepository bookRepository = BookRepository(connection);
-  QuoteRepository quoteRepository = QuoteRepository(connection);
-
-  return Repositories(authorRepository, bookRepository, quoteRepository);
-}
-
-class EventRepositories {
-  AuthorEventRepository _authorRepository;
-  BookEventRepository _bookRepository;
-  QuoteEventRepository _quoteRepository;
-
-  EventRepositories(this._authorRepository, this._bookRepository, this._quoteRepository);
-
-  AuthorEventRepository get authorRepository => _authorRepository;
-  BookEventRepository get bookRepository => _bookRepository;
-  QuoteEventRepository get quoteRepository => _quoteRepository;
-}
-
-EventRepositories createEventRepositories(ElasticsearchConfig config) {
+Repositories createRepositories(ElasticsearchConfig config) {
   HttpClient client = HttpClient();
 
   var host = config.host;
   var port = config.port;
 
-  var authorEs = ESStore<AuthorEvent>(client, host, port, config.authorsIndex);
-  var bookEs = ESStore<BookEvent>(client, host, port, config.booksIndex);
-  var quoteEs = ESStore<QuoteEvent>(client, host, port, config.quotesIndex);
+  var author = ESStore<Author>(client, host, port, config.authorsIndex);
+  var book = ESStore<Book>(client, host, port, config.booksIndex);
+  var quote = ESStore<Quote>(client, host, port, config.quotesIndex);
+  var authorEs = ESStore<AuthorEvent>(client, host, port, config.authorEventsIndex);
+  var bookEs = ESStore<BookEvent>(client, host, port, config.bookEventsIndex);
+  var quoteEs = ESStore<QuoteEvent>(client, host, port, config.quoteEventsIndex);
 
+  var authorRepo = AuthorRepository(author);
+  var bookRepo = BookRepository(book);
+  var quoteRepo = QuoteRepository(quote);
   var authorEventRepo = AuthorEventRepository(authorEs);
   var bookEventRepo = BookEventRepository(bookEs);
   var quoteEventRepo = QuoteEventRepository(quoteEs);
 
-  return EventRepositories(authorEventRepo, bookEventRepo, quoteEventRepo);
+  return Repositories(authorRepo, bookRepo, quoteRepo, authorEventRepo, bookEventRepo, quoteEventRepo);
 }
 
 class Services {
@@ -165,13 +139,14 @@ class Services {
   QuoteService get quoteService => _quoteService;
 }
 
-Services createServices(Repositories repositories, EventRepositories eventRepositories) {
-  var authorService = AuthorService(repositories.authorRepository, eventRepositories.authorRepository, repositories.bookRepository,
-      eventRepositories.bookRepository, repositories.quoteRepository, eventRepositories.quoteRepository);
+Services createServices(Repositories repositories) {
+  var authorService = AuthorService(repositories.authorRepository, repositories.authorEventsRepository, repositories.bookRepository,
+      repositories.bookEventsRepository, repositories.quoteRepository, repositories.quoteEventsRepository);
 
-  var bookService = BookService(repositories.bookRepository, eventRepositories.bookRepository, repositories.quoteRepository, eventRepositories.quoteRepository);
+  var bookService =
+      BookService(repositories.bookRepository, repositories.bookEventsRepository, repositories.quoteRepository, repositories.quoteEventsRepository);
 
-  var quoteService = QuoteService(repositories.quoteRepository, eventRepositories.quoteRepository);
+  var quoteService = QuoteService(repositories.quoteRepository, repositories.quoteEventsRepository);
 
   return Services(authorService, bookService, quoteService);
 }

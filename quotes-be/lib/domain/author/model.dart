@@ -11,8 +11,10 @@ var createdUtcLabel = 'createdUtc';
 var descriptionLabel = 'description';
 var modifiedUtcLabel = 'modifiedUtc';
 
-class Author extends Entity {
+class Author extends Entity with Document {
   String name, description;
+
+  String getId() => this.id;
 
   Author(String id, this.name, this.description, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
 
@@ -22,8 +24,6 @@ class Author extends Entity {
 
   Author.fromJson(Map<String, dynamic> json)
       : this(json[idLabel], json[nameLabel], json[descriptionLabel], DateTime.parse(json[modifiedUtcLabel]), DateTime.parse(json[createdUtcLabel]));
-
-  Author.fromDB(List<dynamic> row) : this(row[0].toString().trim(), row[1].toString().trim(), row[2].toString().trim(), row[3], row[4]);
 
   Map toJson() => super.toJson()..addAll({nameLabel: name, descriptionLabel: description});
 

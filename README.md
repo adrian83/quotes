@@ -1,5 +1,5 @@
 # QUOTES
-Simple CRUD application written in: Dart 2.7, AngularDart 6, Elasticsearch 6.4, Postgres 11.1.
+Simple CRUD application written in: Dart 2.7, AngularDart 6 and Elasticsearch 6.4.
 
 
 ## Running
@@ -23,7 +23,7 @@ Simple CRUD application written in: Dart 2.7, AngularDart 6, Elasticsearch 6.4, 
 - Webdev
 
 #### Steps
-1. Start infrastructure (Elasticsearch and Postgres): `make deps`
+1. Start infrastructure (Elasticsearch): `make deps`
 2. Start backend: `make be-all`
 3. Start frontend: `make fe-all`
 4. (Optional) Put some content into database `make be-init`

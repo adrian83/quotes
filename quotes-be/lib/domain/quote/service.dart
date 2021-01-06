@@ -11,7 +11,7 @@ class QuoteService {
 
   QuoteService(this._quotesRepository, this._quoteEventRepository);
 
-  Future<Quote> save(Quote quote) => _quotesRepository.save(quote).then((quote) => _quoteEventRepository.save(quote));
+  Future<Quote> save(Quote quote) => _quotesRepository.save(quote).then((_) => _quoteEventRepository.save(quote));
 
   Future<Quote> find(String quoteId) => _quotesRepository.find(quoteId);
 

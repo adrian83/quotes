@@ -7,7 +7,7 @@ const textF = "text";
 const authorIdF = "authorId";
 const bookIdF = "bookId";
 
-class Quote extends Entity {
+class Quote extends Entity with Document {
   String text, authorId, bookId;
 
   Quote(String id, this.text, this.authorId, this.bookId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
@@ -19,8 +19,7 @@ class Quote extends Entity {
   Quote.fromJson(Map<String, dynamic> json)
       : this(json[idF], json[textF], json[authorIdF], json[bookIdF], DateTime.parse(json[modifiedUtcF]), DateTime.parse(json[createdUtcF]));
 
-  Quote.fromDB(List<dynamic> row)
-      : this(row[0].toString().trim(), row[1].toString().trim(), row[2].toString().trim(), row[3].toString().trim(), row[4], row[5]);
+  String getId() => id;
 
   Map toJson() => super.toJson()
     ..addAll({

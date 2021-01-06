@@ -3,7 +3,7 @@ import 'package:uuid/uuid.dart';
 import '../../infrastructure/elasticsearch/document.dart';
 import '../common/model.dart';
 
-class Book extends Entity {
+class Book extends Entity with Document {
   String title, description, authorId;
 
   Book(String id, this.title, this.description, this.authorId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
@@ -15,7 +15,7 @@ class Book extends Entity {
   Book.fromJson(Map<String, dynamic> json)
       : this(json['id'], json['title'], json['description'], json['authorId'], DateTime.parse(json['modifiedUtc']), DateTime.parse(json['createdUtc']));
 
-  Book.fromDB(List<dynamic> row) : this(row[0].toString().trim(), row[1].toString().trim(), row[2].toString().trim(), row[3].toString().trim(), row[4], row[5]);
+  String getId() => id;
 
   Map toJson() => super.toJson()
     ..addAll({
