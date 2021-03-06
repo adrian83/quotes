@@ -25,6 +25,7 @@ class ESStore<T extends Document> {
   String _searchUri() => "$_protocol://$_host:$_port/$_index/$_type/_search";
   String _updateUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id/_update";
   String _deleteByQueryUri() => "$_protocol://$_host:$_port/$_index/$_type/_delete_by_query";
+  String _mappingUri() => "$_protocol://$_host:$_port/$_index/_mapping";
 
   static final Decode<IndexResult> _indexResDecoder = (Map<String, dynamic> json) => IndexResult.fromJson(json);
   static final Decode<UpdateResult> _updateResDecoder = (Map<String, dynamic> json) => UpdateResult.fromJson(json);
@@ -61,6 +62,11 @@ class ESStore<T extends Document> {
 
   Future<SearchResult> list(SearchRequest searchRequest) =>
       _client.postUrl(Uri.parse(_searchUri())).then((req) => withBody(req, jsonEncode(searchRequest))).then((resp) => decode(resp, _searchResDecoder));
+
+  Future<String> mapping() => _client
+      .getUrl(Uri.parse(_mappingUri()))
+      .then((req) => req.close())
+      .then((resp) => resp.transform(utf8.decoder).join());
 
   Future<bool> active() => _client.getUrl(Uri.parse(_statsUri())).then((req) => req.close()).then((resp) => resp.statusCode == 200);
 

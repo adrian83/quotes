@@ -37,4 +37,6 @@ class AuthorService {
   Future<Page<Author>> findAuthors(SearchEntityRequest request) => _authorRepository.findAuthors(request);
 
   Future<Page<AuthorEvent>> listEvents(ListEventsByAuthorRequest request) => _authorEventRepository.listEvents(request);
+
+  Future<String> mapping() => _authorRepository.mapping();
 }

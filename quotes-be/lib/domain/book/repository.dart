@@ -20,7 +20,7 @@ class BookRepository extends Repository<Book> {
 
   Future<Page<Book>> findBooks(SearchEntityRequest request) {
     var phrase = request.searchPhrase ?? "";
-    var query = MatchQuery("title", phrase); // TODO: better query
+    var query = WildcardQuery("title", phrase); // TODO: better query
 
     return this.findDocuments(query, request.pageRequest);
   }

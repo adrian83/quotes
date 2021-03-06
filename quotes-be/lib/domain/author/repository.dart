@@ -20,7 +20,7 @@ class AuthorRepository extends Repository<Author> {
     logger.info("find authors $request");
 
     var phrase = request.searchPhrase ?? "";
-    var query = TermQuery("name", phrase); // TODO: better query
+    var query = WildcardQuery("name", phrase); 
 
     return this.findDocuments(query, request.pageRequest);
   }

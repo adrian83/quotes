@@ -34,7 +34,23 @@ class MatchQuery<T> extends Query {
 
   Map toJson() => {
         matchQ: {
-          this.field: {queryQ: this.value}
+          this.field: {queryQ: ".*" + this.value.toString() + ".*"}
+        }
+      };
+}
+
+class WildcardQuery extends Query {
+  String field, value;
+
+  WildcardQuery(this.field, this.value);
+
+  Map toJson() => {
+        "wildcard": {
+          this.field: {
+            "value": "*" + this.value + "*",
+               "boost": 1.0,
+                "rewrite": "constant_score"
+            }
         }
       };
 }

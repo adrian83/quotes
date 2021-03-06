@@ -20,7 +20,7 @@ class QuoteRepository extends Repository<Quote> {
 
   Future<Page<Quote>> findQuotes(SearchEntityRequest request) {
     var phrase = request.searchPhrase ?? "";
-    var query = MatchQuery("text", phrase); // TODO: better query
+    var query = WildcardQuery("text", phrase); // TODO: better query
 
     return this.findDocuments(query, request.pageRequest);
   }

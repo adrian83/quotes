@@ -37,6 +37,8 @@ class Repository<T extends Document> {
     return _store.delete(docId);
   }
 
+  Future<String> mapping() => _store.mapping();
+
   Future<Page<T>> findDocuments(Query query, PageRequest pageRequest) {
     var sort = SortElement.asc("_id");
     var req = SearchRequest(query, [sort], pageRequest.offset, pageRequest.limit);

@@ -5,18 +5,10 @@ import 'package:logging/logging.dart';
 import 'form.dart';
 import '../error.dart';
 import '../../web/form.dart';
-import '../../web/path.dart';
 import '../../web/response.dart';
 import '../../web/param.dart';
-import '../../../common/tuple.dart';
-import '../../../domain/author/model.dart';
 import '../../../domain/author/service.dart';
-import '../../../domain/common/model.dart';
 
-// var requiredAuthorId = ParamData("authorId", "authorId cannot be empty");
-// var optionalSearchPhrase = ParamData("searchPhrase", "");
-// var positivePageLimit = ParamData("limit", "limit should be a positive integer");
-// var positivePageOffset = ParamData("offset", "offset should be a positive integer");
 
 var authorIdParam = "authorId";
 var searchPhraseParam = "searchPhrase";
