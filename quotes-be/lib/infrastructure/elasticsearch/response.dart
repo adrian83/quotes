@@ -72,8 +72,11 @@ class SearchHits {
 
   SearchHits(this.total, this.maxScore, this.hits);
 
-  factory SearchHits.fromJson(Map<String, dynamic> json) =>
-      SearchHits(json[totalF], json[maxScoreF], (json[hitsF] as List).map((d) => SearchHit.fromJson(d)).toList());
+  factory SearchHits.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return SearchHits(0, 0, List.empty());
+
+    return SearchHits(json[totalF], json[maxScoreF], (json[hitsF] as List).map((d) => SearchHit.fromJson(d)).toList());
+  }
 }
 
 class SearchResult {
@@ -83,7 +86,12 @@ class SearchResult {
 
   SearchResult(this.timedOut, this.took, this.hits);
 
-  factory SearchResult.fromJson(Map<String, dynamic> json) => SearchResult(json[timedOutF], json[tookF], SearchHits.fromJson(json[hitsF]));
+  factory SearchResult.fromJson(Map<String, dynamic?> json) {
+    var timedOut = json.containsKey(timedOutF) ? json[timedOutF] : false;
+    var took = json.containsKey(tookF) ? json[tookF] : 0;
+    var hits = SearchHits.fromJson(json[hitsF]);
+    return SearchResult(timedOut, took, hits);
+  }
 }
 
 class DeleteByQueryResult {

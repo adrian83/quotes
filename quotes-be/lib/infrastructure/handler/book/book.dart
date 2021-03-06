@@ -36,8 +36,7 @@ class BookHandler {
       .then((_) => ok(null, req))
       .catchError((e) => handleErrors(e, req));
 
-  void search(HttpRequest req, Params params) => readForm(req)
-      .then((form) => SearchParams(form, params))
+  void search(HttpRequest req, Params params) => Future.value(SearchParams(params))
       .then((searchParams) => _bookService.findBooks(searchParams.toSearchEntityRequest()))
       .then((books) => ok(books, req))
       .catchError((e) => handleErrors(e, req));

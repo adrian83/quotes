@@ -4,6 +4,7 @@ const desc = "desc";
 const matchAllQ = "match_all";
 const matchQ = "match";
 const termsQ = "terms";
+const termQ = "term";
 const queryQ = "query";
 const orderQ = "order";
 const sizeQ = "size";
@@ -32,7 +33,20 @@ class MatchQuery<T> extends Query {
   MatchQuery(this.field, this.value);
 
   Map toJson() => {
-        matchQ: {this.field: this.value}
+        matchQ: {
+          this.field: {queryQ: this.value}
+        }
+      };
+}
+
+class TermQuery<T> extends Query {
+  String field;
+  T value;
+
+  TermQuery(this.field, this.value);
+
+  Map toJson() => {
+        termQ: {this.field: this.value}
       };
 }
 
@@ -100,5 +114,5 @@ class SearchRequest {
 
   factory SearchRequest.oneByQuery(Query query, List<SortElement> sort) => SearchRequest(query, sort, defaultOffset, 1);
 
-  Map toJson() => {sizeQ: size, fromQ: from, queryQ: query.toJson(), sortQ: (sort != null && sort.length > 0) ? sort : defaultSort};
+  Map toJson() => {sizeQ: size, fromQ: from, queryQ: query.toJson(), sortQ: (sort.length > 0 ? sort : defaultSort)};
 }

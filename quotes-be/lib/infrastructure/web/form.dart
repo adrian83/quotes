@@ -116,7 +116,7 @@ Tuple3<int, int, List<Violation>> validatePageRequest(String? offset, String? li
 class SearchParams {
   String? phrase, limit, offset;
 
-  SearchParams(Map form, Params params) {
+  SearchParams(Params params) {
     this.phrase = params.getValue("searchPhrase");
     this.limit = params.getValue("limit");
     this.offset = params.getValue("offset");

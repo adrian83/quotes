@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:convert';
 
+import 'package:logging/logging.dart';
+
 import 'document.dart';
 import 'response.dart';
 import 'search.dart';
@@ -13,6 +15,8 @@ class ESStore<T extends Document> {
   HttpClient _client;
   String _host, _index, _protocol = "http", _type = "doc";
   int _port;
+
+  final Logger logger = Logger('ESStore');
 
   String _statsUri() => "$_protocol://$_host:$_port/_stats";
   String _indexUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id";
@@ -27,7 +31,7 @@ class ESStore<T extends Document> {
   static final Decode<GetResult> _getResDecoder = (Map<String, dynamic> json) => GetResult.fromJson(json);
   static final Decode<DeleteResult> _deleteResDecoder = (Map<String, dynamic> json) => DeleteResult.fromJson(json);
   static final Decode<DeleteByQueryResult> _delByQueryResDecoder = (Map<String, dynamic> json) => DeleteByQueryResult.fromJson(json);
-  static final Decode<SearchResult> _searchResDecoder = (Map<String, dynamic> json) => SearchResult.fromJson(json);
+  static final Decode<SearchResult> _searchResDecoder = (Map<String, dynamic?> json) => SearchResult.fromJson(json);
 
   ESStore(this._client, this._host, this._port, this._index);
 
@@ -60,7 +64,17 @@ class ESStore<T extends Document> {
 
   Future<bool> active() => _client.getUrl(Uri.parse(_statsUri())).then((req) => req.close()).then((resp) => resp.statusCode == 200);
 
-  Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) => response.transform(utf8.decoder).join().then((content) => decode(jsonDecode(content)));
+  Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) {
+    return response.transform(utf8.decoder).join().then((content) {
+      logger.info("body: $content");
+      return decode(jsonDecode(content));
+    }).then((value) {
+      logger.info("decoded: $value");
+      return value;
+    });
+  }
+
+  // {"error":{"root_cause":[{"type":"index_not_found_exception","reason":"no such index","resource.type":"index_or_alias","resource.id":"quotes","index_uuid":"_na_","index":"quotes"}],"type":"index_not_found_exception","reason":"no such index","resource.type":"index_or_alias","resource.id":"quotes","index_uuid":"_na_","index":"quotes"},"status":404}
 
   Future<HttpClientResponse> withBody(HttpClientRequest request, String body) {
     request
