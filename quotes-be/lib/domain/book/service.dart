@@ -1,9 +1,7 @@
 import 'dart:async';
 
 import '../common/model.dart';
-import '../quote/event.dart';
 import '../quote/repository.dart';
-import 'event.dart';
 import 'model.dart';
 import 'repository.dart';
 
@@ -15,11 +13,17 @@ class BookService {
 
   BookService(this._bookRepository, this._bookEventRepository, this._quoteRepository, this._quoteEventRepository);
 
-  Future<Book> save(Book book) => _bookRepository.save(book).then((_) => _bookEventRepository.save(book));
+  Future<Book> save(Book book) => _bookRepository.save(book).then((_) {
+        _bookEventRepository.save(BookEvent.create(book));
+        return book;
+      });
 
   Future<Book> find(String bookId) => _bookRepository.find(bookId);
 
-  Future<Book> update(Book book) => _bookRepository.update(book).then((book) => _bookEventRepository.update(book));
+  Future<Book> update(Book book) => _bookRepository.update(book).then((book) {
+        _bookEventRepository.update(BookEvent.update(book));
+        return book;
+      });
 
   Future<void> delete(String bookId) => _bookRepository
       .delete(bookId)

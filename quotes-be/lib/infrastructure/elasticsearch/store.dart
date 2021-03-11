@@ -40,11 +40,11 @@ class ESStore<T extends Document> {
       .postUrl(Uri.parse(_indexUri(doc.getId())))
       .then((req) => withBody(req, jsonEncode(doc)))
       .then((resp) => decode(resp, _indexResDecoder))
-      .then((ir) => ir.result != created ? throw IndexingFailedException(doc, ir) : ir);
+      .then((ir) => (ir.result != created && ir.result != updated) ? throw IndexingFailedException(doc, ir) : ir);
 
   Future<UpdateResult> update(T doc) => _client
       .postUrl(Uri.parse(_updateUri(doc.getId())))
-      .then((req) => withBody(req, jsonEncode(UpdateDoc(doc))))
+      .then((req) => withBody(req, jsonEncode(UpdateDoc(doc.toJson()))))
       .then((resp) => decode(resp, _updateResDecoder))
       .then((ur) => ur.result != updated ? throw DocUpdateFailedException(doc, ur) : ur);
 
@@ -63,10 +63,7 @@ class ESStore<T extends Document> {
   Future<SearchResult> list(SearchRequest searchRequest) =>
       _client.postUrl(Uri.parse(_searchUri())).then((req) => withBody(req, jsonEncode(searchRequest))).then((resp) => decode(resp, _searchResDecoder));
 
-  Future<String> mapping() => _client
-      .getUrl(Uri.parse(_mappingUri()))
-      .then((req) => req.close())
-      .then((resp) => resp.transform(utf8.decoder).join());
+  Future<String> mapping() => _client.getUrl(Uri.parse(_mappingUri())).then((req) => req.close()).then((resp) => resp.transform(utf8.decoder).join());
 
   Future<bool> active() => _client.getUrl(Uri.parse(_statsUri())).then((req) => req.close()).then((resp) => resp.statusCode == 200);
 

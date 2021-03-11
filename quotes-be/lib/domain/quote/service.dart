@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import '../common/model.dart';
-import 'event.dart';
 import 'model.dart';
 import 'repository.dart';
 
@@ -11,11 +10,17 @@ class QuoteService {
 
   QuoteService(this._quotesRepository, this._quoteEventRepository);
 
-  Future<Quote> save(Quote quote) => _quotesRepository.save(quote).then((_) => _quoteEventRepository.save(quote));
+  Future<Quote> save(Quote quote) => _quotesRepository.save(quote).then((_){
+     _quoteEventRepository.saveQuote(quote);
+     return quote;
+  });
 
   Future<Quote> find(String quoteId) => _quotesRepository.find(quoteId);
 
-  Future<Quote> update(Quote quote) => _quotesRepository.update(quote).then((quote) => _quoteEventRepository.update(quote));
+  Future<Quote> update(Quote quote) => _quotesRepository.update(quote).then((quote) { 
+    _quoteEventRepository.updateQuote(quote);
+    return quote;
+  });
 
   Future<void> delete(String quoteId) => _quotesRepository.delete(quoteId).then((_) => _quoteEventRepository.delete(quoteId));
 

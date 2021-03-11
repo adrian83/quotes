@@ -32,6 +32,10 @@ class IndexResult extends BasicResult {
   IndexResult(String index, String type, String id, this.result, this.version) : super(index, type, id);
 
   factory IndexResult.fromJson(Map<String, dynamic> json) => IndexResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
+
+  String toString() {
+    return "IndexResult [id: $id, type: $type, index: $index, result: $result version: $version]";
+  }
 }
 
 class UpdateResult extends IndexResult {

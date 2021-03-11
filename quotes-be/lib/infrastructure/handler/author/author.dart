@@ -9,7 +9,6 @@ import '../../web/response.dart';
 import '../../web/param.dart';
 import '../../../domain/author/service.dart';
 
-
 var authorIdParam = "authorId";
 var searchPhraseParam = "searchPhrase";
 var limitParam = "limit";

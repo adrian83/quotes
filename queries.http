@@ -1,0 +1,4 @@
+
+
+
+GET http://localhost:9020/my-index-000001/_mapping HTTP/1.1

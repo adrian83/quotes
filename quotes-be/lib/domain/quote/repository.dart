@@ -36,3 +36,43 @@ class QuoteRepository extends Repository<Quote> {
     return this.deleteDocuments(query);
   }
 }
+
+
+Decoder<QuoteEvent> quoteEventDecoder = (Map<String, dynamic> json) => QuoteEvent.fromJson(json);
+
+class QuoteEventRepository extends Repository<QuoteEvent> {
+  QuoteEventRepository(ESStore<QuoteEvent> store) : super(store, quoteEventDecoder);
+
+  Future<void> saveQuote(Quote quote) {
+    return this.save(QuoteEvent.create(quote));
+  }
+ 
+  Future<void> updateQuote(Quote quote) {
+    return this.save(QuoteEvent.update(quote));
+  }
+
+    Future<void> deleteAuthor(String quoteId) {
+    var idQuery = MatchQuery("entity.id", quoteId);
+    var sorting = SortElement.desc(modifiedUtcF);
+
+    return super.findDocuments(idQuery, PageRequest(1, 0), sorting:sorting)
+    .then((page) => this.save(QuoteEvent.delete(page.elements[0].entity)));
+  }
+
+  Future<void> deleteByAuthor(String authorId) {
+    var authorIdQ = MatchQuery("entity.authorId", authorId);
+    return super.deleteDocuments(authorIdQ);
+  }
+
+  Future<void> deleteByBook(String bookId) {
+    var bookIdQ = MatchQuery("entity.bookId", bookId);
+    return super.deleteDocuments(bookIdQ);
+  }
+
+  Future<Page<QuoteEvent>> listEvents(ListEventsByQuoteRequest request) {
+    var query = MatchQuery("entity.id", request.quoteId);
+    return super.findDocuments(query, request.pageRequest);
+  }
+
+
+}

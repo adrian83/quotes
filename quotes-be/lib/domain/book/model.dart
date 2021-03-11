@@ -3,6 +3,15 @@ import 'package:uuid/uuid.dart';
 import '../../infrastructure/elasticsearch/document.dart';
 import '../common/model.dart';
 
+var idLabel = 'id';
+var titleLabel = 'title';
+var eventIdLabel = 'eventId';
+var authorIdLabel = 'authorId';
+var operationLabel = 'operation';
+var createdUtcLabel = 'createdUtc';
+var descriptionLabel = 'description';
+var modifiedUtcLabel = 'modifiedUtc';
+
 class Book extends Entity with Document {
   String title, description, authorId;
 
@@ -13,36 +22,36 @@ class Book extends Entity with Document {
   Book.update(String id, this.title, this.description, this.authorId) : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
 
   Book.fromJson(Map<String, dynamic> json)
-      : this(json['id'], json['title'], json['description'], json['authorId'], DateTime.parse(json['modifiedUtc']), DateTime.parse(json['createdUtc']));
+      : this(json[idLabel], json[titleLabel], json[descriptionLabel], json[authorIdLabel], DateTime.parse(json[modifiedUtcLabel]),
+            DateTime.parse(json[createdUtcLabel]));
 
   String getId() => id;
 
   Map toJson() => super.toJson()
     ..addAll({
-      "title": title,
-      "authorId": authorId,
-      "description": description,
+      titleLabel: title,
+      authorIdLabel: authorId,
+      descriptionLabel: description,
     });
 
-  String toString() => "Book [id: $id, title: $title, description: $description, authorId: $authorId, modifiedUtc: $modifiedUtc, createdUtc: $createdUtc]";
+  String toString() =>
+      "Book [$idLabel: $id, $titleLabel: $title, $descriptionLabel: $description, $authorIdLabel: $authorId, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
-class BookEvent extends ESDocument {
-  Book book;
+class BookEvent extends Event<Book> with Document {
+  BookEvent(String id, String operation, Book book, DateTime modified, DateTime created) : super(id, operation, book, modified, created);
 
-  BookEvent(String docId, String operation, this.book) : super(docId, operation);
+  BookEvent.create(Book book) : super(Uuid().v4(), Event.created, book, DateTime.now().toUtc(), DateTime.now().toUtc());
 
-  BookEvent.created(String docId, Book book) : this(docId, ESDocument.created, book);
+  BookEvent.update(Book book) : super(Uuid().v4(), Event.modified, book, DateTime.now().toUtc(), DateTime.now().toUtc());
 
-  BookEvent.modified(String docId, Book book) : this(docId, ESDocument.modified, book);
+  BookEvent.fromJson(Map<String, dynamic> json)
+      : super(json[idLabel], json[operationF], Book.fromJson(json[entityF]), DateTime.parse(json[modifiedUtcLabel]), DateTime.parse(json[createdUtcLabel]));
 
-  BookEvent.deleted(String docId, Book book) : this(docId, ESDocument.deleted, book);
+  String getId() => this.id;
 
-  BookEvent.fromJson(Map<String, dynamic> json) : this(json['eventId'], json['operation'], Book.fromJson(json));
-
-  Map toJson() => super.toJson()..addAll(book.toJson());
-
-  String toString() => "BookEvent [eventId: $eventId, operation: $operation, modifiedUtc: $modifiedUtc, book: $book]";
+  String toString() =>
+      "AuthorEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc book: ${entity.toString()}]";
 }
 
 class ListBooksByAuthorRequest {

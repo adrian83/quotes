@@ -3,9 +3,16 @@ import 'package:uuid/uuid.dart';
 import '../../infrastructure/elasticsearch/document.dart';
 import '../common/model.dart';
 
-const textF = "text";
-const authorIdF = "authorId";
-const bookIdF = "bookId";
+
+var idLabel = 'id';
+var textLabel = "text";
+var authorIdLabel = "authorId";
+var bookIdLabel = "bookId";
+var eventIdLabel = 'eventId';
+var operationLabel = 'operation';
+var createdUtcLabel = 'createdUtc';
+var descriptionLabel = 'description';
+var modifiedUtcLabel = 'modifiedUtc';
 
 class Quote extends Entity with Document {
   String text, authorId, bookId;
@@ -17,37 +24,40 @@ class Quote extends Entity with Document {
   Quote.update(String id, this.text, this.authorId, this.bookId) : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
 
   Quote.fromJson(Map<String, dynamic> json)
-      : this(json[idF], json[textF], json[authorIdF], json[bookIdF], DateTime.parse(json[modifiedUtcF]), DateTime.parse(json[createdUtcF]));
+      : this(json[idLabel], json[textLabel], json[authorIdLabel], json[bookIdLabel], DateTime.parse(json[modifiedUtcF]), DateTime.parse(json[createdUtcF]));
 
   String getId() => id;
 
   Map toJson() => super.toJson()
     ..addAll({
-      textF: text,
-      authorIdF: authorId,
-      bookIdF: bookId,
+      textLabel: text,
+      authorIdLabel: authorId,
+      bookIdLabel: bookId,
     });
 
-  String toString() => "Quote [$idF: $id, $textF: $text, $authorIdF: $authorId, $bookIdF: $bookId, $modifiedUtcF: $modifiedUtc, $createdUtcF: $createdUtc]";
+  String toString() => "Quote [$idLabel: $id, $textLabel: $text, $authorIdLabel: $authorId, $bookIdLabel: $bookId, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
-class QuoteEvent extends ESDocument {
-  Quote quote;
 
-  QuoteEvent(String docId, String operation, this.quote) : super(docId, operation);
 
-  QuoteEvent.created(String docId, Quote quote) : this(docId, ESDocument.created, quote);
+class QuoteEvent extends Event<Quote> with Document {
+  QuoteEvent(String id, String operation, Quote quote, DateTime modified, DateTime created) : super(id, operation, quote, modified, created);
 
-  QuoteEvent.modified(String docId, Quote quote) : this(docId, ESDocument.modified, quote);
+  QuoteEvent.create(Quote quote) : super(Uuid().v4(), Event.created, quote, DateTime.now().toUtc(), DateTime.now().toUtc());
 
-  QuoteEvent.deleted(String docId, Quote quote) : this(docId, ESDocument.deleted, quote);
+  QuoteEvent.update(Quote quote) : super(Uuid().v4(), Event.modified, quote, DateTime.now().toUtc(), DateTime.now().toUtc());
 
-  QuoteEvent.fromJson(Map<String, dynamic> json) : this(json['docId'], json['operation'], Quote.fromJson(json));
+  QuoteEvent.delete(Quote quote) : super(Uuid().v4(), Event.deleted, quote, DateTime.now().toUtc(), DateTime.now().toUtc());
 
-  Map toJson() => super.toJson()..addAll(quote.toJson());
+  QuoteEvent.fromJson(Map<String, dynamic> json)
+      : super(json[idF], json[operationF], Quote.fromJson(json[entityF]), DateTime.parse(json[modifiedUtcLabel]), DateTime.parse(json[createdUtcLabel]));
 
-  String toString() => "QuoteEvent [eventId: $eventId, operation: $operation, modifiedUtc: $modifiedUtc, quote: $quote]";
+  String getId() => this.id;
+
+  String toString() =>
+      "QuoteEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc quote: ${entity.toString()}]";
 }
+
 
 class ListEventsByQuoteRequest {
   String authorId, bookId, quoteId;

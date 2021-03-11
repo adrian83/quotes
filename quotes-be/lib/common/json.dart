@@ -1,3 +1,3 @@
 abstract class Jsonable {
-  Map toJson();
+  Map<dynamic, dynamic> toJson();
 }

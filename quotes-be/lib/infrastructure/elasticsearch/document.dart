@@ -2,6 +2,8 @@ import '../../common/json.dart';
 
 abstract class Document implements Jsonable {
   String getId();
+  //Map<dynamic, dynamic> toSave() => toJson();
+  //Map<dynamic, dynamic> toUpdate() => toJson();
 }
 
 abstract class ESDocument extends Document implements Jsonable {
@@ -11,7 +13,6 @@ abstract class ESDocument extends Document implements Jsonable {
   late DateTime modifiedUtc;
 
   ESDocument(this.eventId, this.operation) {
-    //, [DateTime modDateUtc]) {
     modifiedUtc = DateTime.now().toUtc(); // modDateUtc == null ? DateTime.now().toUtc() : modDateUtc;
   }
 
@@ -22,9 +23,9 @@ abstract class ESDocument extends Document implements Jsonable {
 
 class UpdateDoc {
   bool _docAsUpsert = true, _detectNoop = false;
-  Document _doc;
+  Map<dynamic, dynamic> _doc;
 
   UpdateDoc(this._doc);
 
-  Map toJson() => {"doc": _doc.toJson(), "doc_as_upsert": _docAsUpsert, "detect_noop": _detectNoop};
+  Map toJson() => {"doc": _doc, "doc_as_upsert": _docAsUpsert, "detect_noop": _detectNoop};
 }

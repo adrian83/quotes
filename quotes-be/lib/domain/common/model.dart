@@ -3,6 +3,8 @@ import '../../common/json.dart';
 const idF = "id";
 const createdUtcF = "createdUtc";
 const modifiedUtcF = "modifiedUtc";
+const operationF = "operation";
+const entityF = "entity";
 
 class Entity implements Jsonable {
   String id;
@@ -18,6 +20,18 @@ class Entity implements Jsonable {
   }
 
   Map toJson() => {idF: id, createdUtcF: _createdUtc.toIso8601String(), modifiedUtcF: _modifiedUtc.toIso8601String()};
+  
+}
+
+class Event<T extends Entity> extends Entity {
+  static final String created = "created", modified = "modified", deleted = "deleted";
+
+  String operation;
+  T entity;
+
+  Event(String id, this.operation, this.entity, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
+
+  Map toJson() => super.toJson()..addAll({operationF: operation, entityF: entity.toJson()});
 }
 
 class PageRequest {

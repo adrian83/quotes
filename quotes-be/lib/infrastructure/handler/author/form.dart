@@ -1,6 +1,7 @@
+import 'package:uuid/uuid.dart';
+
 import '../../web/param.dart';
 import '../../web/form.dart';
-import '../../../common/tuple.dart';
 
 import '../../../domain/author/model.dart';
 
@@ -33,7 +34,7 @@ class PersistAuthorParams {
       throw InvalidInputException(violations);
     }
 
-    return Author.create(nameOrError.e1!, descriptionOrError.e1!);
+    return Author(Uuid().v4(), nameOrError.e1!, descriptionOrError.e1!, DateTime.now().toUtc(), DateTime.now().toUtc());
   }
 }
 
@@ -60,7 +61,7 @@ class UpdateAuthorParams extends PersistAuthorParams {
       throw InvalidInputException(violations);
     }
 
-    return Author.update(locationOrError.e1!, nameOrError.e1!, descriptionOrError.e1!);
+    return Author(authorId!, nameOrError.e1!, descriptionOrError.e1!, DateTime.now().toUtc(), DateTime.now().toUtc());
   }
 }
 

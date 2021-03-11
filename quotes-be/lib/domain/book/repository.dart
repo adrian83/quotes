@@ -30,3 +30,19 @@ class BookRepository extends Repository<Book> {
     return this.deleteDocuments(query);
   }
 }
+
+Decoder<BookEvent> bookEventDecoder = (Map<String, dynamic> json) => BookEvent.fromJson(json);
+
+class BookEventRepository extends Repository<BookEvent> {
+  BookEventRepository(ESStore<BookEvent> store) : super(store, bookEventDecoder);
+
+  Future<void> deleteByAuthor(String authorId) {
+    var authorIdQ = MatchQuery("entity.authorId", authorId);
+    return super.deleteDocuments(authorIdQ);
+  }
+
+  Future<Page<BookEvent>> listEvents(ListEventsByBookRequest request) {
+    var query = MatchQuery("entity.id", request.bookId);
+    return super.findDocuments(query, request.pageRequest);
+  }
+}

@@ -7,16 +7,7 @@ import '../error.dart';
 import '../../web/form.dart';
 import '../../web/param.dart';
 import '../../web/response.dart';
-import '../../../common/tuple.dart';
-import '../../../domain/book/model.dart';
 import '../../../domain/book/service.dart';
-import '../../../domain/common/model.dart';
-
-// var requiredAuthorId = ParamData("authorId", "authorId cannot be empty");
-// var requiredBookId = ParamData("bookId", "bookId cannot be empty");
-// var optionalSearchPhrase = ParamData("searchPhrase", "");
-// var positivePageLimit = ParamData("limit", "limit should be a positive integer");
-// var positivePageOffset = ParamData("offset", "offset should be a positive integer");
 
 class BookHandler {
   static final Logger logger = Logger('BookHandler');

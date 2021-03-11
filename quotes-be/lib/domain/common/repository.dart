@@ -6,7 +6,6 @@ import 'package:logging/logging.dart';
 import '../../infrastructure/elasticsearch/search.dart';
 import '../../infrastructure/elasticsearch/store.dart';
 import '../../infrastructure/elasticsearch/document.dart';
-
 import '../common/model.dart';
 import 'model.dart';
 
@@ -21,7 +20,7 @@ class Repository<T extends Document> {
   Repository(this._store, this._fromJson);
 
   Future<void> save(T doc) {
-    logger.info("storing $doc");
+    logger.info("storing ${doc.toJson()}");
     return _store.index(doc).then((ir) => doc);
   }
 
@@ -39,8 +38,8 @@ class Repository<T extends Document> {
 
   Future<String> mapping() => _store.mapping();
 
-  Future<Page<T>> findDocuments(Query query, PageRequest pageRequest) {
-    var sort = SortElement.asc("_id");
+  Future<Page<T>> findDocuments(Query query, PageRequest pageRequest, {SortElement? sorting}) {
+    var sort = sorting == null ? SortElement.asc("_id") : sorting;
     var req = SearchRequest(query, [sort], pageRequest.offset, pageRequest.limit);
     logger.info("finding documents ${jsonEncode(req)}");
 

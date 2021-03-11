@@ -21,10 +21,6 @@ import '../lib/domain/author/repository.dart';
 import '../lib/domain/quote/repository.dart';
 import '../lib/domain/book/repository.dart';
 
-import '../lib/domain/author/event.dart';
-import '../lib/domain/quote/event.dart';
-import '../lib/domain/book/event.dart';
-
 import '../lib/domain/author/model.dart';
 import '../lib/domain/quote/model.dart';
 import '../lib/domain/book/model.dart';
