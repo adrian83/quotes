@@ -14,7 +14,7 @@ deps:
 	docker run -d -p 9200:9200 -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:6.4.1
 
 fe-format:
-	cd quotes-fe && dartfmt -w -l 160 --fix .
+	cd quotes-fe && dartfmt -w -l 120 --fix .
 
 fe-get:
 	echo "getting frontend dependencies" 
@@ -34,7 +34,7 @@ fe-all: fe-format fe-get fe-build be-test fe-run
 
 
 be-format:
-	cd quotes-be && dartfmt -w -l 160 --fix .
+	cd quotes-be && dartfmt -w -l 120 --fix .
 
 be-get: 
 	echo "getting backend dependencies" 

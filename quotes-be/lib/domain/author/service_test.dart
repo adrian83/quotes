@@ -29,7 +29,8 @@ void main() {
   var quoteRepoMock = QuoteRepositoryMock();
   var quoteEventRepoMock = QuoteEventRepositoryMock();
 
-  var authorService = AuthorService(authorRepoMock, authorEventRepoMock, bookRepoMock, bookEventRepoMock, quoteRepoMock, quoteEventRepoMock);
+  var authorService = AuthorService(
+      authorRepoMock, authorEventRepoMock, bookRepoMock, bookEventRepoMock, quoteRepoMock, quoteEventRepoMock);
 
   var authorId = "abcd-efgh";
 

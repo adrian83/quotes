@@ -16,8 +16,11 @@ bool empty(String? str) => str == null || str.length == 0;
 bool shorter(String str, int limit) => str.length < limit;
 bool longer(String str, int limit) => str.length > limit;
 
-Future<Map> readForm<F>(HttpRequest req) =>
-    req.toList().then((lol) => lol.map((l) => String.fromCharCodes(l))).then((los) => los.join()).then((content) => jsonDecode(content) as Map);
+Future<Map> readForm<F>(HttpRequest req) => req
+    .toList()
+    .then((lol) => lol.map((l) => String.fromCharCodes(l)))
+    .then((los) => los.join())
+    .then((content) => jsonDecode(content) as Map);
 
 Tuple2<String, Violation> notEmptyString(String name, String? value) {
   if (value == null) {
@@ -78,7 +81,8 @@ Tuple3<String, String, List<Violation>> validateBookLocation(String? authorId, S
   return Tuple3<String, String, List<Violation>>(authorIdOrError.e1!, bookIdOrError.e1!, violations);
 }
 
-Tuple4<String, String, String, List<Violation>> validateQuoteLocation(String? authorId, String? bookId, String? quoteId) {
+Tuple4<String, String, String, List<Violation>> validateQuoteLocation(
+    String? authorId, String? bookId, String? quoteId) {
   List<Violation> violations = [];
 
   var authorIdOrError = notEmptyString("authorId", authorId);
@@ -94,7 +98,8 @@ Tuple4<String, String, String, List<Violation>> validateQuoteLocation(String? au
     return Tuple4<String, String, String, List<Violation>>(null, null, null, violations);
   }
 
-  return Tuple4<String, String, String, List<Violation>>(authorIdOrError.e1!, bookIdOrError.e1!, quoteIdOrError.e1!, violations);
+  return Tuple4<String, String, String, List<Violation>>(
+      authorIdOrError.e1!, bookIdOrError.e1!, quoteIdOrError.e1!, violations);
 }
 
 Tuple3<int, int, List<Violation>> validatePageRequest(String? offset, String? limit) {

@@ -7,12 +7,12 @@ class ElasticsearchConfig {
   String authorEventsIndex, bookEventsIndex, quoteEventsIndex;
   int port;
 
-  ElasticsearchConfig(
-      this.host, this.port, this.authorsIndex, this.booksIndex, this.quotesIndex, this.authorEventsIndex, this.bookEventsIndex, this.quoteEventsIndex);
+  ElasticsearchConfig(this.host, this.port, this.authorsIndex, this.booksIndex, this.quotesIndex,
+      this.authorEventsIndex, this.bookEventsIndex, this.quoteEventsIndex);
 
   ElasticsearchConfig.fromJson(Map<String, dynamic> json)
-      : this(json['host'], json['port'], json['authorsIndex'], json['booksIndex'], json['quotesIndex'], json['authorEventsIndex'], json['bookEventsIndex'],
-            json['quoteEventsIndex']);
+      : this(json['host'], json['port'], json['authorsIndex'], json['booksIndex'], json['quotesIndex'],
+            json['authorEventsIndex'], json['bookEventsIndex'], json['quoteEventsIndex']);
 }
 
 class ServerConfig {
@@ -24,7 +24,8 @@ class ServerConfig {
   ServerConfig.fromJson(Map<String, dynamic> json) : this(json['host'], json['port']);
 }
 
-Future<Config> readConfig(String path) => File(path).readAsString().then((str) => jsonDecode(str)).then((json) => Config.fromJson(json));
+Future<Config> readConfig(String path) =>
+    File(path).readAsString().then((str) => jsonDecode(str)).then((json) => Config.fromJson(json));
 
 class Config {
   ElasticsearchConfig elasticsearch;
@@ -32,5 +33,6 @@ class Config {
 
   Config(this.elasticsearch, this.server);
 
-  Config.fromJson(Map<String, dynamic> json) : this(ElasticsearchConfig.fromJson(json['elasticsearch']), ServerConfig.fromJson(json['server']));
+  Config.fromJson(Map<String, dynamic> json)
+      : this(ElasticsearchConfig.fromJson(json['elasticsearch']), ServerConfig.fromJson(json['server']));
 }

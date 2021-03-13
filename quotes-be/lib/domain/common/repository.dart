@@ -46,7 +46,9 @@ class Repository<T extends Document> {
     return _store.list(req).then((resp) => resp.hits).then((hits) {
       logger.info("found ${hits.total} documents");
       var docs = hits.hits.map((h) => _fromJson(h.source)).toList();
+      logger.info("documents $docs");
       var info = PageInfo(pageRequest.limit, pageRequest.offset, hits.total);
+      logger.info("info $info");
       return Page<T>(info, docs);
     });
   }

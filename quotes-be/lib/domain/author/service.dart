@@ -16,10 +16,10 @@ class AuthorService {
   QuoteRepository _quoteRepository;
   QuoteEventRepository _quoteEventRepository;
 
-final Logger logger = Logger('AuthorService');
+  final Logger logger = Logger('AuthorService');
 
-  AuthorService(
-      this._authorRepository, this._authorEventRepository, this._bookRepository, this._bookEventRepository, this._quoteRepository, this._quoteEventRepository);
+  AuthorService(this._authorRepository, this._authorEventRepository, this._bookRepository, this._bookEventRepository,
+      this._quoteRepository, this._quoteEventRepository);
 
   Future<Author> save(Author author) => _authorRepository.save(author).then((_) {
         _authorEventRepository.saveAuthor(author);
@@ -44,7 +44,8 @@ final Logger logger = Logger('AuthorService');
 
   Future<Page<Author>> findAuthors(SearchEntityRequest request) => _authorRepository.findAuthors(request);
 
-  Future<Page<AuthorEvent>> listEvents(ListEventsByAuthorRequest request) => _authorEventRepository.findAuthorsEvents(request);
+  Future<Page<AuthorEvent>> listEvents(ListEventsByAuthorRequest request) =>
+      _authorEventRepository.findAuthorsEvents(request);
 
   Future<String> mapping() => _authorRepository.mapping();
 }

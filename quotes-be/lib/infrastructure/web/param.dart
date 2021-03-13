@@ -16,7 +16,8 @@ class PathParams {
   Map<String, String> params = {};
 
   PathParams(List<String> segments, Map<String, int> desc) {
-    var entries = desc.entries.where((e) => e.value < segments.length).map((e) => MapEntry(e.key, segments[e.value])).toList();
+    var entries =
+        desc.entries.where((e) => e.value < segments.length).map((e) => MapEntry(e.key, segments[e.value])).toList();
     params = Map<String, String>.fromEntries(entries);
   }
 

@@ -34,7 +34,9 @@ void main() {
     var otherHttpMethods = ["GET", "PUT", "OPTIONS", "HEAD"];
 
     // when & then
-    otherHttpMethods.map((method) => route.canHandle("/authors/123/books/4534", method)).forEach((result) => expect(result, isFalse));
+    otherHttpMethods
+        .map((method) => route.canHandle("/authors/123/books/4534", method))
+        .forEach((result) => expect(result, isFalse));
   });
 
   test("Route cannot handle requests with path not matching given pattern", () {

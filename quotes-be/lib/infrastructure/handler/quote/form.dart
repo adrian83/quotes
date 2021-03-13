@@ -116,7 +116,8 @@ class ListEventsByQuoteParams {
       throw InvalidInputException(violations);
     }
 
-    return ListEventsByQuoteRequest(locationOrError.e1!, locationOrError.e2!, locationOrError.e3!, pageDataOrError.e1!, pageDataOrError.e2!);
+    return ListEventsByQuoteRequest(
+        locationOrError.e1!, locationOrError.e2!, locationOrError.e3!, pageDataOrError.e1!, pageDataOrError.e2!);
   }
 }
 
@@ -143,6 +144,7 @@ class ListQuotesFromBookParams {
       throw InvalidInputException(violations);
     }
 
-    return ListQuotesFromBookRequest(locationOrError.e1!, locationOrError.e2!, pageDataOrError.e1!, pageDataOrError.e2!);
+    return ListQuotesFromBookRequest(
+        locationOrError.e1!, locationOrError.e2!, pageDataOrError.e1!, pageDataOrError.e2!);
   }
 }

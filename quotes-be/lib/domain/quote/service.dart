@@ -10,19 +10,20 @@ class QuoteService {
 
   QuoteService(this._quotesRepository, this._quoteEventRepository);
 
-  Future<Quote> save(Quote quote) => _quotesRepository.save(quote).then((_){
-     _quoteEventRepository.saveQuote(quote);
-     return quote;
-  });
+  Future<Quote> save(Quote quote) => _quotesRepository.save(quote).then((_) {
+        _quoteEventRepository.saveQuote(quote);
+        return quote;
+      });
 
   Future<Quote> find(String quoteId) => _quotesRepository.find(quoteId);
 
-  Future<Quote> update(Quote quote) => _quotesRepository.update(quote).then((quote) { 
-    _quoteEventRepository.updateQuote(quote);
-    return quote;
-  });
+  Future<Quote> update(Quote quote) => _quotesRepository.update(quote).then((quote) {
+        _quoteEventRepository.updateQuote(quote);
+        return quote;
+      });
 
-  Future<void> delete(String quoteId) => _quotesRepository.delete(quoteId).then((_) => _quoteEventRepository.delete(quoteId));
+  Future<void> delete(String quoteId) =>
+      _quotesRepository.delete(quoteId).then((_) => _quoteEventRepository.delete(quoteId));
 
   Future<Page<Quote>> findBookQuotes(ListQuotesFromBookRequest request) => _quotesRepository.findBookQuotes(request);
 
@@ -30,5 +31,6 @@ class QuoteService {
 
   Future<Page<QuoteEvent>> listEvents(ListEventsByQuoteRequest request) => _quoteEventRepository.listEvents(request);
 
-  Future<void> deleteByAuthor(String authorId) => _quotesRepository.deleteByAuthor(authorId).then((_) => _quoteEventRepository.deleteByAuthor(authorId));
+  Future<void> deleteByAuthor(String authorId) =>
+      _quotesRepository.deleteByAuthor(authorId).then((_) => _quoteEventRepository.deleteByAuthor(authorId));
 }

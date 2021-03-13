@@ -11,7 +11,8 @@ var invalidNameViolation = Violation("name", "Name length should be between $min
 
 var minDescriptionLen = 1;
 var maxDescriptionLen = 5000;
-var invalidDescViolation = Violation("description", "Description length should be between $minDescriptionLen and $maxDescriptionLen");
+var invalidDescViolation =
+    Violation("description", "Description length should be between $minDescriptionLen and $maxDescriptionLen");
 
 class PersistAuthorParams {
   String? name, description;

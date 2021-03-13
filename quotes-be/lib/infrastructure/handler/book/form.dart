@@ -9,7 +9,8 @@ var invalidTitleViolation = Violation("title", "Title length should be between $
 
 var minDescriptionLen = 1;
 var maxDescriptionLen = 5000;
-var invalidDescViolation = Violation("description", "Description length should be between $minDescriptionLen and $maxDescriptionLen");
+var invalidDescViolation =
+    Violation("description", "Description length should be between $minDescriptionLen and $maxDescriptionLen");
 
 class PersistBookParams {
   String? authorId, title, description;

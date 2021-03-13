@@ -25,7 +25,8 @@ class Route {
 
     _exp = RegExp(urlPatterns);
 
-    _pathParamsDesc = _url.split(slash).asMap().map((i, e) => MapEntry(e, i - 1))..removeWhere((e, i) => !_isPathParam(e));
+    _pathParamsDesc = _url.split(slash).asMap().map((i, e) => MapEntry(e, i - 1))
+      ..removeWhere((e, i) => !_isPathParam(e));
 
     _pathParamsDesc = _pathParamsDesc.map((e, i) => MapEntry(e.substring(1, e.length - 1), i));
   }

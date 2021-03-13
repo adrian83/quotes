@@ -31,7 +31,8 @@ class IndexResult extends BasicResult {
 
   IndexResult(String index, String type, String id, this.result, this.version) : super(index, type, id);
 
-  factory IndexResult.fromJson(Map<String, dynamic> json) => IndexResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
+  factory IndexResult.fromJson(Map<String, dynamic> json) =>
+      IndexResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
 
   String toString() {
     return "IndexResult [id: $id, type: $type, index: $index, result: $result version: $version]";
@@ -39,15 +40,20 @@ class IndexResult extends BasicResult {
 }
 
 class UpdateResult extends IndexResult {
-  UpdateResult(String index, String type, String id, String result, int version) : super(index, type, id, result, version);
+  UpdateResult(String index, String type, String id, String result, int version)
+      : super(index, type, id, result, version);
 
-  factory UpdateResult.fromJson(Map<String, dynamic> json) => UpdateResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
+  factory UpdateResult.fromJson(Map<String, dynamic> json) =>
+      UpdateResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
 }
 
 class DeleteResult extends IndexResult {
-  DeleteResult(String index, String type, String id, String result, int version) : super(index, type, id, result, version);
+  DeleteResult(String index, String type, String id, String result, int version)
+      : super(index, type, id, result, version);
 
-  factory DeleteResult.fromJson(Map<String, dynamic> json) => DeleteResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
+  factory DeleteResult.fromJson(Map<String, dynamic> json) {
+    return DeleteResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
+  }
 }
 
 class GetResult extends BasicResult {
@@ -57,7 +63,8 @@ class GetResult extends BasicResult {
 
   GetResult(String index, String type, String id, this.version, this.found, this.source) : super(index, type, id);
 
-  factory GetResult.fromJson(Map<String, dynamic> json) => GetResult(json[indexF], json[typeF], json[idF], json[versionF], json[foundF], json[sourceF]);
+  factory GetResult.fromJson(Map<String, dynamic> json) =>
+      GetResult(json[indexF], json[typeF], json[idF], json[versionF], json[foundF], json[sourceF]);
 }
 
 class SearchHit extends BasicResult {
@@ -66,7 +73,8 @@ class SearchHit extends BasicResult {
 
   SearchHit(String index, String type, String id, this.score, this.source) : super(index, type, id);
 
-  factory SearchHit.fromJson(Map<String, dynamic> json) => SearchHit(json[indexF], json[typeF], json[idF], json[scoreF], json[sourceF]);
+  factory SearchHit.fromJson(Map<String, dynamic> json) =>
+      SearchHit(json[indexF], json[typeF], json[idF], json[scoreF], json[sourceF]);
 }
 
 class SearchHits {
@@ -104,5 +112,6 @@ class DeleteByQueryResult {
 
   DeleteByQueryResult(this.timedOut, this.took, this.deleted);
 
-  factory DeleteByQueryResult.fromJson(Map<String, dynamic> json) => DeleteByQueryResult(json[timedOutF], json[tookF], json[deletedF]);
+  factory DeleteByQueryResult.fromJson(Map<String, dynamic> json) =>
+      DeleteByQueryResult(json[timedOutF], json[tookF], json[deletedF]);
 }

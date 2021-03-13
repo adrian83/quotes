@@ -10,6 +10,7 @@ class Server {
   Server(this.config, this.router);
 
   void start() async {
-    HttpServer.bind(config.host, config.port).then((server) => server.listen((request) => router.handleRequest(request)));
+    HttpServer.bind(config.host, config.port)
+        .then((server) => server.listen((request) => router.handleRequest(request)));
   }
 }

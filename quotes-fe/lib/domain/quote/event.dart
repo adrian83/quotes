@@ -5,11 +5,11 @@ import '../common/page.dart';
 class QuoteEvent extends Quote {
   String _eventId, _operation;
 
-  QuoteEvent(this._eventId, this._operation, String id, String text, String authorId, String bookId, DateTime modifiedUtc, DateTime createdUtc)
-      : super(id, text, authorId, bookId, modifiedUtc, createdUtc);
+  QuoteEvent(this._eventId, this._operation, Quote quote)
+      : super(quote.id, quote.text, quote.authorId, quote.bookId, quote.modifiedUtc, quote.createdUtc);
 
-  factory QuoteEvent.fromJson(Map<String, dynamic> json) => QuoteEvent(json["eventId"], json["operation"], json["id"], json["text"], json["authorId"],
-      json["bookId"], DateTime.parse(json["modifiedUtc"]), DateTime.parse(json["createdUtc"]));
+  QuoteEvent.fromJson(Map<String, dynamic> json)
+  : this(json["id"], json["operation"], Quote.fromJson(json["entity"]));
 
   String get eventId => _eventId;
   String get operation => _operation;

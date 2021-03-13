@@ -27,11 +27,12 @@ class BookService {
 
   Future<void> delete(String bookId) => _bookRepository
       .delete(bookId)
-      .then((_) => _bookEventRepository.delete(bookId))
+      .then((_) => _bookEventRepository.deleteBook(bookId))
       .then((_) => _quoteRepository.deleteByBook(bookId))
       .then((_) => _quoteEventRepository.deleteByBook(bookId));
 
-  Future<void> deleteByAuthor(String authorId) => _bookRepository.deleteByAuthor(authorId).then((_) => _bookEventRepository.deleteByAuthor(authorId));
+  Future<void> deleteByAuthor(String authorId) =>
+      _bookRepository.deleteByAuthor(authorId).then((_) => _bookEventRepository.deleteByAuthor(authorId));
 
   Future<Page<Book>> findAuthorBooks(ListBooksByAuthorRequest request) => _bookRepository.findAuthorBooks(request);
 

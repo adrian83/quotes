@@ -1,10 +1,12 @@
 import '../../common/json.dart';
 
-const idF = "id";
-const createdUtcF = "createdUtc";
-const modifiedUtcF = "modifiedUtc";
-const operationF = "operation";
-const entityF = "entity";
+const idLabel = 'id';
+const modifiedUtcLabel = 'modifiedUtc';
+const createdUtcLabel = 'createdUtc';
+
+const eventIdLabel = 'eventId';
+const operationLabel = 'operation';
+const entityLabel = 'entity';
 
 class Entity implements Jsonable {
   String id;
@@ -19,8 +21,8 @@ class Entity implements Jsonable {
     _modifiedUtc = md;
   }
 
-  Map toJson() => {idF: id, createdUtcF: _createdUtc.toIso8601String(), modifiedUtcF: _modifiedUtc.toIso8601String()};
-  
+  Map toJson() =>
+      {idLabel: id, createdUtcLabel: _createdUtc.toIso8601String(), modifiedUtcLabel: _modifiedUtc.toIso8601String()};
 }
 
 class Event<T extends Entity> extends Entity {
@@ -29,9 +31,10 @@ class Event<T extends Entity> extends Entity {
   String operation;
   T entity;
 
-  Event(String id, this.operation, this.entity, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
+  Event(String id, this.operation, this.entity, DateTime modifiedUtc, DateTime createdUtc)
+      : super(id, modifiedUtc, createdUtc);
 
-  Map toJson() => super.toJson()..addAll({operationF: operation, entityF: entity.toJson()});
+  Map toJson() => super.toJson()..addAll({operationLabel: operation, entityLabel: entity.toJson()});
 }
 
 class PageRequest {

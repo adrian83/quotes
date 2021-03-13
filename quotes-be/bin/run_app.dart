@@ -96,8 +96,8 @@ class Repositories {
   BookEventRepository bookEventsRepository;
   QuoteEventRepository quoteEventsRepository;
 
-  Repositories(
-      this.authorRepository, this.bookRepository, this.quoteRepository, this.authorEventsRepository, this.bookEventsRepository, this.quoteEventsRepository);
+  Repositories(this.authorRepository, this.bookRepository, this.quoteRepository, this.authorEventsRepository,
+      this.bookEventsRepository, this.quoteEventsRepository);
 }
 
 Repositories createRepositories(ElasticsearchConfig config) {
@@ -136,11 +136,16 @@ class Services {
 }
 
 Services createServices(Repositories repositories) {
-  var authorService = AuthorService(repositories.authorRepository, repositories.authorEventsRepository, repositories.bookRepository,
-      repositories.bookEventsRepository, repositories.quoteRepository, repositories.quoteEventsRepository);
+  var authorService = AuthorService(
+      repositories.authorRepository,
+      repositories.authorEventsRepository,
+      repositories.bookRepository,
+      repositories.bookEventsRepository,
+      repositories.quoteRepository,
+      repositories.quoteEventsRepository);
 
-  var bookService =
-      BookService(repositories.bookRepository, repositories.bookEventsRepository, repositories.quoteRepository, repositories.quoteEventsRepository);
+  var bookService = BookService(repositories.bookRepository, repositories.bookEventsRepository,
+      repositories.quoteRepository, repositories.quoteEventsRepository);
 
   var quoteService = QuoteService(repositories.quoteRepository, repositories.quoteEventsRepository);
 
