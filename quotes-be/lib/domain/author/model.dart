@@ -3,8 +3,8 @@ import 'package:uuid/uuid.dart';
 import '../common/model.dart';
 import '../../infrastructure/elasticsearch/document.dart';
 
-var authorNameLabel = 'name';
-var authorDescLabel = 'description';
+const authorNameLabel = 'name';
+const authorDescLabel = 'description';
 
 class Author extends Entity with Document {
   String name, description;
@@ -12,14 +12,27 @@ class Author extends Entity with Document {
   Author(String id, this.name, this.description, DateTime modifiedUtc, DateTime createdUtc)
       : super(id, modifiedUtc, createdUtc);
 
+  Author.create(this.name, this.description) : super.create();
+
+  Author.update(String id, this.name, this.description) : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
+
   Author.fromJson(Map<String, dynamic> json)
       : this(json[idLabel], json[authorNameLabel], json[authorDescLabel], DateTime.parse(json[modifiedUtcLabel]),
             DateTime.parse(json[createdUtcLabel]));
 
+  @override
   String getId() => this.id;
 
-  Map toJson() => super.toJson()..addAll({authorNameLabel: name, authorDescLabel: description});
+  @override
+  Map<dynamic, dynamic> toSave() => toJson();
 
+  @override
+  Map<dynamic, dynamic> toUpdate() => toJson()..remove(createdUtcLabel);
+
+  @override
+  Map<dynamic, dynamic> toJson() => super.toJson()..addAll({authorNameLabel: name, authorDescLabel: description});
+
+  @override
   String toString() =>
       "Author [$idLabel: $id, $authorNameLabel: $name, $authorDescLabel: $description, " +
       "$modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
@@ -42,8 +55,10 @@ class AuthorEvent extends Event<Author> with Document {
       : super(json[idLabel], json[operationLabel], Author.fromJson(json[entityLabel]),
             DateTime.parse(json[modifiedUtcLabel]), DateTime.parse(json[createdUtcLabel]));
 
+  @override
   String getId() => this.id;
 
+  @override
   String toString() =>
       "AuthorEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, " +
       "$createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
@@ -56,6 +71,7 @@ class ListAuthorsRequest {
     pageRequest = PageRequest(limit, offset);
   }
 
+  @override
   String toString() => "ListAuthorsRequest [pageRequest: $pageRequest]";
 }
 
@@ -67,5 +83,6 @@ class ListEventsByAuthorRequest {
     pageRequest = PageRequest(limit, offset);
   }
 
+  @override
   String toString() => "ListEventsByAuthorRequest [authorId: $authorId, pageRequest: $pageRequest]";
 }

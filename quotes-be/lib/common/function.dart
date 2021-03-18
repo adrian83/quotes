@@ -5,3 +5,8 @@ Map<T, List<S>> groupBy<S, T>(Iterable<S> values, T Function(S) key) {
   }
   return map;
 }
+
+T pass<T, G>(T arg, G Function(T) fun) {
+  fun(arg);
+  return arg;
+}

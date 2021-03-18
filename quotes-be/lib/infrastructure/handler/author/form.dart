@@ -35,7 +35,7 @@ class PersistAuthorParams {
       throw InvalidInputException(violations);
     }
 
-    return Author(Uuid().v4(), nameOrError.e1!, descriptionOrError.e1!, DateTime.now().toUtc(), DateTime.now().toUtc());
+    return Author.create(nameOrError.e1!, descriptionOrError.e1!);
   }
 }
 
@@ -62,7 +62,7 @@ class UpdateAuthorParams extends PersistAuthorParams {
       throw InvalidInputException(violations);
     }
 
-    return Author(authorId!, nameOrError.e1!, descriptionOrError.e1!, DateTime.now().toUtc(), DateTime.now().toUtc());
+    return Author.update(authorId!, nameOrError.e1!, descriptionOrError.e1!);
   }
 }
 

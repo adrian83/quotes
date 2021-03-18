@@ -1,36 +1,57 @@
 import 'dart:async';
 
-import '../common/model.dart';
+import 'package:logging/logging.dart';
+
 import 'model.dart';
 import 'repository.dart';
+import '../common/model.dart';
+import '../../common/function.dart';
 
 class QuoteService {
+  final Logger _logger = Logger('QuoteService');
+
   QuoteRepository _quotesRepository;
   QuoteEventRepository _quoteEventRepository;
 
   QuoteService(this._quotesRepository, this._quoteEventRepository);
 
-  Future<Quote> save(Quote quote) => _quotesRepository.save(quote).then((_) {
-        _quoteEventRepository.saveQuote(quote);
-        return quote;
-      });
+  Future<Quote> save(Quote quote) => Future.value(quote)
+      .then((_) => _logger.info("save quote: $quote"))
+      .then((_) => _quotesRepository.save(quote))
+      .then((_) => _logger.info("store quote event (create) for quote: $quote"))
+      .then((_) => pass(quote, (q) => _quoteEventRepository.storeSaveQuoteEvent(quote)));
 
-  Future<Quote> find(String quoteId) => _quotesRepository.find(quoteId);
+  Future<Quote> find(String quoteId) => Future.value(quoteId)
+      .then((_) => _logger.info("find quote by id: $quoteId"))
+      .then((_) => _quotesRepository.find(quoteId));
 
-  Future<Quote> update(Quote quote) => _quotesRepository.update(quote).then((quote) {
-        _quoteEventRepository.updateQuote(quote);
-        return quote;
-      });
+  Future<Quote> update(Quote quote) => Future.value(quote)
+      .then((_) => _logger.info("update quote: $quote"))
+      .then((_) => _quotesRepository.update(quote))
+      .then((_) => _logger.info("store quote event (update) for quote: $quote"))
+      .then((_) => pass(quote, (q) => _quoteEventRepository.storeUpdateQuoteEvent(quote)));
 
-  Future<void> delete(String quoteId) =>
-      _quotesRepository.delete(quoteId).then((_) => _quoteEventRepository.delete(quoteId));
+  Future<void> delete(String quoteId) => Future.value(quoteId)
+      .then((_) => _logger.info("delete quote with id: $quoteId"))
+      .then((_) => _quotesRepository.delete(quoteId))
+      .then((_) => _logger.info("store quote event (delete) for quote with id: $quoteId"))
+      .then((_) => _quoteEventRepository.storeDeleteQuoteEventByQuoteId(quoteId));
 
-  Future<Page<Quote>> findBookQuotes(ListQuotesFromBookRequest request) => _quotesRepository.findBookQuotes(request);
+  Future<Page<Quote>> findBookQuotes(ListQuotesFromBookRequest request) => Future.value(request)
+      .then((_) => _logger.info("find book quotes by request: $request"))
+      .then((value) => _quotesRepository.findBookQuotes(request));
 
-  Future<Page<Quote>> findQuotes(SearchEntityRequest request) => _quotesRepository.findQuotes(request);
+  Future<Page<Quote>> findQuotes(SearchEntityRequest request) => Future.value(request)
+      .then((_) => _logger.info("find quotes by request: $request"))
+      .then((_) => _quotesRepository.findQuotes(request));
 
-  Future<Page<QuoteEvent>> listEvents(ListEventsByQuoteRequest request) => _quoteEventRepository.listEvents(request);
+  Future<Page<QuoteEvent>> listEvents(ListEventsByQuoteRequest request) => Future.value(request)
+      .then((_) => _logger.info("find quote events by request: $request"))
+      .then((_) => _quoteEventRepository.findQuoteEvents(request));
 
-  Future<void> deleteByAuthor(String authorId) =>
-      _quotesRepository.deleteByAuthor(authorId).then((_) => _quoteEventRepository.deleteByAuthor(authorId));
+  Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
+      .then((_) => _logger.info("delete quotes by author with id: $authorId"))
+      .then((_) => _quotesRepository.deleteByAuthor(authorId))
+      .then((_) => _logger.info("store quote events (delete) for author with id: $authorId"))
+      .then((_) => _quoteEventRepository.deleteByAuthor(authorId));
 }

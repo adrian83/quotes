@@ -1,3 +1,5 @@
+import 'package:uuid/uuid.dart';
+
 import '../../common/json.dart';
 
 const idLabel = 'id';
@@ -10,19 +12,18 @@ const entityLabel = 'entity';
 
 class Entity implements Jsonable {
   String id;
-  DateTime _modifiedUtc, _createdUtc;
+  DateTime modifiedUtc, createdUtc;
 
-  Entity(this.id, this._modifiedUtc, this._createdUtc);
+  Entity(this.id, this.modifiedUtc, this.createdUtc);
 
-  DateTime get modifiedUtc => _modifiedUtc;
-  DateTime get createdUtc => _createdUtc;
+  Entity.create() : this(Uuid().v4(), DateTime.now().toUtc(), DateTime.now().toUtc());
 
-  void set modifiedUtc(DateTime md) {
-    _modifiedUtc = md;
-  }
-
+  @override
   Map toJson() =>
-      {idLabel: id, createdUtcLabel: _createdUtc.toIso8601String(), modifiedUtcLabel: _modifiedUtc.toIso8601String()};
+      {idLabel: id, createdUtcLabel: createdUtc.toIso8601String(), modifiedUtcLabel: modifiedUtc.toIso8601String()};
+
+  @override
+  String toString() => "Entity [$idLabel: $id, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
 class Event<T extends Entity> extends Entity {
@@ -31,50 +32,55 @@ class Event<T extends Entity> extends Entity {
   String operation;
   T entity;
 
-  Event(String id, this.operation, this.entity, DateTime modifiedUtc, DateTime createdUtc)
-      : super(id, modifiedUtc, createdUtc);
+  Event(String id, this.operation, this.entity, DateTime modifiedUtc, DateTime createdUtc) : super.create();
 
+  @override
   Map toJson() => super.toJson()..addAll({operationLabel: operation, entityLabel: entity.toJson()});
+
+  @override
+  String toString() =>
+      "Event [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, " +
+      "$createdUtcLabel: $createdUtc, $entityLabel: $entity]";
 }
 
 class PageRequest {
-  int _limit, _offset;
+  int limit, offset;
 
-  PageRequest(this._limit, this._offset);
+  PageRequest(this.limit, this.offset);
+  PageRequest.first() : this(1, 0);
 
-  int get limit => _limit;
-  int get offset => _offset;
+  @override
+  String toString() => "PageRequest [limit: $limit, offset: $offset]";
 }
 
 class PageInfo {
-  int _limit, _offset, _total;
+  int limit, offset, total;
 
-  PageInfo(this._limit, this._offset, this._total);
-
-  int get limit => _limit;
-  int get offset => _offset;
-  int get total => _total;
+  PageInfo(this.limit, this.offset, this.total);
 
   Map toJson() => {
-        "limit": _limit,
-        "offset": _offset,
-        "total": _total,
+        "limit": limit,
+        "offset": offset,
+        "total": total,
       };
+
+  @override
+  String toString() => "PageInfo [limit: $limit, offset: $offset, total: $total]";
 }
 
 class Page<T extends Jsonable> {
-  PageInfo _info;
-  List<T> _elements;
+  PageInfo info;
+  List<T> elements;
 
-  Page(this._info, this._elements);
-
-  List<T> get elements => _elements;
-  PageInfo get info => _info;
+  Page(this.info, this.elements);
 
   Map toJson() => {
-        "info": _info.toJson(),
-        "elements": _elements.map((e) => e.toJson()).toList(),
+        "info": info.toJson(),
+        "elements": elements.map((e) => e.toJson()).toList(),
       };
+
+  @override
+  String toString() => "Page [info: $info, elements: $elements]";
 }
 
 class SearchEntityRequest {
@@ -84,4 +90,7 @@ class SearchEntityRequest {
   SearchEntityRequest(this.searchPhrase, int offset, int limit) {
     pageRequest = PageRequest(limit, offset);
   }
+
+  @override
+  String toString() => "SearchEntityRequest [searchPhrase: $searchPhrase, pageRequest: $pageRequest]";
 }

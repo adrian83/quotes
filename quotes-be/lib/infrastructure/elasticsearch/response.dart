@@ -34,9 +34,8 @@ class IndexResult extends BasicResult {
   factory IndexResult.fromJson(Map<String, dynamic> json) =>
       IndexResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
 
-  String toString() {
-    return "IndexResult [id: $id, type: $type, index: $index, result: $result version: $version]";
-  }
+  @override
+  String toString() => "IndexResult [id: $id, type: $type, index: $index, result: $result, version: $version]";
 }
 
 class UpdateResult extends IndexResult {
@@ -45,6 +44,9 @@ class UpdateResult extends IndexResult {
 
   factory UpdateResult.fromJson(Map<String, dynamic> json) =>
       UpdateResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
+
+  @override
+  String toString() => "UpdateResult [id: $id, type: $type, index: $index, result: $result, version: $version]";
 }
 
 class DeleteResult extends IndexResult {
@@ -54,6 +56,9 @@ class DeleteResult extends IndexResult {
   factory DeleteResult.fromJson(Map<String, dynamic> json) {
     return DeleteResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
   }
+
+  @override
+  String toString() => "DeleteResult [id: $id, type: $type, index: $index, result: $result, version: $version]";
 }
 
 class GetResult extends BasicResult {
@@ -65,6 +70,10 @@ class GetResult extends BasicResult {
 
   factory GetResult.fromJson(Map<String, dynamic> json) =>
       GetResult(json[indexF], json[typeF], json[idF], json[versionF], json[foundF], json[sourceF]);
+
+  @override
+  String toString() =>
+      "GetResult [id: $id, type: $type, index: $index, found: $found ,version: $version, source: $source]";
 }
 
 class SearchHit extends BasicResult {
@@ -75,6 +84,9 @@ class SearchHit extends BasicResult {
 
   factory SearchHit.fromJson(Map<String, dynamic> json) =>
       SearchHit(json[indexF], json[typeF], json[idF], json[scoreF], json[sourceF]);
+
+  @override
+  String toString() => "SearchHit [id: $id, type: $type, index: $index, score: $score, source: $source]";
 }
 
 class SearchHits {
@@ -86,9 +98,11 @@ class SearchHits {
 
   factory SearchHits.fromJson(Map<String, dynamic>? json) {
     if (json == null) return SearchHits(0, 0, List.empty());
-
     return SearchHits(json[totalF], json[maxScoreF], (json[hitsF] as List).map((d) => SearchHit.fromJson(d)).toList());
   }
+
+  @override
+  String toString() => "SearchHits [total: $total, maxScore: $maxScore, hits: $hits]";
 }
 
 class SearchResult {
@@ -104,6 +118,9 @@ class SearchResult {
     var hits = SearchHits.fromJson(json[hitsF]);
     return SearchResult(timedOut, took, hits);
   }
+
+  @override
+  String toString() => "SearchResult [timedOut: $timedOut, took: $took, hits: $hits]";
 }
 
 class DeleteByQueryResult {
@@ -114,4 +131,7 @@ class DeleteByQueryResult {
 
   factory DeleteByQueryResult.fromJson(Map<String, dynamic> json) =>
       DeleteByQueryResult(json[timedOutF], json[tookF], json[deletedF]);
+
+  @override
+  String toString() => "DeleteByQueryResult [timedOut: $timedOut, took: $took, deleted: $deleted]";
 }

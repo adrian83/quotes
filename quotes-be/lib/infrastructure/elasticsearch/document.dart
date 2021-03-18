@@ -2,8 +2,8 @@ import '../../common/json.dart';
 
 abstract class Document implements Jsonable {
   String getId();
-  //Map<dynamic, dynamic> toSave() => toJson();
-  //Map<dynamic, dynamic> toUpdate() => toJson();
+  Map<dynamic, dynamic> toSave() => toJson();
+  Map<dynamic, dynamic> toUpdate() => toJson();
 }
 
 abstract class ESDocument extends Document implements Jsonable {
