@@ -18,14 +18,12 @@ class Repository<T extends Document> {
   Future<void> save(T doc) => _store.index(doc).then((ir) => doc);
 
   Future<T> find(String docId) => _store.get(docId).then((gr) => _fromJson(gr.source));
-  
+
   Future<T> update(T doc) => _store.update(doc).then((ir) => doc);
-  
+
   Future<void> delete(String docId) => _store.delete(docId);
-  
 
   Future<void> deleteDocuments(Query query) => _store.deleteByQuery(query);
-
 
   Future<Page<T>> findDocuments(Query query, PageRequest pageRequest, {SortElement? sorting}) =>
       Future.value(sorting == null ? SortElement.asc("_id") : sorting)
