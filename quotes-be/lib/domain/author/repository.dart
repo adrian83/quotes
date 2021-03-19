@@ -1,63 +1,54 @@
 import 'dart:async';
 
-import 'package:postgres/postgres.dart';
+import 'package:logging/logging.dart';
 
+import 'model.dart';
 import '../common/model.dart';
 import '../common/repository.dart';
-import 'model.dart';
+import '../../common/function.dart';
+import '../../infrastructure/elasticsearch/search.dart';
+import '../../infrastructure/elasticsearch/store.dart';
 
-const modifiedParam = "modified";
-const createdParam = "created";
-const descParam = "desc";
-const nameParam = "name";
-const idParam = "id";
-const limitParam = "limit";
-const offsetParam = "offset";
-const phraseParam = "phrase";
-
-const insertAuthorStmt = "INSERT INTO Author (ID, NAME, DESCRIPTION, MODIFIED_UTC, CREATED_UTC) VALUES (@id, @name, @desc, @modified, @created)";
-
-const updateAuthorStmt = "UPDATE Author SET NAME = @name, DESCRIPTION = @desc, MODIFIED_UTC = @modified WHERE ID = @id";
-
-const getAuthorStmt = "SELECT * FROM Author WHERE id = @id";
-
-const deleteAuthorStmt = "DELETE FROM Author WHERE id = @id";
-
-// TODO fix - use prepared statement.
-var findAuthorsStmt = (String phrase) =>
-    "SELECT * FROM Author WHERE NAME ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%' ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
-
-var findAuthorsCountStmt = (String phrase) => "SELECT count(*) FROM Author WHERE NAME ILIKE '%$phrase%' OR DESCRIPTION ILIKE '%$phrase%'";
-
-RowDecoder<Author> authorRowDecoder = (List<dynamic> row) => Author.fromDB(row);
+Decoder<Author> authorDecoder = (Map<String, dynamic> json) => Author.fromJson(json);
 
 class AuthorRepository extends Repository<Author> {
-  AuthorRepository(PostgreSQLConnection connection) : super(connection, authorRowDecoder);
+  final Logger _logger = Logger('AuthorRepository');
 
-  Future<void> save(Author author) => saveByStatement(insertAuthorStmt, insertParams(author));
+  AuthorRepository(ESStore<Author> store) : super(store, authorDecoder);
 
-  Future<Author> find(String authorId) => findOneByStatement(getAuthorStmt, idParameter(authorId));
+  Future<Page<Author>> findAuthors(SearchEntityRequest request) => Future.value(request)
+      .then((_) => _logger.info("find authors by request: $request"))
+      .then((_) => WildcardQuery(authorNameLabel, request.searchPhrase ?? ""))
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
+}
 
-  Future<Author> update(Author author) => updateAtLeastOne(updateAuthorStmt, updateParams(author)).then((_) => author);
+Decoder<AuthorEvent> authorEventDecoder = (Map<String, dynamic> json) => AuthorEvent.fromJson(json);
 
-  Future<void> delete(String authorId) => deleteAtLeastOne(deleteAuthorStmt, idParameter(authorId));
+class AuthorEventRepository extends Repository<AuthorEvent> {
+  final Logger _logger = Logger('AuthorEventRepository');
 
-  Future<Page<Author>> findAuthors(String searchPhrase, PageRequest request) => Future.value(findByPhraseParams(searchPhrase, request))
-      .then((params) => listAll(findAuthorsStmt(orEmpty(searchPhrase)), params))
-      .then((List<Author> authors) => count(findAuthorsCountStmt(orEmpty(searchPhrase)), {})
-          .then((total) => PageInfo(request.limit, request.offset, total))
-          .then((info) => Page(info, authors)));
+  String _authorIdProp = "$entityLabel.$idLabel";
 
-  String orEmpty(String text) => text ?? "";
+  AuthorEventRepository(ESStore<AuthorEvent> store) : super(store, authorEventDecoder);
 
-  Map<String, Object> findByPhraseParams(String phrase, PageRequest request) =>
-      {limitParam: request.limit, offsetParam: request.offset, phraseParam: orEmpty(phrase)};
+  Future<Page<AuthorEvent>> findAuthorsEvents(ListEventsByAuthorRequest request) => Future.value(request)
+      .then((_) => _logger.info("find author events by request: $request"))
+      .then((_) => MatchQuery(_authorIdProp, request.authorId))
+      .then((query) => super.findDocuments(query, request.pageRequest, sorting: SortElement.asc(createdUtcLabel)));
 
-  Map<String, Object> idParameter(String authorId) => {idParam: authorId};
+  Future<void> storeSaveAuthorEvent(Author author) => Future.value(author)
+      .then((_) => _logger.info("save author event (save) for author: $author"))
+      .then((_) => this.save(AuthorEvent.create(author)));
 
-  Map<String, Object> updateParams(Author author) =>
-      {nameParam: author.name, modifiedParam: author.modifiedUtc, descParam: author.description, idParam: author.id};
+  Future<void> storeUpdateAuthorEvent(Author author) => Future.value(author)
+      .then((_) => _logger.info("save author event (update) for author: $author"))
+      .then((_) => this.save(AuthorEvent.update(author)));
 
-  Map<String, Object> insertParams(Author author) =>
-      {idParam: author.id, nameParam: author.name, descParam: author.description, modifiedParam: author.modifiedUtc, createdParam: author.createdUtc};
+  Future<void> storeDeleteAuthorEvent(String authorId) => Future.value(authorId)
+      .then((_) => _logger.info("save author event (delete) for author with id: $authorId"))
+      .then((_) => MatchQuery(_authorIdProp, authorId))
+      .then((query) => super.findDocuments(query, PageRequest.first(), sorting: SortElement.desc(modifiedUtcLabel)))
+      .then((page) => page.elements[0].entity)
+      .then((author) => pass(author, (a) => _logger.info("save author event (delete) for author with id: $authorId")))
+      .then((author) => this.save(AuthorEvent.delete(author)));
 }

@@ -1,59 +1,73 @@
 import 'dart:async';
 
-import 'package:postgres/postgres.dart';
+import 'package:logging/logging.dart';
 
+import 'model.dart';
 import '../common/model.dart';
 import '../common/repository.dart';
-import 'model.dart';
+import '../../infrastructure/elasticsearch/search.dart';
+import '../../infrastructure/elasticsearch/store.dart';
 
-const insertBookStmt =
-    "INSERT INTO Book (ID, TITLE, DESCRIPTION, AUTHOR_ID, " + "MODIFIED_UTC, CREATED_UTC) VALUES (@id, @title, @desc, @authorId, " + "@modified, @created)";
-
-const updateBookStmt = "UPDATE Book SET TITLE = @title, DESCRIPTION = @desc, " + "MODIFIED_UTC = @modified WHERE ID = @id";
-
-const getBookStmt = "SELECT * FROM Book WHERE id = @id";
-
-const deleteBookStmt = "DELETE FROM Book WHERE id = @id";
-
-const deleteAuthorBooks = "DELETE FROM Book WHERE AUTHOR_ID = @authorId";
-
-const listAuthorBooksStmt = "SELECT * FROM Book WHERE AUTHOR_ID = @authorId " + "ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
-
-const authorBooksCountStmt = "SELECT count(*) FROM Book WHERE AUTHOR_ID = @authorId";
-
-// TODO fix - use prepared statement.
-var findBooksStmt = (String phrase) =>
-    "SELECT * FROM Book WHERE TITLE ILIKE '%$phrase%' OR DESCRIPTION " + "ILIKE '%$phrase%' ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
-
-var findBooksCountStmt = (String phrase) => "SELECT count(*) FROM Book WHERE TITLE ILIKE '%$phrase%' OR DESCRIPTION " + "ILIKE '%$phrase%'";
-
-RowDecoder<Book> bookRowDecoder = (List<dynamic> row) => Book.fromDB(row);
+Decoder<Book> bookDecoder = (Map<String, dynamic> json) => Book.fromJson(json);
 
 class BookRepository extends Repository<Book> {
-  BookRepository(PostgreSQLConnection connection) : super(connection, bookRowDecoder);
+  final Logger _logger = Logger('BookRepository');
 
-  Future<Page<Book>> findAuthorBooks(String authorId, PageRequest request) =>
-      listAll(listAuthorBooksStmt, {"limit": request.limit, "offset": request.offset, "authorId": authorId}).then((List<Book> books) =>
-          count(authorBooksCountStmt, {"authorId": authorId})
-              .then((total) => PageInfo(request.limit, request.offset, total))
-              .then((info) => Page(info, books)));
+  BookRepository(ESStore<Book> store) : super(store, bookDecoder);
 
-  Future<Page<Book>> findBooks(String searchPhrase, PageRequest request) {
-    Map<String, Object> params = {"limit": request.limit, "offset": request.offset, "phrase": searchPhrase ?? ""};
+  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorRequest request) => Future.value(request)
+      .then((_) => _logger.info("find author books by request: $request"))
+      .then((_) => MatchQuery(bookAuthorIdLabel, request.authorId))
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
 
-    return listAll(findBooksStmt(params["phrase"]), params).then((List<Book> books) =>
-        count(findBooksCountStmt(params["phrase"]), {}).then((total) => PageInfo(request.limit, request.offset, total)).then((info) => Page(info, books)));
-  }
+  Future<Page<Book>> findBooks(SearchEntityRequest request) => Future.value(request)
+      .then((_) => _logger.info("find books by request: $request"))
+      .then((_) => WildcardQuery(bookTitleLabel, request.searchPhrase ?? ""))
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
 
-  Future<void> save(Book book) => saveByStatement(insertBookStmt,
-      {"id": book.id, "title": book.title, "desc": book.description, "authorId": book.authorId, "modified": book.modifiedUtc, "created": book.createdUtc});
+  Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
+      .then((_) => _logger.info("delete books by author with id: $authorId"))
+      .then((_) => JustQuery(MatchQuery(bookAuthorIdLabel, authorId)))
+      .then((query) => this.deleteDocuments(query));
+}
 
-  Future<Book> find(String bookId) => findOneByStatement(getBookStmt, {"id": bookId});
+Decoder<BookEvent> bookEventDecoder = (Map<String, dynamic> json) => BookEvent.fromJson(json);
 
-  Future<Book> update(Book book) =>
-      updateAtLeastOne(updateBookStmt, {"id": book.id, "title": book.title, "desc": book.description, "modified": book.modifiedUtc}).then((_) => book);
+class BookEventRepository extends Repository<BookEvent> {
+  final Logger _logger = Logger('BookEventRepository');
 
-  Future<void> delete(String bookId) => deleteAtLeastOne(deleteBookStmt, {"id": bookId});
+  String _authorIdProp = "$entityLabel.$bookAuthorIdLabel";
+  String _bookIdProp = "$entityLabel.$idLabel";
 
-  Future<void> deleteByAuthor(String authorId) => deleteAll(deleteAuthorBooks, {"authorId": authorId});
+  BookEventRepository(ESStore<BookEvent> store) : super(store, bookEventDecoder);
+
+  Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
+      .then((_) => _logger.info("save book events (delete) for books created by author with id: $authorId"))
+      .then((_) => MatchQuery(_authorIdProp, authorId))
+      .then((query) => super.findDocuments(query, PageRequest(1000, 0)))
+      .then((page) => this.newestEntities(page))
+      .then((newestBooks) => Future.wait(newestBooks.map((book) => storeDeleteBookEvent(book))));
+
+  Future<void> storeDeleteBookEventByBookId(String bookId) => Future.value(bookId)
+      .then((_) => _logger.info("save book event (delete) for book with id: $bookId"))
+      .then((_) => MatchQuery(_bookIdProp, bookId))
+      .then((query) => super.findDocuments(query, PageRequest.first(), sorting: SortElement.desc(modifiedUtcLabel)))
+      .then((page) => storeDeleteBookEvent(page.elements[0].entity));
+
+  Future<Page<BookEvent>> findBookEvents(ListEventsByBookRequest request) => Future.value(request)
+      .then((_) => _logger.info("find book events by request: $request"))
+      .then((_) => MatchQuery(_bookIdProp, request.bookId))
+      .then((query) => super.findDocuments(query, request.pageRequest, sorting: SortElement.asc(createdUtcLabel)));
+
+  Future<void> storeSaveBookEvent(Book book) => Future.value(book)
+      .then((_) => _logger.info("save book event (save) for book: $book"))
+      .then((_) => this.save(BookEvent.create(book)));
+
+  Future<void> storeUpdateBookEvent(Book book) => Future.value(book)
+      .then((_) => _logger.info("save book event (update) for book: $book"))
+      .then((_) => this.save(BookEvent.update(book)));
+
+  Future<void> storeDeleteBookEvent(Book book) => Future.value(book)
+      .then((_) => _logger.info("save book event (delete) for book: $book"))
+      .then((_) => this.save(BookEvent.delete(book)));
 }

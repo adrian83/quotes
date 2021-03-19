@@ -2,10 +2,10 @@ import 'dart:io';
 
 import 'package:logging/logging.dart';
 
-import '../web/param.dart';
-import '../web/response.dart';
 import '../../domain/common/exception.dart';
-import '../../infrastructure/elasticsearch/exception.dart';
+import '../../infrastructure/web/exception.dart';
+import '../../infrastructure/web/param.dart';
+import '../../infrastructure/web/response.dart';
 
 final Logger logger = Logger('ErrorHandler');
 
@@ -18,10 +18,10 @@ void handleErrors(Object ex, HttpRequest request) {
     serverError("cannot update entity", request);
   } else if (ex is FindFailedException) {
     notFound(request);
-  } else if (ex is IndexingFailedException) {
-    serverError(ex.toString(), request);
   } else if (ex is InvalidInputException) {
     badRequest(ex.violation, request);
+  } else if (ex is InvalidPathParameterException) {
+    badRequest(ex.violations, request);
   } else {
     serverError("unknown error ${ex}", request);
   }

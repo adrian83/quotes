@@ -1,46 +1,94 @@
 import 'package:uuid/uuid.dart';
 
-import '../../infrastructure/elasticsearch/document.dart';
 import '../common/model.dart';
+import '../../infrastructure/elasticsearch/document.dart';
 
-class Book extends Entity {
+const bookAuthorIdLabel = 'authorId';
+const bookTitleLabel = 'title';
+const bookDescLabel = 'description';
+const bookIdLabel = 'bookId';
+
+class Book extends Entity with Document {
   String title, description, authorId;
 
-  Book(String id, this.title, this.description, this.authorId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
+  Book(String id, this.title, this.description, this.authorId, DateTime modifiedUtc, DateTime createdUtc)
+      : super(id, modifiedUtc, createdUtc);
 
-  Book.create(this.title, this.description, this.authorId) : super(Uuid().v4(), DateTime.now().toUtc(), DateTime.now().toUtc());
+  Book.create(this.title, this.description, this.authorId) : super.create();
 
-  Book.update(String id, this.title, this.description, this.authorId) : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
+  Book.update(String id, this.title, this.description, this.authorId) : super(id, nowUtc(), nowUtc());
 
   Book.fromJson(Map<String, dynamic> json)
-      : this(json['id'], json['title'], json['description'], json['authorId'], DateTime.parse(json['modifiedUtc']), DateTime.parse(json['createdUtc']));
+      : this(json[idLabel], json[bookTitleLabel], json[bookDescLabel], json[bookAuthorIdLabel],
+            DateTime.parse(json[modifiedUtcLabel]), DateTime.parse(json[createdUtcLabel]));
 
-  Book.fromDB(List<dynamic> row) : this(row[0].toString().trim(), row[1].toString().trim(), row[2].toString().trim(), row[3].toString().trim(), row[4], row[5]);
+  @override
+  String getId() => id;
 
-  Map toJson() => super.toJson()
+  @override
+  Map<dynamic, dynamic> toSave() => toJson();
+
+  @override
+  Map<dynamic, dynamic> toUpdate() => toJson()..remove(createdUtcLabel);
+
+  @override
+  Map<dynamic, dynamic> toJson() => super.toJson()
     ..addAll({
-      "title": title,
-      "authorId": authorId,
-      "description": description,
+      bookTitleLabel: title,
+      bookAuthorIdLabel: authorId,
+      bookDescLabel: description,
     });
 
-  String toString() => "Book [id: $id, title: $title, description: $description, authorId: $authorId, modifiedUtc: $modifiedUtc, createdUtc: $createdUtc]";
+  @override
+  String toString() =>
+      "Book [$idLabel: $id, $bookTitleLabel: $title, $bookDescLabel: $description, $bookAuthorIdLabel: $authorId, " +
+      "$modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
-class BookEvent extends ESDocument {
-  Book book;
+class BookEvent extends Event<Book> with Document {
+  BookEvent(String id, String operation, Book book, DateTime modified, DateTime created)
+      : super(id, operation, book, modified, created);
 
-  BookEvent(String docId, String operation, this.book) : super(docId, operation);
+  BookEvent.create(Book book) : super(Uuid().v4(), Event.created, book, nowUtc(), nowUtc());
 
-  BookEvent.created(String docId, Book book) : this(docId, ESDocument.created, book);
+  BookEvent.update(Book book) : super(Uuid().v4(), Event.modified, book, nowUtc(), nowUtc());
 
-  BookEvent.modified(String docId, Book book) : this(docId, ESDocument.modified, book);
+  BookEvent.delete(Book book) : super(Uuid().v4(), Event.deleted, book, nowUtc(), nowUtc());
 
-  BookEvent.deleted(String docId, Book book) : this(docId, ESDocument.deleted, book);
+  BookEvent.fromJson(Map<String, dynamic> json)
+      : super(json[idLabel], json[operationLabel], Book.fromJson(json[entityLabel]),
+            DateTime.parse(json[modifiedUtcLabel]), DateTime.parse(json[createdUtcLabel]));
 
-  BookEvent.fromJson(Map<String, dynamic> json) : this(json['eventId'], json['operation'], Book.fromJson(json));
+  @override
+  String getId() => this.id;
 
-  Map toJson() => super.toJson()..addAll(book.toJson());
+  @override
+  String toString() =>
+      "BookEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, " +
+      "$createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
+}
 
-  String toString() => "BookEvent [eventId: $eventId, operation: $operation, modifiedUtc: $modifiedUtc, book: $book]";
+class ListBooksByAuthorRequest {
+  String authorId;
+  late PageRequest pageRequest;
+
+  ListBooksByAuthorRequest(this.authorId, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
+  }
+
+  @override
+  String toString() => "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, pageRequest: $pageRequest]";
+}
+
+class ListEventsByBookRequest {
+  String authorId, bookId;
+  late PageRequest pageRequest;
+
+  ListEventsByBookRequest(this.authorId, this.bookId, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
+  }
+
+  @override
+  String toString() =>
+      "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, $bookIdLabel: $bookId, " + "pageRequest: $pageRequest]";
 }

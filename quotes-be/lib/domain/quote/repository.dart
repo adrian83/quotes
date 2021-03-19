@@ -1,66 +1,86 @@
 import 'dart:async';
 
-import 'package:postgres/postgres.dart';
+import 'package:logging/logging.dart';
 
+import 'model.dart';
 import '../common/model.dart';
 import '../common/repository.dart';
-import 'model.dart';
+import '../../infrastructure/elasticsearch/search.dart';
+import '../../infrastructure/elasticsearch/store.dart';
 
-const insertQuoteStmt =
-    "INSERT INTO Quote (ID, TEXT, AUTHOR_ID, BOOK_ID, MODIFIED_UTC, CREATED_UTC) VALUES (@id, @text, @authorId, @bookId, @modified, @created)";
-
-const updateQuoteStmt = "UPDATE Quote SET TEXT = @text, MODIFIED_UTC = @modified WHERE ID = @id";
-
-const getQuoteStmt = "SELECT * FROM Quote WHERE id = @id";
-
-const deleteQuoteStmt = "DELETE FROM Quote WHERE id = @id";
-
-const listBookQuotesStmt = "SELECT * FROM Quote WHERE BOOK_ID = @bookId ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
-
-const bookQuotesCountStmt = "SELECT count(*) FROM Quote WHERE BOOK_ID = @bookId";
-
-const deleteAuthorQuotesStmt = "DELETE FROM Quote WHERE AUTHOR_ID = @authorId";
-
-const deleteBookQuotesStmt = "DELETE FROM Quote WHERE BOOK_ID = @bookId";
-
-// TODO fix - use prepared statement.
-var findQuotesStmt = (String phrase) => "SELECT * FROM Quote WHERE TEXT ILIKE '%$phrase%' ORDER BY CREATED_UTC ASC LIMIT @limit OFFSET @offset";
-
-var findQuotesCountStmt = (String phrase) => "SELECT count(*) FROM Quote WHERE TEXT ILIKE '%$phrase%'";
-
-RowDecoder<Quote> quoteRowDecoder = (List<dynamic> row) => Quote.fromDB(row);
+Decoder<Quote> quoteDecoder = (Map<String, dynamic> json) => Quote.fromJson(json);
 
 class QuoteRepository extends Repository<Quote> {
-  QuoteRepository(PostgreSQLConnection connection) : super(connection, quoteRowDecoder);
+  final Logger _logger = Logger('QuoteRepository');
 
-  Future<Page<Quote>> findBookQuotes(String bookId, PageRequest request) =>
-      listAll(listBookQuotesStmt, {"limit": request.limit, "offset": request.offset, "bookId": bookId}).then((List<Quote> quotes) =>
-          count(bookQuotesCountStmt, {"bookId": bookId}).then((total) => PageInfo(request.limit, request.offset, total)).then((info) => Page(info, quotes)));
+  QuoteRepository(ESStore<Quote> store) : super(store, quoteDecoder);
 
-  Future<Page<Quote>> findQuotes(String searchPhrase, PageRequest request) {
-    Map<String, Object> params = {"limit": request.limit, "offset": request.offset, "phrase": searchPhrase ?? ""};
+  Future<Page<Quote>> findBookQuotes(ListQuotesFromBookRequest request) => Future.value(request)
+      .then((_) => _logger.info("find quotes from book by request: $request"))
+      .then((_) => MatchQuery(quoteBookIdLabel, request.bookId))
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
 
-    return listAll(findQuotesStmt(params["phrase"]), params).then((List<Quote> quotes) =>
-        count(findQuotesCountStmt(params["phrase"]), {}).then((total) => PageInfo(request.limit, request.offset, total)).then((info) => Page(info, quotes)));
-  }
+  Future<Page<Quote>> findQuotes(SearchEntityRequest request) => Future.value(request)
+      .then((_) => _logger.info("find quotes by request: $request"))
+      .then((_) => WildcardQuery(quoteTextLabel, request.searchPhrase ?? ""))
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
 
-  Future<Quote> save(Quote quote) => saveByStatement(insertQuoteStmt, {
-        "id": quote.id,
-        "text": quote.text,
-        "authorId": quote.authorId,
-        "bookId": quote.bookId,
-        "modified": quote.modifiedUtc,
-        "created": quote.createdUtc
-      }).then((_) => quote);
+  Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
+      .then((_) => _logger.info("delete books by author with id: $authorId"))
+      .then((_) => JustQuery(MatchQuery(quoteAuthorIdLabel, authorId)))
+      .then((query) => this.deleteDocuments(query));
 
-  Future<Quote> find(String quoteId) => findOneByStatement(getQuoteStmt, {"id": quoteId});
+  Future<void> deleteByBook(String bookId) => Future.value(bookId)
+      .then((_) => _logger.info("delete quotes by book with id: $bookId"))
+      .then((_) => JustQuery(MatchQuery(quoteBookIdLabel, bookId)))
+      .then((query) => this.deleteDocuments(query));
+}
 
-  Future<Quote> update(Quote quote) =>
-      updateAtLeastOne(updateQuoteStmt, {"id": quote.id, "text": quote.text, "modified": quote.modifiedUtc}).then(((_) => quote));
+Decoder<QuoteEvent> quoteEventDecoder = (Map<String, dynamic> json) => QuoteEvent.fromJson(json);
 
-  Future<void> delete(String quoteId) => deleteAtLeastOne(deleteQuoteStmt, {"id": quoteId});
+class QuoteEventRepository extends Repository<QuoteEvent> {
+  final Logger _logger = Logger('QuoteRepository');
 
-  Future<void> deleteByAuthor(String authorId) => deleteAll(deleteAuthorQuotesStmt, {"authorId": authorId});
+  String _authorIdProp = "$entityLabel.$quoteAuthorIdLabel";
+  String _bookIdProp = "$entityLabel.$quoteBookIdLabel";
+  String _quoteIdProp = "$entityLabel.$idLabel";
 
-  Future<void> deleteByBook(String bookId) => deleteAll(deleteBookQuotesStmt, {"bookId": bookId});
+  QuoteEventRepository(ESStore<QuoteEvent> store) : super(store, quoteEventDecoder);
+
+  Future<void> storeSaveQuoteEvent(Quote quote) => Future.value(quote)
+      .then((_) => _logger.info("save quote event (save) for quote: $quote"))
+      .then((_) => this.save(QuoteEvent.create(quote)));
+
+  Future<void> storeUpdateQuoteEvent(Quote quote) => Future.value(quote)
+      .then((_) => _logger.info("save quote event (update) for book: $quote"))
+      .then((_) => this.save(QuoteEvent.update(quote)));
+
+  Future<void> storeDeleteQuoteEvent(Quote quote) => Future.value(quote)
+      .then((_) => _logger.info("save quote event (delete) for book: $quote"))
+      .then((_) => this.save(QuoteEvent.delete(quote)));
+
+  Future<void> storeDeleteQuoteEventByQuoteId(String quoteId) => Future.value(quoteId)
+      .then((_) => _logger.info("save quote event (delete) for quote with id: $quoteId"))
+      .then((_) => MatchQuery(_quoteIdProp, quoteId))
+      .then((query) => super.findDocuments(query, PageRequest.first(), sorting: SortElement.desc(modifiedUtcLabel)))
+      .then((page) => storeDeleteQuoteEvent(page.elements[0].entity));
+
+  Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
+      .then((_) => _logger.info("save quote events (delete) for quotes created by author with id: $authorId"))
+      .then((_) => MatchQuery(_authorIdProp, authorId))
+      .then((query) => super.findDocuments(query, PageRequest(1000, 0)))
+      .then((page) => this.newestEntities(page))
+      .then((newestQuotes) => Future.wait(newestQuotes.map((quote) => storeDeleteQuoteEvent(quote))));
+
+  Future<void> deleteByBook(String bookId) => Future.value(bookId)
+      .then((_) => _logger.info("save quote events (delete) for quotes from book with id: $bookId"))
+      .then((_) => MatchQuery(_bookIdProp, bookId))
+      .then((query) => super.findDocuments(query, PageRequest(1000, 0)))
+      .then((page) => this.newestEntities(page))
+      .then((newestQuotes) => Future.wait(newestQuotes.map((quote) => storeDeleteQuoteEvent(quote))));
+
+  Future<Page<QuoteEvent>> findQuoteEvents(ListEventsByQuoteRequest request) => Future.value(request)
+      .then((_) => _logger.info("find quote events by request: $request"))
+      .then((_) => MatchQuery(_quoteIdProp, request.quoteId))
+      .then((query) => super.findDocuments(query, request.pageRequest, sorting: SortElement.asc(createdUtcLabel)));
 }

@@ -2,10 +2,15 @@ const asc = "asc";
 const desc = "desc";
 
 const matchAllQ = "match_all";
+const wildcardQ = "wildcard";
+const rewriteQ = "rewrite";
 const matchQ = "match";
 const termsQ = "terms";
+const valueQ = "value";
+const boostQ = "boost";
 const queryQ = "query";
 const orderQ = "order";
+const termQ = "term";
 const sizeQ = "size";
 const fromQ = "from";
 const sortQ = "sort";
@@ -32,7 +37,32 @@ class MatchQuery<T> extends Query {
   MatchQuery(this.field, this.value);
 
   Map toJson() => {
-        matchQ: {this.field: this.value}
+        matchQ: {
+          this.field: {queryQ: this.value}
+        }
+      };
+}
+
+class WildcardQuery extends Query {
+  String field, value;
+
+  WildcardQuery(this.field, this.value);
+
+  Map toJson() => {
+        wildcardQ: {
+          this.field: {valueQ: "*$value*", boostQ: 1.0, rewriteQ: "constant_score"}
+        }
+      };
+}
+
+class TermQuery<T> extends Query {
+  String field;
+  T value;
+
+  TermQuery(this.field, this.value);
+
+  Map toJson() => {
+        termQ: {this.field: this.value}
       };
 }
 
@@ -100,5 +130,5 @@ class SearchRequest {
 
   factory SearchRequest.oneByQuery(Query query, List<SortElement> sort) => SearchRequest(query, sort, defaultOffset, 1);
 
-  Map toJson() => {sizeQ: size, fromQ: from, queryQ: query.toJson(), sortQ: (sort != null && sort.length > 0) ? sort : defaultSort};
+  Map toJson() => {sizeQ: size, fromQ: from, queryQ: query.toJson(), sortQ: (sort.length > 0 ? sort : defaultSort)};
 }

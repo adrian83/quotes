@@ -5,12 +5,11 @@ import '../common/page.dart';
 class AuthorEvent extends Author {
   String _eventId, _operation;
 
-  AuthorEvent(this._eventId, this._operation, String id, String name, String description, DateTime modifiedUtc, DateTime createdUtc)
-      : super(id, name, description, modifiedUtc, createdUtc);
+  AuthorEvent(this._eventId, this._operation, Author author)
+      : super(author.id, author.name, author.description, author.modifiedUtc, author.createdUtc);
 
   AuthorEvent.fromJson(Map<String, dynamic> json)
-      : this(json["eventId"], json["operation"], json["id"], json["name"], json["description"], DateTime.parse(json["modifiedUtc"]),
-            DateTime.parse(json["createdUtc"]));
+  : this(json["id"], json["operation"], Author.fromJson(json["entity"]));
 
   String get eventId => _eventId;
   String get operation => _operation;

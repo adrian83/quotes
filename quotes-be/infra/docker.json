@@ -8,14 +8,9 @@
     "port": 9200,
     "authorsIndex": "authors",
     "booksIndex": "books",
-    "quotesIndex": "quotes"
-  },
-  "postgres": {
-    "host": "postgres",
-    "port": 5432,
-    "database": "quotes",
-    "user": "postgres",
-    "password": "secret",
-    "reconnectDelaySec": 20
+    "quotesIndex": "quotes",
+    "authorEventsIndex": "author_events",
+    "bookEventsIndex": "book_events",
+    "quoteEventsIndex": "quote_events"
   }
 }

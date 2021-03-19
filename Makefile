@@ -12,15 +12,9 @@ compose-up:
 deps:
 	echo "starting elasticsearch image (version 6.4.1)"
 	docker run -d -p 9200:9200 -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:6.4.1
-	echo "starting postgres image (version 11.1)"
-	docker rm quotes_postgres ||:
-	docker run -p 5432:5432 --env-file=quotes-be/infra/env.db -d --name=quotes_postgres postgres:11.1
-	sleep 2
-	docker cp quotes-be/infra/db.sql quotes_postgres:/schema.sql
-	docker exec quotes_postgres psql quotes root -f /schema.sql
 
 fe-format:
-	cd quotes-fe && dartfmt -w -l 160 --fix .
+	cd quotes-fe && dartfmt -w -l 120 --fix .
 
 fe-get:
 	echo "getting frontend dependencies" 
@@ -36,16 +30,20 @@ fe-run:
 	echo "running frontend"
 	cd quotes-fe && webdev serve
 
-fe-all: fe-format fe-get fe-build fe-run
+fe-all: fe-format fe-get fe-build be-test fe-run
 
 
 be-format:
-	cd quotes-be && dartfmt -w -l 160 --fix .
+	cd quotes-be && dartfmt -w -l 120 --fix .
 
 be-get: 
 	echo "getting backend dependencies" 
 	cd quotes-be && pub upgrade && pub get 
 	
+be-test:
+	echo "running backend tests" 
+	cd quotes-be && dart pub run test ./..
+
 be-run: 
 	echo "running backend"
 	cd quotes-be && dart bin/run_app.dart infra/local.json

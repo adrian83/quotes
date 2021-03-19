@@ -12,6 +12,8 @@ class Router {
   List<Route> _routes = [];
   Handler _notFoundHandler;
 
+  Router(this._notFoundHandler);
+
   void registerRoute(String path, String method, Handler handler) {
     _routes.add(Route(path, method, handler));
   }

@@ -1,51 +1,97 @@
 import 'package:uuid/uuid.dart';
 
-import '../../infrastructure/elasticsearch/document.dart';
 import '../common/model.dart';
+import '../../infrastructure/elasticsearch/document.dart';
 
-const textF = "text";
-const authorIdF = "authorId";
-const bookIdF = "bookId";
+var quoteTextLabel = "text";
+var quoteAuthorIdLabel = "authorId";
+var quoteBookIdLabel = "bookId";
 
-class Quote extends Entity {
+class Quote extends Entity with Document {
   String text, authorId, bookId;
 
-  Quote(String id, this.text, this.authorId, this.bookId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
+  Quote(String id, this.text, this.authorId, this.bookId, DateTime modifiedUtc, DateTime createdUtc)
+      : super(id, modifiedUtc, createdUtc);
 
-  Quote.create(this.text, this.authorId, this.bookId) : super(Uuid().v4(), DateTime.now().toUtc(), DateTime.now().toUtc());
+  Quote.create(this.text, this.authorId, this.bookId) : super.create();
 
-  Quote.update(String id, this.text, this.authorId, this.bookId) : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
+  Quote.update(String id, this.text, this.authorId, this.bookId) : super(id, nowUtc(), nowUtc());
 
   Quote.fromJson(Map<String, dynamic> json)
-      : this(json[idF], json[textF], json[authorIdF], json[bookIdF], DateTime.parse(json[modifiedUtcF]), DateTime.parse(json[createdUtcF]));
+      : this(json[idLabel], json[quoteTextLabel], json[quoteAuthorIdLabel], json[quoteBookIdLabel],
+            DateTime.parse(json[modifiedUtcLabel]), DateTime.parse(json[createdUtcLabel]));
 
-  Quote.fromDB(List<dynamic> row)
-      : this(row[0].toString().trim(), row[1].toString().trim(), row[2].toString().trim(), row[3].toString().trim(), row[4], row[5]);
+  @override
+  String getId() => id;
 
-  Map toJson() => super.toJson()
+  @override
+  Map<dynamic, dynamic> toSave() => toJson();
+
+  @override
+  Map<dynamic, dynamic> toUpdate() => toJson()..remove(createdUtcLabel);
+
+  @override
+  Map<dynamic, dynamic> toJson() => super.toJson()
     ..addAll({
-      textF: text,
-      authorIdF: authorId,
-      bookIdF: bookId,
+      quoteTextLabel: text,
+      quoteAuthorIdLabel: authorId,
+      quoteBookIdLabel: bookId,
     });
 
-  String toString() => "Quote [$idF: $id, $textF: $text, $authorIdF: $authorId, $bookIdF: $bookId, $modifiedUtcF: $modifiedUtc, $createdUtcF: $createdUtc]";
+  @override
+  String toString() =>
+      "Quote [$idLabel: $id, $quoteTextLabel: $text, $quoteAuthorIdLabel: $authorId, $quoteBookIdLabel: $bookId, " +
+      "$modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
-class QuoteEvent extends ESDocument {
-  Quote quote;
+class QuoteEvent extends Event<Quote> with Document {
+  QuoteEvent(String id, String operation, Quote quote, DateTime modified, DateTime created)
+      : super(id, operation, quote, modified, created);
 
-  QuoteEvent(String docId, String operation, this.quote) : super(docId, operation);
+  QuoteEvent.operation(Quote quote, String operation) : super(Uuid().v4(), operation, quote, nowUtc(), nowUtc());
 
-  QuoteEvent.created(String docId, Quote quote) : this(docId, ESDocument.created, quote);
+  QuoteEvent.create(Quote quote) : this.operation(quote, Event.created);
 
-  QuoteEvent.modified(String docId, Quote quote) : this(docId, ESDocument.modified, quote);
+  QuoteEvent.update(Quote quote) : this.operation(quote, Event.modified);
 
-  QuoteEvent.deleted(String docId, Quote quote) : this(docId, ESDocument.deleted, quote);
+  QuoteEvent.delete(Quote quote) : this.operation(quote, Event.deleted);
 
-  QuoteEvent.fromJson(Map<String, dynamic> json) : this(json['docId'], json['operation'], Quote.fromJson(json));
+  QuoteEvent.fromJson(Map<String, dynamic> json)
+      : super(json[idLabel], json[operationLabel], Quote.fromJson(json[entityLabel]),
+            DateTime.parse(json[modifiedUtcLabel]), DateTime.parse(json[createdUtcLabel]));
 
-  Map toJson() => super.toJson()..addAll(quote.toJson());
+  @override
+  String getId() => this.id;
 
-  String toString() => "QuoteEvent [eventId: $eventId, operation: $operation, modifiedUtc: $modifiedUtc, quote: $quote]";
+  @override
+  String toString() =>
+      "QuoteEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, " +
+      "$entityLabel: ${entity.toString()}]";
+}
+
+class ListEventsByQuoteRequest {
+  String authorId, bookId, quoteId;
+  late PageRequest pageRequest;
+
+  ListEventsByQuoteRequest(this.authorId, this.bookId, this.quoteId, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
+  }
+
+  @override
+  String toString() =>
+      "ListEventsByQuoteRequest [authorId: $authorId, bookId: $bookId, " +
+      "quoteId: $quoteId, pageRequest: $pageRequest]";
+}
+
+class ListQuotesFromBookRequest {
+  String authorId, bookId;
+  late PageRequest pageRequest;
+
+  ListQuotesFromBookRequest(this.authorId, this.bookId, int offset, int limit) {
+    pageRequest = PageRequest(limit, offset);
+  }
+
+  @override
+  String toString() =>
+      "ListQuotesFromBookRequest [authorId: $authorId, bookId: $bookId, " + "pageRequest: $pageRequest]";
 }

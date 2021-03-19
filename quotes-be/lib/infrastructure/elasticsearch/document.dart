@@ -1,23 +1,16 @@
 import '../../common/json.dart';
 
-abstract class ESDocument implements Jsonable {
-  static final String created = "created", modified = "modified", deleted = "deleted";
-
-  String eventId, operation;
-  DateTime modifiedUtc;
-
-  ESDocument(this.eventId, this.operation, [DateTime modDateUtc]) {
-    modifiedUtc = modDateUtc == null ? DateTime.now().toUtc() : modDateUtc;
-  }
-
-  Map toJson() => {"eventId": eventId, "operation": operation, "modifiedUtc": modifiedUtc.toIso8601String()};
+abstract class Document implements Jsonable {
+  String getId();
+  Map<dynamic, dynamic> toSave() => toJson();
+  Map<dynamic, dynamic> toUpdate() => toJson();
 }
 
 class UpdateDoc {
   bool _docAsUpsert = true, _detectNoop = false;
-  ESDocument _doc;
+  Map<dynamic, dynamic> _doc;
 
   UpdateDoc(this._doc);
 
-  Map toJson() => {"doc": _doc.toJson(), "doc_as_upsert": _docAsUpsert, "detect_noop": _detectNoop};
+  Map toJson() => {"doc": _doc, "doc_as_upsert": _docAsUpsert, "detect_noop": _detectNoop};
 }

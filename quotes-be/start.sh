@@ -1,9 +1,10 @@
 
-# POSTGRES & ELASTICSEARCH
-echo "Waiting for postgres and elasticsearch"
-# it's stupid but i don't want to waist more time fo checking 
-#    if postgres and elasticsearch are ready for accepting connections
+# ELASTICSEARCH
+echo "Waiting for elasticsearch"
+# it's stupid but i don't want to waist more time for checking 
+#    if elasticsearch is ready for accepting connections
 sleep 20
 
 # APPLICATION
-dart ./bin/run_app.dart ./infra/docker.json # populate
+# dart '--enable-experiment=non-nullable' ./bin/run_app.dart ./infra/docker.json # populate
+dart --no-sound-null-safety ./bin/run_app.dart ./infra/docker.json # populate

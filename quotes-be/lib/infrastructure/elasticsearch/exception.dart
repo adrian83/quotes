@@ -32,5 +32,3 @@ class DocFindFailedException implements Exception {
     return "DocFindFailedException [document id: $id, result: $result]";
   }
 }
-
-class IndexNotFoundException implements Exception {}

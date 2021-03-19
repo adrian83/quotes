@@ -24,7 +24,7 @@ void badRequest(List<Violation> errors, HttpRequest request) {
   write(errors, HttpStatus.badRequest, request);
 }
 
-void ok(Object o, HttpRequest request) {
+void ok(Object? o, HttpRequest request) {
   write(o, HttpStatus.ok, request);
 }
 
@@ -32,7 +32,7 @@ void created(Object o, HttpRequest request) {
   write(o, HttpStatus.created, request);
 }
 
-void write(Object body, int status, HttpRequest request) {
+void write(Object? body, int status, HttpRequest request) {
   var resp = request.response;
   resp.headers.contentType = jsonHeader;
 

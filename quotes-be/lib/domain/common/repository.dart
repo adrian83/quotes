@@ -1,41 +1,48 @@
 import 'dart:async';
 
-import 'package:postgres/postgres.dart';
+import 'model.dart';
+import '../common/model.dart';
+import '../../common/function.dart';
+import '../../infrastructure/elasticsearch/search.dart';
+import '../../infrastructure/elasticsearch/store.dart';
+import '../../infrastructure/elasticsearch/document.dart';
 
-import 'exception.dart';
+typedef Decoder<T> = T Function(Map<String, dynamic> json);
 
-typedef RowDecoder<T> = T Function(List<dynamic> row);
+class Repository<T extends Document> {
+  ESStore<T> _store;
+  Decoder<T> _fromJson;
 
-class Repository<T> {
-  PostgreSQLConnection _connection;
-  RowDecoder<T> _rowDecoder;
+  Repository(this._store, this._fromJson);
 
-  Repository(this._connection, this._rowDecoder);
+  Future<void> save(T doc) => _store.index(doc).then((ir) => doc);
 
-  PostgreSQLConnection get connection => _connection;
+  Future<T> find(String docId) => _store.get(docId).then((gr) => _fromJson(gr.source));
 
-  Future<void> saveByStatement(String insertStatement, Map<String, Object> params) => _connection.execute(insertStatement, substitutionValues: params);
+  Future<T> update(T doc) => _store.update(doc).then((ir) => doc);
 
-  Future<T> findOneByStatement(String findStmt, Map<String, Object> params) =>
-      _connection.query(findStmt, substitutionValues: params).then((List<List<dynamic>> entitiesData) {
-        if (entitiesData.length == 0) throw FindFailedException();
-        return _rowDecoder(entitiesData[0]);
+  Future<void> delete(String docId) => _store.delete(docId);
+
+  Future<void> deleteDocuments(Query query) => _store.deleteByQuery(query);
+
+  Future<Page<T>> findDocuments(Query query, PageRequest pageRequest, {SortElement? sorting}) =>
+      Future.value(sorting == null ? SortElement.asc("_id") : sorting)
+          .then((sorting) => SearchRequest(query, [sorting], pageRequest.offset, pageRequest.limit))
+          .then((request) => _store.list(request))
+          .then((resp) => resp.hits)
+          .then((hits) {
+        var docs = hits.hits.map((h) => _fromJson(h.source)).toList();
+        var info = PageInfo(pageRequest.limit, pageRequest.offset, hits.total);
+        return Page<T>(info, docs);
       });
 
-  Future<void> updateAtLeastOne(String updateStmt, Map<String, Object> params) => connection.execute(updateStmt, substitutionValues: params).then((count) {
-        if (count == 0) throw FindFailedException();
-      });
-
-  Future<int> deleteAll(String deleteStmt, Map<String, Object> params) => connection.execute(deleteStmt, substitutionValues: params);
-
-  Future<List<T>> listAll(String selectStmt, Map<String, Object> params) =>
-      _connection.query(selectStmt, substitutionValues: params).then((List<List<dynamic>> entitiesData) => toEntities(entitiesData));
-
-  Future<void> deleteAtLeastOne(String deleteStmt, Map<String, Object> params) => deleteAll(deleteStmt, params).then((count) {
-        if (count == 0) throw FindFailedException();
-      });
-
-  Future<int> count(String countStmt, Map<String, Object> params) => connection.query(countStmt, substitutionValues: params).then((l) => l[0][0]);
-
-  List<T> toEntities(List<List<dynamic>> entitiesData) => entitiesData.map((List<dynamic> entityData) => _rowDecoder(entityData)).toList();
+  List<N> newestEntities<N extends Entity, T>(Page<Event<N>> page) {
+    return groupBy(page.elements, (event) => (event as Event).entity.id)
+        .map((key, value) {
+          value.sort((a, b) => a.entity.createdUtc.compareTo(b.entity.createdUtc));
+          return MapEntry(key, value[0].entity);
+        })
+        .values
+        .toList();
+  }
 }
