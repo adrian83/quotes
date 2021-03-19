@@ -10,13 +10,15 @@ const eventIdLabel = 'eventId';
 const operationLabel = 'operation';
 const entityLabel = 'entity';
 
+DateTime nowUtc() => DateTime.now().toUtc();
+
 class Entity implements Jsonable {
   String id;
   DateTime modifiedUtc, createdUtc;
 
   Entity(this.id, this.modifiedUtc, this.createdUtc);
 
-  Entity.create() : this(Uuid().v4(), DateTime.now().toUtc(), DateTime.now().toUtc());
+  Entity.create() : this(Uuid().v4(), nowUtc(), nowUtc());
 
   @override
   Map toJson() =>

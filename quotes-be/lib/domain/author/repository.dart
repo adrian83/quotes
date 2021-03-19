@@ -19,7 +19,7 @@ class AuthorRepository extends Repository<Author> {
   Future<Page<Author>> findAuthors(SearchEntityRequest request) => Future.value(request)
       .then((_) => _logger.info("find authors by request: $request"))
       .then((_) => WildcardQuery(authorNameLabel, request.searchPhrase ?? ""))
-      .then((query) => this.findDocuments(query, request.pageRequest));
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
 }
 
 Decoder<AuthorEvent> authorEventDecoder = (Map<String, dynamic> json) => AuthorEvent.fromJson(json);

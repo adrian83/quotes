@@ -2,11 +2,15 @@ const asc = "asc";
 const desc = "desc";
 
 const matchAllQ = "match_all";
+const wildcardQ = "wildcard";
+const rewriteQ = "rewrite";
 const matchQ = "match";
 const termsQ = "terms";
-const termQ = "term";
+const valueQ = "value";
+const boostQ = "boost";
 const queryQ = "query";
 const orderQ = "order";
+const termQ = "term";
 const sizeQ = "size";
 const fromQ = "from";
 const sortQ = "sort";
@@ -45,8 +49,8 @@ class WildcardQuery extends Query {
   WildcardQuery(this.field, this.value);
 
   Map toJson() => {
-        "wildcard": {
-          this.field: {"value": "*" + this.value + "*", "boost": 1.0, "rewrite": "constant_score"}
+        wildcardQ: {
+          this.field: {valueQ: "*$value*", boostQ: 1.0, rewriteQ: "constant_score"}
         }
       };
 }

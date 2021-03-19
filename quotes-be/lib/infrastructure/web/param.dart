@@ -1,7 +1,5 @@
 import 'package:logging/logging.dart';
 
-import '../../common/tuple.dart';
-
 final Logger logger = Logger('param');
 
 class UrlParams {
@@ -36,6 +34,9 @@ class Params {
 
   String? getValue(String name) => params[name];
   int get size => params.length;
+
+    @override
+  String toString() => "Params [params: $params]";
 }
 
 class InvalidInputException implements Exception {
@@ -53,19 +54,4 @@ class Violation {
         "field": field,
         "message": message,
       };
-}
-
-Tuple2<int, Violation> positiveInteger(String value, String name, String errorMsg) {
-  var violation = Violation(name, errorMsg);
-
-  if (value.length == 0) {
-    return Tuple2<int, Violation>(null, violation);
-  }
-
-  var intVal = int.parse(value);
-  if (intVal < 0) {
-    return Tuple2<int, Violation>(null, violation);
-  }
-
-  return Tuple2<int, Violation>(intVal, null);
 }

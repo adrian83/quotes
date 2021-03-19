@@ -11,7 +11,7 @@ class Quote extends Entity {
   Quote.fromJson(Map<String, dynamic> json)
       : this(json['id'], json['text'], json['authorId'], json['bookId'], DateTime.parse(json["modifiedUtc"]), DateTime.parse(json["createdUtc"]));
 
-  Quote.empty() : this(null, "", null, null, DateTime.now().toUtc(), DateTime.now().toUtc());
+  Quote.empty() : this(null, "", null, null, nowUtc(), nowUtc());
 
   String get text => _text;
   String get authorId => _authorId;

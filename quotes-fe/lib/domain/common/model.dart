@@ -1,3 +1,5 @@
+DateTime nowUtc() => DateTime.now().toUtc();
+
 class Entity {
   String _id;
   DateTime _modifiedUtc, _createdUtc;
@@ -17,6 +19,5 @@ class Entity {
   Map toJson() => {"id": _id, "modifiedUtc": _modifiedUtc.toIso8601String(), "createdUtc": _createdUtc.toIso8601String()};
 }
 
-DateTime nowUtc() {
-  return DateTime.now().toUtc();
-}
+
+

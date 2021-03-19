@@ -6,7 +6,6 @@ import 'package:mockito/mockito.dart';
 import 'service.dart';
 import '../book/repository.dart';
 import '../quote/repository.dart';
-import 'model.dart';
 import 'repository.dart';
 
 class AuthorRepositoryMock extends Mock implements AuthorRepository {}
@@ -34,7 +33,7 @@ void main() {
 
   var authorId = "abcd-efgh";
 
-  var author = Author(authorId, "John", "Great writter", DateTime.now().toUtc(), DateTime.now().toUtc());
+  //var author = Author(authorId, "John", "Great writter", DateTime.now().toUtc(), DateTime.now().toUtc());
 
   //var createAuthorEvent = AuthorEvent.created("abc-def-ghi", author);
 /*

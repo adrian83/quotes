@@ -1,24 +1,25 @@
 import '../../../domain/quote/model.dart';
-import '../../web/param.dart';
-import '../../web/form.dart';
+import '../../../infrastructure/web/param.dart';
+import '../../../infrastructure/web/form.dart';
 
-var minTextLen = 1;
-var maxTextLen = 5000;
-var invalidTextViolation = Violation("text", "Text length should be between $minTextLen and $maxTextLen");
+const quoteIdLabel = "quoteId";
+const limitLabel = "limit";
+const offsetLabel = "offset";
 
 class PersistQuoteParams {
-  String? authorId, bookId, text;
+  String? authorId, bookId;
+  late String text;
 
   PersistQuoteParams(Map form, Params params) {
-    this.text = form["text"];
-    this.authorId = params.getValue("authorId");
-    this.bookId = params.getValue("bookId");
+    this.text = form[quoteTextLabel];
+    this.authorId = params.getValue(quoteAuthorIdLabel);
+    this.bookId = params.getValue(quoteBookIdLabel);
   }
 
   Quote toQuote() {
     List<Violation> violations = [];
 
-    var textOrError = notEmptyString("text", this.text);
+    var textOrError = notEmptyString(quoteTextLabel, this.text);
     textOrError.ifElem2Exists((err) => violations.add(err));
 
     var locationOrError = validateBookLocation(authorId, bookId);
@@ -40,13 +41,13 @@ class UpdateQuoteParams extends PersistQuoteParams {
   String? quoteId;
 
   UpdateQuoteParams(Map form, Params params)
-      : this.quoteId = params.getValue("quoteId"),
+      : this.quoteId = params.getValue(quoteIdLabel),
         super(form, params);
 
   Quote toQuote() {
     List<Violation> violations = [];
 
-    var textOrError = notEmptyString("text", this.text);
+    var textOrError = notEmptyString(quoteTextLabel, this.text);
     textOrError.ifElem2Exists((err) => violations.add(err));
 
     var locationOrError = validateQuoteLocation(authorId, bookId, quoteId);
@@ -69,9 +70,9 @@ class FindQuoteParams {
   String? authorId, bookId, quoteId;
 
   FindQuoteParams(Params params) {
-    this.authorId = params.getValue("authorId");
-    this.bookId = params.getValue("bookId");
-    this.quoteId = params.getValue("quoteId");
+    this.authorId = params.getValue(quoteAuthorIdLabel);
+    this.bookId = params.getValue(quoteBookIdLabel);
+    this.quoteId = params.getValue(quoteIdLabel);
   }
 
   String getQuoteId() {
@@ -96,11 +97,11 @@ class ListEventsByQuoteParams {
   String? authorId, bookId, quoteId, limit, offset;
 
   ListEventsByQuoteParams(Params params) {
-    this.authorId = params.getValue("authorId");
-    this.bookId = params.getValue("bookId");
-    this.quoteId = params.getValue("quoteId");
-    this.limit = params.getValue("limit");
-    this.offset = params.getValue("offset");
+    this.authorId = params.getValue(quoteAuthorIdLabel);
+    this.bookId = params.getValue(quoteBookIdLabel);
+    this.quoteId = params.getValue(quoteIdLabel);
+    this.limit = params.getValue(limitLabel);
+    this.offset = params.getValue(offsetLabel);
   }
 
   ListEventsByQuoteRequest toListEventsByQuoteRequest() {
@@ -125,10 +126,10 @@ class ListQuotesFromBookParams {
   String? authorId, bookId, limit, offset;
 
   ListQuotesFromBookParams(Params params) {
-    this.authorId = params.getValue("authorId");
-    this.bookId = params.getValue("bookId");
-    this.limit = params.getValue("limit");
-    this.offset = params.getValue("offset");
+    this.authorId = params.getValue(quoteAuthorIdLabel);
+    this.bookId = params.getValue(quoteBookIdLabel);
+    this.limit = params.getValue(limitLabel);
+    this.offset = params.getValue(offsetLabel);
   }
 
   ListQuotesFromBookRequest toListQuotesFromBookRequest() {

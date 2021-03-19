@@ -6,6 +6,7 @@ import '../../infrastructure/elasticsearch/document.dart';
 const bookAuthorIdLabel = 'authorId';
 const bookTitleLabel = 'title';
 const bookDescLabel = 'description';
+const bookIdLabel = 'bookId';
 
 class Book extends Entity with Document {
   String title, description, authorId;
@@ -15,8 +16,7 @@ class Book extends Entity with Document {
 
   Book.create(this.title, this.description, this.authorId) : super.create();
 
-  Book.update(String id, this.title, this.description, this.authorId)
-      : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
+  Book.update(String id, this.title, this.description, this.authorId) : super(id, nowUtc(), nowUtc());
 
   Book.fromJson(Map<String, dynamic> json)
       : this(json[idLabel], json[bookTitleLabel], json[bookDescLabel], json[bookAuthorIdLabel],
@@ -49,12 +49,11 @@ class BookEvent extends Event<Book> with Document {
   BookEvent(String id, String operation, Book book, DateTime modified, DateTime created)
       : super(id, operation, book, modified, created);
 
-  BookEvent.create(Book book) : super(Uuid().v4(), Event.created, book, DateTime.now().toUtc(), DateTime.now().toUtc());
+  BookEvent.create(Book book) : super(Uuid().v4(), Event.created, book, nowUtc(), nowUtc());
 
-  BookEvent.update(Book book)
-      : super(Uuid().v4(), Event.modified, book, DateTime.now().toUtc(), DateTime.now().toUtc());
+  BookEvent.update(Book book) : super(Uuid().v4(), Event.modified, book, nowUtc(), nowUtc());
 
-  BookEvent.delete(Book book) : super(Uuid().v4(), Event.deleted, book, DateTime.now().toUtc(), DateTime.now().toUtc());
+  BookEvent.delete(Book book) : super(Uuid().v4(), Event.deleted, book, nowUtc(), nowUtc());
 
   BookEvent.fromJson(Map<String, dynamic> json)
       : super(json[idLabel], json[operationLabel], Book.fromJson(json[entityLabel]),
@@ -78,7 +77,7 @@ class ListBooksByAuthorRequest {
   }
 
   @override
-  String toString() => "ListBooksByAuthorRequest [authorId: $authorId, pageRequest: $pageRequest]";
+  String toString() => "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, pageRequest: $pageRequest]";
 }
 
 class ListEventsByBookRequest {
@@ -91,5 +90,5 @@ class ListEventsByBookRequest {
 
   @override
   String toString() =>
-      "ListBooksByAuthorRequest [authorId: $authorId, bookId: $bookId, " + "pageRequest: $pageRequest]";
+      "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, $bookIdLabel: $bookId, " + "pageRequest: $pageRequest]";
 }

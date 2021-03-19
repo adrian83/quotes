@@ -9,9 +9,9 @@ import '../lib/domain/author/service.dart';
 import '../lib/domain/quote/service.dart';
 import '../lib/domain/book/service.dart';
 
-import '../lib/infrastructure/handler/author/author.dart';
-import '../lib/infrastructure/handler/book/book.dart';
-import '../lib/infrastructure/handler/quote/quote.dart';
+import '../lib/web/handler/author/author.dart';
+import '../lib/web/handler/book/book.dart';
+import '../lib/web/handler/quote/quote.dart';
 
 import '../lib/infrastructure/web/handler.dart';
 import '../lib/infrastructure/web/router.dart';

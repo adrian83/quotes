@@ -5,7 +5,6 @@ import 'package:logging/logging.dart';
 import 'model.dart';
 import '../common/model.dart';
 import '../common/repository.dart';
-import '../../common/function.dart';
 import '../../infrastructure/elasticsearch/search.dart';
 import '../../infrastructure/elasticsearch/store.dart';
 
@@ -19,12 +18,12 @@ class QuoteRepository extends Repository<Quote> {
   Future<Page<Quote>> findBookQuotes(ListQuotesFromBookRequest request) => Future.value(request)
       .then((_) => _logger.info("find quotes from book by request: $request"))
       .then((_) => MatchQuery(quoteBookIdLabel, request.bookId))
-      .then((query) => this.findDocuments(query, request.pageRequest));
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
 
   Future<Page<Quote>> findQuotes(SearchEntityRequest request) => Future.value(request)
       .then((_) => _logger.info("find quotes by request: $request"))
       .then((_) => WildcardQuery(quoteTextLabel, request.searchPhrase ?? ""))
-      .then((query) => this.findDocuments(query, request.pageRequest));
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
 
   Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
       .then((_) => _logger.info("delete books by author with id: $authorId"))

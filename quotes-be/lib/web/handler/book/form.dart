@@ -1,32 +1,28 @@
-import '../../web/param.dart';
-import '../../web/form.dart';
 import '../../../domain/book/model.dart';
+import '../../../infrastructure/web/param.dart';
+import '../../../infrastructure/web/form.dart';
 
-var minTitleLen = 1;
-var maxTitleLen = 200;
-var invalidTitleViolation = Violation("title", "Title length should be between $minTitleLen and $maxTitleLen");
-
-var minDescriptionLen = 1;
-var maxDescriptionLen = 5000;
-var invalidDescViolation =
-    Violation("description", "Description length should be between $minDescriptionLen and $maxDescriptionLen");
+const bookIdLabel = "bookId";
+const limitLabel = "limit";
+const offsetLabel = "offset";
 
 class PersistBookParams {
-  String? authorId, title, description;
+  late String? authorId;
+  late String title, description;
 
   PersistBookParams(Map form, Params params) {
-    this.title = form["title"];
-    this.description = form["description"];
-    this.authorId = params.getValue("authorId");
+    this.title = form[bookTitleLabel];
+    this.description = form[bookDescLabel];
+    this.authorId = params.getValue(bookAuthorIdLabel);
   }
 
   Book toBook() {
     List<Violation> violations = [];
 
-    var titleOrError = notEmptyString("title", this.title);
+    var titleOrError = notEmptyString(bookTitleLabel, this.title);
     titleOrError.ifElem2Exists((err) => violations.add(err));
 
-    var descriptionOrError = notEmptyString("description", this.description);
+    var descriptionOrError = notEmptyString(bookDescLabel, this.description);
     descriptionOrError.ifElem2Exists((err) => violations.add(err));
 
     var locationOrError = validateAuthorLocation(authorId);
@@ -44,16 +40,16 @@ class UpdateBookParams extends PersistBookParams {
   String? bookId;
 
   UpdateBookParams(Map form, Params params)
-      : this.bookId = params.getValue("bookId"),
+      : this.bookId = params.getValue(bookIdLabel),
         super(form, params);
 
   Book toBook() {
     List<Violation> violations = [];
 
-    var titleOrError = notEmptyString("title", this.title);
+    var titleOrError = notEmptyString(bookTitleLabel, this.title);
     titleOrError.ifElem2Exists((err) => violations.add(err));
 
-    var descriptionOrError = notEmptyString("description", this.description);
+    var descriptionOrError = notEmptyString(bookDescLabel, this.description);
     descriptionOrError.ifElem2Exists((err) => violations.add(err));
 
     var locationOrError = validateBookLocation(authorId, bookId);
@@ -71,8 +67,8 @@ class FindBookParams {
   String? authorId, bookId;
 
   FindBookParams(Params params) {
-    this.authorId = params.getValue("authorId");
-    this.bookId = params.getValue("bookId");
+    this.authorId = params.getValue(bookAuthorIdLabel);
+    this.bookId = params.getValue(bookIdLabel);
   }
 
   String getBookId() {
@@ -97,9 +93,9 @@ class ListBooksByAuthorParams {
   String? authorId, limit, offset;
 
   ListBooksByAuthorParams(Params params) {
-    this.authorId = params.getValue("authorId");
-    this.limit = params.getValue("limit");
-    this.offset = params.getValue("offset");
+    this.authorId = params.getValue(bookAuthorIdLabel);
+    this.limit = params.getValue(limitLabel);
+    this.offset = params.getValue(offsetLabel);
   }
 
   ListBooksByAuthorRequest toListBooksByAuthorRequest() {
@@ -123,10 +119,10 @@ class ListEventsByBookParams {
   String? authorId, bookId, limit, offset;
 
   ListEventsByBookParams(Params params) {
-    this.authorId = params.getValue("authorId");
-    this.bookId = params.getValue("bookId");
-    this.limit = params.getValue("limit");
-    this.offset = params.getValue("offset");
+    this.authorId = params.getValue(bookAuthorIdLabel);
+    this.bookId = params.getValue(bookIdLabel);
+    this.limit = params.getValue(limitLabel);
+    this.offset = params.getValue(offsetLabel);
   }
 
   ListEventsByBookRequest toListEventsByBookRequest() {

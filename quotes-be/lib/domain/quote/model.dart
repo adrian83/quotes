@@ -15,8 +15,7 @@ class Quote extends Entity with Document {
 
   Quote.create(this.text, this.authorId, this.bookId) : super.create();
 
-  Quote.update(String id, this.text, this.authorId, this.bookId)
-      : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
+  Quote.update(String id, this.text, this.authorId, this.bookId) : super(id, nowUtc(), nowUtc());
 
   Quote.fromJson(Map<String, dynamic> json)
       : this(json[idLabel], json[quoteTextLabel], json[quoteAuthorIdLabel], json[quoteBookIdLabel],
@@ -49,8 +48,7 @@ class QuoteEvent extends Event<Quote> with Document {
   QuoteEvent(String id, String operation, Quote quote, DateTime modified, DateTime created)
       : super(id, operation, quote, modified, created);
 
-  QuoteEvent.operation(Quote quote, String operation)
-      : super(Uuid().v4(), operation, quote, DateTime.now().toUtc(), DateTime.now().toUtc());
+  QuoteEvent.operation(Quote quote, String operation) : super(Uuid().v4(), operation, quote, nowUtc(), nowUtc());
 
   QuoteEvent.create(Quote quote) : this.operation(quote, Event.created);
 
@@ -61,6 +59,7 @@ class QuoteEvent extends Event<Quote> with Document {
   QuoteEvent.fromJson(Map<String, dynamic> json)
       : super(json[idLabel], json[operationLabel], Quote.fromJson(json[entityLabel]),
             DateTime.parse(json[modifiedUtcLabel]), DateTime.parse(json[createdUtcLabel]));
+
   @override
   String getId() => this.id;
 

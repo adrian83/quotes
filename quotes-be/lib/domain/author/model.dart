@@ -14,7 +14,7 @@ class Author extends Entity with Document {
 
   Author.create(this.name, this.description) : super.create();
 
-  Author.update(String id, this.name, this.description) : super(id, DateTime.now().toUtc(), DateTime.now().toUtc());
+  Author.update(String id, this.name, this.description) : super(id, nowUtc(), nowUtc());
 
   Author.fromJson(Map<String, dynamic> json)
       : this(json[idLabel], json[authorNameLabel], json[authorDescLabel], DateTime.parse(json[modifiedUtcLabel]),
@@ -42,8 +42,7 @@ class AuthorEvent extends Event<Author> with Document {
   AuthorEvent(String id, String operation, Author author, DateTime modified, DateTime created)
       : super(id, operation, author, modified, created);
 
-  AuthorEvent.operation(Author author, String operation)
-      : super(Uuid().v4(), operation, author, DateTime.now().toUtc(), DateTime.now().toUtc());
+  AuthorEvent.operation(Author author, String operation) : super(Uuid().v4(), operation, author, nowUtc(), nowUtc());
 
   AuthorEvent.create(Author author) : this.operation(author, Event.created);
 

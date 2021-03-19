@@ -1,34 +1,26 @@
-import 'package:uuid/uuid.dart';
-
-import '../../web/param.dart';
-import '../../web/form.dart';
-
 import '../../../domain/author/model.dart';
+import '../../../infrastructure/web/param.dart';
+import '../../../infrastructure/web/form.dart';
 
-var minNameLen = 1;
-var maxNameLen = 200;
-var invalidNameViolation = Violation("name", "Name length should be between $minNameLen and $maxNameLen");
-
-var minDescriptionLen = 1;
-var maxDescriptionLen = 5000;
-var invalidDescViolation =
-    Violation("description", "Description length should be between $minDescriptionLen and $maxDescriptionLen");
+const authorIdLabel = "authorId";
+const limitLabel = "limit";
+const offsetLabel = "offset";
 
 class PersistAuthorParams {
   String? name, description;
 
   PersistAuthorParams(Map form, Params params) {
-    this.name = form["name"];
-    this.description = form["description"];
+    this.name = form[authorNameLabel];
+    this.description = form[authorDescLabel];
   }
 
   Author toAuthor() {
     List<Violation> violations = [];
 
-    var nameOrError = notEmptyString("name", this.name);
+    var nameOrError = notEmptyString(authorNameLabel, this.name);
     nameOrError.ifElem2Exists((err) => violations.add(err));
 
-    var descriptionOrError = notEmptyString("description", this.description);
+    var descriptionOrError = notEmptyString(authorDescLabel, this.description);
     descriptionOrError.ifElem2Exists((err) => violations.add(err));
 
     if (violations.isNotEmpty) {
@@ -43,16 +35,16 @@ class UpdateAuthorParams extends PersistAuthorParams {
   String? authorId;
 
   UpdateAuthorParams(Map form, Params params)
-      : this.authorId = params.getValue("authorId"),
+      : this.authorId = params.getValue(authorIdLabel),
         super(form, params);
 
   Author toAuthor() {
     List<Violation> violations = [];
 
-    var nameOrError = notEmptyString("name", this.name);
+    var nameOrError = notEmptyString(authorNameLabel, this.name);
     nameOrError.ifElem2Exists((err) => violations.add(err));
 
-    var descriptionOrError = notEmptyString("description", this.description);
+    var descriptionOrError = notEmptyString(authorDescLabel, this.description);
     descriptionOrError.ifElem2Exists((err) => violations.add(err));
 
     var locationOrError = validateAuthorLocation(authorId);
@@ -70,7 +62,7 @@ class FindAuthorParams {
   String? authorId;
 
   FindAuthorParams(Params params) {
-    this.authorId = params.getValue("authorId");
+    this.authorId = params.getValue(authorIdLabel);
   }
 
   String getAuthorId() {
@@ -95,8 +87,8 @@ class ListAuthorsParams {
   String? limit, offset;
 
   ListAuthorsParams(Params params) {
-    this.limit = params.getValue("limit");
-    this.offset = params.getValue("offset");
+    this.limit = params.getValue(limitLabel);
+    this.offset = params.getValue(offsetLabel);
   }
 
   ListAuthorsRequest toListAuthorsRequest() {
@@ -117,9 +109,9 @@ class ListEventsByAuthorParams {
   String? authorId, quoteId, limit, offset;
 
   ListEventsByAuthorParams(Params params) {
-    this.authorId = params.getValue("authorId");
-    this.limit = params.getValue("limit");
-    this.offset = params.getValue("offset");
+    this.authorId = params.getValue(authorIdLabel);
+    this.limit = params.getValue(limitLabel);
+    this.offset = params.getValue(offsetLabel);
   }
 
   ListEventsByAuthorRequest toListEventsByAuthorRequest() {

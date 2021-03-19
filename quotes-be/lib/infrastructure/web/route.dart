@@ -13,13 +13,13 @@ class Route {
   static final String slash = r"/";
 
   String _url, _method;
-  RegExp _exp = RegExp(""); // TODO
+  late RegExp _exp;
   Handler _handler;
 
   Map<String, int> _pathParamsDesc = Map<String, int>();
 
   Route(this._url, this._method, this._handler) {
-    logger.info("New Route created. Method: $_method, url: $_url");
+    logger.info("new Route created: method: $_method, url: $_url");
 
     var urlPatterns = _url.split(slash).map((e) => _isPathParam(e) ? paramPattern : e).join(slash) + patternEnding;
 
@@ -36,7 +36,7 @@ class Route {
   bool canHandle(String uri, String method) => method == this._method && _exp.hasMatch(uri);
 
   void handle(HttpRequest request) {
-    logger.info("New request. Method: ${request.method}, url: ${request.requestedUri}");
+    logger.info("new request, method: ${request.method}, url: ${request.requestedUri}");
     var segments = request.requestedUri.pathSegments;
     var pathParams = PathParams(segments, _pathParamsDesc);
     var urlParams = UrlParams(request.requestedUri.queryParameters);

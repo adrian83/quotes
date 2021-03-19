@@ -25,7 +25,6 @@ class AuthorService {
 
   Future<Author> save(Author author) => Future.value(author)
       .then((_) => _logger.info("save author: $author"))
-      .then((value) => throw FormatException())
       .then((_) => _authorRepository.save(author))
       .then((_) => _logger.info("store author event (create) for author: $author"))
       .then((_) => pass(author, (a) => _authorEventRepository.storeSaveAuthorEvent(author)))

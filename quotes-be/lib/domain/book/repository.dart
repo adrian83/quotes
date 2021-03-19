@@ -18,12 +18,12 @@ class BookRepository extends Repository<Book> {
   Future<Page<Book>> findAuthorBooks(ListBooksByAuthorRequest request) => Future.value(request)
       .then((_) => _logger.info("find author books by request: $request"))
       .then((_) => MatchQuery(bookAuthorIdLabel, request.authorId))
-      .then((query) => this.findDocuments(query, request.pageRequest));
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
 
   Future<Page<Book>> findBooks(SearchEntityRequest request) => Future.value(request)
       .then((_) => _logger.info("find books by request: $request"))
       .then((_) => WildcardQuery(bookTitleLabel, request.searchPhrase ?? ""))
-      .then((query) => this.findDocuments(query, request.pageRequest));
+      .then((query) => this.findDocuments(query, request.pageRequest, sorting: SortElement.desc(modifiedUtcLabel)));
 
   Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
       .then((_) => _logger.info("delete books by author with id: $authorId"))
