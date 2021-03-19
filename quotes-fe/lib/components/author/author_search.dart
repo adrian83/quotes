@@ -42,8 +42,10 @@ class AuthorSearchComponent implements PageSwitcher {
   List<Event> get events => _errorHandler.events;
 
   @override
-  void change(int pageNumber) =>
-      _authorService.listAuthors(_phrase, PageRequest.page(pageNumber)).then((page) => _authorsPage = page).catchError(_errorHandler.handleError);
+  void change(int pageNumber) => _authorService
+      .listAuthors(_phrase, PageRequest.page(pageNumber))
+      .then((page) => _authorsPage = page)
+      .catchError(_errorHandler.handleError);
 
   void showAuthor(Author author) => _router.showAuthor(author.id);
 

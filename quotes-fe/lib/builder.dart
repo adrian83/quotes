@@ -17,7 +17,8 @@ class ConstantBuilder implements Builder {
       };
 
   @override
-  Future<void> build(BuildStep buildStep) => buildStep.writeAsString(AssetId(buildStep.inputId.package, 'lib/${ConstantBuilder._constantsFile}'),
+  Future<void> build(BuildStep buildStep) => buildStep.writeAsString(
+      AssetId(buildStep.inputId.package, 'lib/${ConstantBuilder._constantsFile}'),
       Future.value(values.entries.map((e) => _toDartConstantDeclaration(e.key, e.value)).join()));
 
   String _toDartConstantDeclaration(String name, dynamic value) {

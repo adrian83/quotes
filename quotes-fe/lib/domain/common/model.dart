@@ -16,8 +16,6 @@ class Entity {
     this._modifiedUtc = dt;
   }
 
-  Map toJson() => {"id": _id, "modifiedUtc": _modifiedUtc.toIso8601String(), "createdUtc": _createdUtc.toIso8601String()};
+  Map toJson() =>
+      {"id": _id, "modifiedUtc": _modifiedUtc.toIso8601String(), "createdUtc": _createdUtc.toIso8601String()};
 }
-
-
-

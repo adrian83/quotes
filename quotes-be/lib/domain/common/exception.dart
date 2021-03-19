@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import '../../infrastructure/elasticsearch/exception.dart';
 
 class BaseException implements Exception {
@@ -24,15 +26,19 @@ class FindFailedException extends BaseException {
   FindFailedException(String msg, {Exception? cause}) : super(msg, cause: cause);
 }
 
+final Logger _logger = Logger('ErrorHandler');
+
 dynamic errorHandler(Object error) {
+  _logger.warning("error: $error");
+
   if (error is IndexingFailedException) {
-    Future.error(SaveFailedException("cannot store", cause: error));
+    return Future.error(SaveFailedException("cannot store", cause: error));
   } else if (error is IndexingFailedException) {
-    Future.error(UpdateFailedException("cannot update", cause: error));
+    return Future.error(UpdateFailedException("cannot update", cause: error));
   } else if (error is DocFindFailedException) {
-    Future.error(FindFailedException("cannot find", cause: error));
+    return Future.error(FindFailedException("cannot find", cause: error));
   } else if (error is Exception) {
-    Future.error(BaseException("error", cause: error));
+    return Future.error(BaseException("error", cause: error));
   }
 
   return error;

@@ -27,7 +27,11 @@ class NewAuthorComponent {
   Author get author => _author;
   List<Event> get events => _errorHandler.events;
 
-  void save() => _authorService.create(author).then((author) => _author = author).then((_) => _editAuthor(_author)).catchError(_errorHandler.handleError);
+  void save() => _authorService
+      .create(author)
+      .then((author) => _author = author)
+      .then((_) => _editAuthor(_author))
+      .catchError(_errorHandler.handleError);
 
   void _editAuthor(Author author) => _router.editAuthor(author.id);
 

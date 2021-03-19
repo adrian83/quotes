@@ -24,7 +24,8 @@ class Service<T> {
 
   Future<Map<String, dynamic>> getEntity(String url) => http.get(url).then((response) => _handleErrors(response));
 
-  Future<Map<String, dynamic>> deleteEntity(String url) => http.delete(url).then((response) => response.statusCode == 200 ? {} : _handleErrors(response));
+  Future<Map<String, dynamic>> deleteEntity(String url) =>
+      http.delete(url).then((response) => response.statusCode == 200 ? {} : _handleErrors(response));
 
   Map<String, dynamic> _handleErrors(response) {
     if (response.statusCode == 404) {
@@ -44,7 +45,8 @@ class Service<T> {
     return json;
   }
 
-  String pageRequestToUrlParams(PageRequest request) => ["limit=${request.limit}", "offset=${request.offset}"].join("&");
+  String pageRequestToUrlParams(PageRequest request) =>
+      ["limit=${request.limit}", "offset=${request.offset}"].join("&");
 
   String appendUrlParam(String params, String kay, String value) {
     if (value == null || value == "") {

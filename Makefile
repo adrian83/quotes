@@ -1,5 +1,4 @@
 
-
 docker:
 	sudo systemctl start docker
 
@@ -9,9 +8,11 @@ compose-build:
 compose-up:
 	sudo docker-compose up
 
+
 deps:
 	echo "starting elasticsearch image (version 6.4.1)"
 	docker run -d -p 9200:9200 -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:6.4.1
+
 
 fe-format:
 	cd quotes-fe && dartfmt -w -l 120 --fix .
@@ -30,7 +31,7 @@ fe-run:
 	echo "running frontend"
 	cd quotes-fe && webdev serve
 
-fe-all: fe-format fe-get fe-build be-test fe-run
+fe-all: fe-format fe-get fe-build fe-run
 
 
 be-format:
@@ -51,7 +52,5 @@ be-run:
 be-init:
 	echo "Init db"
 	./quotes-be/infra/init.sh
-	
 
-
-be-all: be-format be-get be-run
+be-all: be-format be-get be-test be-run

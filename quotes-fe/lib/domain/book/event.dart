@@ -8,8 +8,7 @@ class BookEvent extends Book {
   BookEvent(this._eventId, this._operation, Book book)
       : super(book.id, book.title, book.description, book.authorId, book.modifiedUtc, book.createdUtc);
 
-  BookEvent.fromJson(Map<String, dynamic> json)
-  : this(json["id"], json["operation"], Book.fromJson(json["entity"]));
+  BookEvent.fromJson(Map<String, dynamic> json) : this(json["id"], json["operation"], Book.fromJson(json["entity"]));
 
   String get eventId => _eventId;
   String get operation => _operation;

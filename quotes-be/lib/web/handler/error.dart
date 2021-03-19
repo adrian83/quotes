@@ -9,7 +9,8 @@ import '../../infrastructure/web/response.dart';
 
 final Logger logger = Logger('ErrorHandler');
 
-void handleErrors(Object ex, HttpRequest request) {
+dynamic handleErrors(Object ex, HttpRequest request) {
+  logger.severe("error: $ex");
   logger.severe(StackTrace.current);
 
   if (ex is SaveFailedException) {
@@ -25,4 +26,6 @@ void handleErrors(Object ex, HttpRequest request) {
   } else {
     serverError("unknown error ${ex}", request);
   }
+
+  return ex;
 }

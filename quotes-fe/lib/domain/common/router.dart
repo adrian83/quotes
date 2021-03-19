@@ -31,11 +31,14 @@ class QuotesRouter {
 
   void createQuote(String authorId, String bookId) => _router.navigate(createQuoteUrl(authorId, bookId));
 
-  void showQuote(String authorId, String bookId, String quoteId) => _router.navigate(showQuoteUrl(authorId, bookId, quoteId));
+  void showQuote(String authorId, String bookId, String quoteId) =>
+      _router.navigate(showQuoteUrl(authorId, bookId, quoteId));
 
-  void editQuote(String authorId, String bookId, String quoteId) => _router.navigate(editQuoteUrl(authorId, bookId, quoteId));
+  void editQuote(String authorId, String bookId, String quoteId) =>
+      _router.navigate(editQuoteUrl(authorId, bookId, quoteId));
 
-  void showQuoteEvents(String authorId, String bookId, String quoteId) => _router.navigate(quoteEventsUrl(authorId, bookId, quoteId));
+  void showQuoteEvents(String authorId, String bookId, String quoteId) =>
+      _router.navigate(quoteEventsUrl(authorId, bookId, quoteId));
 
   // -----
 
@@ -59,23 +62,31 @@ class QuotesRouter {
 
   String createBookUrl(String authorId) => RoutePaths.newBook.toUrl(parameters: _mapFromParams1(authorId));
 
-  String showBookUrl(String authorId, String bookId) => RoutePaths.showBook.toUrl(parameters: _mapFromParams2(authorId, bookId));
+  String showBookUrl(String authorId, String bookId) =>
+      RoutePaths.showBook.toUrl(parameters: _mapFromParams2(authorId, bookId));
 
-  String editBookUrl(String authorId, String bookId) => RoutePaths.editBook.toUrl(parameters: _mapFromParams2(authorId, bookId));
+  String editBookUrl(String authorId, String bookId) =>
+      RoutePaths.editBook.toUrl(parameters: _mapFromParams2(authorId, bookId));
 
-  String bookEventsUrl(String authorId, String bookId) => RoutePaths.bookEvents.toUrl(parameters: _mapFromParams2(authorId, bookId));
+  String bookEventsUrl(String authorId, String bookId) =>
+      RoutePaths.bookEvents.toUrl(parameters: _mapFromParams2(authorId, bookId));
 
-  String showQuoteUrl(String authorId, String bookId, String quoteId) => RoutePaths.showQuote.toUrl(parameters: _mapFromParams3(authorId, bookId, quoteId));
+  String showQuoteUrl(String authorId, String bookId, String quoteId) =>
+      RoutePaths.showQuote.toUrl(parameters: _mapFromParams3(authorId, bookId, quoteId));
 
-  String createQuoteUrl(String authorId, String bookId) => RoutePaths.newQuote.toUrl(parameters: _mapFromParams2(authorId, bookId));
+  String createQuoteUrl(String authorId, String bookId) =>
+      RoutePaths.newQuote.toUrl(parameters: _mapFromParams2(authorId, bookId));
 
-  String editQuoteUrl(String authorId, String bookId, String quoteId) => RoutePaths.editQuote.toUrl(parameters: _mapFromParams3(authorId, bookId, quoteId));
+  String editQuoteUrl(String authorId, String bookId, String quoteId) =>
+      RoutePaths.editQuote.toUrl(parameters: _mapFromParams3(authorId, bookId, quoteId));
 
-  String quoteEventsUrl(String authorId, String bookId, String quoteId) => RoutePaths.quoteEvents.toUrl(parameters: _mapFromParams3(authorId, bookId, quoteId));
+  String quoteEventsUrl(String authorId, String bookId, String quoteId) =>
+      RoutePaths.quoteEvents.toUrl(parameters: _mapFromParams3(authorId, bookId, quoteId));
 
   Map<String, String> _mapFromParams1(String authorId) => {authorIdParam: authorId ?? missing};
 
-  Map<String, String> _mapFromParams2(String authorId, String bookId) => {authorIdParam: authorId ?? missing, bookIdParam: bookId ?? missing};
+  Map<String, String> _mapFromParams2(String authorId, String bookId) =>
+      {authorIdParam: authorId ?? missing, bookIdParam: bookId ?? missing};
 
   Map<String, String> _mapFromParams3(String authorId, String bookId, String quoteId) =>
       {authorIdParam: authorId ?? missing, bookIdParam: bookId ?? missing, quoteIdParam: quoteId ?? missing};

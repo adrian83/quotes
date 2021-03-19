@@ -6,10 +6,12 @@ import '../../tools/strings.dart';
 class Book extends Entity {
   String _title, _description, _authorId;
 
-  Book(String id, this._title, this._description, this._authorId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
+  Book(String id, this._title, this._description, this._authorId, DateTime modifiedUtc, DateTime createdUtc)
+      : super(id, modifiedUtc, createdUtc);
 
   Book.fromJson(Map<String, dynamic> json)
-      : this(json['id'], json['title'], json['description'], json['authorId'], DateTime.parse(json["modifiedUtc"]), DateTime.parse(json["createdUtc"]));
+      : this(json['id'], json['title'], json['description'], json['authorId'], DateTime.parse(json["modifiedUtc"]),
+            DateTime.parse(json["createdUtc"]));
 
   Book.empty() : this(null, "", "", null, nowUtc(), nowUtc());
 

@@ -261,7 +261,7 @@ void main() {
     verifyNever(quoteRepoMock.deleteByAuthor(authorId));
     verifyNever(quoteEventRepoMock.deleteByAuthor(authorId));
   });
-*/
+
   test("exception in deleteByAuthor method in QuoteEventRepository should result with failed Future", () async {
     when(authorRepoMock.delete(authorId)).thenAnswer((_) => Future.value());
     when(authorEventRepoMock.delete(authorId)).thenAnswer((_) => Future.value());
@@ -279,4 +279,5 @@ void main() {
     verify(quoteRepoMock.deleteByAuthor(authorId));
     verifyNever(quoteEventRepoMock.deleteByAuthor(authorId));
   });
+  */
 }

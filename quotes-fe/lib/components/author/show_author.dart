@@ -34,8 +34,10 @@ class ShowAuthorComponent extends OnActivate {
   List<Event> get events => _errorHandler.events;
 
   @override
-  void onActivate(_, RouterState state) =>
-      _authorService.find(_router.param(authorIdParam, state)).then((author) => _author = author).catchError(_errorHandler.handleError);
+  void onActivate(_, RouterState state) => _authorService
+      .find(_router.param(authorIdParam, state))
+      .then((author) => _author = author)
+      .catchError(_errorHandler.handleError);
 
   void deleteAuthor() => _authorService
       .delete(_author.id)

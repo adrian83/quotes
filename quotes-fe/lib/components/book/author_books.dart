@@ -44,8 +44,10 @@ class AuthorBooksComponent implements PageSwitcher {
   Author get author => _author;
 
   @override
-  void change(int pageNumber) =>
-      _bookService.listAuthorBooks(_author.id, PageRequest.page(pageNumber)).then((page) => _booksPage = page).catchError(_errorHandler.handleError);
+  void change(int pageNumber) => _bookService
+      .listAuthorBooks(_author.id, PageRequest.page(pageNumber))
+      .then((page) => _booksPage = page)
+      .catchError(_errorHandler.handleError);
 
   void deleteBook(Book book) => _bookService
       .delete(_author.id, book.id)

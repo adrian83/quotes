@@ -16,7 +16,12 @@ import '../../domain/common/event.dart';
 @Component(
   selector: 'edit-book',
   templateUrl: 'edit_book.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(BookService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
 class EditBookComponent implements OnActivate {

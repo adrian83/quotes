@@ -8,8 +8,7 @@ class QuoteEvent extends Quote {
   QuoteEvent(this._eventId, this._operation, Quote quote)
       : super(quote.id, quote.text, quote.authorId, quote.bookId, quote.modifiedUtc, quote.createdUtc);
 
-  QuoteEvent.fromJson(Map<String, dynamic> json)
-  : this(json["id"], json["operation"], Quote.fromJson(json["entity"]));
+  QuoteEvent.fromJson(Map<String, dynamic> json) : this(json["id"], json["operation"], Quote.fromJson(json["entity"]));
 
   String get eventId => _eventId;
   String get operation => _operation;

@@ -42,8 +42,10 @@ class BookSearchComponent implements PageSwitcher {
   List<Event> get events => _errorHandler.events;
 
   @override
-  void change(int pageNumber) =>
-      _bookService.listBooks(_phrase, PageRequest.page(pageNumber)).then((page) => _booksPage = page).catchError(_errorHandler.handleError);
+  void change(int pageNumber) => _bookService
+      .listBooks(_phrase, PageRequest.page(pageNumber))
+      .then((page) => _booksPage = page)
+      .catchError(_errorHandler.handleError);
 
   void showBook(Book book) => _router.showBook(book.authorId, book.id);
 

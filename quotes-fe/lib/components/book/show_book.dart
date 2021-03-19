@@ -18,7 +18,12 @@ import '../quote/book_quotes.dart';
 @Component(
   selector: 'show-book',
   templateUrl: 'show_book.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(BookService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: [coreDirectives, Breadcrumbs, Events, Pagination, BookQuotesComponent],
 )
 class ShowBookComponent extends OnActivate {

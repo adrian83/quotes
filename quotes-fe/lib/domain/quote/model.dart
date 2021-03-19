@@ -6,10 +6,12 @@ import '../../tools/strings.dart';
 class Quote extends Entity {
   String _text, _authorId, _bookId;
 
-  Quote(String id, this._text, this._authorId, this._bookId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
+  Quote(String id, this._text, this._authorId, this._bookId, DateTime modifiedUtc, DateTime createdUtc)
+      : super(id, modifiedUtc, createdUtc);
 
   Quote.fromJson(Map<String, dynamic> json)
-      : this(json['id'], json['text'], json['authorId'], json['bookId'], DateTime.parse(json["modifiedUtc"]), DateTime.parse(json["createdUtc"]));
+      : this(json['id'], json['text'], json['authorId'], json['bookId'], DateTime.parse(json["modifiedUtc"]),
+            DateTime.parse(json["createdUtc"]));
 
   Quote.empty() : this(null, "", null, null, nowUtc(), nowUtc());
 

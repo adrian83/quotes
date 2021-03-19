@@ -24,7 +24,8 @@ class Breadcrumb {
   bool get current => this._current;
 }
 
-@Component(selector: 'breadcrumbs', templateUrl: 'breadcrumb.template.html', directives: [coreDirectives, routerDirectives])
+@Component(
+    selector: 'breadcrumbs', templateUrl: 'breadcrumb.template.html', directives: [coreDirectives, routerDirectives])
 class Breadcrumbs {
   @Input()
   List<Breadcrumb> elements;

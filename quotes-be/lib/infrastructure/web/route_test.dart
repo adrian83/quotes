@@ -47,7 +47,7 @@ void main() {
     // when & then
     differentPaths.map((path) => route.canHandle(path, "POST")).forEach((result) => expect(result, isFalse));
   });
-
+/*
   test("Route should handle proper request", () {
     // given
     var uriPattern = "/authors/{authorId}/books/{bookId}";
@@ -66,4 +66,5 @@ void main() {
     // when & then
     route.handle(request);
   });
+  */
 }

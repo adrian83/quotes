@@ -3,7 +3,8 @@ class ValidationError {
 
   ValidationError([this.field, this.code, this.message]);
 
-  factory ValidationError.fromJson(Map<String, dynamic> json) => ValidationError(json['field'], json['code'], json['message']);
+  factory ValidationError.fromJson(Map<String, dynamic> json) =>
+      ValidationError(json['field'], json['code'], json['message']);
 
   String toString() {
     return "ValidationError { field=$field, code=$code, message=$message }";

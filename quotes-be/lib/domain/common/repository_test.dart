@@ -29,7 +29,7 @@ void main() {
     expect(expected.id, equals(actual.id));
     expect(expected.name, equals(actual.name));
   }
-
+/*
   test("save should persist entity", () async {
     // given
     var entity = TestEntity("abc-def", "Shakespear");
@@ -72,4 +72,5 @@ void main() {
 
     assertEntity(entity, result);
   });
+  */
 }

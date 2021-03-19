@@ -20,7 +20,13 @@ import '../common/pagination.dart';
 @Component(
   selector: 'show-quote',
   templateUrl: 'show_quote.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuoteService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(BookService),
+    ClassProvider(QuoteService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: [coreDirectives, Breadcrumbs, Events, Pagination],
 )
 class ShowQuoteComponent implements OnActivate {

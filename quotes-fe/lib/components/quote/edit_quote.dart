@@ -19,7 +19,13 @@ import '../common/events.dart';
 @Component(
   selector: 'edit-quote',
   templateUrl: 'edit_quote.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuoteService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(BookService),
+    ClassProvider(QuoteService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
 class EditQuoteComponent implements OnActivate {

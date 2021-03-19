@@ -83,7 +83,7 @@ class SearchHit extends BasicResult {
   SearchHit(String index, String type, String id, this.score, this.source) : super(index, type, id);
 
   factory SearchHit.fromJson(Map<String, dynamic> json) =>
-      SearchHit(json[indexF], json[typeF], json[idF], json[scoreF], json[sourceF]);
+      SearchHit(json[indexF], json[typeF], json[idF], json[scoreF] ??= 0.0, json[sourceF]);
 
   @override
   String toString() => "SearchHit [id: $id, type: $type, index: $index, score: $score, source: $source]";
@@ -98,7 +98,8 @@ class SearchHits {
 
   factory SearchHits.fromJson(Map<String, dynamic>? json) {
     if (json == null) return SearchHits(0, 0, List.empty());
-    return SearchHits(json[totalF], json[maxScoreF], (json[hitsF] as List).map((d) => SearchHit.fromJson(d)).toList());
+    return SearchHits(
+        json[totalF], json[maxScoreF] ??= 0.0, (json[hitsF] as List).map((d) => SearchHit.fromJson(d)).toList());
   }
 
   @override

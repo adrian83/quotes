@@ -26,7 +26,8 @@ class QuoteService extends Service<Quote> {
   }
 
   Future<QuoteEventsPage> listEvents(String authorId, String bookId, String quoteId, PageRequest request) {
-    var url = "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId/events?${this.pageRequestToUrlParams(request)}";
+    var url =
+        "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId/events?${this.pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => QuoteEventsPage.fromJson(json));
   }
 

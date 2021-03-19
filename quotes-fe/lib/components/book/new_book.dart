@@ -16,7 +16,12 @@ import '../common/events.dart';
 @Component(
   selector: 'new-book',
   templateUrl: 'new_book.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(BookService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
 class NewBookComponent implements OnActivate {
@@ -41,7 +46,11 @@ class NewBookComponent implements OnActivate {
       .then((_) => _book.authorId = _author.id)
       .catchError(_errorHandler.handleError);
 
-  void save() => _bookService.create(book).then((book) => _book = book).then((_) => _editBook(_book)).catchError(_errorHandler.handleError);
+  void save() => _bookService
+      .create(book)
+      .then((book) => _book = book)
+      .then((_) => _editBook(_book))
+      .catchError(_errorHandler.handleError);
 
   void _editBook(Book book) => _router.editBook(book.authorId, book.id);
 

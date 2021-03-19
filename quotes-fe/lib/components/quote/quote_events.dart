@@ -62,7 +62,8 @@ class QuoteEventsComponent extends PageSwitcher implements OnActivate {
       .then((page) => _quoteEventPage = page)
       .catchError(_errorHandler.handleError);
 
-  void showQuote() => _router.showQuote(_quoteEventPage.elements.last.authorId, _quoteEventPage.elements.last.bookId, _quoteEventPage.elements.last.id);
+  void showQuote() => _router.showQuote(
+      _quoteEventPage.elements.last.authorId, _quoteEventPage.elements.last.bookId, _quoteEventPage.elements.last.id);
 
   List<Breadcrumb> get breadcrumbs {
     var elems = [Breadcrumb.link(_router.search(), "search")];

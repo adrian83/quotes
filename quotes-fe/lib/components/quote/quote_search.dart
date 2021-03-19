@@ -42,8 +42,10 @@ class QuoteSearchComponent implements PageSwitcher {
   List<Event> get events => _errorHandler.events;
 
   @override
-  void change(int pageNumber) =>
-      _quoteService.listQuotes(_phrase, PageRequest.page(pageNumber)).then((page) => _quotesPage = page).catchError(_errorHandler.handleError);
+  void change(int pageNumber) => _quoteService
+      .listQuotes(_phrase, PageRequest.page(pageNumber))
+      .then((page) => _quotesPage = page)
+      .catchError(_errorHandler.handleError);
 
   void showQuote(Quote quote) => _router.showQuote(quote.authorId, quote.bookId, quote.id);
 

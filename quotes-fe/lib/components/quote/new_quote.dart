@@ -18,7 +18,13 @@ import '../common/events.dart';
 @Component(
   selector: 'new-quote',
   templateUrl: 'new_quote.template.html',
-  providers: [ClassProvider(AuthorService), ClassProvider(BookService), ClassProvider(QuoteService), ClassProvider(QuotesRouter), ClassProvider(ErrorHandler)],
+  providers: [
+    ClassProvider(AuthorService),
+    ClassProvider(BookService),
+    ClassProvider(QuoteService),
+    ClassProvider(QuotesRouter),
+    ClassProvider(ErrorHandler)
+  ],
   directives: [coreDirectives, formDirectives, Breadcrumbs, Events],
 )
 class NewQuoteComponent implements OnActivate {
@@ -48,7 +54,11 @@ class NewQuoteComponent implements OnActivate {
       .then((_) => _quote.bookId = _book.id)
       .catchError(_errorHandler.handleError);
 
-  void save() => _quoteService.create(quote).then((quote) => _quote = quote).then((_) => _editQuote(_quote)).catchError(_errorHandler.handleError);
+  void save() => _quoteService
+      .create(quote)
+      .then((quote) => _quote = quote)
+      .then((_) => _editQuote(_quote))
+      .catchError(_errorHandler.handleError);
 
   void _editQuote(Quote quote) => _router.editQuote(quote.authorId, quote.bookId, quote.id);
 

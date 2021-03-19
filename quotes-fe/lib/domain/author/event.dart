@@ -9,7 +9,7 @@ class AuthorEvent extends Author {
       : super(author.id, author.name, author.description, author.modifiedUtc, author.createdUtc);
 
   AuthorEvent.fromJson(Map<String, dynamic> json)
-  : this(json["id"], json["operation"], Author.fromJson(json["entity"]));
+      : this(json["id"], json["operation"], Author.fromJson(json["entity"]));
 
   String get eventId => _eventId;
   String get operation => _operation;
