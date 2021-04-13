@@ -2,15 +2,15 @@ import 'package:angular/angular.dart';
 import 'package:angular_forms/angular_forms.dart';
 import 'package:logging/logging.dart';
 
-import '../../domain/book/model.dart';
-import '../../domain/common/event.dart';
-import '../../domain/common/page.dart';
-import '../../domain/common/router.dart';
-import '../../domain/quote/model.dart';
-import '../../domain/quote/service.dart';
 import '../common/error_handler.dart';
 import '../common/events.dart';
 import '../common/pagination.dart';
+import '../../domain/book/model.dart';
+import '../../domain/quote/model.dart';
+import '../../domain/quote/service.dart';
+import '../../domain/common/event.dart';
+import '../../domain/common/page.dart';
+import '../../domain/common/router.dart';
 
 @Component(
   selector: 'book-quotes',
@@ -25,20 +25,18 @@ class BookQuotesComponent implements PageSwitcher {
   final ErrorHandler _errorHandler;
   final QuotesRouter _router;
 
-  QuotesPage _quotesPage = QuotesPage.empty();
+  QuotesPage page = QuotesPage.empty();
+  Book _book;
 
   BookQuotesComponent(this._quoteService, this._errorHandler, this._router);
-
-  Book _book;
 
   @Input()
   void set book(Book b) {
     _book = b;
-    change(_quotesPage.info.curent);
+    change(page.info.curent);
     logger.info("searching for quotes from book with id: ${_book.id}");
   }
 
-  QuotesPage get page => _quotesPage;
   PageSwitcher get switcher => this;
   List<Event> get events => _errorHandler.events;
   Book get book => _book;
@@ -46,14 +44,14 @@ class BookQuotesComponent implements PageSwitcher {
   @override
   void change(int pageNumber) => _quoteService
       .listBookQuotes(_book.authorId, _book.id, PageRequest.page(pageNumber))
-      .then((page) => _quotesPage = page)
+      .then((p) => page = p)
       .catchError(_errorHandler.handleError);
 
   void deleteQuote(Quote quote) => _quoteService
       .delete(quote.authorId, quote.bookId, quote.id)
       .then((id) => _errorHandler.showInfo("Quote '${quote.text}' removed"))
-      .then((_) => _quotesPage.elements.remove(quote))
-      .then((_) => _quotesPage.empty ? 0 : _quotesPage.info.curent)
+      .then((_) => page.elements.remove(quote))
+      .then((_) => page.empty ? 0 : page.info.curent)
       .then((pageNumber) => change(pageNumber))
       .catchError(_errorHandler.handleError);
 

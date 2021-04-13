@@ -13,10 +13,6 @@ import '../lib/web/handler/author/author.dart';
 import '../lib/web/handler/book/book.dart';
 import '../lib/web/handler/quote/quote.dart';
 
-import '../lib/infrastructure/web/handler.dart';
-import '../lib/infrastructure/web/router.dart';
-import '../lib/infrastructure/web/server.dart';
-
 import '../lib/domain/author/repository.dart';
 import '../lib/domain/quote/repository.dart';
 import '../lib/domain/book/repository.dart';
@@ -25,6 +21,9 @@ import '../lib/domain/author/model.dart';
 import '../lib/domain/quote/model.dart';
 import '../lib/domain/book/model.dart';
 
+import '../lib/web/handler/router.dart';
+
+import '../lib/infrastructure/web/server.dart';
 import '../lib/infrastructure/elasticsearch/store.dart';
 
 Future main(List<String> args) async {
@@ -40,7 +39,11 @@ Future main(List<String> args) async {
   var repositories = createRepositories(config.elasticsearch);
   var services = createServices(repositories);
 
-  var router = createRouter(services.authorService, services.bookService, services.quoteService);
+  var authorHandler = AuthorHandler(services.authorService);
+  var bookHandler = BookHandler(services.bookService);
+  var quoteHandler = QuoteHandler(services.quoteService);
+
+  var router = createRouter(authorHandler, bookHandler, quoteHandler);
 
   var server = Server(config.server, router);
   server.start();
@@ -51,41 +54,6 @@ void initLogger() {
   Logger.root.onRecord.listen((LogRecord rec) {
     print('${rec.loggerName}: ${rec.level.name}: ${rec.time}: ${rec.message}');
   });
-}
-
-Router createRouter(AuthorService authorService, BookService bookService, QuoteService quoteService) {
-  var authorHandler = AuthorHandler(authorService);
-  var bookHandler = BookHandler(bookService);
-  var quoteHandler = QuoteHandler(quoteService);
-
-  Router router = Router(resourceNotFound);
-
-  router.registerRoute(r"/{anything}", "OPTIONS", options);
-
-  router.registerRoute(r"/authors", "POST", authorHandler.persist);
-  router.registerRoute(r"/authors/{authorId}", "GET", authorHandler.find);
-  router.registerRoute(r"/authors/{authorId}", "PUT", authorHandler.update);
-  router.registerRoute(r"/authors/{authorId}", "DELETE", authorHandler.delete);
-  router.registerRoute(r"/authors", "GET", authorHandler.search);
-  router.registerRoute(r"/authors/{authorId}/events", "GET", authorHandler.listEvents);
-
-  router.registerRoute(r"/authors/{authorId}/books", "POST", bookHandler.persist);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}", "GET", bookHandler.find);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}", "PUT", bookHandler.update);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}", "DELETE", bookHandler.delete);
-  router.registerRoute(r"/authors/{authorId}/books", "GET", bookHandler.listByAuthor);
-  router.registerRoute(r"/books", "GET", bookHandler.search);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/events", "GET", bookHandler.listEvents);
-
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes", "POST", quoteHandler.persist);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}", "GET", quoteHandler.find);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}", "PUT", quoteHandler.update);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}", "DELETE", quoteHandler.delete);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes", "GET", quoteHandler.listByBook);
-  router.registerRoute(r"/quotes", "GET", quoteHandler.search);
-  router.registerRoute(r"/authors/{authorId}/books/{bookId}/quotes/{quoteId}/events", "GET", quoteHandler.listEvents);
-
-  return router;
 }
 
 class Repositories {
