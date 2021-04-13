@@ -15,15 +15,15 @@ deps:
 
 
 fe-format:
-	cd quotes-fe && dartfmt -w -l 120 --fix .
+	cd quotes-fe && dart format -o write -l 120 --fix . #&& dart fix -n . && dart analyze
 
 fe-get:
 	echo "getting frontend dependencies" 
-	cd quotes-fe && pub upgrade && pub get 
+	cd quotes-fe && dart pub upgrade && dart pub get  
 
 fe-build:
 	echo "building frontend"
-	#cd quotes-fe && pub run build_runner clean
+	#cd quotes-fe && dart pub run build_runner clean
 	rm quotes-fe/lib/generated_consts.dart ||:
 	cd quotes-fe && webdev build # --delete-conflicting-outputs
 
@@ -35,15 +35,15 @@ fe-all: fe-format fe-get fe-build fe-run
 
 
 be-format:
-	cd quotes-be && dartfmt -w -l 120 --fix .
+	cd quotes-be && dart format -o write -l 120 --fix . && dart fix -n . && dart analyze
 
 be-get: 
 	echo "getting backend dependencies" 
-	cd quotes-be && pub upgrade && pub get 
+	cd quotes-be && dart pub upgrade && dart pub get 
 	
 be-test:
 	echo "running backend tests" 
-	cd quotes-be && dart pub run test ./..
+	cd quotes-be && dart test ./..
 
 be-run: 
 	echo "running backend"

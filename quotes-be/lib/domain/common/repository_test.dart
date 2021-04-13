@@ -1,12 +1,8 @@
-import 'dart:async';
-
-import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
 import 'repository.dart';
 import '../../infrastructure/elasticsearch/document.dart';
 import '../../infrastructure/elasticsearch/store.dart';
-import '../../infrastructure/elasticsearch/response.dart';
 
 class TestEntity with Document {
   String id, name;
@@ -22,13 +18,13 @@ Decoder<TestEntity> testEntityDecoder = (Map<String, dynamic> json) => TestEntit
 class TestEntityStoreMock extends Mock implements ESStore<TestEntity> {}
 
 void main() {
-  ESStore<TestEntity> storeMock = TestEntityStoreMock();
-  Repository<TestEntity> repository = Repository(storeMock, testEntityDecoder);
+  //ESStore<TestEntity> storeMock = TestEntityStoreMock();
+  //Repository<TestEntity> repository = Repository(storeMock, testEntityDecoder);
 
-  void assertEntity(TestEntity expected, TestEntity actual) {
-    expect(expected.id, equals(actual.id));
-    expect(expected.name, equals(actual.name));
-  }
+  // void assertEntity(TestEntity expected, TestEntity actual) {
+  //   expect(expected.id, equals(actual.id));
+  //   expect(expected.name, equals(actual.name));
+  // }
 /*
   test("save should persist entity", () async {
     // given
