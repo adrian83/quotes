@@ -1,9 +1,5 @@
-import 'dart:async';
-
-import 'package:test/test.dart';
 import 'package:mockito/mockito.dart';
 
-import 'service.dart';
 import '../book/repository.dart';
 import '../quote/repository.dart';
 import 'repository.dart';
@@ -21,17 +17,17 @@ class QuoteRepositoryMock extends Mock implements QuoteRepository {}
 class QuoteEventRepositoryMock extends Mock implements QuoteEventRepository {}
 
 void main() {
-  var authorRepoMock = AuthorRepositoryMock();
-  var authorEventRepoMock = AuthorEventRepositoryMock();
-  var bookRepoMock = BookRepositoryMock();
-  var bookEventRepoMock = BookEventRepositoryMock();
-  var quoteRepoMock = QuoteRepositoryMock();
-  var quoteEventRepoMock = QuoteEventRepositoryMock();
+  // var authorRepoMock = AuthorRepositoryMock();
+  // var authorEventRepoMock = AuthorEventRepositoryMock();
+  // var bookRepoMock = BookRepositoryMock();
+  // var bookEventRepoMock = BookEventRepositoryMock();
+  // var quoteRepoMock = QuoteRepositoryMock();
+  // var quoteEventRepoMock = QuoteEventRepositoryMock();
 
-  var authorService = AuthorService(
-      authorRepoMock, authorEventRepoMock, bookRepoMock, bookEventRepoMock, quoteRepoMock, quoteEventRepoMock);
+  // var authorService = AuthorService(
+  //     authorRepoMock, authorEventRepoMock, bookRepoMock, bookEventRepoMock, quoteRepoMock, quoteEventRepoMock);
 
-  var authorId = "abcd-efgh";
+  // var authorId = "abcd-efgh";
 
   //var author = Author(authorId, "John", "Great writter", DateTime.now().toUtc(), DateTime.now().toUtc());
 

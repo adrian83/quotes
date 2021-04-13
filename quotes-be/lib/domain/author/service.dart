@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:logging/logging.dart';
 
 import 'model.dart';
