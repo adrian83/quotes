@@ -1,5 +1,5 @@
 # QUOTES
-Simple CRUD application written in: Dart 2.12, AngularDart 6 and Elasticsearch 6.4.
+Simple CRUD application written in: Dart 2.12, AngularDart 6 and Elasticsearch 7.12.
 
 
 ## Running
