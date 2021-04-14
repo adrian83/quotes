@@ -32,7 +32,7 @@ class Repository<T extends Document> {
           .then((resp) => resp.hits)
           .then((hits) {
         var docs = hits.hits.map((h) => _fromJson(h.source)).toList();
-        var info = PageInfo(pageRequest.limit, pageRequest.offset, hits.total);
+        var info = PageInfo(pageRequest.limit, pageRequest.offset, hits.total.value);
         return Page<T>(info, docs);
       });
 
