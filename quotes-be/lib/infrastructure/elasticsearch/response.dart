@@ -89,17 +89,32 @@ class SearchHit extends BasicResult {
   String toString() => "SearchHit [id: $id, type: $type, index: $index, score: $score, source: $source]";
 }
 
+class HitsTotal {
+  int value;
+  String relation;
+
+  HitsTotal(this.value, this.relation);
+
+  factory HitsTotal.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return HitsTotal(0, "");
+    return HitsTotal(json["value"], json["relation"]);
+  }
+
+  @override
+  String toString() => "HitsTotal [value: $value, relation: $relation]";
+}
+
 class SearchHits {
-  int total;
+  HitsTotal total;
   double maxScore;
   List<SearchHit> hits;
 
   SearchHits(this.total, this.maxScore, this.hits);
 
   factory SearchHits.fromJson(Map<String, dynamic>? json) {
-    if (json == null) return SearchHits(0, 0, List.empty());
-    return SearchHits(
-        json[totalF], json[maxScoreF] ??= 0.0, (json[hitsF] as List).map((d) => SearchHit.fromJson(d)).toList());
+    if (json == null) return SearchHits(HitsTotal(0, ""), 0, List.empty());
+    var total = HitsTotal.fromJson(json[totalF]);
+    return SearchHits(total, json[maxScoreF] ??= 0.0, (json[hitsF] as List).map((d) => SearchHit.fromJson(d)).toList());
   }
 
   @override

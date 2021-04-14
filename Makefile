@@ -10,8 +10,8 @@ compose-up:
 
 
 deps:
-	echo "starting elasticsearch image (version 6.4.1)"
-	docker run -d -p 9200:9200 -p 9300:9300 -e \"discovery.type=single-node\" elasticsearch:6.4.1
+	echo "starting elasticsearch image (version 7.12.0)"
+	docker run -d -p 9200:9200 -p 9300:9300 -e "discovery.type=single-node" elasticsearch:7.12.0
 
 
 fe-format:
