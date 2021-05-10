@@ -1,8 +1,10 @@
-import 'package:mockito/mockito.dart';
+import "package:test/test.dart";
+import 'package:mocktail/mocktail.dart';
 
 import 'repository.dart';
 import '../../infrastructure/elasticsearch/document.dart';
 import '../../infrastructure/elasticsearch/store.dart';
+import '../../infrastructure/elasticsearch/response.dart';
 
 class TestEntity with Document {
   String id, name;
@@ -18,27 +20,29 @@ Decoder<TestEntity> testEntityDecoder = (Map<String, dynamic> json) => TestEntit
 class TestEntityStoreMock extends Mock implements ESStore<TestEntity> {}
 
 void main() {
-  //ESStore<TestEntity> storeMock = TestEntityStoreMock();
-  //Repository<TestEntity> repository = Repository(storeMock, testEntityDecoder);
+  ESStore<TestEntity> storeMock = TestEntityStoreMock();
+  Repository<TestEntity> repository = Repository(storeMock, testEntityDecoder);
 
   // void assertEntity(TestEntity expected, TestEntity actual) {
   //   expect(expected.id, equals(actual.id));
   //   expect(expected.name, equals(actual.name));
   // }
-/*
+
   test("save should persist entity", () async {
     // given
     var entity = TestEntity("abc-def", "Shakespear");
+    var indexingResult = IndexResult("test-index", "entity", "abc-def", "INDEXED", 1);
+    // IndexResult(String index, String type, String id, this.result, this.version)
 
-    when(storeMock.index(entity)).thenAnswer((_) => Future.value());
+    when(() => storeMock.index(entity)).thenAnswer((_) => Future.value(indexingResult));
 
     // when
     await repository.save(entity);
 
     // then
-    verify(storeMock.index(entity));
+    verify(() => storeMock.index(entity)).called(1);
   });
-
+/*
   test("save should return failed Future if store throws exception", () async {
     // given
     var entity = TestEntity("abc-def", "Shakespear");
