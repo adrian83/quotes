@@ -12,6 +12,7 @@ class TestEntity with Document {
   TestEntity(this.id, this.name);
 
   String getId() => this.id;
+
   Map<dynamic, dynamic> toJson() => {"id": id, "name": name};
 }
 
@@ -24,9 +25,9 @@ void main() {
   Repository<TestEntity> repository = Repository(storeMock, testEntityDecoder);
 
   void assertEntity(TestEntity expected, TestEntity actual) {
-     expect(expected.id, equals(actual.id));
-     expect(expected.name, equals(actual.name));
-   }
+    expect(expected.id, equals(actual.id));
+    expect(expected.name, equals(actual.name));
+  }
 
   test("save should persist entity", () async {
     // given
@@ -42,9 +43,10 @@ void main() {
     verify(() => storeMock.index(entity)).called(1);
   });
 
-  test("save should return failed Future if Store throws exception", () async {
+  test("save should return failed Future if ES Store throws exception", () async {
     // given
     var entity = TestEntity("abc-def", "Shakespear");
+
     when(() => storeMock.index(entity)).thenAnswer((_) => Future.error(StateError("exception")));
 
     // when
@@ -58,7 +60,6 @@ void main() {
     // given
     var entity = TestEntity("abc-def", "Shakespear");
     var entityJson = {"id": entity.id, "name": entity.name};
-
     var getResult = GetResult("author", "doc", "xyz-hij", 1, true, entityJson);
 
     when(() => storeMock.get(any())).thenAnswer((_) => Future.value(getResult));
@@ -71,8 +72,8 @@ void main() {
 
     assertEntity(entity, result);
   });
-  
-  test("find should return failed Future if Store throws exception", () async {
+
+  test("find should return failed Future if ES Store throws exception", () async {
     // given
     when(() => storeMock.get(any())).thenAnswer((_) => Future.error(StateError("exception")));
 
@@ -87,8 +88,7 @@ void main() {
     // given
     var entity = TestEntity("abc-def", "Shakespear");
     var entityJson = "{\"id\": ${entity.id}, \"name\": ${entity.name}}";
-
-    var updateResult = UpdateResult("author", "doc", "abc-def", entityJson, 1);
+    var updateResult = UpdateResult("author", "doc", entity.id, entityJson, 1);
 
     when(() => storeMock.update(entity)).thenAnswer((_) => Future.value(updateResult));
 
@@ -101,4 +101,43 @@ void main() {
     assertEntity(entity, result);
   });
 
+  test("update should return failed Future if ES Store throws exception", () async {
+    // given
+    var entity = TestEntity("abc-def", "Shakespear");
+
+    when(() => storeMock.update(entity)).thenAnswer((_) => Future.error(StateError("exception")));
+
+    // when
+    expect(repository.update(entity), throwsA(const TypeMatcher<StateError>()));
+
+    // the
+    verify(() => storeMock.update(entity)).called(1);
+  });
+
+  test("delete should delete entity", () async {
+    // given
+    var docId = "mnb-lkj";
+    var deleteResult = DeleteResult("author", "doc", docId, "DELETED", 1);
+
+    when(() => storeMock.delete(docId)).thenAnswer((_) => Future.value(deleteResult));
+
+    // when
+    await repository.delete(docId);
+
+    // then
+    verify(() => storeMock.delete(docId)).called(1);
+  });
+
+  test("delete should return failed Future if ES store throws exception", () async {
+    // given
+    var docId = "mnb-lkj";
+
+    when(() => storeMock.delete(docId)).thenAnswer((_) => Future.error(StateError("exception")));
+
+    // when
+    expect(repository.delete(docId), throwsA(const TypeMatcher<StateError>()));
+
+    // the
+    verify(() => storeMock.delete(docId)).called(1);
+  });
 }
