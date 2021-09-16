@@ -43,7 +43,7 @@ be-get:
 	
 be-test:
 	echo "running backend tests" 
-	cd quotes-be && dart test ./..
+	cd quotes-be && dart test ./.. --coverage=./..
 
 be-run: 
 	echo "running backend"

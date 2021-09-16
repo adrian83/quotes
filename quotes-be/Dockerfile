@@ -1,4 +1,4 @@
-FROM google/dart:2.12
+FROM google/dart:2.13.4
 
 ADD . /quotes-be/
 WORKDIR /quotes-be
