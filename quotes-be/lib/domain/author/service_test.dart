@@ -1,22 +1,26 @@
-import 'package:mockito/mockito.dart';
+import "package:test/test.dart";
 
-import '../book/repository.dart';
-import '../quote/repository.dart';
-import 'repository.dart';
+// import '../book/repository.dart';
+// import '../quote/repository.dart';
+// import 'repository.dart';
 
-class AuthorRepositoryMock extends Mock implements AuthorRepository {}
+// class AuthorRepositoryMock extends Mock implements AuthorRepository {}
 
-class AuthorEventRepositoryMock extends Mock implements AuthorEventRepository {}
+// class AuthorEventRepositoryMock extends Mock implements AuthorEventRepository {}
 
-class BookRepositoryMock extends Mock implements BookRepository {}
+// class BookRepositoryMock extends Mock implements BookRepository {}
 
-class BookEventRepositoryMock extends Mock implements BookEventRepository {}
+// class BookEventRepositoryMock extends Mock implements BookEventRepository {}
 
-class QuoteRepositoryMock extends Mock implements QuoteRepository {}
+// class QuoteRepositoryMock extends Mock implements QuoteRepository {}
 
-class QuoteEventRepositoryMock extends Mock implements QuoteEventRepository {}
+// class QuoteEventRepositoryMock extends Mock implements QuoteEventRepository {}
 
 void main() {
+  test("empty", () async {
+    print("empty");
+  });
+
   // var authorRepoMock = AuthorRepositoryMock();
   // var authorEventRepoMock = AuthorEventRepositoryMock();
   // var bookRepoMock = BookRepositoryMock();

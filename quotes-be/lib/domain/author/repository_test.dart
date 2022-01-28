@@ -1,11 +1,15 @@
-import 'package:mockito/mockito.dart';
+import "package:test/test.dart";
 
-import 'model.dart';
-import '../../infrastructure/elasticsearch/store.dart';
+// import 'model.dart';
+// import '../../infrastructure/elasticsearch/store.dart';
 
-class AuthorStoreMock extends Mock implements ESStore<Author> {}
+// class AuthorStoreMock extends Mock implements ESStore<Author> {}
 
 void main() {
+  test("empty", () async {
+    print("empty");
+  });
+
   //var authorStoreMock = AuthorStoreMock();
   //var authorRepository = AuthorRepository(authorStoreMock);
 

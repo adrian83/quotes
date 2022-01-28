@@ -25,21 +25,3 @@ class UpdateFailedException extends BaseException {
 class FindFailedException extends BaseException {
   FindFailedException(String msg, {Exception? cause}) : super(msg, cause: cause);
 }
-
-final Logger _logger = Logger('ErrorHandler');
-
-dynamic errorHandler(Object error) {
-  _logger.warning("error: $error");
-
-  if (error is IndexingFailedException) {
-    return Future.error(SaveFailedException("cannot store", cause: error));
-  } else if (error is IndexingFailedException) {
-    return Future.error(UpdateFailedException("cannot update", cause: error));
-  } else if (error is DocFindFailedException) {
-    return Future.error(FindFailedException("cannot find", cause: error));
-  } else if (error is Exception) {
-    return Future.error(BaseException("error", cause: error));
-  }
-
-  return error;
-}

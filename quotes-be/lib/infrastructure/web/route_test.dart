@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import "package:test/test.dart";
-import "package:mockito/mockito.dart";
+import 'package:mocktail/mocktail.dart';
 
 import "handler.dart";
 import "route.dart";
