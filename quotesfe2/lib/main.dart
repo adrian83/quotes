@@ -1,8 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:quotesfe2/routes.dart';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart' show timeDilation;
+
 
 void main() {
-  runApp(const MyApp());
+  runApp(const GalleryApp(null, ""));
 }
+
+
+
+
+class GalleryApp extends StatelessWidget {
+  const GalleryApp(Key? key, this.initialRoute) : super(key: key);
+
+  final String initialRoute;
+
+  @override
+  Widget build(BuildContext context) {
+
+          return MaterialApp(
+            // By default on desktop, scrollbars are applied by the
+            // ScrollBehavior. This overrides that. All vertical scrollables in
+            // the gallery need to be audited before enabling this feature,
+            // see https://github.com/flutter/gallery/issues/523
+            scrollBehavior: const MaterialScrollBehavior().copyWith(scrollbars: false),
+            restorationScopeId: 'rootGallery',
+            title: 'Flutter Gallery',
+            debugShowCheckedModeBanner: false,
+            theme: ThemeData(primarySwatch: Colors.blue,),
+
+            initialRoute: initialRoute,
+
+            onGenerateRoute: RouteConfiguration.onGenerateRoute,
+          );
+
+  }
+}
+
+
+
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -12,9 +53,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(primarySwatch: Colors.blue,),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
