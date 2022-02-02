@@ -33,10 +33,6 @@ class _DemoPageState extends State<DemoPage> {
 
   @override
   Widget build(BuildContext context) {
-
-      // Return to root if invalid slug.
-      //Navigator.of(context).pop();
-
     return ScaffoldMessenger(child: Text("Demo"));
   }
 }

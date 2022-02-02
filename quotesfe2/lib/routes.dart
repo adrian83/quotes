@@ -1,11 +1,9 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:quotesfe2/deferred_widget.dart';
-import 'package:quotesfe2/main.dart';
 import 'package:quotesfe2/pages/demo.dart';
 import 'package:quotesfe2/pages/home.dart';
-
+import 'package:quotesfe2/pages/authors.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, String);
 
@@ -17,28 +15,66 @@ class Path {
 }
 
 class RouteConfiguration {
-  /// List of [Path] to for route matching. When a named route is pushed with
-  /// [Navigator.pushNamed], the route name is matched with the [Path.pattern]
-  /// in the list below. As soon as there is a match, the associated builder
-  /// will be returned. This means that the paths higher up in the list will
-  /// take priority.
+
+
+
+
   static List<Path> paths = [
-    Path(
-      r'^' + DemoPage.baseRoute + r'/([\w-]+)$',
-      (context, match) => DemoPage(),
-    ),
-    Path(
-      r'^/',
-      (context, match) => const HomePage(null, "Home"),
-    ),
+    Path(NewAuthorPage.routePattern, (context, match) => const NewAuthorPage(null, "new author")),
+    Path(ShowAuthorPage.routePattern, (context, match) => const ShowAuthorPage(null, "show author")),
+    Path(r'^' + DemoPage.baseRoute + r'/?([\w-]+)$', (context, match) => const DemoPage()),
+    Path(r'^/',(context, match) => const HomePage(null, "Home")),
   ];
 
-  /// The route generator callback used when the app is navigated to a named
-  /// route. Set it on the [MaterialApp.onGenerateRoute] or
-  /// [WidgetsApp.onGenerateRoute] to make use of the [paths] for route
-  /// matching.
+
+/*
+const authorIdParam = "authorId";
+const bookIdParam = "bookId";
+const quoteIdParam = "quoteId";
+
+class RoutePaths {
+  static final newAuthorPath = 'authors/new';
+  static final showAuthorPath = 'authors/show/:$authorIdParam';
+  static final editAuthorPath = 'authors/edit/:$authorIdParam';
+  static final authorEventsPath = 'authors/events/:$authorIdParam';
+
+  static final newAuthor = RoutePath(path: newAuthorPath);
+  static final showAuthor = RoutePath(path: showAuthorPath);
+  static final editAuthor = RoutePath(path: editAuthorPath);
+  static final authorEvents = RoutePath(path: authorEventsPath);
+
+  static final newBookPath = 'authors/show/:$authorIdParam/books/new';
+  static final showBookPath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam';
+  static final editBookPath = 'authors/show/:$authorIdParam/books/edit/:$bookIdParam';
+  static final bookEventsPath = 'authors/show/:$authorIdParam/books/events/:$bookIdParam';
+
+  static final newBook = RoutePath(path: newBookPath);
+  static final showBook = RoutePath(path: showBookPath);
+  static final editBook = RoutePath(path: editBookPath);
+  static final bookEvents = RoutePath(path: bookEventsPath);
+
+  static final newQuotePath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/new';
+  static final showQuotePath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/show/:$quoteIdParam';
+  static final editQuotePath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/edit/:$quoteIdParam';
+  static final quoteEventsPath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/events/:$quoteIdParam';
+
+  static final newQuote = RoutePath(path: newQuotePath);
+  static final showQuote = RoutePath(path: showQuotePath);
+  static final editQuote = RoutePath(path: editQuotePath);
+  static final quoteEvents = RoutePath(path: quoteEventsPath);
+
+  static final info = RoutePath(path: 'info');
+  static final search = RoutePath(path: '');
+}
+
+*/
+
+  static int g = 0;
+
+
   static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-    print("onGenerateRoute");
+    print("onGenerateRoute $g settings: $settings");
+    g += 1;
     for (final path in paths) {
       final regExpPattern = RegExp(path.pattern);
       var name = settings.name;
@@ -52,6 +88,7 @@ class RouteConfiguration {
       }
       if (regExpPattern.hasMatch(name)) {
         final firstMatch = regExpPattern.firstMatch(name);
+        print("firstMatch $firstMatch");
 
         final match = (firstMatch?.groupCount == 1) ? firstMatch?.group(1) : null;
         if (kIsWeb) {
@@ -75,7 +112,7 @@ class RouteConfiguration {
 class NoAnimationMaterialPageRoute<T> extends MaterialPageRoute<T> {
 
   NoAnimationMaterialPageRoute(
-    @required WidgetBuilder builder,
+    WidgetBuilder builder,
     RouteSettings settings,
   ) : super(builder: builder, settings: settings);
 
