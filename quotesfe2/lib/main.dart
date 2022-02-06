@@ -1,15 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:quotesfe2/domain/author/service.dart';
+
+import 'package:http/browser_client.dart';
 
 import 'package:quotesfe2/routes.dart';
+import 'package:quotesfe2/tools/config.dart';
 
 void main() {
-  runApp(const MyApp(null, ""));
+
+  var browserClient = BrowserClient();
+
+  var config = Config("http://localhost:5050");
+
+var authorService = AuthorService(browserClient, config);
+
+final routes = RouteConfiguration(authorService);
+
+  runApp(MyApp(null, "", routes));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp(Key? key, this.initialRoute) : super(key: key);
+
+  RouteConfiguration routes;
+
+
+
+  MyApp(Key? key, this.initialRoute, this.routes) : super(key: key);
+  
 
   final String initialRoute;
+  
+
+
+  Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+    return routes.onGenerateRoute(settings);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +45,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: initialRoute,
-      onGenerateRoute: RouteConfiguration.onGenerateRoute,
+      onGenerateRoute: onGenerateRoute,
     );
   }
 }

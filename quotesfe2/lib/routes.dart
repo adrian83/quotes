@@ -1,8 +1,10 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:quotesfe2/domain/author/service.dart';
 import 'package:quotesfe2/pages/demo.dart';
 import 'package:quotesfe2/pages/home.dart';
+import 'package:quotesfe2/pages/search.dart';
 import 'package:quotesfe2/pages/authors.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, String);
@@ -16,15 +18,21 @@ class Path {
 
 class RouteConfiguration {
 
+  AuthorService _authorService;
+
+  RouteConfiguration(this._authorService);
 
 
 
-  static List<Path> paths = [
+  List<Path> paths(){
+    return [
+    Path(SearchPage.routePattern, (context, match) => SearchPage(null, "search", this._authorService)),
     Path(NewAuthorPage.routePattern, (context, match) => const NewAuthorPage(null, "new author")),
     Path(ShowAuthorPage.routePattern, (context, match) => const ShowAuthorPage(null, "show author")),
     Path(r'^' + DemoPage.baseRoute + r'/?([\w-]+)$', (context, match) => const DemoPage()),
     Path(r'^/',(context, match) => const HomePage(null, "Home")),
   ];
+  }
 
 
 /*
@@ -70,12 +78,12 @@ class RoutePaths {
 */
 
   static int g = 0;
+  
 
-
-  static Route<dynamic>? onGenerateRoute(RouteSettings settings) {
+  Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     print("onGenerateRoute $g settings: $settings");
     g += 1;
-    for (final path in paths) {
+    for (final path in paths()) {
       final regExpPattern = RegExp(path.pattern);
       var name = settings.name;
       print("name $name");

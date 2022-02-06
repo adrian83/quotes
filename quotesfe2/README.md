@@ -23,10 +23,10 @@ flutter channel stable
 flutter upgrade
 flutter config --enable-web
 
-flutter run -d chrome
 
 flutter build web
 
+flutter run -d chrome
 
 cd ../build/web/
 python3 -m http.server
