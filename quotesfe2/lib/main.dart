@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quotesfe2/domain/author/service.dart';
+import 'package:quotesfe2/domain/book/service.dart';
 
 import 'package:http/browser_client.dart';
 
@@ -13,8 +14,9 @@ void main() {
   var config = Config("http://localhost:5050");
 
 var authorService = AuthorService(browserClient, config);
+var bookService = BookService(browserClient, config);
 
-final routes = RouteConfiguration(authorService);
+final routes = RouteConfiguration(authorService, bookService);
 
   runApp(MyApp(null, "", routes));
 }

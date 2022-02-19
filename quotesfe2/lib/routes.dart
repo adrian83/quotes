@@ -2,6 +2,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quotesfe2/domain/author/service.dart';
+import 'package:quotesfe2/domain/book/service.dart';
 import 'package:quotesfe2/pages/demo.dart';
 import 'package:quotesfe2/pages/home.dart';
 import 'package:quotesfe2/pages/search.dart';
@@ -19,18 +20,19 @@ class Path {
 class RouteConfiguration {
 
   AuthorService _authorService;
+  BookService _bookService;
 
-  RouteConfiguration(this._authorService);
+  RouteConfiguration(this._authorService, this._bookService);
 
 
 
   List<Path> paths(){
     return [
-    Path(SearchPage.routePattern, (context, match) => SearchPage(null, "search", this._authorService)),
+    Path(SearchPage.routePattern, (context, match) => SearchPage(null, "search", this._authorService, this._bookService)),
     Path(NewAuthorPage.routePattern, (context, match) => const NewAuthorPage(null, "new author")),
     Path(ShowAuthorPage.routePattern, (context, match) => const ShowAuthorPage(null, "show author")),
-    Path(r'^' + DemoPage.baseRoute + r'/?([\w-]+)$', (context, match) => const DemoPage()),
-    Path(r'^/',(context, match) => const HomePage(null, "Home")),
+    Path(r'^' + DemoPage.baseRoute + r'/?([\w-]+)$', (context, match) => SearchPage(null, "search", this._authorService, this._bookService)), //const DemoPage()),
+    Path(r'^/',(context, match) => SearchPage(null, "search", this._authorService, this._bookService)), //const HomePage(null, "Home")),
   ];
   }
 
