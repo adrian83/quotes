@@ -1,8 +1,8 @@
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:quotesfe2/domain/author/service.dart';
 import 'package:quotesfe2/domain/book/service.dart';
+import 'package:quotesfe2/domain/quote/service.dart';
 import 'package:quotesfe2/pages/demo.dart';
 import 'package:quotesfe2/pages/home.dart';
 import 'package:quotesfe2/pages/search.dart';
@@ -18,24 +18,43 @@ class Path {
 }
 
 class RouteConfiguration {
+  final AuthorService _authorService;
+  final BookService _bookService;
+  final QuoteService _quoteService;
 
-  AuthorService _authorService;
-  BookService _bookService;
+  const RouteConfiguration(
+      this._authorService, this._bookService, this._quoteService);
 
-  RouteConfiguration(this._authorService, this._bookService);
-
-
-
-  List<Path> paths(){
+  List<Path> paths() {
     return [
-    Path(SearchPage.routePattern, (context, match) => SearchPage(null, "search", this._authorService, this._bookService)),
-    Path(NewAuthorPage.routePattern, (context, match) => const NewAuthorPage(null, "new author")),
-    Path(ShowAuthorPage.routePattern, (context, match) => const ShowAuthorPage(null, "show author")),
-    Path(r'^' + DemoPage.baseRoute + r'/?([\w-]+)$', (context, match) => SearchPage(null, "search", this._authorService, this._bookService)), //const DemoPage()),
-    Path(r'^/',(context, match) => SearchPage(null, "search", this._authorService, this._bookService)), //const HomePage(null, "Home")),
-  ];
+      Path(
+          SearchPage.routePattern,
+          (context, match) => SearchPage(
+              null, "search", _authorService, _bookService, _quoteService)),
+      Path(NewAuthorPage.routePattern,
+          (context, match) => NewAuthorPage(null, "new author", _authorService)),
+      Path(
+          ShowAuthorPage.routePattern,
+          (context, match) =>
+              ShowAuthorPage(null, "show author", extractPathElement(match, 3))),
+      Path(
+          r'^' + DemoPage.baseRoute + r'/?([\w-]+)$',
+          (context, match) => SearchPage(null, "search", _authorService,
+              _bookService, _quoteService)), //const DemoPage()),
+      Path(
+          r'^/',
+          (context, match) => SearchPage(null, "search", _authorService,
+              _bookService, _quoteService)), //const HomePage(null, "Home")),
+    ];
   }
 
+  String extractPathElement(String path, int no) {
+    print("path $path");
+    var parts = path.split("\\");
+    var elem = parts[no+1];
+    var ps = elem.split("?");
+    return ps[0];
+  }
 
 /*
 const authorIdParam = "authorId";
@@ -79,28 +98,27 @@ class RoutePaths {
 
 */
 
-  static int g = 0;
-  
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
-    print("onGenerateRoute $g settings: $settings");
-    g += 1;
-    for (final path in paths()) {
-      final regExpPattern = RegExp(path.pattern);
       var name = settings.name;
       print("name $name");
-      if(name == null) {
-          return NoAnimationMaterialPageRoute<void>(
-            (context) => path.builder(context, "test-match"),
-            settings,
-          );
-          
+
+    for (final path in paths()) {
+      final regExpPattern = RegExp(path.pattern);
+
+      if (name == null) {
+        return NoAnimationMaterialPageRoute<void>(
+          (context) => path.builder(context, "test-match"),
+          settings,
+        );
       }
+
       if (regExpPattern.hasMatch(name)) {
         final firstMatch = regExpPattern.firstMatch(name);
-        print("firstMatch $firstMatch");
+        print("firstMatch ${path.pattern}");
 
-        final match = (firstMatch?.groupCount == 1) ? firstMatch?.group(1) : null;
+        final match =
+            (firstMatch?.groupCount == 1) ? firstMatch?.group(1) : null;
         if (kIsWeb) {
           return NoAnimationMaterialPageRoute<void>(
             (context) => path.builder(context, "test-match2"),
@@ -120,7 +138,6 @@ class RoutePaths {
 }
 
 class NoAnimationMaterialPageRoute<T> extends MaterialPageRoute<T> {
-
   NoAnimationMaterialPageRoute(
     WidgetBuilder builder,
     RouteSettings settings,

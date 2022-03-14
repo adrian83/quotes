@@ -1,38 +1,32 @@
-import 'package:flutter/material.dart';
-import 'package:quotesfe2/domain/author/service.dart';
-import 'package:quotesfe2/domain/book/service.dart';
-
 import 'package:http/browser_client.dart';
 
+import 'package:flutter/material.dart';
+
+import 'package:quotesfe2/domain/author/service.dart';
+import 'package:quotesfe2/domain/book/service.dart';
+import 'package:quotesfe2/domain/quote/service.dart';
 import 'package:quotesfe2/routes.dart';
 import 'package:quotesfe2/tools/config.dart';
 
 void main() {
-
   var browserClient = BrowserClient();
 
   var config = Config("http://localhost:5050");
 
-var authorService = AuthorService(browserClient, config);
-var bookService = BookService(browserClient, config);
+  var authorService = AuthorService(browserClient, config);
+  var bookService = BookService(browserClient, config);
+  var quoteService = QuoteService(browserClient, config);
 
-final routes = RouteConfiguration(authorService, bookService);
+  final routes = RouteConfiguration(authorService, bookService, quoteService);
 
-  runApp(MyApp(null, "", routes));
+  runApp(QuotesApp(null, "", routes));
 }
 
-class MyApp extends StatelessWidget {
-
-  RouteConfiguration routes;
-
-
-
-  MyApp(Key? key, this.initialRoute, this.routes) : super(key: key);
-  
-
+class QuotesApp extends StatelessWidget {
+  final RouteConfiguration routes;
   final String initialRoute;
-  
 
+  const QuotesApp(Key? key, this.initialRoute, this.routes) : super(key: key);
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     return routes.onGenerateRoute(settings);

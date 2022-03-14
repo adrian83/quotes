@@ -5,19 +5,15 @@ import 'package:quotesfe2/domain/book/model.dart';
 
 class BookEntry extends StatefulWidget {
 
-  Book _book;
+  final Book _book;
 
-  BookEntry(Key? key, this._book) : super(key: key);
+  const BookEntry(Key? key, this._book) : super(key: key);
 
   @override
-  State<BookEntry> createState() => _BookEntryState(_book);
+  State<BookEntry> createState() => _BookEntryState();
 }
 
 class _BookEntryState extends State<BookEntry> {
-
-  Book _book;
-
-  _BookEntryState(this._book);
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +22,8 @@ class _BookEntryState extends State<BookEntry> {
         
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-            Text('Title: ${_book.title}'),
-            Text('Description: ${_book.shortDescription}')
+            Text('Title: ${widget._book.title}'),
+            Text('Description: ${widget._book.shortDescription}')
       ],
     );
   }
