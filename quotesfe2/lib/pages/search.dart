@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe2/pages/widgets/author.dart';
 import 'package:quotesfe2/pages/widgets/book.dart';
+import 'package:quotesfe2/pages/widgets/paging.dart';
 import 'package:quotesfe2/pages/widgets/quote.dart';
 import 'package:quotesfe2/domain/author/model.dart';
 import 'package:quotesfe2/domain/book/model.dart';
@@ -28,7 +29,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  List<Author> _authors = [];
+  AuthorsPage _authors = AuthorsPage.empty();
   List<Book> _books = [];
   List<Quote> _quotes = [];
 
@@ -43,7 +44,7 @@ class _SearchPageState extends State<SearchPage> {
 
       widget._authorService
           .listAuthors(searchPhrase, PageRequest(3, 0))
-          .then((resp) => _authors = resp.elements);
+          .then((resp) => _authors = resp);
 
       widget._bookService
           .listBooks(searchPhrase, PageRequest(3, 0))
@@ -55,9 +56,17 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
+  Future<AuthorsPage> changeAuthorsPage(PageRequest pageReq) {
+    var searchPhrase = myController.value.text;
+          return widget._authorService
+          .listAuthors(searchPhrase, pageReq);
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
-    var authorsWidgets = _authors.map((e) => AuthorEntry(null, e));
+    var authorsWidget = AuthorPageEntry(null, changeAuthorsPage);
     var booksWidgets = _books.map((e) => BookEntry(null, e));
     var quotesWidgets = _quotes.map((e) => QuoteEntry(null, e));
 
@@ -80,8 +89,7 @@ class _SearchPageState extends State<SearchPage> {
                   child: const Text('Search'),
                   onPressed: () => _search(textField.controller?.value.text)),
             ),
-            _searchEntityHeader('Authors'),
-            ...authorsWidgets,
+            authorsWidget,
             _searchEntityHeader('Books'),
             ...booksWidgets,
             _searchEntityHeader('Quotes'),
