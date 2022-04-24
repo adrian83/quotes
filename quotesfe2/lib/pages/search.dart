@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe2/pages/widgets/author.dart';
 import 'package:quotesfe2/pages/widgets/book.dart';
-import 'package:quotesfe2/pages/widgets/paging.dart';
 import 'package:quotesfe2/pages/widgets/quote.dart';
 import 'package:quotesfe2/domain/author/model.dart';
 import 'package:quotesfe2/domain/book/model.dart';
@@ -20,7 +19,7 @@ class SearchPage extends StatefulWidget {
   final BookService _bookService;
   final QuoteService _quoteService;
 
-  const SearchPage(Key? key, this.title, this._authorService, this._bookService,
+  const SearchPage(Key key, this.title, this._authorService, this._bookService,
       this._quoteService)
       : super(key: key);
 
@@ -29,48 +28,61 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  AuthorsPage _authors = AuthorsPage.empty();
-  List<Book> _books = [];
-  List<Quote> _quotes = [];
 
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController myController = TextEditingController();
 
-  _SearchPageState();
+late TextFormField textField;
+late AuthorPageEntry authorsWidget;
+late BookPageEntry booksWidgets;
+late QuotePageEntry quotesWidgets;
+
+
+_SearchPageState() {
+  textField = TextFormField(controller: myController);
+newWidgets();
+
+}
 
   void _search(String? text) {
+    print("new search");
     setState(() {
-      var searchPhrase = text ?? "";
-
-      widget._authorService
-          .listAuthors(searchPhrase, PageRequest(3, 0))
-          .then((resp) => _authors = resp);
-
-      widget._bookService
-          .listBooks(searchPhrase, PageRequest(3, 0))
-          .then((resp) => _books = resp.elements);
-
-      widget._quoteService
-          .listQuotes(searchPhrase, PageRequest(3, 0))
-          .then((resp) => _quotes = resp.elements);
+      print("_search");
+      newWidgets();
     });
+  }
+
+  newWidgets() {
+      authorsWidget = AuthorPageEntry(
+        UniqueKey(), changeAuthorsPage, (Author a){ 
+          print("new AuthorEntry $a");
+          return AuthorEntry(null, a);
+        });
+      booksWidgets = BookPageEntry(
+        UniqueKey(), changeBooksPage, (Book b) => BookEntry(null, b));
+      quotesWidgets = QuotePageEntry(
+        UniqueKey(), changeQuotesPage, (Quote q) => QuoteEntry(null, q));
   }
 
   Future<AuthorsPage> changeAuthorsPage(PageRequest pageReq) {
     var searchPhrase = myController.value.text;
-          return widget._authorService
-          .listAuthors(searchPhrase, pageReq);
+    print("changeAuthorsPage $searchPhrase");
+    return widget._authorService.listAuthors(searchPhrase, pageReq);
   }
 
+    Future<BooksPage> changeBooksPage(PageRequest pageReq) {
+    var searchPhrase = myController.value.text;
+    return widget._bookService.listBooks(searchPhrase, pageReq);
+  }
 
+    Future<QuotesPage> changeQuotesPage(PageRequest pageReq) {
+    var searchPhrase = myController.value.text;
+    return widget._quoteService.listQuotes(searchPhrase, pageReq);
+  }
 
   @override
   Widget build(BuildContext context) {
-    var authorsWidget = AuthorPageEntry(null, changeAuthorsPage);
-    var booksWidgets = _books.map((e) => BookEntry(null, e));
-    var quotesWidgets = _quotes.map((e) => QuoteEntry(null, e));
 
-    var textField = TextFormField(controller: myController);
+    print("build");
 
     return Scaffold(
       appBar: AppBar(
@@ -90,18 +102,11 @@ class _SearchPageState extends State<SearchPage> {
                   onPressed: () => _search(textField.controller?.value.text)),
             ),
             authorsWidget,
-            _searchEntityHeader('Books'),
-            ...booksWidgets,
-            _searchEntityHeader('Quotes'),
-            ...quotesWidgets
+            booksWidgets,
+            quotesWidgets,
           ],
         ),
       ),
     );
   }
-
-  Text _searchEntityHeader(String text) {
-    return Text(text, style: Theme.of(context).textTheme.headline4);
-  }
-
 }

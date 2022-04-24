@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-typedef PageChangeAction = Function(int);
+typedef SelectPageAction = Function(int);
 
 class Pagination extends StatefulWidget {
   int _pages, _current;
-  PageChangeAction _pageChangeAction;
+  SelectPageAction _selectPageAction;
 
-  Pagination(this._pages, this._current, this._pageChangeAction);
+  Pagination(Key? key, this._pages, this._current, this._selectPageAction): super(key: key);
 
-  Pagination.empty() : this(0, 0, (i) => "");
+  Pagination.empty(Key? key) : this(key, 0, 0, (i) => "");
 
   @override
   State<Pagination> createState() => _PaginationState();
@@ -18,12 +18,10 @@ class _PaginationState extends State<Pagination> {
 
   @override
   Widget build(BuildContext context) {
-    //print("current ${widget._current}");
-    //print("pages ${widget._pages}");
 
-    var links = [for (var i = 0; i < widget._pages; i += 1) i].map((i) {
-      return generateButton(i, "${i + 1}", i != widget._current);
-    }).toList();
+    var links = [for (var i = 0; i < widget._pages; i += 1) i]
+      .map((i) => generateButton(i, "${i + 1}", i != widget._current))
+      .toList();
 
     if (links.isNotEmpty) {
       var isFirst = widget._current == 0;
@@ -44,7 +42,7 @@ class _PaginationState extends State<Pagination> {
   changePage(int i){
     setState(() {
       widget._current = i;
-      widget._pageChangeAction(i);
+      widget._selectPageAction(i);
     });
   }
 

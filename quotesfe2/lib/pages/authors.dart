@@ -77,7 +77,7 @@ final descController = TextEditingController();
 }
 
 class ShowAuthorPage extends StatefulWidget {
-  static String routePattern = r'^/authors/show/([0-9]+)/?(&[\w-=]+)?$';
+  static String routePattern = r'^/authors/show/([a-zA-Z0-9_.-]*)/?(&[\w-=]+)?$';
 
   final String _title;
   final String _id;
@@ -89,6 +89,9 @@ class ShowAuthorPage extends StatefulWidget {
 }
 
 class _ShowAuthorPageState extends State<ShowAuthorPage> {
+
+  
+
   void _persist() {
     setState(() {
       print("update");

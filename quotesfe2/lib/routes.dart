@@ -30,7 +30,7 @@ class RouteConfiguration {
       Path(
           SearchPage.routePattern,
           (context, match) => SearchPage(
-              null, "search", _authorService, _bookService, _quoteService)),
+              UniqueKey(), "search", _authorService, _bookService, _quoteService)),
       Path(NewAuthorPage.routePattern,
           (context, match) => NewAuthorPage(null, "new author", _authorService)),
       Path(
@@ -39,20 +39,23 @@ class RouteConfiguration {
               ShowAuthorPage(null, "show author", extractPathElement(match, 3))),
       Path(
           r'^' + DemoPage.baseRoute + r'/?([\w-]+)$',
-          (context, match) => SearchPage(null, "search", _authorService,
+          (context, match) => SearchPage(UniqueKey(), "search", _authorService,
               _bookService, _quoteService)), //const DemoPage()),
       Path(
           r'^/',
-          (context, match) => SearchPage(null, "search", _authorService,
+          (context, match) => SearchPage(UniqueKey(), "search", _authorService,
               _bookService, _quoteService)), //const HomePage(null, "Home")),
     ];
   }
 
   String extractPathElement(String path, int no) {
     print("path $path");
-    var parts = path.split("\\");
-    var elem = parts[no+1];
+    var parts = path.split("/");
+    print("parts $parts");
+    var elem = parts[no];
+    print("elem $elem");
     var ps = elem.split("?");
+    print("ps $ps");
     return ps[0];
   }
 
@@ -108,7 +111,7 @@ class RoutePaths {
 
       if (name == null) {
         return NoAnimationMaterialPageRoute<void>(
-          (context) => path.builder(context, "test-match"),
+          (context) => path.builder(context, name!),
           settings,
         );
       }
@@ -117,16 +120,15 @@ class RoutePaths {
         final firstMatch = regExpPattern.firstMatch(name);
         print("firstMatch ${path.pattern}");
 
-        final match =
-            (firstMatch?.groupCount == 1) ? firstMatch?.group(1) : null;
+        final match = (firstMatch?.groupCount == 1) ? firstMatch?.group(1) : null;
         if (kIsWeb) {
           return NoAnimationMaterialPageRoute<void>(
-            (context) => path.builder(context, "test-match2"),
+            (context) => path.builder(context, name),
             settings,
           );
         }
         return MaterialPageRoute<void>(
-          builder: (context) => path.builder(context, "test-match3"),
+          builder: (context) => path.builder(context, name),
           settings: settings,
         );
       }

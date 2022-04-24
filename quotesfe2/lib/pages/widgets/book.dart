@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:quotesfe2/domain/book/model.dart';
-
+import 'package:quotesfe2/pages/widgets/common.dart';
 
 class BookEntry extends StatefulWidget {
 
@@ -27,4 +27,11 @@ class _BookEntryState extends State<BookEntry> {
       ],
     );
   }
+}
+
+class BookPageEntry extends PageEntry<Book, BooksPage, BookEntry> {
+
+const BookPageEntry(Key key, PageChangeAction<Book> pageChangeAction, ToEntryTransformer<Book, BookEntry> toEntryTransformer) 
+: super(key, "Books", pageChangeAction, toEntryTransformer);
+
 }

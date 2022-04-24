@@ -12,6 +12,11 @@ class PageInfo {
     return current.isNaN ? 0 : current.ceil();
   }
 
+  int get pages {
+    var pages = total / limit;
+    return ((total % limit == 0) ? pages : pages + 1).toInt() ;
+  }
+
   Map toJson() => {
         "limit": limit,
         "offset": offset,
