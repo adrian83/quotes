@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:quotesfe2/domain/author/service.dart';
 import 'package:quotesfe2/domain/book/service.dart';
 import 'package:quotesfe2/domain/quote/service.dart';
-import 'package:quotesfe2/pages/demo.dart';
-import 'package:quotesfe2/pages/home.dart';
 import 'package:quotesfe2/pages/search.dart';
 import 'package:quotesfe2/pages/authors.dart';
+import 'package:quotesfe2/pages/books.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, String);
 
@@ -27,24 +26,12 @@ class RouteConfiguration {
 
   List<Path> paths() {
     return [
-      Path(
-          SearchPage.routePattern,
-          (context, match) => SearchPage(
-              UniqueKey(), "search", _authorService, _bookService, _quoteService)),
-      Path(NewAuthorPage.routePattern,
-          (context, match) => NewAuthorPage(null, "new author", _authorService)),
-      Path(
-          ShowAuthorPage.routePattern,
-          (context, match) =>
-              ShowAuthorPage(null, "show author", extractPathElement(match, 3))),
-      Path(
-          r'^' + DemoPage.baseRoute + r'/?([\w-]+)$',
-          (context, match) => SearchPage(UniqueKey(), "search", _authorService,
-              _bookService, _quoteService)), //const DemoPage()),
-      Path(
-          r'^/',
-          (context, match) => SearchPage(UniqueKey(), "search", _authorService,
-              _bookService, _quoteService)), //const HomePage(null, "Home")),
+      Path(SearchPage.routePattern, (context, match) => SearchPage(UniqueKey(), "search", _authorService, _bookService, _quoteService)),
+      Path(NewAuthorPage.routePattern, (context, match) => NewAuthorPage(null, "new author", _authorService)),
+      Path(ShowAuthorPage.routePattern, (context, match) => ShowAuthorPage(null, "show author", extractPathElement(match, 3), _authorService)),
+      Path(NewBookPage.routePattern, (context, match) => NewBookPage(null, "new author", extractPathElement(match, 3), _bookService)),
+      Path(ShowBookPage.routePattern, (context, match) => ShowBookPage(null, "show book", extractPathElement(match, 3), extractPathElement(match, 6), _bookService)),
+      Path(r'^/', (context, match) => SearchPage(UniqueKey(), "search", _authorService, _bookService, _quoteService)), 
     ];
   }
 

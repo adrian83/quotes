@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:quotesfe2/domain/author/model.dart';
-
+import 'package:quotesfe2/domain/common/errors.dart';
 import 'package:quotesfe2/domain/author/service.dart';
+import 'package:quotesfe2/pages/common.dart';
+import 'package:quotesfe2/pages/widgets/author.dart';
 
 class NewAuthorPage extends StatefulWidget {
   static String routePattern = r'^/authors/new/?(&[\w-=]+)?$';
@@ -76,48 +78,16 @@ final descController = TextEditingController();
   }
 }
 
-class ShowAuthorPage extends StatefulWidget {
+AuthorEntry authorToWidget(Author a) => AuthorEntry(null, a);
+
+class ShowAuthorPage extends ShowEntityPage<Author> {
   static String routePattern = r'^/authors/show/([a-zA-Z0-9_.-]*)/?(&[\w-=]+)?$';
 
-  final String _title;
-  final String _id;
+  final AuthorService _authorService;
+  final String entityId;
 
-  const ShowAuthorPage(Key? key, this._title, this._id) : super(key: key);
-
-  @override
-  State<ShowAuthorPage> createState() => _ShowAuthorPageState();
-}
-
-class _ShowAuthorPageState extends State<ShowAuthorPage> {
-
-  
-
-  void _persist() {
-    setState(() {
-      print("update");
-    });
-  }
+  const ShowAuthorPage(Key? key, String title, this.entityId, this._authorService) : super(key, title, authorToWidget);
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget._title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('???'),
-            Text('test', style: Theme.of(context).textTheme.headline4),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _persist,
-        tooltip: 'Save',
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
+  Future<Author> findEntity() => _authorService.find(entityId);
 }
