@@ -29,8 +29,13 @@ class _QuoteEntryState extends State<QuoteEntry> {
 
 class QuotePageEntry extends PageEntry<Quote, QuotesPage, QuoteEntry> {
 
-const QuotePageEntry(Key key, PageChangeAction<Quote> pageChangeAction, ToEntryTransformer<Quote, QuoteEntry> toEntryTransformer) 
-: super(key, "Quotes", pageChangeAction, toEntryTransformer);
+  const QuotePageEntry(
+    Key key, 
+    PageChangeAction<Quote> pageChangeAction, 
+    ToEntryTransformer<Quote, QuoteEntry> toEntryTransformer,
+    EditEntityUrl<Quote> onEditAction,
+    OnDeleteAction<Quote> onDeleteAction
+  ) : super(key, "Quotes", pageChangeAction, toEntryTransformer, onEditAction, onDeleteAction);
 
 }
 

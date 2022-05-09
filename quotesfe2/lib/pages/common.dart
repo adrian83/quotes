@@ -1,4 +1,7 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
+
 import 'package:quotesfe2/domain/common/errors.dart';
 
 
@@ -27,7 +30,7 @@ class _ShowEntityPageState<ENTITY> extends State<ShowEntityPage<ENTITY>> {
 
     @override
   initState() {
-    print("_ShowEntityPageState initState");
+    developer.log("_ShowEntityPageState initState");
     super.initState();
 
     widget.findEntity()
@@ -63,9 +66,9 @@ class _ShowEntityPageState<ENTITY> extends State<ShowEntityPage<ENTITY>> {
     } else if(_entity != null) { // success
       children = [widget._toWidgetTransformer(_entity!)];
     } else if(_entity == null && !_notFound){ // not found
-      children = [Text('waiting...')];
+      children = [const Text('waiting...')];
     } else { // ??
-      children = [Text('???')];
+      children = [const Text('???')];
     }
 
     return Scaffold(

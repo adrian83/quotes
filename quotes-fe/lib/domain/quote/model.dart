@@ -41,7 +41,7 @@ JsonDecoder<Quote> _quoteJsonDecoder = (Map<String, dynamic> json) => Quote.from
 class QuotesPage extends Page<Quote> {
   QuotesPage(PageInfo info, List<Quote> elements) : super(info, elements);
 
-  QuotesPage.empty() : super(PageInfo(0, 0, 0), List<Quote>());
+  QuotesPage.empty() : super(PageInfo(0, 0, 0), []);
 
   QuotesPage.fromJson(Map<String, dynamic> json) : super.fromJson(_quoteJsonDecoder, json);
 }

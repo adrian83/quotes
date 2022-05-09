@@ -13,6 +13,7 @@ class BookEvent extends Book {
   String get eventId => _eventId;
   String get operation => _operation;
 
+  @override
   Map toJson() => super.toJson()..addAll({"eventId": _eventId, "operation": _operation});
 }
 

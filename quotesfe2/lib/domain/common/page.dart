@@ -67,6 +67,8 @@ class PageRequest {
 
   PageRequest.pageWithSize(int pageNumber, int size) : this(size, size * pageNumber);
 
+  int page() => offset ~/ limit;
+
 @override
   String toString() => jsonEncode(this);
 }

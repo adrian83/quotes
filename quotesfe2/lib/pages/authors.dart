@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:quotesfe2/domain/author/model.dart';
-import 'package:quotesfe2/domain/common/errors.dart';
 import 'package:quotesfe2/domain/author/service.dart';
 import 'package:quotesfe2/pages/common.dart';
 import 'package:quotesfe2/pages/widgets/author.dart';
@@ -9,11 +8,9 @@ class NewAuthorPage extends StatefulWidget {
   static String routePattern = r'^/authors/new/?(&[\w-=]+)?$';
 
   final String title;
-
   final AuthorService _authorService;
 
-
-  NewAuthorPage(Key? key, this.title, this._authorService) : super(key: key);
+  const NewAuthorPage(Key? key, this.title, this._authorService) : super(key: key);
 
   @override
   State<NewAuthorPage> createState() => _NewAuthorPageState();
@@ -27,7 +24,6 @@ final descController = TextEditingController();
 
   void _persist() {
     setState(() {
-      print("save author");
       var author = Author(null, nameController.text, descController.text, DateTime.now(), DateTime.now());
       widget._authorService.create(author);
 

@@ -21,7 +21,7 @@ JsonDecoder<QuoteEvent> _quoteEventJsonDecoder = (Map<String, dynamic> json) => 
 class QuoteEventsPage extends Page<QuoteEvent> {
   QuoteEventsPage(PageInfo info, List<QuoteEvent> elements) : super(info, elements);
 
-  QuoteEventsPage.empty() : super(PageInfo(0, 0, 0), List<QuoteEvent>());
+  QuoteEventsPage.empty() : super(PageInfo(0, 0, 0), []);
 
   QuoteEventsPage.fromJson(Map<String, dynamic> json) : super.fromJson(_quoteEventJsonDecoder, json);
 }

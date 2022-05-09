@@ -22,7 +22,7 @@ JsonDecoder<AuthorEvent> _authorEventJsonDecoder = (Map<String, dynamic> json) =
 class AuthorEventsPage extends Page<AuthorEvent> {
   AuthorEventsPage(PageInfo info, List<AuthorEvent> elements) : super(info, elements);
 
-  AuthorEventsPage.empty() : super(PageInfo(0, 0, 0), List<AuthorEvent>());
+  AuthorEventsPage.empty() : super(PageInfo(0, 0, 0), []);
 
   AuthorEventsPage.fromJson(Map<String, dynamic> json) : super.fromJson(_authorEventJsonDecoder, json);
 }

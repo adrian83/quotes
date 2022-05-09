@@ -1,3 +1,5 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
 
 import 'package:quotesfe2/pages/widgets/author.dart';
@@ -19,9 +21,13 @@ class SearchPage extends StatefulWidget {
   final BookService _bookService;
   final QuoteService _quoteService;
 
-  const SearchPage(Key key, this.title, this._authorService, this._bookService,
-      this._quoteService)
-      : super(key: key);
+  const SearchPage(
+    Key key, 
+    this.title, 
+    this._authorService, 
+    this._bookService,
+    this._quoteService
+  ) : super(key: key);
 
   @override
   State<SearchPage> createState() => _SearchPageState();
@@ -29,7 +35,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
 
-  final TextEditingController myController = TextEditingController();
+final TextEditingController myController = TextEditingController();
 
 late TextFormField textField;
 late AuthorPageEntry authorsWidget;
@@ -39,33 +45,51 @@ late QuotePageEntry quotesWidgets;
 
 _SearchPageState() {
   textField = TextFormField(controller: myController);
-newWidgets();
-
+  newWidgets();
 }
 
   void _search(String? text) {
-    print("new search");
+    developer.log("new search with text: '$text'");
     setState(() {
-      print("_search");
       newWidgets();
     });
   }
 
   newWidgets() {
-      authorsWidget = AuthorPageEntry(
-        UniqueKey(), changeAuthorsPage, (Author a){ 
-          print("new AuthorEntry $a");
-          return AuthorEntry(null, a);
-        });
-      booksWidgets = BookPageEntry(
-        UniqueKey(), changeBooksPage, (Book b) => BookEntry(null, b));
-      quotesWidgets = QuotePageEntry(
-        UniqueKey(), changeQuotesPage, (Quote q) => QuoteEntry(null, q));
+    newAuthorWidget();
+    newBookWidget();
+    newQuotesWidget();
   }
+
+  void newAuthorWidget() {
+      authorsWidget = AuthorPageEntry(
+        UniqueKey(), changeAuthorsPage, (Author a) => AuthorEntry(null, a), editAuthorLink, onDeleteAuthor);
+  }
+
+  void newBookWidget() {
+      booksWidgets = BookPageEntry(
+        UniqueKey(), changeBooksPage, (Book b) => BookEntry(null, b), editBookLink, onDeleteBook);
+  }
+
+  void newQuotesWidget() {
+      quotesWidgets = QuotePageEntry(
+        UniqueKey(), changeQuotesPage, (Quote q) => QuoteEntry(null, q), editQuoteLink, onDeleteQuote);
+  }
+
+  String editAuthorLink(Author a) => "authors/edit/:${a.id}";
+
+  String editBookLink(Book b) => "authors/show/:${b.authorId}/books/edit/:${b.id}";
+
+  String editQuoteLink(Quote q) => "authors/show/:${q.authorId}/books/show/:${q.bookId}/quotes/edit/:${q.id}";
+
+  Future<void> onDeleteAuthor(Author a) => widget._authorService.delete(a.id!);
+
+  Future<void> onDeleteBook(Book b) => widget._bookService.delete(b.authorId, b.id!);
+
+  Future<void> onDeleteQuote(Quote q) => widget._quoteService.delete(q.authorId, q.bookId, q.id!);
 
   Future<AuthorsPage> changeAuthorsPage(PageRequest pageReq) {
     var searchPhrase = myController.value.text;
-    print("changeAuthorsPage $searchPhrase");
     return widget._authorService.listAuthors(searchPhrase, pageReq);
   }
 
@@ -82,7 +106,7 @@ newWidgets();
   @override
   Widget build(BuildContext context) {
 
-    print("build");
+    developer.log("building search page");
 
     return Scaffold(
       appBar: AppBar(

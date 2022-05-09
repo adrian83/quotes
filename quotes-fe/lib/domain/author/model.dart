@@ -36,7 +36,7 @@ JsonDecoder<Author> _authorJsonDecoder = (Map<String, dynamic> json) => Author.f
 class AuthorsPage extends Page<Author> {
   AuthorsPage(PageInfo info, List<Author> elements) : super(info, elements);
 
-  AuthorsPage.empty() : super(PageInfo(0, 0, 0), List<Author>());
+  AuthorsPage.empty() : super(PageInfo(0, 0, 0), []);
 
   AuthorsPage.fromJson(Map<String, dynamic> json) : super.fromJson(_authorJsonDecoder, json);
 }

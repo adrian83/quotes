@@ -21,7 +21,7 @@ JsonDecoder<BookEvent> _bookEventJsonDecoder = (Map<String, dynamic> json) => Bo
 class BookEventsPage extends Page<BookEvent> {
   BookEventsPage(PageInfo info, List<BookEvent> elements) : super(info, elements);
 
-  BookEventsPage.empty() : super(PageInfo(0, 0, 0), List<BookEvent>());
+  BookEventsPage.empty() : super(PageInfo(0, 0, 0), []);
 
   BookEventsPage.fromJson(Map<String, dynamic> json) : super.fromJson(_bookEventJsonDecoder, json);
 }

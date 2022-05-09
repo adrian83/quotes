@@ -41,7 +41,7 @@ JsonDecoder<Book> _bookJsonDecoder = (Map<String, dynamic> json) => Book.fromJso
 class BooksPage extends Page<Book> {
   BooksPage(PageInfo info, List<Book> elements) : super(info, elements);
 
-  BooksPage.empty() : super(PageInfo(0, 0, 0), List<Book>());
+  BooksPage.empty() : super(PageInfo(0, 0, 0), []);
 
   BooksPage.fromJson(Map<String, dynamic> json) : super.fromJson(_bookJsonDecoder, json);
 }

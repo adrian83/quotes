@@ -42,7 +42,12 @@ class _BookEntryState extends State<BookEntry> {
 
 class BookPageEntry extends PageEntry<Book, BooksPage, BookEntry> {
 
-  const BookPageEntry(Key key, PageChangeAction<Book> pageChangeAction, ToEntryTransformer<Book, BookEntry> toEntryTransformer) 
-  : super(key, "Books", pageChangeAction, toEntryTransformer);
+  const BookPageEntry(
+    Key key, 
+    PageChangeAction<Book> pageChangeAction, 
+    ToEntryTransformer<Book, BookEntry> toEntryTransformer,
+    EditEntityUrl<Book> onEditAction,
+    OnDeleteAction<Book> onDeleteAction
+    ) : super(key, "Books", pageChangeAction, toEntryTransformer, onEditAction, onDeleteAction);
 
 }

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:quotesfe2/domain/common/page.dart' as qpage;
+import 'dart:developer' as developer;
 
 import 'package:url_launcher/link.dart';
 
 import 'package:quotesfe2/domain/author/model.dart';
-import 'package:quotesfe2/pages/widgets/paging.dart';
 import 'package:quotesfe2/pages/widgets/common.dart';
+
 
 class AuthorEntry extends StatefulWidget {
   final Author _author;
@@ -17,9 +17,10 @@ class AuthorEntry extends StatefulWidget {
 }
 
 class _AuthorEntryState extends State<AuthorEntry> {
+
   @override
   Widget build(BuildContext context) {
-    print("rebuilding: ${widget._author.name}");
+    developer.log("building: ${widget._author.name}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
@@ -46,7 +47,12 @@ class _AuthorEntryState extends State<AuthorEntry> {
 
 class AuthorPageEntry extends PageEntry<Author, AuthorsPage, AuthorEntry> {
 
-const AuthorPageEntry(Key? key, PageChangeAction<Author> pageChangeAction, ToEntryTransformer<Author, AuthorEntry> toEntryTransformer) 
-: super(key, "Authors", pageChangeAction, toEntryTransformer);
+  const AuthorPageEntry(
+    Key? key,
+    PageChangeAction<Author> pageChangeAction, 
+    ToEntryTransformer<Author, AuthorEntry> toEntryTransformer,
+    EditEntityUrl<Author> onEditAction,
+    OnDeleteAction<Author> onDeleteAction
+  ) : super(key, "Authors", pageChangeAction, toEntryTransformer, onEditAction, onDeleteAction);
 
 }

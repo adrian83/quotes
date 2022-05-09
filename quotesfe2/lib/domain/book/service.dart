@@ -10,23 +10,23 @@ import '../common/page.dart';
 import '../../tools/config.dart';
 
 class BookService extends Service<Book> {
-  Config _config;
+  final Config _config;
 
   BookService(BrowserClient http, this._config) : super(http);
 
   Future<BooksPage> listAuthorBooks(String authorId, PageRequest request) {
-    var url = "${_config.beHost}/authors/$authorId/books?${this.pageRequestToUrlParams(request)}";
+    var url = "${_config.beHost}/authors/$authorId/books?${pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => BooksPage.fromJson(json));
   }
 
   Future<BooksPage> listBooks(String searchPhrase, PageRequest request) {
-    var url = "${_config.beHost}/books?${this.pageRequestToUrlParams(request)}";
+    var url = "${_config.beHost}/books?${pageRequestToUrlParams(request)}";
     url = appendUrlParam(url, "searchPhrase", searchPhrase);
     return getEntity(url).then((json) => BooksPage.fromJson(json));
   }
 
   Future<BookEventsPage> listEvents(String authorId, String bookId, PageRequest request) {
-    var url = "${_config.beHost}/authors/$authorId/books/$bookId/events?${this.pageRequestToUrlParams(request)}";
+    var url = "${_config.beHost}/authors/$authorId/books/$bookId/events?${pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => BookEventsPage.fromJson(json));
   }
 

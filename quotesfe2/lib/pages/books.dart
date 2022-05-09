@@ -1,6 +1,8 @@
+import 'dart:developer' as developer;
+
 import 'package:flutter/material.dart';
+
 import 'package:quotesfe2/domain/book/model.dart';
-import 'package:quotesfe2/domain/common/errors.dart';
 import 'package:quotesfe2/domain/book/service.dart';
 import 'package:quotesfe2/pages/common.dart';
 import 'package:quotesfe2/pages/widgets/book.dart';
@@ -14,7 +16,7 @@ class NewBookPage extends StatefulWidget {
   final String authorId;
 
 
-  NewBookPage(Key? key, this.title, this.authorId, this._bookService) : super(key: key);
+  const NewBookPage(Key? key, this.title, this.authorId, this._bookService) : super(key: key);
 
   @override
   State<NewBookPage> createState() => _NewBookPageState();
@@ -28,7 +30,7 @@ final descController = TextEditingController();
 
   void _persist() {
     setState(() {
-      print("save book");
+      developer.log("save book");
       var book = Book(null, titleController.text, descController.text, widget.authorId, DateTime.now(), DateTime.now());
       widget._bookService.create(book);
 

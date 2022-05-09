@@ -6,7 +6,7 @@ class Event {
   final String _type;
   final String _id = const Uuid().v4();
 
-  Event(this._type) {}
+  Event(this._type);
 
   String get id => _id;
   String get type => _type;
