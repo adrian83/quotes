@@ -32,7 +32,7 @@ class ESStore<T extends Document> {
   static final Decode<DeleteResult> _deleteResDecoder = (Map<String, dynamic> json) => DeleteResult.fromJson(json);
   static final Decode<DeleteByQueryResult> _delByQueryResDecoder =
       (Map<String, dynamic> json) => DeleteByQueryResult.fromJson(json);
-  static final Decode<SearchResult> _searchResDecoder = (Map<String, dynamic?> json) => SearchResult.fromJson(json);
+  static final Decode<SearchResult> _searchResDecoder = (Map<String, dynamic> json) => SearchResult.fromJson(json);
 
   ESStore(this._client, this._host, this._port, this._index);
 

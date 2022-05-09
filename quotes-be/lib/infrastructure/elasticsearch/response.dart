@@ -128,7 +128,7 @@ class SearchResult {
 
   SearchResult(this.timedOut, this.took, this.hits);
 
-  factory SearchResult.fromJson(Map<String, dynamic?> json) {
+  factory SearchResult.fromJson(Map<String, dynamic> json) {
     var timedOut = json.containsKey(timedOutF) ? json[timedOutF] : false;
     var took = json.containsKey(tookF) ? json[tookF] : 0;
     var hits = SearchHits.fromJson(json[hitsF]);

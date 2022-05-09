@@ -1,8 +1,4 @@
-import 'dart:async';
 
-import 'package:logging/logging.dart';
-
-import '../../infrastructure/elasticsearch/exception.dart';
 
 class BaseException implements Exception {
   Exception? cause;
