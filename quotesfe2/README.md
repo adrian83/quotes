@@ -16,20 +16,21 @@ For help getting started with Flutter, view our
 samples, guidance on mobile development, and a full API reference.
 
 
-
-export CHROME_EXECUTABLE=/usr/bin/google-chrome-stable
-
-flutter channel stable
-flutter upgrade
-flutter config --enable-web
+### On Arch/Manjaro:
+1. Install flutter 
+2. `sudo chown -R [user]:root /opt/flutter`
 
 
-flutter build web
+### Update:
+1. `flutter channel stable`
+2. `flutter upgrade`
 
-flutter run -d chrome
-
-cd ../build/web/
-python3 -m http.server
+### Run app:
+1. `cd quotesfe2`
+2. `export CHROME_EXECUTABLE=/usr/bin/google-chrome-stable`
+3. `flutter config --enable-web`
+4. `flutter build web`
+5. `flutter run -d chrome` or `cd ./build/web/ && python3 -m http.server`
 
 
 
