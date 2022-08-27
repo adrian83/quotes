@@ -1,17 +1,32 @@
-
 import 'package:shelf/shelf.dart';
-
-typedef Handler = Response Function(Request request);
 
 enum HttpMethod { get, post, put, delete }
 
 class Mapping {
 
+  static final String paramPattern = r"[a-z-A-Z0-9]+";
+  static final String slash = r"/";
+
+  late final String pathPattern;
   final HttpMethod method;
   final String path;
-  final Handler handler;
+  final Function handler;
 
-  Mapping(this.method, this.path, this.handler);
+  Mapping(this.method, this.path, this.handler) {
+
+    var pathSegments = path.split(slash);
+
+    pathPattern = pathSegments
+      .map((segment) => _isPathParam(segment) ? "<${_pathParamName(segment)}|$paramPattern>" : segment)
+      .join(slash); 
+    
+    print("path: $path");
+    print("pathPattern: $pathPattern");
+  }
+
+  String _pathParamName(String segment) => segment.substring(1, segment.length-1);
+
+  bool _isPathParam(String elem) => elem.startsWith("{") && elem.endsWith("}");
 }
 
 

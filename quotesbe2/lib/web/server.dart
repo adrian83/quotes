@@ -4,7 +4,7 @@ import 'package:quotesbe2/web/handler.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart' as shelf_router;
-import 'package:shelf_static/shelf_static.dart' as shelf_static;
+//import 'package:shelf_static/shelf_static.dart' as shelf_static;
 
 class Server {
   final int _port;
@@ -33,16 +33,16 @@ class Server {
   void _addMapping(shelf_router.Router router, Mapping mapping) {
     switch (mapping.method) {
       case HttpMethod.get:
-        router.get(mapping.path, mapping.handler);
+        router.get(mapping.pathPattern, mapping.handler);
         break;
       case HttpMethod.post:
-        router.post(mapping.path, mapping.handler);
+        router.post(mapping.pathPattern, mapping.handler);
         break;
       case HttpMethod.put:
-        router.put(mapping.path, mapping.handler);
+        router.put(mapping.pathPattern, mapping.handler);
         break;
       case HttpMethod.delete:
-        router.delete(mapping.path, mapping.handler);
+        router.delete(mapping.pathPattern, mapping.handler);
         break;
       default:
         throw ArgumentError(
