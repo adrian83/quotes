@@ -34,6 +34,12 @@ fe-run:
 fe-all: fe-format fe-get fe-build fe-run
 
 
+be2-run:
+	echo "running backend V2"
+	dart quotesbe2/bin/main.dart 
+
+
+
 be-format:
 	cd quotes-be && dart format -o write -l 120 --fix . && dart fix -n . && dart analyze
 

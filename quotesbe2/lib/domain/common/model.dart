@@ -20,29 +20,38 @@ class Entity extends Document {
 
   Entity.create() : this(const Uuid().v4(), nowUtc(), nowUtc());
 
-  Map<dynamic, dynamic> toJson() => {idLabel: id, createdUtcLabel: createdUtc.toIso8601String(), modifiedUtcLabel: modifiedUtc.toIso8601String()};
+  @override
+  Map<dynamic, dynamic> toJson() => {
+        idLabel: id,
+        createdUtcLabel: createdUtc.toIso8601String(),
+        modifiedUtcLabel: modifiedUtc.toIso8601String()
+      };
 
   @override
-  String toString() => "Entity [$idLabel: $id, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
-  
-  @override
   String getId() => id;
-  
+
   @override
   Map toSave() => toJson();
-  
+
   @override
   Map toUpdate() => toJson();
 
+  @override
+  String toString() =>
+      "Entity [$idLabel: $id, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
 abstract class Event<T extends Entity> extends Entity {
-  static final String created = "created", modified = "modified", deleted = "deleted";
+  static final String created = "created",
+      modified = "modified",
+      deleted = "deleted";
 
   String operation;
   T entity;
 
-  Event(String id, this.operation, this.entity, DateTime modifiedUtc, DateTime createdUtc) : super.create();
+  Event(String id, this.operation, this.entity, DateTime modifiedUtc,
+      DateTime createdUtc)
+      : super.create();
 
   @override
   String toString() =>
@@ -64,10 +73,12 @@ class PageInfo {
 
   PageInfo(this.limit, this.offset, this.total);
 
-  Map<dynamic, dynamic> toJson() => {"limit": limit, "offset": offset, "total": total};
+  Map<dynamic, dynamic> toJson() =>
+      {"limit": limit, "offset": offset, "total": total};
 
   @override
-  String toString() => "PageInfo [limit: $limit, offset: $offset, total: $total]";
+  String toString() =>
+      "PageInfo [limit: $limit, offset: $offset, total: $total]";
 }
 
 class Page<T extends Document> {
@@ -76,7 +87,10 @@ class Page<T extends Document> {
 
   Page(this.info, this.elements);
 
-  Map<dynamic, dynamic> toJson() => {"info": info.toJson(), "elements": elements.map((e) => e.toJson()).toList() };
+  Map<dynamic, dynamic> toJson() => {
+        "info": info.toJson(),
+        "elements": elements.map((e) => e.toJson()).toList()
+      };
 
   @override
   String toString() => "Page [info: $info, elements: $elements]";
@@ -91,5 +105,6 @@ class SearchQuery {
   }
 
   @override
-  String toString() => "SearchQuery [searchPhrase: $searchPhrase, pageRequest: $pageRequest]";
+  String toString() =>
+      "SearchQuery [searchPhrase: $searchPhrase, pageRequest: $pageRequest]";
 }
