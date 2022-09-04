@@ -28,7 +28,7 @@ class UpdateBookCommand {
   UpdateBookCommand(this.id, this.authorId, this.title, this.description);
 
   Book toBook() => Book(
-        const Uuid().v4(),
+        id,
         title,
         description,
         authorId,
@@ -41,6 +41,12 @@ class FindBookQuery {
   final String authorId, bookId;
 
   FindBookQuery(this.authorId, this.bookId);
+}
+
+class DeleteBookCommand {
+  final String authorId, bookId;
+
+  DeleteBookCommand(this.authorId, this.bookId);
 }
 
 class BookService {
@@ -77,16 +83,17 @@ class BookService {
     return book;
   }
 
-  Future<void> delete(String bookId) => Future.value(bookId)
-      .then((_) => _logger.info("delete book with id: $bookId"))
-      .then((_) => _bookRepository.delete(bookId))
-      .then((_) =>
-          _logger.info("store book event (delete) for book with id: $bookId"))
-      .then((_) => _bookEventRepository.storeDeleteBookEventByBookId(bookId));
-  //.then((_) => _logger.info("delete all quotes from book with id: $bookId"))
-  //.then((_) => _quoteRepository.deleteByBook(bookId))
-  //.then((_) => _logger.info("store quote events (delete) for book with id: $bookId"))
-  //.then((_) => _quoteEventRepository.deleteByBook(bookId));
+  Future<void> delete(DeleteBookCommand command) async {
+    _logger.info("delete book with: $command");
+    await _bookRepository.delete(command.bookId);
+    _logger.info("store book event (delete) for book: $command");
+    await _bookEventRepository.storeDeleteBookEventByBookId(command.bookId);
+    return;
+    //.then((_) => _logger.info("delete all quotes from book with id: $bookId"))
+    //.then((_) => _quoteRepository.deleteByBook(bookId))
+    //.then((_) => _logger.info("store quote events (delete) for book with id: $bookId"))
+    //.then((_) => _quoteEventRepository.deleteByBook(bookId));
+  }
 
   Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
       .then((_) => _logger.info("delete books by author with id: $authorId"))

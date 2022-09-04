@@ -20,9 +20,18 @@ services:
 
 
   backend:
-    build: ./quotes-be/
+    build: ./quotesbe2/
     ports:
     - "5050:5050"
+    environment:
+    - ELASTICSEARCH_HOST=elasticsearch
+    - ELASTICSEARCH_PORT=9200
+    - ELASTICSEARCH_AUTHOR_INDEX=authors
+    - ELASTICSEARCH_AUTHOR_EVENTS_INDEX=author_events
+    - ELASTICSEARCH_BOOK_INDEX=books
+    - ELASTICSEARCH_BOOK_EVENTS_INDEX=book_events
+    - ELASTICSEARCH_QUOTE_INDEX=quotes
+    - ELASTICSEARCH_QUOTE_EVENTS_INDEX=quote_events
     links:
     - elasticsearch
     depends_on:

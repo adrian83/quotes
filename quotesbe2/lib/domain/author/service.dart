@@ -3,13 +3,11 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 import 'package:uuid/uuid.dart';
 
-//import '../book/repository.dart';
-//import '../quote/repository.dart';
-
 import 'package:quotesbe2/common/function.dart';
 import 'package:quotesbe2/domain/common/model.dart';
 import 'package:quotesbe2/domain/author/model.dart';
 import 'package:quotesbe2/domain/author/repository.dart';
+
 
 class NewAuthorCommand {
   final String name, description;
@@ -62,7 +60,7 @@ class AuthorService {
   //QuoteEventRepository _quoteEventRepository;
 
   AuthorService(this._authorRepository,
-      this._authorEventRepository); //, this._bookRepository, this._bookEventRepository, this._quoteRepository, this._quoteEventRepository);
+      this._authorEventRepository,); //, this._bookRepository, this._bookEventRepository, this._quoteRepository, this._quoteEventRepository);
 
 
 
@@ -88,7 +86,7 @@ class AuthorService {
       .then((_) => _authorRepository.update(author))
       .then((_) => _logger.info("store author event (update) for author: $author"))
       .then((_) => pass(author,
-          (a) => _authorEventRepository.storeUpdateAuthorEvent(author)));
+          (a) => _authorEventRepository.storeUpdateAuthorEvent(author),),);
   }
 
   Future<void> delete(DeleteAuthorQuery query) =>_authorRepository.delete(query.id)

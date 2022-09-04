@@ -83,7 +83,13 @@ class ESStore<T extends Document> {
       _client.getUrl(Uri.parse(_statsUri())).then((req) => req.close()).then((resp) => resp.statusCode == 200);
 
   Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) =>
-      response.transform(utf8.decoder).join().then((content) => decode(jsonDecode(content)));
+      response.transform(utf8.decoder).join().then((content) => decodeStr(content, decode));
+
+  T decodeStr<T>(String str, Decode<T> decode) {
+    _logger.info("[decode] $str");
+    return decode(jsonDecode(str));
+  }
+
 
   Future<HttpClientResponse> withBody(HttpClientRequest request, String body) {
     _logger.info("body: $body");

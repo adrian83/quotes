@@ -1,27 +1,78 @@
-
-
+import 'dart:convert';
 
 import 'package:shelf/shelf.dart';
 import 'package:logging/logging.dart';
 
-import 'package:quotesbe2/domain/author/service.dart';
+import 'package:quotesbe2/domain/quote/service.dart';
+import 'package:quotesbe2/domain/web/common/request.dart';
+import 'package:quotesbe2/web/error.dart';
+import 'package:quotesbe2/web/response.dart';
 
 
 class QuoteController {
-    final Logger _logger = Logger('QuoteController');
+  final Logger _logger = Logger('QuoteController');
 
-  final AuthorService _authorService;
+  final QuoteService _quoteService;
 
-  QuoteController(this._authorService);
+  QuoteController(this._quoteService);
 
+  List<ValidationRule> newQuoteValidationRules = [
+    ValidationRule("text", "Text cannot be empty", emptyString),
+  ];
 
-  Future<Response> find(Request request, String authorId, String bookId, String quoteId) async {
+  List<ValidationRule> updateQuoteValidationRules = [
+    ValidationRule("text", "Text cannot be empty", emptyString),
+  ];
 
-final String query = await request.readAsString();
+  Future<Response> search(Request request) async {
+    var query = extractSearchQuery(request);
 
-
-    return Response.ok("authorId=$authorId, bookId=$bookId, quoteId=$quoteId");
+    return _quoteService.findQuotes(query)
+        .then((page) => Response.ok(jsonEncode(page)));
   }
 
+  Future<Response> store(Request request, String authorId, String bookId) async {
+    var json = jsonDecode(await request.readAsString()) as Map;
+
+    var violations = validate(newQuoteValidationRules, json);
+    if (violations.isNotEmpty) {
+      _logger.warning("[save quote] validation error: $violations");
+      return responseBadRequest(violations);
+    }
+
+    var command = NewQuoteCommand(authorId, bookId, json["text"]);
+
+    return _quoteService
+        .save(command)
+        .then((quote) => Response.ok(jsonEncode(quote)));
+  }
+
+  Future<Response> update(
+      Request request, String authorId, String bookId, String quoteId) async {
+    var json = jsonDecode(await request.readAsString()) as Map;
+
+    var violations = validate(updateQuoteValidationRules, json);
+    if (violations.isNotEmpty) {
+      _logger.warning("[update quote] validation error: $violations");
+      return responseBadRequest(violations);
+    }
+
+    var command =
+        UpdateQuoteCommand(authorId, bookId, quoteId, json["text"]);
+
+    return _quoteService
+        .update(command)
+        .then((quote) => Response.ok(jsonEncode(quote)));
+  }
+
+  Future<Response> find(Request request, String authorId, String bookId, String quoteId) =>
+      _quoteService
+          .find(FindQuoteQuery(authorId, bookId, quoteId))
+          .then((quote) => Response.ok(jsonEncode(quote)));
+
+  Future<Response> delete(Request request, String authorId, String bookId, String quoteId) => _quoteService
+      .delete(DeleteQuoteCommand(authorId, bookId, quoteId))
+      .then((_) => Response.ok(""));
+      
 
 }

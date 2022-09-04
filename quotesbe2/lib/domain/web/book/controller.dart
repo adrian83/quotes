@@ -71,9 +71,9 @@ class BookController {
       _bookService
           .find(FindBookQuery(authorId, bookId))
           .then((book) => Response.ok(jsonEncode(book)));
-/*
-  Future<Response> delete(Request request, String authorId) => _authorService
-      .delete(DeleteAuthorQuery(authorId))
+
+  Future<Response> delete(Request request, String authorId, String bookId) => _bookService
+      .delete(DeleteBookCommand(authorId, bookId))
       .then((_) => Response.ok(""));
-      */
+      
 }

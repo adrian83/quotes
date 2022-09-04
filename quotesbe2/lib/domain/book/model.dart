@@ -47,8 +47,7 @@ class Book extends Entity {
 
   @override
   String toString() =>
-      "Book [$idLabel: $id, $bookTitleLabel: $title, $bookDescLabel: $description, $bookAuthorIdLabel: $authorId, " +
-      "$modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
+      "Book [$idLabel: $id, $bookTitleLabel: $title, $bookDescLabel: $description, $bookAuthorIdLabel: $authorId, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
 class BookEvent extends Event<Book> {
@@ -74,12 +73,11 @@ class BookEvent extends Event<Book> {
             DateTime.parse(json[createdUtcLabel]));
 
   @override
-  String getId() => this.id;
+  String getId() => id;
 
   @override
   String toString() =>
-      "BookEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, " +
-      "$createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
+      "BookEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
 }
 
 class ListBooksByAuthorRequest {
@@ -105,6 +103,5 @@ class ListEventsByBookRequest {
 
   @override
   String toString() =>
-      "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, $bookIdLabel: $bookId, " +
-      "pageRequest: $pageRequest]";
+      "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, $bookIdLabel: $bookId, pageRequest: $pageRequest]";
 }

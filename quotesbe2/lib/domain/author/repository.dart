@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:logging/logging.dart';
 
-import 'package:quotesbe2/common/function.dart';
 import 'package:quotesbe2/domain/common/model.dart';
 import 'package:quotesbe2/domain/author/model.dart';
 import 'package:quotesbe2/domain/common/repository.dart';
