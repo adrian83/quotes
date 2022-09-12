@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:logging/logging.dart';
 
 import 'package:quotesbe2/domain/common/model.dart';
-import 'package:quotesbe2/domain/book/model.dart';
+import 'package:quotesbe2/domain/book/model/entity.dart';
+import 'package:quotesbe2/domain/book/model/query.dart';
 import 'package:quotesbe2/domain/common/repository.dart';
 import 'package:quotesbe2/storage/elasticsearch/store.dart';
 import 'package:quotesbe2/storage/elasticsearch/search.dart';
@@ -15,7 +16,7 @@ class BookRepository extends Repository<Book> {
 
   BookRepository(ESStore<Book> store) : super(store, bookDecoder);
 
-  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorRequest request) =>
+  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorQuery request) =>
       Future.value(request)
           .then((_) => _logger.info("find author books by request: $request"))
           .then((_) => MatchQuery(bookAuthorIdLabel, request.authorId))
@@ -40,8 +41,8 @@ Decoder<BookEvent> bookEventDecoder =
 class BookEventRepository extends Repository<BookEvent> {
   final Logger _logger = Logger('BookEventRepository');
 
-  String _authorIdProp = "$entityLabel.$bookAuthorIdLabel";
-  String _bookIdProp = "$entityLabel.$idLabel";
+  final String _authorIdProp = "$entityLabel.$bookAuthorIdLabel";
+  final String _bookIdProp = "$entityLabel.$idLabel";
 
   BookEventRepository(ESStore<BookEvent> store)
       : super(store, bookEventDecoder);
@@ -64,7 +65,7 @@ class BookEventRepository extends Repository<BookEvent> {
               sorting: SortElement.desc(modifiedUtcLabel)))
           .then((page) => storeDeleteBookEvent(page.elements[0].entity));
 
-  Future<Page<BookEvent>> findBookEvents(ListEventsByBookRequest request) =>
+  Future<Page<BookEvent>> findBookEvents(ListEventsByBookQuery request) =>
       Future.value(request)
           .then((_) => _logger.info("find book events by request: $request"))
           .then((_) => MatchQuery(_bookIdProp, request.bookId))

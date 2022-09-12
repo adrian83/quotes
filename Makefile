@@ -38,25 +38,23 @@ be2-run:
 	echo "running backend V2"
 	dart quotesbe2/bin/main.dart 
 
-
-
 be-format:
-	cd quotes-be && dart format -o write -l 120 --fix . && dart fix -n . && dart analyze
+	cd quotesbe2 && dart format -o write -l 120 --fix . && dart fix -n . && dart analyze
 
 be-get: 
 	echo "getting backend dependencies" 
-	cd quotes-be && dart pub upgrade && dart pub get 
+	cd quotesbe2 && dart pub upgrade && dart pub get 
 	
 be-test:
 	echo "running backend tests" 
-	cd quotes-be && dart test ./.. --coverage=./..
+	cd quotesbe2 && dart test ./.. --coverage=./..
 
 be-run: 
 	echo "running backend"
-	cd quotes-be && dart bin/run_app.dart infra/local.json
+	cd quotesbe2 && dart bin/run_app.dart infra/local.json
 
 be-init:
 	echo "Init db"
-	./quotes-be/infra/init.sh
+	./quotesbe2/infra/init.sh
 
 be-all: be-format be-get be-test be-run

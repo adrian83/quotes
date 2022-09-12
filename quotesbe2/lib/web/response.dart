@@ -12,3 +12,11 @@ Response responseBadRequest(List<Violation> violations) => Response(
       body: jsonEncode(violations),
       headers: {HttpHeaders.contentTypeHeader: headerValueJson},
     );
+
+Response jsonResponseOk(Object body) => Response(
+      200,
+      body: jsonEncode(body),
+      headers: {HttpHeaders.contentTypeHeader: headerValueJson},
+    );
+
+Response emptyResponseOk() => Response(200);

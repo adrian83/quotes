@@ -6,10 +6,10 @@ import 'package:logging/logging.dart';
 import 'package:quotesbe2/web/server.dart';
 import 'package:quotesbe2/web/handler.dart';
 
-import 'package:quotesbe2/domain/author/model.dart';
+import 'package:quotesbe2/domain/author/model/entity.dart';
 import 'package:quotesbe2/domain/author/repository.dart';
 import 'package:quotesbe2/domain/author/service.dart';
-import 'package:quotesbe2/domain/book/model.dart';
+import 'package:quotesbe2/domain/book/model/entity.dart';
 import 'package:quotesbe2/domain/book/repository.dart';
 import 'package:quotesbe2/domain/book/service.dart';
 import 'package:quotesbe2/domain/quote/model.dart';
@@ -21,7 +21,6 @@ import 'package:quotesbe2/domain/web/quote/controller.dart';
 
 import 'package:quotesbe2/storage/elasticsearch/store.dart';
 
-
 const healthCheckPath = "/health";
 
 const storeAuthorPath = "/authors";
@@ -29,6 +28,7 @@ const searchAuthorsPath = "/authors";
 const findAuthorPath = "/authors/{authorId}";
 const updateAuthorPath = "/authors/{authorId}";
 const deleteAuthorPath = "/authors/{authorId}";
+const findAuthorEventsPath = "/authors/{authorId}/events";
 
 const storeBookPath = "$findAuthorPath/books";
 const searchBooksPath = "$findAuthorPath/books";
@@ -51,10 +51,6 @@ class Config {
   final String _defElasticsearchBookEventsIndex = "book_events";
   final String _defElasticsearchQuotesIndex = "quotes";
   final String _defElasticsearchQuoteEventsIndex = "quote_events";
-
-
-
-
 
   String get elasticsearchHost =>
       Platform.environment["ELASTICSEARCH_HOST"] ?? _defElasticsearchHost;
@@ -108,71 +104,106 @@ Future<void> main() async {
   HttpClient client = HttpClient();
 
   var authorEsStore = ESStore<Author>(
-      client, elasticsearchHost, elasticsearchPort, authorIndex);
+    client,
+    elasticsearchHost,
+    elasticsearchPort,
+    authorIndex,
+  );
+
   var authorEventsEsStore = ESStore<AuthorEvent>(
-      client, elasticsearchHost, elasticsearchPort, authorEventsIndex);
+    client,
+    elasticsearchHost,
+    elasticsearchPort,
+    authorEventsIndex,
+  );
 
   var bookEsStore =
       ESStore<Book>(client, elasticsearchHost, elasticsearchPort, bookIndex);
+
   var bookEventsEsStore = ESStore<BookEvent>(
-      client, elasticsearchHost, elasticsearchPort, bookEventsIndex);
+    client,
+    elasticsearchHost,
+    elasticsearchPort,
+    bookEventsIndex,
+  );
 
   var quoteEsStore =
       ESStore<Quote>(client, elasticsearchHost, elasticsearchPort, quoteIndex);
+
   var quoteEventsEsStore = ESStore<QuoteEvent>(
-      client, elasticsearchHost, elasticsearchPort, quoteEventsIndex);
+    client,
+    elasticsearchHost,
+    elasticsearchPort,
+    quoteEventsIndex,
+  );
 
-  var authorRepo = AuthorRepository(authorEsStore);
-  var authorEventsRepo = AuthorEventRepository(authorEventsEsStore);
+  var authorRepository = AuthorRepository(authorEsStore);
 
-  var bookRepo = BookRepository(bookEsStore);
-  var bookEventsRepo = BookEventRepository(bookEventsEsStore);
+  var authorEventsRepository = AuthorEventRepository(authorEventsEsStore);
 
-  var quoteRepo = QuoteRepository(quoteEsStore);
-  var quoteEventsRepo = QuoteEventRepository(quoteEventsEsStore);
+  var bookRepository = BookRepository(bookEsStore);
 
-  var authorService = AuthorService(authorRepo, authorEventsRepo);
-  var bookService = BookService(bookRepo, bookEventsRepo);
-  var quoteService = QuoteService(quoteRepo, quoteEventsRepo);
+  var bookEventsRepository = BookEventRepository(bookEventsEsStore);
 
-  var authorController = AuthorController(authorService);
-  var bookController = BookController(bookService);
-  var quoteController = QuoteController(quoteService);
+  var quoteRepository = QuoteRepository(quoteEsStore);
+  
+  var quoteEventsRepository = QuoteEventRepository(quoteEventsEsStore);
+
+  var authorService = AuthorService(
+    authorRepository,
+    authorEventsRepository,
+    bookRepository,
+    bookEventsRepository,
+    quoteRepository,
+    quoteEventsRepository,
+  );
+  var bookService = BookService(
+    bookRepository,
+    bookEventsRepository,
+    quoteRepository,
+    quoteEventsRepository,
+  );
+  var quoteService = QuoteService(quoteRepository, quoteEventsRepository);
+
+  var authorCtrl = AuthorController(authorService);
+  var bookCtrl = BookController(bookService);
+  var quoteCtrl = QuoteController(quoteService);
 
   var healthMapping = Mapping(HttpMethod.get, healthCheckPath, healthHandler);
 
   var storeAuthorMapping =
-      Mapping(HttpMethod.post, storeAuthorPath, authorController.store);
+      Mapping(HttpMethod.post, storeAuthorPath, authorCtrl.store);
   var searchAuthorsMapping =
-      Mapping(HttpMethod.get, searchAuthorsPath, authorController.search);
+      Mapping(HttpMethod.get, searchAuthorsPath, authorCtrl.search);
   var findAuthorMapping =
-      Mapping(HttpMethod.get, findAuthorPath, authorController.find);
+      Mapping(HttpMethod.get, findAuthorPath, authorCtrl.find);
   var updateAuthorMapping =
-      Mapping(HttpMethod.put, updateAuthorPath, authorController.update);
+      Mapping(HttpMethod.put, updateAuthorPath, authorCtrl.update);
   var deleteAuthorMapping =
-      Mapping(HttpMethod.delete, deleteAuthorPath, authorController.delete);
+      Mapping(HttpMethod.delete, deleteAuthorPath, authorCtrl.delete);
+  var findAuthorEventsMapping =
+      Mapping(HttpMethod.get, findAuthorEventsPath, authorCtrl.listEvents);
 
   var storeBookMapping =
-      Mapping(HttpMethod.post, storeBookPath, bookController.store);
+      Mapping(HttpMethod.post, storeBookPath, bookCtrl.store);
   var searchBooksMapping =
-      Mapping(HttpMethod.get, searchBooksPath, bookController.search);
-  var findBooksMapping =
-      Mapping(HttpMethod.get, findBookPath, bookController.find);
+      Mapping(HttpMethod.get, searchBooksPath, bookCtrl.search);
+  var findBooksMapping = Mapping(HttpMethod.get, findBookPath, bookCtrl.find);
   var updateBooksMapping =
-      Mapping(HttpMethod.put, updateBookPath, bookController.update);
+      Mapping(HttpMethod.put, updateBookPath, bookCtrl.update);
   var deleteBookMapping =
-      Mapping(HttpMethod.delete, deleteBookPath, bookController.delete);
+      Mapping(HttpMethod.delete, deleteBookPath, bookCtrl.delete);
 
   var storeQuoteMapping =
-      Mapping(HttpMethod.post, storeQuotePath, quoteController.store);
+      Mapping(HttpMethod.post, storeQuotePath, quoteCtrl.store);
   var searchQuoteMapping =
-      Mapping(HttpMethod.get, searchQuotesPath, quoteController.search);
+      Mapping(HttpMethod.get, searchQuotesPath, quoteCtrl.search);
   var findQuotesMapping =
-      Mapping(HttpMethod.get, findQuotePath, quoteController.find);
+      Mapping(HttpMethod.get, findQuotePath, quoteCtrl.find);
   var updateQuotesMapping =
-      Mapping(HttpMethod.put, updateQuotePath, quoteController.update);
+      Mapping(HttpMethod.put, updateQuotePath, quoteCtrl.update);
   var deleteQuoteMapping =
-      Mapping(HttpMethod.delete, deleteQuotePath, quoteController.delete);
+      Mapping(HttpMethod.delete, deleteQuotePath, quoteCtrl.delete);
 
   var server = Server(5050, [
     healthMapping,
@@ -181,6 +212,7 @@ Future<void> main() async {
     findAuthorMapping,
     updateAuthorMapping,
     deleteAuthorMapping,
+    findAuthorEventsMapping,
     storeBookMapping,
     searchBooksMapping,
     updateBooksMapping,

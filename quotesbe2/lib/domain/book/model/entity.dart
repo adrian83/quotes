@@ -80,28 +80,3 @@ class BookEvent extends Event<Book> {
       "BookEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
 }
 
-class ListBooksByAuthorRequest {
-  String authorId;
-  late PageRequest pageRequest;
-
-  ListBooksByAuthorRequest(this.authorId, int offset, int limit) {
-    pageRequest = PageRequest(limit, offset);
-  }
-
-  @override
-  String toString() =>
-      "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, pageRequest: $pageRequest]";
-}
-
-class ListEventsByBookRequest {
-  String authorId, bookId;
-  late PageRequest pageRequest;
-
-  ListEventsByBookRequest(this.authorId, this.bookId, int offset, int limit) {
-    pageRequest = PageRequest(limit, offset);
-  }
-
-  @override
-  String toString() =>
-      "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, $bookIdLabel: $bookId, pageRequest: $pageRequest]";
-}

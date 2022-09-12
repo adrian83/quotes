@@ -97,12 +97,11 @@ class Page<T extends Document> {
 }
 
 class SearchQuery {
-  String? searchPhrase;
-  late PageRequest pageRequest;
+  final String? searchPhrase;
+  final PageRequest pageRequest;
 
-  SearchQuery(this.searchPhrase, int offset, int limit) {
-    pageRequest = PageRequest(limit, offset);
-  }
+  SearchQuery(this.searchPhrase, this.pageRequest);
+
 
   @override
   String toString() =>

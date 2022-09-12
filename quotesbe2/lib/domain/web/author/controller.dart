@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:shelf/shelf.dart';
 import 'package:logging/logging.dart';
 
+import 'package:quotesbe2/domain/author/model/command.dart';
+import 'package:quotesbe2/domain/author/model/query.dart';
 import 'package:quotesbe2/domain/author/service.dart';
 import 'package:quotesbe2/domain/web/common/request.dart';
 import 'package:quotesbe2/web/error.dart';
@@ -30,7 +32,7 @@ class AuthorController {
 
     return _authorService
         .findAuthors(query)
-        .then((page) => Response.ok(jsonEncode(page)));
+        .then((page) => jsonResponseOk(page));
   }
 
   Future<Response> store(Request request) async {
@@ -46,7 +48,7 @@ class AuthorController {
 
     return _authorService
         .save(command)
-        .then((author) => Response.ok(jsonEncode(author)));
+        .then((author) => jsonResponseOk(author));
   }
 
   Future<Response> update(Request request, String authorId) async {
@@ -63,14 +65,21 @@ class AuthorController {
 
     return _authorService
         .update(command)
-        .then((author) => Response.ok(jsonEncode(author)));
+        .then((author) => jsonResponseOk(author));
   }
 
   Future<Response> find(Request request, String authorId) => _authorService
       .find(FindAuthorQuery(authorId))
-      .then((author) => Response.ok(jsonEncode(author)));
+      .then((author) => jsonResponseOk(author));
 
   Future<Response> delete(Request request, String authorId) => _authorService
       .delete(DeleteAuthorQuery(authorId))
-      .then((_) => Response.ok(""));
+      .then((_) => emptyResponseOk());
+
+  Future<Response> listEvents(Request request, String authorId) async {
+    var query = ListEventsByAuthorQuery(authorId, extractPageRequest(request));
+    return await _authorService
+        .listEvents(query)
+        .then((page) => jsonResponseOk(page));
+  }
 }

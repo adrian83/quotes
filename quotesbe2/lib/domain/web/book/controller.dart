@@ -4,6 +4,8 @@ import 'package:shelf/shelf.dart';
 import 'package:logging/logging.dart';
 
 import 'package:quotesbe2/domain/book/service.dart';
+import 'package:quotesbe2/domain/book/model/command.dart';
+import 'package:quotesbe2/domain/book/model/query.dart';
 import 'package:quotesbe2/domain/web/common/request.dart';
 import 'package:quotesbe2/web/error.dart';
 import 'package:quotesbe2/web/response.dart';

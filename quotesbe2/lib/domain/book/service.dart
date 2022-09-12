@@ -1,64 +1,24 @@
 import 'dart:async';
 
 import 'package:logging/logging.dart';
-import 'package:uuid/uuid.dart';
 
 import 'package:quotesbe2/domain/common/model.dart';
-import 'package:quotesbe2/domain/book/model.dart';
+import 'package:quotesbe2/domain/book/model/command.dart';
+import 'package:quotesbe2/domain/book/model/entity.dart';
+import 'package:quotesbe2/domain/book/model/query.dart';
 import 'package:quotesbe2/domain/book/repository.dart';
-
-class NewBookCommand {
-  final String authorId, title, description;
-
-  NewBookCommand(this.authorId, this.title, this.description);
-
-  Book toBook() => Book(
-        const Uuid().v4(),
-        title,
-        description,
-        authorId,
-        DateTime.now(),
-        DateTime.now(),
-      );
-}
-
-class UpdateBookCommand {
-  final String id, authorId, title, description;
-
-  UpdateBookCommand(this.id, this.authorId, this.title, this.description);
-
-  Book toBook() => Book(
-        id,
-        title,
-        description,
-        authorId,
-        DateTime.now(),
-        DateTime.now(),
-      );
-}
-
-class FindBookQuery {
-  final String authorId, bookId;
-
-  FindBookQuery(this.authorId, this.bookId);
-}
-
-class DeleteBookCommand {
-  final String authorId, bookId;
-
-  DeleteBookCommand(this.authorId, this.bookId);
-}
+import 'package:quotesbe2/domain/quote/repository.dart';
 
 class BookService {
   final Logger _logger = Logger('BookService');
 
   final BookRepository _bookRepository;
   final BookEventRepository _bookEventRepository;
-  //QuoteRepository _quoteRepository;
-  //QuoteEventRepository _quoteEventRepository;
+  final QuoteRepository _quoteRepository;
+  final QuoteEventRepository _quoteEventRepository;
 
-  BookService(this._bookRepository,
-      this._bookEventRepository); //, this._quoteRepository, this._quoteEventRepository);
+  BookService(this._bookRepository, this._bookEventRepository,
+      this._quoteRepository, this._quoteEventRepository);
 
   Future<Book> save(NewBookCommand command) async {
     var book = command.toBook();
@@ -88,11 +48,9 @@ class BookService {
     await _bookRepository.delete(command.bookId);
     _logger.info("store book event (delete) for book: $command");
     await _bookEventRepository.storeDeleteBookEventByBookId(command.bookId);
+    await _quoteRepository.deleteByBook(command.bookId);
+    await _quoteEventRepository.deleteByBook(command.bookId);
     return;
-    //.then((_) => _logger.info("delete all quotes from book with id: $bookId"))
-    //.then((_) => _quoteRepository.deleteByBook(bookId))
-    //.then((_) => _logger.info("store quote events (delete) for book with id: $bookId"))
-    //.then((_) => _quoteEventRepository.deleteByBook(bookId));
   }
 
   Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
@@ -102,7 +60,7 @@ class BookService {
           .info("store quote events (delete) for author with id: $authorId"))
       .then((_) => _bookEventRepository.deleteByAuthor(authorId));
 
-  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorRequest request) =>
+  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorQuery request) =>
       Future.value(request)
           .then((_) => _logger.info("find author books by request: $request"))
           .then((value) => _bookRepository.findAuthorBooks(request));
@@ -111,7 +69,7 @@ class BookService {
       .then((_) => _logger.info("find books by request: $request"))
       .then((_) => _bookRepository.findBooks(request));
 
-  Future<Page<BookEvent>> listEvents(ListEventsByBookRequest request) =>
+  Future<Page<BookEvent>> listEvents(ListEventsByBookQuery request) =>
       Future.value(request)
           .then((_) => _logger.info("find book events by request: $request"))
           .then((_) => _bookEventRepository.findBookEvents(request));
