@@ -1,10 +1,8 @@
+import "package:test/test.dart";
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
-import 'package:quotesbe2/domain/author/model/command.dart';
-import "package:test/test.dart";
 
-import 'package:quotesbe2/domain/author/model/entity.dart';
-import 'package:quotesbe2/domain/common/model.dart';
+import 'package:quotesbe2/domain/author/model/command.dart';
 import 'package:quotesbe2/domain/author/repository.dart';
 import 'package:quotesbe2/domain/author/service.dart';
 import 'package:quotesbe2/domain/book/repository.dart';
@@ -20,11 +18,6 @@ import 'package:quotesbe2/domain/author/service_test.mocks.dart';
   QuoteEventRepository
 ])
 void main() {
-  // var authorId = "abcd-efgh";
-
-  //var author = Author(authorId, "John", "Great writter", DateTime.now().toUtc(), DateTime.now().toUtc());
-
-  //var createAuthorEvent = AuthorEvent.created("abc-def-ghi", author);
 
   test("save should persist author entity and author event", () async {
     // given
@@ -60,26 +53,65 @@ void main() {
     expect(result.description, equals(command.description));
   });
 
-/*
+
   test("exception in save method in AuthorRepository should result with failed Future", () async {
-    when(authorRepoMock.save(author)).thenAnswer((_) => Future.error(StateError("exception")));
+        // given
+    var authorRepoMock = MockAuthorRepository();
+    var authorEventRepoMock = MockAuthorEventRepository();
+    var bookRepoMock = MockBookRepository();
+    var bookEventRepoMock = MockBookEventRepository();
+    var quoteRepoMock = MockQuoteRepository();
+    var quoteEventRepoMock = MockQuoteEventRepository();
 
-    expect(authorService.save(author), throwsStateError);
+    var authorService = AuthorService(
+      authorRepoMock,
+      authorEventRepoMock,
+      bookRepoMock,
+      bookEventRepoMock,
+      quoteRepoMock,
+      quoteEventRepoMock,
+    );
 
-    verify(authorRepoMock.save(author));
-    verifyNever(authorEventRepoMock.save(author));
+    var command = NewAuthorCommand("John", "This is John");
+
+    when(authorRepoMock.save(any)).thenAnswer((_) => Future.error(StateError("exception")));
+
+    expect(authorService.save(command), throwsStateError);
+
+    verify(authorRepoMock.save(any));
+    verifyNever(authorEventRepoMock.save(any));
   });
+
 
   test("exception in save method in AuthorEventRepository should result with failed Future", () async {
-    when(authorRepoMock.save(author)).thenAnswer((_) => Future.value(author));
-    when(authorRepoMock.save(author)).thenAnswer((_) => Future.error(StateError("exception")));
+        // given
+    var authorRepoMock = MockAuthorRepository();
+    var authorEventRepoMock = MockAuthorEventRepository();
+    var bookRepoMock = MockBookRepository();
+    var bookEventRepoMock = MockBookEventRepository();
+    var quoteRepoMock = MockQuoteRepository();
+    var quoteEventRepoMock = MockQuoteEventRepository();
 
-    expect(authorService.save(author), throwsStateError);
+    var authorService = AuthorService(
+      authorRepoMock,
+      authorEventRepoMock,
+      bookRepoMock,
+      bookEventRepoMock,
+      quoteRepoMock,
+      quoteEventRepoMock,
+    );
 
-    verify(authorRepoMock.save(author));
-    verifyNever(authorEventRepoMock.save(author));
+    var command = NewAuthorCommand("John", "This is John");
+
+    when(authorRepoMock.save(any)).thenAnswer((_) => Future.value());
+    when(authorEventRepoMock.storeSaveAuthorEvent(any)).thenAnswer((_) => Future.error(StateError("exception")));
+
+    expect(authorService.save(command), throwsStateError);
+
+    verify(authorRepoMock.save(any));
+    verifyNever(authorEventRepoMock.save(any));
   });
-
+/*
   test("find should find author", () async {
     when(authorRepoMock.find(authorId)).thenAnswer((_) => Future.value(author));
 
