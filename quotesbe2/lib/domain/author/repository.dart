@@ -12,19 +12,22 @@ import 'package:quotesbe2/storage/elasticsearch/search.dart';
 Decoder<Author> authorDecoder =
     (Map<String, dynamic> json) => Author.fromJson(json);
 
+var sortingByModifiedTime = SortElement.desc(modifiedUtcLabel);
+
 class AuthorRepository extends Repository<Author> {
   final Logger _logger = Logger('AuthorRepository');
 
   AuthorRepository(ESStore<Author> store) : super(store, authorDecoder);
 
-  Future<Page<Author>> findAuthors(
-          SearchQuery searchQuery) =>
-      Future.value(searchQuery)
-          .then((_) => _logger.info("find authors by request: $searchQuery"))
-          .then((_) =>
-              WildcardQuery(authorNameLabel, searchQuery.searchPhrase ?? ""))
-          .then((query) => findDocuments(query, searchQuery.pageRequest,
-              sorting: SortElement.desc(modifiedUtcLabel)));
+  Future<Page<Author>> findAuthors(SearchQuery searchQuery) async {
+    _logger.info("find authors by query: $searchQuery");
+    var query = WildcardQuery(authorNameLabel, searchQuery.searchPhrase ?? "");
+    return await findDocuments(
+      query,
+      searchQuery.pageRequest,
+      sorting: sortingByModifiedTime,
+    );
+  }
 }
 
 Decoder<AuthorEvent> authorEventDecoder =
@@ -38,28 +41,38 @@ class AuthorEventRepository extends Repository<AuthorEvent> {
   AuthorEventRepository(ESStore<AuthorEvent> store)
       : super(store, authorEventDecoder);
 
-  Future<Page<AuthorEvent>> findAuthorsEvents(
-          ListEventsByAuthorQuery request) =>
-      Future.value(request)
-          .then((_) => _logger.info("find author events by request: $request"))
-          .then((_) => MatchQuery(_authorIdProp, request.authorId))
-          .then((query) => super.findDocuments(query, request.pageRequest,
-              sorting: SortElement.asc(createdUtcLabel)));
+  Future<Page<AuthorEvent>> findAuthorEvents(
+    ListEventsByAuthorQuery request,
+  ) async {
+    _logger.info("find author events by request: $request");
+    var query = MatchQuery(_authorIdProp, request.authorId);
+    return await super.findDocuments(
+      query,
+      request.pageRequest,
+      sorting: SortElement.asc(createdUtcLabel),
+    );
+  }
 
-  Future<void> storeSaveAuthorEvent(Author author) => Future.value(author)
-      .then((_) => _logger.info("save author event (save) for author: $author"))
-      .then((_) => save(AuthorEvent.create(author)));
+  Future<void> storeSaveAuthorEvent(Author author) async {
+    _logger.info("save author event (save) for author: $author");
+    await save(AuthorEvent.create(author));
+    return;
+  }
 
-  Future<void> storeUpdateAuthorEvent(Author author) => Future.value(author)
-      .then(
-          (_) => _logger.info("save author event (update) for author: $author"))
-      .then((_) => save(AuthorEvent.update(author)));
+  Future<void> storeUpdateAuthorEvent(Author author) async {
+    _logger.info("save author event (update) for author: $author");
+    await save(AuthorEvent.update(author));
+    return;
+  }
 
   Future<void> storeDeleteAuthorEvent(String authorId) async {
     _logger.info("save author event (delete) for author with id: $authorId");
     var query = MatchQuery(_authorIdProp, authorId);
-    var page = await super.findDocuments(query, PageRequest.first(),
-        sorting: SortElement.desc(modifiedUtcLabel));
+    var page = await super.findDocuments(
+      query,
+      PageRequest.first(),
+      sorting: sortingByModifiedTime,
+    );
     var author = page.elements[0].entity;
     await save(AuthorEvent.delete(author));
     return;

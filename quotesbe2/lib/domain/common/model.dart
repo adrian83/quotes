@@ -50,7 +50,7 @@ abstract class Event<T extends Entity> extends Entity {
   T entity;
 
   Event(String id, this.operation, this.entity, DateTime modifiedUtc,
-      DateTime createdUtc)
+      DateTime createdUtc,)
       : super.create();
 
   @override

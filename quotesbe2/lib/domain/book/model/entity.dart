@@ -10,9 +10,14 @@ const bookIdLabel = 'bookId';
 class Book extends Entity {
   String title, description, authorId;
 
-  Book(String id, this.title, this.description, this.authorId,
-      DateTime modifiedUtc, DateTime createdUtc)
-      : super(id, modifiedUtc, createdUtc);
+  Book(
+    String id,
+    this.title,
+    this.description,
+    this.authorId,
+    DateTime modifiedUtc,
+    DateTime createdUtc,
+  ) : super(id, modifiedUtc, createdUtc);
 
   Book.create(this.title, this.description, this.authorId) : super.create();
 
@@ -26,7 +31,7 @@ class Book extends Entity {
             json[bookDescLabel],
             json[bookAuthorIdLabel],
             DateTime.parse(json[modifiedUtcLabel]),
-            DateTime.parse(json[createdUtcLabel]));
+            DateTime.parse(json[createdUtcLabel]),);
 
   @override
   String getId() => id;
@@ -52,7 +57,7 @@ class Book extends Entity {
 
 class BookEvent extends Event<Book> {
   BookEvent(String id, String operation, Book book, DateTime modified,
-      DateTime created)
+      DateTime created,)
       : super(id, operation, book, modified, created);
 
   BookEvent.create(Book book)
@@ -70,7 +75,7 @@ class BookEvent extends Event<Book> {
             json[operationLabel],
             Book.fromJson(json[entityLabel]),
             DateTime.parse(json[modifiedUtcLabel]),
-            DateTime.parse(json[createdUtcLabel]));
+            DateTime.parse(json[createdUtcLabel]),);
 
   @override
   String getId() => id;
@@ -79,4 +84,3 @@ class BookEvent extends Event<Book> {
   String toString() =>
       "BookEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
 }
-

@@ -9,6 +9,7 @@
 **/build
 .dart_tool
 
+**/*.dart.vm.json
+**/*.mocks.dart
 
-quote-be/infra/env.db
-quote-be/infra/container
+

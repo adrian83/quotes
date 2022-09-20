@@ -1,54 +1,66 @@
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
+import 'package:quotesbe2/domain/author/model/command.dart';
 import "package:test/test.dart";
 
-// import '../book/repository.dart';
-// import '../quote/repository.dart';
-// import 'repository.dart';
+import 'package:quotesbe2/domain/author/model/entity.dart';
+import 'package:quotesbe2/domain/common/model.dart';
+import 'package:quotesbe2/domain/author/repository.dart';
+import 'package:quotesbe2/domain/author/service.dart';
+import 'package:quotesbe2/domain/book/repository.dart';
+import 'package:quotesbe2/domain/quote/repository.dart';
+import 'package:quotesbe2/domain/author/service_test.mocks.dart';
 
-// class AuthorRepositoryMock extends Mock implements AuthorRepository {}
-
-// class AuthorEventRepositoryMock extends Mock implements AuthorEventRepository {}
-
-// class BookRepositoryMock extends Mock implements BookRepository {}
-
-// class BookEventRepositoryMock extends Mock implements BookEventRepository {}
-
-// class QuoteRepositoryMock extends Mock implements QuoteRepository {}
-
-// class QuoteEventRepositoryMock extends Mock implements QuoteEventRepository {}
-
+@GenerateMocks([
+  AuthorRepository,
+  AuthorEventRepository,
+  BookRepository,
+  BookEventRepository,
+  QuoteRepository,
+  QuoteEventRepository
+])
 void main() {
-  test("empty", () async {
-    print("empty");
-  });
-
-  // var authorRepoMock = AuthorRepositoryMock();
-  // var authorEventRepoMock = AuthorEventRepositoryMock();
-  // var bookRepoMock = BookRepositoryMock();
-  // var bookEventRepoMock = BookEventRepositoryMock();
-  // var quoteRepoMock = QuoteRepositoryMock();
-  // var quoteEventRepoMock = QuoteEventRepositoryMock();
-
-  // var authorService = AuthorService(
-  //     authorRepoMock, authorEventRepoMock, bookRepoMock, bookEventRepoMock, quoteRepoMock, quoteEventRepoMock);
-
   // var authorId = "abcd-efgh";
 
   //var author = Author(authorId, "John", "Great writter", DateTime.now().toUtc(), DateTime.now().toUtc());
 
   //var createAuthorEvent = AuthorEvent.created("abc-def-ghi", author);
-/*
+
   test("save should persist author entity and author event", () async {
-    when(authorRepoMock.save(author)).thenAnswer((_) => Future.value(author));
-    when(authorEventRepoMock.save(author)).thenAnswer((_) => Future.value(author));
+    // given
+    var authorRepoMock = MockAuthorRepository();
+    var authorEventRepoMock = MockAuthorEventRepository();
+    var bookRepoMock = MockBookRepository();
+    var bookEventRepoMock = MockBookEventRepository();
+    var quoteRepoMock = MockQuoteRepository();
+    var quoteEventRepoMock = MockQuoteEventRepository();
 
-    var result = await authorService.save(author);
+    var authorService = AuthorService(
+      authorRepoMock,
+      authorEventRepoMock,
+      bookRepoMock,
+      bookEventRepoMock,
+      quoteRepoMock,
+      quoteEventRepoMock,
+    );
 
-    verify(authorRepoMock.save(author));
-    verify(authorEventRepoMock.save(author));
+    when(authorRepoMock.save(any)).thenAnswer((_) => Future.value());
+    when(authorEventRepoMock.save(any)).thenAnswer((_) => Future.value());
 
-    expect(result.id, equals(author.id));
+    var command = NewAuthorCommand("John", "This is John");
+
+    // when
+    var result = await authorService.save(command);
+
+    // then
+    verify(authorRepoMock.save(any));
+    verify(authorEventRepoMock.storeSaveAuthorEvent(any));
+
+    expect(result.name, equals(command.name));
+    expect(result.description, equals(command.description));
   });
 
+/*
   test("exception in save method in AuthorRepository should result with failed Future", () async {
     when(authorRepoMock.save(author)).thenAnswer((_) => Future.error(StateError("exception")));
 

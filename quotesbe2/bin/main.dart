@@ -146,7 +146,7 @@ Future<void> main() async {
   var bookEventsRepository = BookEventRepository(bookEventsEsStore);
 
   var quoteRepository = QuoteRepository(quoteEsStore);
-  
+
   var quoteEventsRepository = QuoteEventRepository(quoteEventsEsStore);
 
   var authorService = AuthorService(

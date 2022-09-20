@@ -52,7 +52,10 @@ class BookController {
   }
 
   Future<Response> update(
-      Request request, String authorId, String bookId) async {
+    Request request,
+    String authorId,
+    String bookId,
+  ) async {
     var json = jsonDecode(await request.readAsString()) as Map;
 
     var violations = validate(updateBookValidationRules, json);
@@ -74,8 +77,8 @@ class BookController {
           .find(FindBookQuery(authorId, bookId))
           .then((book) => Response.ok(jsonEncode(book)));
 
-  Future<Response> delete(Request request, String authorId, String bookId) => _bookService
-      .delete(DeleteBookCommand(authorId, bookId))
-      .then((_) => Response.ok(""));
-      
+  Future<Response> delete(Request request, String authorId, String bookId) =>
+      _bookService
+          .delete(DeleteBookCommand(authorId, bookId))
+          .then((_) => Response.ok(""));
 }

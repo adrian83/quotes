@@ -46,7 +46,8 @@ class Server {
         break;
       default:
         throw ArgumentError(
-            "invalid mapping, unknown http method ${mapping.method}");
+          "invalid mapping, unknown http method ${mapping.method}",
+        );
     }
   }
 }

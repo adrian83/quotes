@@ -84,7 +84,8 @@ class QuoteService {
     _logger.info("delete quote with id: ${command.quoteId}");
     await _quotesRepository.delete(command.quoteId);
     _logger.info(
-        "store quote event (delete) for quote with id: ${command.quoteId}");
+      "store quote event (delete) for quote with id: ${command.quoteId}",
+    );
     await _quoteEventRepository.storeDeleteQuoteEventByQuoteId(command.quoteId);
     return;
   }
@@ -106,7 +107,9 @@ class QuoteService {
   Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
       .then((_) => _logger.info("delete quotes by author with id: $authorId"))
       .then((_) => _quotesRepository.deleteByAuthor(authorId))
-      .then((_) => _logger
-          .info("store quote events (delete) for author with id: $authorId"))
+      .then(
+        (_) => _logger
+            .info("store quote events (delete) for author with id: $authorId"),
+      )
       .then((_) => _quoteEventRepository.deleteByAuthor(authorId));
 }

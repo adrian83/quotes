@@ -43,12 +43,12 @@ class AuthorService {
   }
 
   Future<void> delete(DeleteAuthorQuery query) async {
-    await _authorRepository.delete(query.id);
-    await _authorEventRepository.storeDeleteAuthorEvent(query.id);
-    await _bookRepository.deleteByAuthor(query.id);
-    await _bookEventRepository.deleteByAuthor(query.id);
-    await _quoteRepository.deleteByAuthor(query.id);
-    await _quoteEventRepository.deleteByAuthor(query.id);
+    await _authorRepository.delete(query.authorId);
+    await _authorEventRepository.storeDeleteAuthorEvent(query.authorId);
+    await _bookRepository.deleteByAuthor(query.authorId);
+    await _bookEventRepository.deleteByAuthor(query.authorId);
+    await _quoteRepository.deleteByAuthor(query.authorId);
+    await _quoteEventRepository.deleteByAuthor(query.authorId);
     return;
   }
 
@@ -56,5 +56,5 @@ class AuthorService {
       _authorRepository.findAuthors(query);
 
   Future<Page<AuthorEvent>> listEvents(ListEventsByAuthorQuery request) =>
-      _authorEventRepository.findAuthorsEvents(request);
+      _authorEventRepository.findAuthorEvents(request);
 }

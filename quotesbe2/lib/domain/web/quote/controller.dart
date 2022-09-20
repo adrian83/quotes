@@ -8,7 +8,6 @@ import 'package:quotesbe2/domain/web/common/request.dart';
 import 'package:quotesbe2/web/error.dart';
 import 'package:quotesbe2/web/response.dart';
 
-
 class QuoteController {
   final Logger _logger = Logger('QuoteController');
 
@@ -27,11 +26,16 @@ class QuoteController {
   Future<Response> search(Request request) async {
     var query = extractSearchQuery(request);
 
-    return _quoteService.findQuotes(query)
+    return _quoteService
+        .findQuotes(query)
         .then((page) => Response.ok(jsonEncode(page)));
   }
 
-  Future<Response> store(Request request, String authorId, String bookId) async {
+  Future<Response> store(
+    Request request,
+    String authorId,
+    String bookId,
+  ) async {
     var json = jsonDecode(await request.readAsString()) as Map;
 
     var violations = validate(newQuoteValidationRules, json);
@@ -48,7 +52,11 @@ class QuoteController {
   }
 
   Future<Response> update(
-      Request request, String authorId, String bookId, String quoteId) async {
+    Request request,
+    String authorId,
+    String bookId,
+    String quoteId,
+  ) async {
     var json = jsonDecode(await request.readAsString()) as Map;
 
     var violations = validate(updateQuoteValidationRules, json);
@@ -57,22 +65,30 @@ class QuoteController {
       return responseBadRequest(violations);
     }
 
-    var command =
-        UpdateQuoteCommand(authorId, bookId, quoteId, json["text"]);
+    var command = UpdateQuoteCommand(authorId, bookId, quoteId, json["text"]);
 
     return _quoteService
         .update(command)
         .then((quote) => Response.ok(jsonEncode(quote)));
   }
 
-  Future<Response> find(Request request, String authorId, String bookId, String quoteId) =>
+  Future<Response> find(
+    Request request,
+    String authorId,
+    String bookId,
+    String quoteId,
+  ) =>
       _quoteService
           .find(FindQuoteQuery(authorId, bookId, quoteId))
           .then((quote) => Response.ok(jsonEncode(quote)));
 
-  Future<Response> delete(Request request, String authorId, String bookId, String quoteId) => _quoteService
-      .delete(DeleteQuoteCommand(authorId, bookId, quoteId))
-      .then((_) => Response.ok(""));
-      
-
+  Future<Response> delete(
+    Request request,
+    String authorId,
+    String bookId,
+    String quoteId,
+  ) =>
+      _quoteService
+          .delete(DeleteQuoteCommand(authorId, bookId, quoteId))
+          .then((_) => Response.ok(""));
 }

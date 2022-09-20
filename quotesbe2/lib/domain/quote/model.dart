@@ -9,9 +9,14 @@ var quoteBookIdLabel = "bookId";
 class Quote extends Entity {
   String text, authorId, bookId;
 
-  Quote(String id, this.text, this.authorId, this.bookId, DateTime modifiedUtc,
-      DateTime createdUtc,)
-      : super(id, modifiedUtc, createdUtc);
+  Quote(
+    String id,
+    this.text,
+    this.authorId,
+    this.bookId,
+    DateTime modifiedUtc,
+    DateTime createdUtc,
+  ) : super(id, modifiedUtc, createdUtc);
 
   Quote.create(this.text, this.authorId, this.bookId) : super.create();
 
@@ -20,12 +25,13 @@ class Quote extends Entity {
 
   Quote.fromJson(Map<String, dynamic> json)
       : this(
-            json[idLabel],
-            json[quoteTextLabel],
-            json[quoteAuthorIdLabel],
-            json[quoteBookIdLabel],
-            DateTime.parse(json[modifiedUtcLabel]),
-            DateTime.parse(json[createdUtcLabel]));
+          json[idLabel],
+          json[quoteTextLabel],
+          json[quoteAuthorIdLabel],
+          json[quoteBookIdLabel],
+          DateTime.parse(json[modifiedUtcLabel]),
+          DateTime.parse(json[createdUtcLabel]),
+        );
 
   @override
   String getId() => id;
@@ -46,14 +52,17 @@ class Quote extends Entity {
 
   @override
   String toString() =>
-      "Quote [$idLabel: $id, $quoteTextLabel: $text, $quoteAuthorIdLabel: $authorId, $quoteBookIdLabel: $bookId, " +
-      "$modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
+      "Quote [$idLabel: $id, $quoteTextLabel: $text, $quoteAuthorIdLabel: $authorId, $quoteBookIdLabel: $bookId, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
 class QuoteEvent extends Event<Quote> {
-  QuoteEvent(String id, String operation, Quote quote, DateTime modified,
-      DateTime created)
-      : super(id, operation, quote, modified, created);
+  QuoteEvent(
+    String id,
+    String operation,
+    Quote quote,
+    DateTime modified,
+    DateTime created,
+  ) : super(id, operation, quote, modified, created);
 
   QuoteEvent.operation(Quote quote, String operation)
       : super(const Uuid().v4(), operation, quote, nowUtc(), nowUtc());
@@ -66,11 +75,12 @@ class QuoteEvent extends Event<Quote> {
 
   QuoteEvent.fromJson(Map<String, dynamic> json)
       : super(
-            json[idLabel],
-            json[operationLabel],
-            Quote.fromJson(json[entityLabel]),
-            DateTime.parse(json[modifiedUtcLabel]),
-            DateTime.parse(json[createdUtcLabel]));
+          json[idLabel],
+          json[operationLabel],
+          Quote.fromJson(json[entityLabel]),
+          DateTime.parse(json[modifiedUtcLabel]),
+          DateTime.parse(json[createdUtcLabel]),
+        );
 
   @override
   String getId() => id;
@@ -85,7 +95,12 @@ class ListEventsByQuoteRequest {
   late PageRequest pageRequest;
 
   ListEventsByQuoteRequest(
-      this.authorId, this.bookId, this.quoteId, int offset, int limit) {
+    this.authorId,
+    this.bookId,
+    this.quoteId,
+    int offset,
+    int limit,
+  ) {
     pageRequest = PageRequest(limit, offset);
   }
 

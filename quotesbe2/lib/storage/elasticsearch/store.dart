@@ -29,13 +29,12 @@ class ESStore<T extends Document> {
   String _updateUri(String id) => "$_protocol://$_host:$_port/$_index/$_type/$id/_update";
   String _deleteByQueryUri() => "$_protocol://$_host:$_port/$_index/$_type/_delete_by_query";
 
-  static final Decode<IndexResult> _indexResDecoder = (Map<String, dynamic> json) => IndexResult.fromJson(json);
-  static final Decode<UpdateResult> _updateResDecoder = (Map<String, dynamic> json) => UpdateResult.fromJson(json);
-  static final Decode<GetResult> _getResDecoder = (Map<String, dynamic> json) => GetResult.fromJson(json);
-  static final Decode<DeleteResult> _deleteResDecoder = (Map<String, dynamic> json) => DeleteResult.fromJson(json);
-  static final Decode<DeleteByQueryResult> _delByQueryResDecoder =
-      (Map<String, dynamic> json) => DeleteByQueryResult.fromJson(json);
-  static final Decode<SearchResult> _searchResDecoder = (Map<String, dynamic> json) => SearchResult.fromJson(json);
+  static IndexResult _indexResDecoder(Map<String, dynamic> json) => IndexResult.fromJson(json);
+  static UpdateResult _updateResDecoder(Map<String, dynamic> json) => UpdateResult.fromJson(json);
+  static GetResult _getResDecoder(Map<String, dynamic> json) => GetResult.fromJson(json);
+  static DeleteResult _deleteResDecoder(Map<String, dynamic> json) => DeleteResult.fromJson(json);
+  static DeleteByQueryResult _delByQueryResDecoder(Map<String, dynamic> json) => DeleteByQueryResult.fromJson(json);
+  static SearchResult _searchResDecoder(Map<String, dynamic> json) => SearchResult.fromJson(json);
 
   ESStore(this._client, this._host, this._port, this._index);
 
@@ -83,13 +82,7 @@ class ESStore<T extends Document> {
       _client.getUrl(Uri.parse(_statsUri())).then((req) => req.close()).then((resp) => resp.statusCode == 200);
 
   Future<T> decode<T>(HttpClientResponse response, Decode<T> decode) =>
-      response.transform(utf8.decoder).join().then((content) => decodeStr(content, decode));
-
-  T decodeStr<T>(String str, Decode<T> decode) {
-    _logger.info("[decode] $str");
-    return decode(jsonDecode(str));
-  }
-
+      response.transform(utf8.decoder).join().then((content) => decode(jsonDecode(content)));
 
   Future<HttpClientResponse> withBody(HttpClientRequest request, String body) {
     _logger.info("body: $body");

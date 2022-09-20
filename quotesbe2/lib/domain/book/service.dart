@@ -17,8 +17,12 @@ class BookService {
   final QuoteRepository _quoteRepository;
   final QuoteEventRepository _quoteEventRepository;
 
-  BookService(this._bookRepository, this._bookEventRepository,
-      this._quoteRepository, this._quoteEventRepository);
+  BookService(
+    this._bookRepository,
+    this._bookEventRepository,
+    this._quoteRepository,
+    this._quoteEventRepository,
+  );
 
   Future<Book> save(NewBookCommand command) async {
     var book = command.toBook();
@@ -56,8 +60,10 @@ class BookService {
   Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
       .then((_) => _logger.info("delete books by author with id: $authorId"))
       .then((_) => _bookRepository.deleteByAuthor(authorId))
-      .then((_) => _logger
-          .info("store quote events (delete) for author with id: $authorId"))
+      .then(
+        (_) => _logger
+            .info("store quote events (delete) for author with id: $authorId"),
+      )
       .then((_) => _bookEventRepository.deleteByAuthor(authorId));
 
   Future<Page<Book>> findAuthorBooks(ListBooksByAuthorQuery request) =>

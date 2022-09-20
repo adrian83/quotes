@@ -1,17 +1,21 @@
 import 'package:quotesbe2/domain/common/model.dart';
 
-
-
 class FindAuthorQuery {
   final String authorId;
 
   FindAuthorQuery(this.authorId);
+
+  @override
+  String toString() => "FindAuthorQuery [authorId: $authorId]";
 }
 
 class DeleteAuthorQuery {
-  final String id;
+  final String authorId;
 
-  DeleteAuthorQuery(this.id);
+  DeleteAuthorQuery(this.authorId);
+
+  @override
+  String toString() => "DeleteAuthorQuery [authorId: $authorId]";
 }
 
 class ListAuthorsQuery {
@@ -22,7 +26,7 @@ class ListAuthorsQuery {
   }
 
   @override
-  String toString() => "ListAuthorsRequest [pageRequest: $pageRequest]";
+  String toString() => "ListAuthorsQuery [pageRequest: $pageRequest]";
 }
 
 class ListEventsByAuthorQuery {
@@ -32,5 +36,6 @@ class ListEventsByAuthorQuery {
   ListEventsByAuthorQuery(this.authorId, this.pageRequest);
 
   @override
-  String toString() => "ListEventsByAuthorRequest [authorId: $authorId, pageRequest: $pageRequest]";
+  String toString() =>
+      "ListEventsByAuthorQuery [authorId: $authorId, pageRequest: $pageRequest]";
 }
