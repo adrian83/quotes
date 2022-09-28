@@ -8,7 +8,7 @@ const bookDescLabel = 'description';
 const bookIdLabel = 'bookId';
 
 class Book extends Entity {
-  String title, description, authorId;
+  final String title, description, authorId;
 
   Book(
     String id,

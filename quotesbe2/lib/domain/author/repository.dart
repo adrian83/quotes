@@ -12,7 +12,8 @@ import 'package:quotesbe2/storage/elasticsearch/search.dart';
 Decoder<Author> authorDecoder =
     (Map<String, dynamic> json) => Author.fromJson(json);
 
-var sortingByModifiedTime = SortElement.desc(modifiedUtcLabel);
+var sortingByModifiedTimeDesc = SortElement.desc(modifiedUtcLabel);
+var sortingByCreatedTimeAsc = SortElement.asc(createdUtcLabel);
 
 class AuthorRepository extends Repository<Author> {
   final Logger _logger = Logger('AuthorRepository');
@@ -25,7 +26,7 @@ class AuthorRepository extends Repository<Author> {
     return await findDocuments(
       query,
       searchQuery.pageRequest,
-      sorting: sortingByModifiedTime,
+      sorting: sortingByModifiedTimeDesc,
     );
   }
 }
@@ -49,7 +50,7 @@ class AuthorEventRepository extends Repository<AuthorEvent> {
     return await super.findDocuments(
       query,
       request.pageRequest,
-      sorting: SortElement.asc(createdUtcLabel),
+      sorting: sortingByCreatedTimeAsc,
     );
   }
 
@@ -71,9 +72,9 @@ class AuthorEventRepository extends Repository<AuthorEvent> {
     var page = await super.findDocuments(
       query,
       PageRequest.first(),
-      sorting: sortingByModifiedTime,
+      sorting: sortingByModifiedTimeDesc,
     );
-    var author = page.elements[0].entity;
+    var author = page.elements.first.entity;
     await save(AuthorEvent.delete(author));
     return;
   }

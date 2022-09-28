@@ -109,15 +109,4 @@ class ListEventsByQuoteRequest {
       "ListEventsByQuoteRequest [authorId: $authorId, bookId: $bookId, quoteId: $quoteId, pageRequest: $pageRequest]";
 }
 
-class ListQuotesFromBookRequest {
-  String authorId, bookId;
-  late PageRequest pageRequest;
 
-  ListQuotesFromBookRequest(this.authorId, this.bookId, int offset, int limit) {
-    pageRequest = PageRequest(limit, offset);
-  }
-
-  @override
-  String toString() =>
-      "ListQuotesFromBookRequest [authorId: $authorId, bookId: $bookId, pageRequest: $pageRequest]";
-}

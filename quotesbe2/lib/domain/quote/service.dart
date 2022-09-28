@@ -1,53 +1,14 @@
 import 'dart:async';
 
 import 'package:logging/logging.dart';
-import 'package:uuid/uuid.dart';
+
 
 import 'package:quotesbe2/domain/common/model.dart';
-import 'package:quotesbe2/domain/quote/model.dart';
+import 'package:quotesbe2/domain/quote/model/command.dart';
+import 'package:quotesbe2/domain/quote/model/entity.dart';
+import 'package:quotesbe2/domain/quote/model/query.dart';
 import 'package:quotesbe2/domain/quote/repository.dart';
 
-class NewQuoteCommand {
-  final String authorId, bookId, text;
-
-  NewQuoteCommand(this.authorId, this.bookId, this.text);
-
-  Quote toQuote() => Quote(
-        const Uuid().v4(),
-        text,
-        authorId,
-        bookId,
-        DateTime.now(),
-        DateTime.now(),
-      );
-}
-
-class UpdateQuoteCommand {
-  final String quoteId, bookId, authorId, text;
-
-  UpdateQuoteCommand(this.authorId, this.bookId, this.quoteId, this.text);
-
-  Quote toQuote() => Quote(
-        quoteId,
-        text,
-        authorId,
-        bookId,
-        DateTime.now(),
-        DateTime.now(),
-      );
-}
-
-class FindQuoteQuery {
-  final String authorId, bookId, quoteId;
-
-  FindQuoteQuery(this.authorId, this.bookId, this.quoteId);
-}
-
-class DeleteQuoteCommand {
-  final String authorId, bookId, quoteId;
-
-  DeleteQuoteCommand(this.authorId, this.bookId, this.quoteId);
-}
 
 class QuoteService {
   final Logger _logger = Logger('QuoteService');
@@ -90,7 +51,7 @@ class QuoteService {
     return;
   }
 
-  Future<Page<Quote>> findBookQuotes(ListQuotesFromBookRequest request) =>
+  Future<Page<Quote>> findBookQuotes(ListQuotesFromBookQuery request) =>
       Future.value(request)
           .then((_) => _logger.info("find book quotes by request: $request"))
           .then((value) => _quotesRepository.findBookQuotes(request));

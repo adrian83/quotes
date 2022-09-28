@@ -38,7 +38,11 @@ class MatchQuery<T> extends Query {
   MatchQuery(this.field, this.value);
 
   @override
-  Map toJson() => { matchQ: { field: {queryQ: value} } };
+  Map toJson() => {
+        matchQ: {
+          field: {queryQ: value}
+        }
+      };
 }
 
 class WildcardQuery extends Query {
@@ -122,17 +126,35 @@ class SortElement {
 }
 
 class SearchRequest {
-  int from = 0, size = 10;
+  int? from = 0, size = 10;
   Query query;
   List<SortElement> sort;
 
   SearchRequest(this.query, this.sort, this.from, this.size);
 
-  factory SearchRequest.all() => SearchRequest(MatchAllQuery(), [], defaultOffset, defaultSize);
+  factory SearchRequest.all() =>
+      SearchRequest(MatchAllQuery(), [], defaultOffset, defaultSize);
 
-  factory SearchRequest.allByQuery(Query query) => SearchRequest(query, [], defaultOffset, maxSize);
+  factory SearchRequest.allByQuery(Query query) =>
+      SearchRequest(query, [], defaultOffset, maxSize);
 
-  factory SearchRequest.oneByQuery(Query query, List<SortElement> sort) => SearchRequest(query, sort, defaultOffset, 1);
+  factory SearchRequest.oneByQuery(Query query, List<SortElement> sort) =>
+      SearchRequest(query, sort, defaultOffset, 1);
 
-  Map toJson() => {sizeQ: size, fromQ: from, queryQ: query.toJson(), sortQ: (sort.isNotEmpty ? sort : defaultSort)};
+  Map toJson() {
+    var json = {
+      queryQ: query.toJson(),
+      sortQ: (sort.isNotEmpty ? sort : defaultSort)
+    };
+
+    if (from != null) {
+      json[fromQ] = from as Object;
+    }
+
+    if (size != null) {
+      json[sizeQ] = size as Object;
+    }
+
+    return json;
+  }
 }

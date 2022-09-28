@@ -23,13 +23,19 @@ class NewBookCommand {
       );
 }
 
-class UpdateBookCommand {
-  final String id, authorId, title, description;
+class UpdateBookCommand extends NewBookCommand {
+  final String bookId;
 
-  UpdateBookCommand(this.id, this.authorId, this.title, this.description);
+  UpdateBookCommand(
+    String authorId,
+    this.bookId,
+    String title,
+    String description,
+  ) : super(authorId, title, description);
 
+  @override
   Book toBook() => Book(
-        id,
+        bookId,
         title,
         description,
         authorId,

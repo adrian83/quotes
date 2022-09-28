@@ -11,38 +11,41 @@ import 'package:quotesbe2/storage/elasticsearch/search.dart';
 
 Decoder<Book> bookDecoder = (Map<String, dynamic> json) => Book.fromJson(json);
 
+var sortingByModifiedTimeDesc = SortElement.desc(modifiedUtcLabel);
+var sortingByCreatedTimeAsc = SortElement.asc(createdUtcLabel);
+
 class BookRepository extends Repository<Book> {
   final Logger _logger = Logger('BookRepository');
 
   BookRepository(ESStore<Book> store) : super(store, bookDecoder);
 
-  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorQuery request) =>
-      Future.value(request)
-          .then((_) => _logger.info("find author books by request: $request"))
-          .then((_) => MatchQuery(bookAuthorIdLabel, request.authorId))
-          .then(
-            (query) => findDocuments(
-              query,
-              request.pageRequest,
-              sorting: SortElement.desc(modifiedUtcLabel),
-            ),
-          );
+  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorQuery query) async {
+    _logger.info("find author books by query: $query");
+    var matchQuery = MatchQuery(bookAuthorIdLabel, query.authorId);
+    return await findDocuments(
+      matchQuery,
+      query.pageRequest,
+      sorting: sortingByModifiedTimeDesc,
+    );
+  }
 
-  Future<Page<Book>> findBooks(SearchQuery request) => Future.value(request)
-      .then((_) => _logger.info("find books by request: $request"))
-      .then((_) => WildcardQuery(bookTitleLabel, request.searchPhrase ?? ""))
-      .then(
-        (query) => findDocuments(
-          query,
-          request.pageRequest,
-          sorting: SortElement.desc(modifiedUtcLabel),
-        ),
-      );
+  Future<Page<Book>> findBooks(SearchQuery query) async {
+    _logger.info("find books by query: $query");
+    var searchPhrase = query.searchPhrase ?? "";
+    var wildcardQuery = WildcardQuery(bookTitleLabel, searchPhrase);
+    return findDocuments(
+      wildcardQuery,
+      query.pageRequest,
+      sorting: sortingByModifiedTimeDesc,
+    );
+  }
 
-  Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
-      .then((_) => _logger.info("delete books by author with id: $authorId"))
-      .then((_) => JustQuery(MatchQuery(bookAuthorIdLabel, authorId)))
-      .then((query) => deleteDocuments(query));
+  Future<void> deleteByAuthor(String authorId) async {
+    _logger.info("delete books by author with id: $authorId");
+    var query = JustQuery(MatchQuery(bookAuthorIdLabel, authorId));
+    await deleteDocuments(query);
+    return;
+  }
 }
 
 Decoder<BookEvent> bookEventDecoder =
@@ -57,57 +60,52 @@ class BookEventRepository extends Repository<BookEvent> {
   BookEventRepository(ESStore<BookEvent> store)
       : super(store, bookEventDecoder);
 
-  Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
-      .then(
-        (_) => _logger.info(
-          "save book events (delete) for books created by author with id: $authorId",
-        ),
-      )
-      .then((_) => MatchQuery(_authorIdProp, authorId))
-      .then((query) => super.findDocuments(query, PageRequest(1000, 0)))
-      .then((page) => newestEntities(page))
-      .then(
-        (newestBooks) =>
-            Future.wait(newestBooks.map((book) => storeDeleteBookEvent(book))),
-      );
+  Future<void> deleteByAuthor(String authorId) async {
+    _logger.info("save book events (delete) for books created by author: $authorId");
+    var matchQuery = MatchQuery(_authorIdProp, authorId);
+    var books = await super.findAllDocuments(matchQuery); 
+    var newestBooks = newestEntities(books);
+    Future.wait(newestBooks.map((book) => storeDeleteBookEvent(book)));
+    return;
+  }
 
-  Future<void> storeDeleteBookEventByBookId(String bookId) =>
-      Future.value(bookId)
-          .then(
-            (_) => _logger
-                .info("save book event (delete) for book with id: $bookId"),
-          )
-          .then((_) => MatchQuery(_bookIdProp, bookId))
-          .then(
-            (query) => super.findDocuments(
-              query,
-              PageRequest.first(),
-              sorting: SortElement.desc(modifiedUtcLabel),
-            ),
-          )
-          .then((page) => storeDeleteBookEvent(page.elements[0].entity));
+  Future<void> storeDeleteBookEventByBookId(String bookId) async {
+    _logger.info("save book event (delete) for book with id: $bookId");
+    var matchQuery = MatchQuery(_bookIdProp, bookId);
+    var page = await super.findDocuments(
+      matchQuery,
+      PageRequest.first(),
+      sorting: sortingByModifiedTimeDesc,
+    );
+    await storeDeleteBookEvent(page.elements[0].entity);
+    return;
+  }
 
-  Future<Page<BookEvent>> findBookEvents(ListEventsByBookQuery request) =>
-      Future.value(request)
-          .then((_) => _logger.info("find book events by request: $request"))
-          .then((_) => MatchQuery(_bookIdProp, request.bookId))
-          .then(
-            (query) => super.findDocuments(
-              query,
-              request.pageRequest,
-              sorting: SortElement.asc(createdUtcLabel),
-            ),
-          );
+  Future<Page<BookEvent>> findBookEvents(ListEventsByBookQuery query) async {
+    _logger.info("find book events by query: $query");
+    var matchQuery = MatchQuery(_bookIdProp, query.bookId);
+    return await super.findDocuments(
+      matchQuery,
+      query.pageRequest,
+      sorting: sortingByCreatedTimeAsc,
+    );
+  }
 
-  Future<void> storeSaveBookEvent(Book book) => Future.value(book)
-      .then((_) => _logger.info("save book event (save) for book: $book"))
-      .then((_) => save(BookEvent.create(book)));
+  Future<void> storeSaveBookEvent(Book book) async {
+    _logger.info("save book event (save) for book: $book");
+    await save(BookEvent.create(book));
+    return;
+  }
 
-  Future<void> storeUpdateBookEvent(Book book) => Future.value(book)
-      .then((_) => _logger.info("save book event (update) for book: $book"))
-      .then((_) => save(BookEvent.update(book)));
+  Future<void> storeUpdateBookEvent(Book book) async {
+    _logger.info("save book event (update) for book: $book");
+    await save(BookEvent.update(book));
+    return;
+  }
 
-  Future<void> storeDeleteBookEvent(Book book) => Future.value(book)
-      .then((_) => _logger.info("save book event (delete) for book: $book"))
-      .then((_) => save(BookEvent.delete(book)));
+  Future<void> storeDeleteBookEvent(Book book) async {
+    _logger.info("save book event (delete) for book: $book");
+    await save(BookEvent.delete(book));
+    return;
+  }
 }

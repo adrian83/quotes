@@ -57,26 +57,26 @@ class BookService {
     return;
   }
 
-  Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
-      .then((_) => _logger.info("delete books by author with id: $authorId"))
-      .then((_) => _bookRepository.deleteByAuthor(authorId))
-      .then(
-        (_) => _logger
-            .info("store quote events (delete) for author with id: $authorId"),
-      )
-      .then((_) => _bookEventRepository.deleteByAuthor(authorId));
+  Future<void> deleteByAuthor(String authorId) async {
+    _logger.info("delete books by author with id: $authorId");
+    await _bookRepository.deleteByAuthor(authorId);
+    _logger.info("store quote events (delete) for author with id: $authorId");
+    await _bookEventRepository.deleteByAuthor(authorId);
+    return;
+  }
 
-  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorQuery request) =>
-      Future.value(request)
-          .then((_) => _logger.info("find author books by request: $request"))
-          .then((value) => _bookRepository.findAuthorBooks(request));
+  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorQuery query) async {
+    _logger.info("find author books by query: $query");
+    return await _bookRepository.findAuthorBooks(query);
+  }
 
-  Future<Page<Book>> findBooks(SearchQuery request) => Future.value(request)
-      .then((_) => _logger.info("find books by request: $request"))
-      .then((_) => _bookRepository.findBooks(request));
+  Future<Page<Book>> findBooks(SearchQuery request) async {
+    _logger.info("find books by request: $request");
+    return await _bookRepository.findBooks(request);
+  }
 
-  Future<Page<BookEvent>> listEvents(ListEventsByBookQuery request) =>
-      Future.value(request)
-          .then((_) => _logger.info("find book events by request: $request"))
-          .then((_) => _bookEventRepository.findBookEvents(request));
+  Future<Page<BookEvent>> listEvents(ListEventsByBookQuery request) async {
+    _logger.info("find book events by request: $request");
+    return await _bookEventRepository.findBookEvents(request);
+  }
 }

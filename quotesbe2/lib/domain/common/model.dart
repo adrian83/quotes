@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:uuid/uuid.dart';
 
 import 'package:quotesbe2/storage/elasticsearch/document.dart';
@@ -9,6 +11,8 @@ const createdUtcLabel = 'createdUtc';
 const eventIdLabel = 'eventId';
 const operationLabel = 'operation';
 const entityLabel = 'entity';
+
+const pageRequestLabel = "pageRequest";
 
 DateTime nowUtc() => DateTime.now().toUtc();
 
@@ -86,6 +90,15 @@ class Page<T extends Document> {
   List<T> elements;
 
   Page(this.info, this.elements);
+
+  Page<T> add(Page<T> other) {
+    var elems = [...elements, ...other.elements];
+    var offset = min(info.offset, other.info.offset);
+    var total = max(info.total, other.info.total);
+    var limit = info.limit + other.info.limit;
+    var inf = PageInfo(limit, offset, total);
+    return Page(inf, elems);
+  }
 
   Map<dynamic, dynamic> toJson() => {
         "info": info.toJson(),

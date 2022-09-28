@@ -6,7 +6,7 @@ const authorNameLabel = 'name';
 const authorDescLabel = 'description';
 
 class Author extends Entity {
-  String name, description;
+  final String name, description;
 
   Author(
     String id,

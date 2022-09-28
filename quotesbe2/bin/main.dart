@@ -12,7 +12,7 @@ import 'package:quotesbe2/domain/author/service.dart';
 import 'package:quotesbe2/domain/book/model/entity.dart';
 import 'package:quotesbe2/domain/book/repository.dart';
 import 'package:quotesbe2/domain/book/service.dart';
-import 'package:quotesbe2/domain/quote/model.dart';
+import 'package:quotesbe2/domain/quote/model/entity.dart';
 import 'package:quotesbe2/domain/quote/repository.dart';
 import 'package:quotesbe2/domain/quote/service.dart';
 import 'package:quotesbe2/domain/web/author/controller.dart';

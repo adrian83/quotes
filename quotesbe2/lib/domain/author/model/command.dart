@@ -16,11 +16,13 @@ class NewAuthorCommand {
       );
 }
 
-class UpdateAuthorCommand {
-  final String id, name, description;
+class UpdateAuthorCommand extends NewAuthorCommand {
+  final String id;
 
-  UpdateAuthorCommand(this.id, this.name, this.description);
+  UpdateAuthorCommand(this.id, String name, String description)
+      : super(name, description);
 
+  @override
   Author toAuthor() =>
       Author(id, name, description, DateTime.now(), DateTime.now());
 }
