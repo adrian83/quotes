@@ -1,6 +1,7 @@
+import 'package:quotesbe2/web/response.dart';
 import 'package:shelf/shelf.dart';
 
-enum HttpMethod { get, post, put, delete }
+enum HttpMethod { get, post, put, delete, options }
 
 class Mapping {
 
@@ -20,8 +21,7 @@ class Mapping {
       .map((segment) => _isPathParam(segment) ? "<${_pathParamName(segment)}|$paramPattern>" : segment)
       .join(slash); 
     
-    print("path: $path");
-    print("pathPattern: $pathPattern");
+    print("method: $method, path: $path, pathPattern: $pathPattern");
   }
 
   String _pathParamName(String segment) => segment.substring(1, segment.length-1);
@@ -30,4 +30,4 @@ class Mapping {
 }
 
 
-Response healthHandler(Request request) => Response.ok('OK');
+Response healthHandler(Request request) => emptyResponseOk();

@@ -17,29 +17,40 @@ class QuoteRepository extends Repository<Quote> {
 
   QuoteRepository(ESStore<Quote> store) : super(store, quoteDecoder);
 
-  Future<Page<Quote>> findBookQuotes(ListQuotesFromBookQuery request) =>
-      Future.value(request)
-          .then(
-              (_) => _logger.info("find quotes from book by request: $request"))
-          .then((_) => MatchQuery(quoteBookIdLabel, request.bookId))
-          .then((query) => findDocuments(query, request.pageRequest,
-              sorting: SortElement.desc(modifiedUtcLabel)));
+  Future<Page<Quote>> findBookQuotes(ListQuotesFromBookQuery query) async {
+    _logger.info("find quotes from book by query: $query");
+    var matchQuery = MatchQuery(quoteBookIdLabel, query.bookId);
+    return await findDocuments(
+      matchQuery,
+      query.pageRequest,
+      sorting: sortingByModifiedTimeDesc,
+    );
+  }
 
-  Future<Page<Quote>> findQuotes(SearchQuery request) => Future.value(request)
-      .then((_) => _logger.info("find quotes by request: $request"))
-      .then((_) => WildcardQuery(quoteTextLabel, request.searchPhrase ?? ""))
-      .then((query) => findDocuments(query, request.pageRequest,
-          sorting: SortElement.desc(modifiedUtcLabel)));
+  Future<Page<Quote>> findQuotes(SearchQuery request) async {
+    _logger.info("find quotes by request: $request");
+    var searchPhrase = request.searchPhrase ?? "";
+    var wildcardQuery = WildcardQuery(quoteTextLabel, searchPhrase);
+    return await findDocuments(
+      wildcardQuery,
+      request.pageRequest,
+      sorting: sortingByModifiedTimeDesc,
+    );
+  }
 
-  Future<void> deleteByAuthor(String authorId) => Future.value(authorId)
-      .then((_) => _logger.info("delete books by author with id: $authorId"))
-      .then((_) => JustQuery(MatchQuery(quoteAuthorIdLabel, authorId)))
-      .then((query) => deleteDocuments(query));
+  Future<void> deleteByAuthor(String authorId) async {
+    _logger.info("delete books by author with id: $authorId");
+    var query = JustQuery(MatchQuery(quoteAuthorIdLabel, authorId));
+    await deleteDocuments(query);
+    return;
+  }
 
-  Future<void> deleteByBook(String bookId) => Future.value(bookId)
-      .then((_) => _logger.info("delete quotes by book with id: $bookId"))
-      .then((_) => JustQuery(MatchQuery(quoteBookIdLabel, bookId)))
-      .then((query) => deleteDocuments(query));
+  Future<void> deleteByBook(String bookId) async {
+    _logger.info("delete quotes by book with id: $bookId");
+    var query = JustQuery(MatchQuery(quoteBookIdLabel, bookId));
+    await deleteDocuments(query);
+    return;
+  }
 }
 
 Decoder<QuoteEvent> quoteEventDecoder =
@@ -55,30 +66,38 @@ class QuoteEventRepository extends Repository<QuoteEvent> {
   QuoteEventRepository(ESStore<QuoteEvent> store)
       : super(store, quoteEventDecoder);
 
-  Future<void> storeSaveQuoteEvent(Quote quote) => Future.value(quote)
-      .then((_) => _logger.info("save quote event (save) for quote: $quote"))
-      .then((_) => save(QuoteEvent.create(quote)));
+  Future<void> storeSaveQuoteEvent(Quote quote) async {
+    _logger.info("save quote event (save) for quote: $quote");
+    await save(QuoteEvent.create(quote));
+    return;
+  }
 
-  Future<void> storeUpdateQuoteEvent(Quote quote) => Future.value(quote)
-      .then((_) => _logger.info("save quote event (update) for book: $quote"))
-      .then((_) => save(QuoteEvent.update(quote)));
+  Future<void> storeUpdateQuoteEvent(Quote quote) async {
+    _logger.info("save quote event (update) for book: $quote");
+    await save(QuoteEvent.update(quote));
+    return;
+  }
 
-  Future<void> storeDeleteQuoteEvent(Quote quote) => Future.value(quote)
-      .then((_) => _logger.info("save quote event (delete) for book: $quote"))
-      .then((_) => save(QuoteEvent.delete(quote)));
+  Future<void> storeDeleteQuoteEvent(Quote quote) async {
+    _logger.info("save quote event (delete) for book: $quote");
+    await save(QuoteEvent.delete(quote));
+    return;
+  }
 
-  Future<void> storeDeleteQuoteEventByQuoteId(String quoteId) =>
-      Future.value(quoteId)
-          .then((_) => _logger
-              .info("save quote event (delete) for quote with id: $quoteId"))
-          .then((_) => MatchQuery(_quoteIdProp, quoteId))
-          .then((query) => super.findDocuments(query, PageRequest.first(),
-              sorting: SortElement.desc(modifiedUtcLabel)))
-          .then((page) => storeDeleteQuoteEvent(page.elements[0].entity));
+  Future<void> storeDeleteQuoteEventByQuoteId(String quoteId) async {
+    _logger.info("save quote event (delete) for quote with id: $quoteId");
+    var matchQuery = MatchQuery(_quoteIdProp, quoteId);
+    var page = await super.findDocuments(
+      matchQuery,
+      PageRequest.first(),
+      sorting: SortElement.desc(modifiedUtcLabel),
+    );
+    return storeDeleteQuoteEvent(page.elements.first.entity);
+  }
 
   Future<void> deleteByAuthor(String authorId) async {
-    _logger.info(
-        "save quote events (delete) for quotes created by author with id: $authorId");
+    _logger
+        .info("save events (delete) for quotes created by author: $authorId");
     var matchQuery = MatchQuery(_authorIdProp, authorId);
     var quoteEvents = await super.findAllDocuments(matchQuery);
     var newestQuotes = newestEntities(quoteEvents);
@@ -87,8 +106,7 @@ class QuoteEventRepository extends Repository<QuoteEvent> {
   }
 
   Future<void> deleteByBook(String bookId) async {
-    _logger.info(
-        "save quote events (delete) for quotes from book with id: $bookId");
+    _logger.info("save events (delete) for quotes from book: $bookId");
     var matchQuery = MatchQuery(_bookIdProp, bookId);
     var quoteEvents = await super.findAllDocuments(matchQuery);
     var newestQuotes = newestEntities(quoteEvents);
@@ -96,10 +114,13 @@ class QuoteEventRepository extends Repository<QuoteEvent> {
     return;
   }
 
-  Future<Page<QuoteEvent>> findQuoteEvents(ListEventsByQuoteRequest request) =>
-      Future.value(request)
-          .then((_) => _logger.info("find quote events by request: $request"))
-          .then((_) => MatchQuery(_quoteIdProp, request.quoteId))
-          .then((query) => super.findDocuments(query, request.pageRequest,
-              sorting: SortElement.asc(createdUtcLabel)));
+  Future<Page<QuoteEvent>> findQuoteEvents(ListEventsByQuoteQuery query) async {
+    _logger.info("find events by request: $query");
+    var matchQuery = MatchQuery(_quoteIdProp, query.quoteId);
+    return await super.findDocuments(
+      matchQuery,
+      query.pageRequest,
+      sorting: SortElement.asc(createdUtcLabel),
+    );
+  }
 }

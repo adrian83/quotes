@@ -11,9 +11,6 @@ import 'package:quotesbe2/storage/elasticsearch/search.dart';
 
 Decoder<Book> bookDecoder = (Map<String, dynamic> json) => Book.fromJson(json);
 
-var sortingByModifiedTimeDesc = SortElement.desc(modifiedUtcLabel);
-var sortingByCreatedTimeAsc = SortElement.asc(createdUtcLabel);
-
 class BookRepository extends Repository<Book> {
   final Logger _logger = Logger('BookRepository');
 

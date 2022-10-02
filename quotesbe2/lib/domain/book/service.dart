@@ -71,12 +71,12 @@ class BookService {
   }
 
   Future<Page<Book>> findBooks(SearchQuery request) async {
-    _logger.info("find books by request: $request");
+    _logger.info("find books by query: $request");
     return await _bookRepository.findBooks(request);
   }
 
-  Future<Page<BookEvent>> listEvents(ListEventsByBookQuery request) async {
-    _logger.info("find book events by request: $request");
-    return await _bookEventRepository.findBookEvents(request);
+  Future<Page<BookEvent>> listEvents(ListEventsByBookQuery query) async {
+    _logger.info("find book events by query: $query");
+    return await _bookEventRepository.findBookEvents(query);
   }
 }

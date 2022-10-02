@@ -30,7 +30,16 @@ class QuoteController {
 
     return _quoteService
         .findQuotes(query)
-        .then((page) => Response.ok(jsonEncode(page)));
+        .then((page) => jsonResponseOk(page));
+  }
+
+    Future<Response> searchBookQuotes(Request request, String authorId, String bookId) async {
+    var query = ListQuotesFromBookQuery(authorId, bookId, extractPageRequest(request));
+
+
+    return _quoteService
+    .findBookQuotes(query)
+        .then((page) => jsonResponseOk(page));
   }
 
   Future<Response> store(
@@ -50,7 +59,7 @@ class QuoteController {
 
     return _quoteService
         .save(command)
-        .then((quote) => Response.ok(jsonEncode(quote)));
+        .then((quote) => jsonResponseOk(quote));
   }
 
   Future<Response> update(
@@ -71,7 +80,7 @@ class QuoteController {
 
     return _quoteService
         .update(command)
-        .then((quote) => Response.ok(jsonEncode(quote)));
+        .then((quote) => jsonResponseOk(quote));
   }
 
   Future<Response> find(
@@ -82,7 +91,7 @@ class QuoteController {
   ) =>
       _quoteService
           .find(FindQuoteQuery(authorId, bookId, quoteId))
-          .then((quote) => Response.ok(jsonEncode(quote)));
+          .then((quote) => jsonResponseOk(quote));
 
   Future<Response> delete(
     Request request,
@@ -92,5 +101,5 @@ class QuoteController {
   ) =>
       _quoteService
           .delete(DeleteQuoteCommand(authorId, bookId, quoteId))
-          .then((_) => Response.ok(""));
+          .then((_) => emptyResponseOk());
 }

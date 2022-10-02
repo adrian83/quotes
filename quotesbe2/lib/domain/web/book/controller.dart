@@ -32,8 +32,18 @@ class BookController {
 
     return _bookService
         .findBooks(query)
-        .then((page) => Response.ok(jsonEncode(page)));
+        .then((page) => jsonResponseOk(page));
   }
+
+  Future<Response> searchAuthorBooks(Request request, String authorId) async {
+    var query = ListBooksByAuthorQuery(authorId, extractPageRequest(request));
+
+    return _bookService
+        .findAuthorBooks(query)
+        .then((page) => jsonResponseOk(page));
+  }
+
+  
 
   Future<Response> store(Request request, String authorId) async {
     var json = jsonDecode(await request.readAsString()) as Map;
@@ -48,7 +58,7 @@ class BookController {
 
     return _bookService
         .save(command)
-        .then((author) => Response.ok(jsonEncode(author)));
+        .then((author) => jsonResponseOk(author));
   }
 
   Future<Response> update(
@@ -69,16 +79,16 @@ class BookController {
 
     return _bookService
         .update(command)
-        .then((book) => Response.ok(jsonEncode(book)));
+        .then((book) => jsonResponseOk(book));
   }
 
   Future<Response> find(Request request, String authorId, String bookId) =>
       _bookService
           .find(FindBookQuery(authorId, bookId))
-          .then((book) => Response.ok(jsonEncode(book)));
+          .then((book) => jsonResponseOk(book));
 
   Future<Response> delete(Request request, String authorId, String bookId) =>
       _bookService
           .delete(DeleteBookCommand(authorId, bookId))
-          .then((_) => Response.ok(""));
+          .then((_) => emptyResponseOk());
 }

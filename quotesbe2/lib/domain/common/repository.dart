@@ -6,6 +6,9 @@ import 'package:quotesbe2/storage/elasticsearch/document.dart';
 import 'package:quotesbe2/storage/elasticsearch/store.dart';
 import 'package:quotesbe2/storage/elasticsearch/search.dart';
 
+var sortingByModifiedTimeDesc = SortElement.desc(modifiedUtcLabel);
+var sortingByCreatedTimeAsc = SortElement.asc(createdUtcLabel);
+
 typedef Decoder<T> = T Function(Map<String, dynamic> json);
 
 const maxPageSize = 1000;
@@ -27,22 +30,24 @@ class Repository<T extends Document> {
 
   Future<void> deleteDocuments(Query query) => _store.deleteByQuery(query);
 
-  Future<Page<T>> findDocuments(Query query, PageRequest pageRequest,
-          {SortElement? sorting}) =>
-      Future.value(sorting ?? SortElement.asc("_id"))
-          .then((sorting) => SearchRequest(
-              query, [sorting], pageRequest.offset, pageRequest.limit))
-          .then((request) => _store.list(request))
-          .then((resp) => resp.hits)
-          .then((hits) {
-        var docs = hits.hits.map((h) => _fromJson(h.source)).toList();
-        var info =
-            PageInfo(pageRequest.limit, pageRequest.offset, hits.total.value);
-        return Page<T>(info, docs);
-      });
+  Future<Page<T>> findDocuments(
+    Query query,
+    PageRequest pageRequest, {
+    SortElement? sorting,
+  }) async {
+    var sort = sorting ?? SortElement.asc("_id");
+    var searchRequest =
+        SearchRequest(query, [sort], pageRequest.offset, pageRequest.limit);
+    var result = await _store.list(searchRequest);
+    var hits = result.hits;
+    var docs = hits.hits.map((h) => _fromJson(h.source)).toList();
+    var info =
+        PageInfo(pageRequest.limit, pageRequest.offset, hits.total.value);
+    return Page<T>(info, docs);
+  }
 
   Future<List<T>> findAllDocuments(Query query,
-      {PageRequest? pageRequest}) async {
+      {PageRequest? pageRequest,}) async {
     var sorting = SortElement.asc("_id");
     var pageReq = pageRequest ?? PageRequest(maxPageSize, 0);
     var searchQuery =
@@ -58,12 +63,16 @@ class Repository<T extends Document> {
     return docs;
   }
 
+  String _extractEntityIdFromEvent(Event e) => e.entity.id;
+
+  int _compareEventsEntityCreationTimes(Event a, Event b) =>
+      a.entity.createdUtc.compareTo(b.entity.createdUtc);
+
   List<N> newestEntities<N extends Entity, K>(List<Event<N>> elements) =>
-      groupBy(elements, (event) => (event as Event).entity.id)
+      groupBy(elements, _extractEntityIdFromEvent)
           .map((key, value) {
-            value.sort(
-                (a, b) => a.entity.createdUtc.compareTo(b.entity.createdUtc));
-            return MapEntry(key, value[0].entity);
+            value.sort(_compareEventsEntityCreationTimes);
+            return MapEntry(key, value.first.entity);
           })
           .values
           .toList();

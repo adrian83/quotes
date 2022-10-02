@@ -90,23 +90,6 @@ class QuoteEvent extends Event<Quote> {
       "QuoteEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
 }
 
-class ListEventsByQuoteRequest {
-  String authorId, bookId, quoteId;
-  late PageRequest pageRequest;
 
-  ListEventsByQuoteRequest(
-    this.authorId,
-    this.bookId,
-    this.quoteId,
-    int offset,
-    int limit,
-  ) {
-    pageRequest = PageRequest(limit, offset);
-  }
-
-  @override
-  String toString() =>
-      "ListEventsByQuoteRequest [authorId: $authorId, bookId: $bookId, quoteId: $quoteId, pageRequest: $pageRequest]";
-}
 
 

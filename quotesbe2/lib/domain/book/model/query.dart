@@ -11,13 +11,11 @@ class ListBooksByAuthorQuery {
   String authorId;
   late PageRequest pageRequest;
 
-  ListBooksByAuthorQuery(this.authorId, int offset, int limit) {
-    pageRequest = PageRequest(limit, offset);
-  }
+  ListBooksByAuthorQuery(this.authorId, this.pageRequest);
 
   @override
   String toString() =>
-      "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, $pageRequestLabel: $pageRequest]";
+      "ListBooksByAuthorQuery [$bookAuthorIdLabel: $authorId, $pageRequestLabel: $pageRequest]";
 }
 
 class ListEventsByBookQuery extends FindBookQuery {
