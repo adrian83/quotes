@@ -1,7 +1,6 @@
 import 'dart:developer' as developer;
 
 import 'package:flutter/material.dart';
-import 'package:url_launcher/link.dart';
 
 import 'package:quotesfe2/domain/common/page.dart' as qpage;
 import 'package:quotesfe2/pages/widgets/paging.dart';
@@ -121,16 +120,10 @@ class _EntryWrapperState<ENTITY> extends State<EntryWrapper<ENTITY>> {
       children.add(const Text('Deleted'));
     } else {
       children.add(widget._widget);
-      children.add(Link(
-          uri: Uri.parse('/authors/show/'),
-          target: LinkTarget.blank,
-          builder: (BuildContext ctx, FollowLink? openLink) {
-            return TextButton(
-              onPressed: delete,
-              child: const Text('Delete'),
-            );
-          },
-        )
+      children.add(TextButton(
+              onPressed: () => Navigator.pushNamed(context,
+              '/authors/show/'),
+              child: const Text('Delete'))
         );
     }
 

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:developer' as developer;
 
-import 'package:url_launcher/link.dart';
-
 import 'package:quotesfe2/domain/author/model.dart';
 import 'package:quotesfe2/pages/widgets/common.dart';
-
 
 class AuthorEntry extends StatefulWidget {
   final Author _author;
@@ -17,7 +14,6 @@ class AuthorEntry extends StatefulWidget {
 }
 
 class _AuthorEntryState extends State<AuthorEntry> {
-
   @override
   Widget build(BuildContext context) {
     developer.log("building: ${widget._author.name}");
@@ -26,15 +22,10 @@ class _AuthorEntryState extends State<AuthorEntry> {
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text('Id: ${widget._author.id}'),
-        Link(
-          uri: Uri.parse('/authors/show/${widget._author.id}'),
-          target: LinkTarget.blank,
-          builder: (BuildContext ctx, FollowLink? openLink) {
-            return TextButton(
-              onPressed: openLink,
-              child: Text('Name: ${widget._author.name}'),
-            );
-          },
+        TextButton(
+          onPressed: () => Navigator.pushNamed(
+              context, "/authors/show/${widget._author.id}"), 
+          child: Text('Name: ${widget._author.name}'),
         ),
         Text('Description: ${widget._author.shortDescription}')
       ],
@@ -42,17 +33,13 @@ class _AuthorEntryState extends State<AuthorEntry> {
   }
 }
 
-
-
-
 class AuthorPageEntry extends PageEntry<Author, AuthorsPage, AuthorEntry> {
-
   const AuthorPageEntry(
-    Key? key,
-    PageChangeAction<Author> pageChangeAction, 
-    ToEntryTransformer<Author, AuthorEntry> toEntryTransformer,
-    EditEntityUrl<Author> onEditAction,
-    OnDeleteAction<Author> onDeleteAction
-  ) : super(key, "Authors", pageChangeAction, toEntryTransformer, onEditAction, onDeleteAction);
-
+      Key? key,
+      PageChangeAction<Author> pageChangeAction,
+      ToEntryTransformer<Author, AuthorEntry> toEntryTransformer,
+      EditEntityUrl<Author> onEditAction,
+      OnDeleteAction<Author> onDeleteAction)
+      : super(key, "Authors", pageChangeAction, toEntryTransformer,
+            onEditAction, onDeleteAction);
 }
