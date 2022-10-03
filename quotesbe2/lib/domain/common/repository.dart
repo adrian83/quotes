@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import 'package:quotesbe2/common/function.dart';
 import 'package:quotesbe2/domain/common/model.dart';
 import 'package:quotesbe2/storage/elasticsearch/document.dart';
@@ -14,6 +16,8 @@ typedef Decoder<T> = T Function(Map<String, dynamic> json);
 const maxPageSize = 1000;
 
 class Repository<T extends Document> {
+  final Logger _logger = Logger('Repository');
+
   final ESStore<T> _store;
   final Decoder<T> _fromJson;
 
@@ -40,14 +44,17 @@ class Repository<T extends Document> {
         SearchRequest(query, [sort], pageRequest.offset, pageRequest.limit);
     var result = await _store.list(searchRequest);
     var hits = result.hits;
+    _logger.info("hits: ${hits.hits}");
     var docs = hits.hits.map((h) => _fromJson(h.source)).toList();
     var info =
         PageInfo(pageRequest.limit, pageRequest.offset, hits.total.value);
     return Page<T>(info, docs);
   }
 
-  Future<List<T>> findAllDocuments(Query query,
-      {PageRequest? pageRequest,}) async {
+  Future<List<T>> findAllDocuments(
+    Query query, {
+    PageRequest? pageRequest,
+  }) async {
     var sorting = SortElement.asc("_id");
     var pageReq = pageRequest ?? PageRequest(maxPageSize, 0);
     var searchQuery =
