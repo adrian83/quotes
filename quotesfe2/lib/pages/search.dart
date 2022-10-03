@@ -63,7 +63,7 @@ _SearchPageState() {
 
   void newAuthorWidget() {
       authorsWidget = AuthorPageEntry(
-        UniqueKey(), changeAuthorsPage, (Author a) => AuthorEntry(null, a), editAuthorLink, onDeleteAuthor);
+        UniqueKey(), changeAuthorsPage, (Author a) => AuthorEntry(null, a, false, true, false), editAuthorLink, onDeleteAuthor);
   }
 
   void newBookWidget() {
