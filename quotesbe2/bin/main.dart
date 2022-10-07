@@ -236,7 +236,7 @@ Future<void> main() async {
         findQuotesMapping,
         deleteQuoteMapping
       ],
-      true);
+      true,);
 
   server.start();
 }

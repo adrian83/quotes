@@ -8,5 +8,9 @@ class Entity {
 
   Entity.empty() : this(null, nowUtc(), nowUtc());
 
-  Map toJson() => {"id": id, "modifiedUtc": modifiedUtc.toIso8601String(), "createdUtc": createdUtc.toIso8601String()};
+  Map toJson() => {
+        "id": id,
+        "modifiedUtc": modifiedUtc.toIso8601String(),
+        "createdUtc": createdUtc.toIso8601String()
+      };
 }

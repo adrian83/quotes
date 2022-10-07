@@ -1,14 +1,14 @@
 class ValidationError {
-  String field, code, message;
+  String field, message;
 
-  ValidationError(this.field, this.code, this.message);
+  ValidationError(this.field, this.message);
 
   factory ValidationError.fromJson(Map<String, dynamic> json) =>
-      ValidationError(json['field'], json['code'], json['message']);
+      ValidationError(json['field'], json['message']);
 
   @override
   String toString() {
-    return "ValidationError { field=$field, code=$code, message=$message }";
+    return "ValidationError { field=$field, message=$message }";
   }
 }
 
@@ -19,7 +19,8 @@ class ValidationErrors implements Exception {
     validationErrors = errors.map((e) => ValidationError.fromJson(e)).toList();
   }
 
-  factory ValidationErrors.fromJson(List<dynamic> json) => ValidationErrors(json);
+  factory ValidationErrors.fromJson(List<dynamic> json) =>
+      ValidationErrors(json);
 
   @override
   String toString() {

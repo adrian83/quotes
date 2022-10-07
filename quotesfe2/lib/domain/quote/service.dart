@@ -13,8 +13,10 @@ class QuoteService extends Service<Quote> {
 
   QuoteService(BrowserClient http, this._config) : super(http);
 
-  Future<QuotesPage> listBookQuotes(String authorId, String bookId, PageRequest request) {
-    var url = "${_config.beHost}/authors/$authorId/books/$bookId/quotes?${pageRequestToUrlParams(request)}";
+  Future<QuotesPage> listBookQuotes(
+      String authorId, String bookId, PageRequest request) {
+    var url =
+        "${_config.beHost}/authors/$authorId/books/$bookId/quotes?${pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
   }
 
@@ -24,29 +26,34 @@ class QuoteService extends Service<Quote> {
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
   }
 
-  Future<QuoteEventsPage> listEvents(String authorId, String bookId, String quoteId, PageRequest request) {
+  Future<QuoteEventsPage> listEvents(
+      String authorId, String bookId, String quoteId, PageRequest request) {
     var url =
         "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId/events?${pageRequestToUrlParams(request)}";
     return getEntity(url).then((json) => QuoteEventsPage.fromJson(json));
   }
 
   Future<Quote> find(String authorId, String bookId, String quoteId) {
-    var url = "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
+    var url =
+        "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
     return getEntity(url).then((json) => Quote.fromJson(json));
   }
 
   Future<Quote> update(Quote quote) {
-    var url = "${_config.beHost}/authors/${quote.authorId}/books/${quote.bookId}/quotes/${quote.id}";
+    var url =
+        "${_config.beHost}/authors/${quote.authorId}/books/${quote.bookId}/quotes/${quote.id}";
     return updateEntity(url, quote).then((json) => Quote.fromJson(json));
   }
 
   Future<Quote> create(Quote quote) {
-    var url = "${_config.beHost}/authors/${quote.authorId}/books/${quote.bookId}/quotes";
+    var url =
+        "${_config.beHost}/authors/${quote.authorId}/books/${quote.bookId}/quotes";
     return createEntity(url, quote).then((json) => Quote.fromJson(json));
   }
 
   Future<String> delete(String authorId, String bookId, String quoteId) {
-    var url = "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
+    var url =
+        "${_config.beHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
     return deleteEntity(url).then((_) => quoteId);
   }
 }

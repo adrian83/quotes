@@ -15,7 +15,7 @@ deps:
 
 
 fe-format:
-	cd quotes-fe && dart format -o write -l 120 --fix . #&& dart fix -n . && dart analyze
+	cd quotesfe2 && dart format -o write -l 80 --fix . && dart fix -n . && dart analyze
 
 fe-get:
 	echo "getting frontend dependencies" 

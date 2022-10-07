@@ -12,7 +12,7 @@ Simple CRUD application written in: Dart 2.17, Flutter 3 and Elasticsearch 7.12.
 
 #### Steps
 1. Run `docker-compose up`
-2. Navigate in browser to `localhost:8080`
+2. Navigate in browser to `localhost:8000`
 3. (Optional) Put some content into database `make be-init`
 
 ### Running locally

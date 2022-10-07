@@ -16,7 +16,7 @@ class _BookEntryState extends State<BookEntry> {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: <Widget>[
         Text('Id: ${widget._book.id}'),
@@ -32,12 +32,7 @@ class _BookEntryState extends State<BookEntry> {
 }
 
 class BookPageEntry extends PageEntry<Book, BooksPage, BookEntry> {
-  const BookPageEntry(
-      Key key,
-      PageChangeAction<Book> pageChangeAction,
-      ToEntryTransformer<Book, BookEntry> toEntryTransformer,
-      EditEntityUrl<Book> onEditAction,
-      OnDeleteAction<Book> onDeleteAction)
-      : super(key, "Books", pageChangeAction, toEntryTransformer, onEditAction,
-            onDeleteAction);
+  const BookPageEntry(Key key, PageChangeAction<Book> pageChangeAction,
+      ToEntryTransformer<Book, BookEntry> toEntryTransformer)
+      : super(key, "Books", pageChangeAction, toEntryTransformer);
 }

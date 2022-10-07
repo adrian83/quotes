@@ -1,17 +1,15 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'dart:developer' as developer;
 import 'package:http/http.dart';
-//import 'package:logging/logging.dart';
 
 import 'errors.dart';
 import 'page.dart';
 
 class Service<T> {
-  // static final Logger logger = Logger('Service');
-
   static final _headers = {'Content-Type': 'application/json'};
-  
+
   static final _corsHeaders = {
     "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
@@ -44,21 +42,22 @@ class Service<T> {
           response.statusCode == 200 ? {} : _handleErrors(response));
 
   Map<String, dynamic> _handleErrors(response) {
+    developer.log("statusCode ${response.statusCode}");
     if (response.statusCode == 404) {
       throw NotFoundError();
     }
 
-    var json = jsonDecode(response.body);
     if (response.statusCode == 400) {
-      //logger.severe("json $json");
+      var json = jsonDecode(response.body);
+      developer.log("json $json");
       var ve = ValidationErrors.fromJson(json);
       //logger.severe("ve $ve");
       throw ve;
     } else if (response.statusCode == 500) {
-      throw Exception(json);
+      throw Exception(jsonDecode(response.body));
     }
     //logger.info("Http request: $json");
-    return json;
+    return jsonDecode(response.body);
   }
 
   String pageRequestToUrlParams(PageRequest request) =>

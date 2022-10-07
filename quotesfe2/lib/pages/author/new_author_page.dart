@@ -33,7 +33,7 @@ class _NewAuthorPageState extends State<NewAuthorPage> {
     var form = Form(
       key: _formKey,
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextFormField(controller: nameController),
           TextFormField(controller: descController),

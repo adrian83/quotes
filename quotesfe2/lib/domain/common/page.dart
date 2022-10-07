@@ -5,7 +5,8 @@ class PageInfo {
 
   PageInfo(this.limit, this.offset, this.total);
 
-  factory PageInfo.fromJson(Map<String, dynamic> json) => PageInfo(json['limit'], json['offset'], json['total']);
+  factory PageInfo.fromJson(Map<String, dynamic> json) =>
+      PageInfo(json['limit'], json['offset'], json['total']);
 
   int get curent {
     var current = offset / limit;
@@ -14,7 +15,7 @@ class PageInfo {
 
   int get pages {
     var pages = total / limit;
-    return ((total % limit == 0) ? pages : pages + 1).toInt() ;
+    return ((total % limit == 0) ? pages : pages + 1).toInt();
   }
 
   Map toJson() => {
@@ -52,7 +53,7 @@ class Page<T> {
     elements.add(elem);
   }
 
-@override
+  @override
   String toString() => jsonEncode(this);
 }
 
@@ -63,12 +64,14 @@ class PageRequest {
 
   PageRequest(this.limit, this.offset);
 
-  PageRequest.page(int pageNumber) : this(defPageSize, defPageSize * pageNumber);
+  PageRequest.page(int pageNumber)
+      : this(defPageSize, defPageSize * pageNumber);
 
-  PageRequest.pageWithSize(int pageNumber, int size) : this(size, size * pageNumber);
+  PageRequest.pageWithSize(int pageNumber, int size)
+      : this(size, size * pageNumber);
 
   int page() => offset ~/ limit;
 
-@override
+  @override
   String toString() => jsonEncode(this);
 }

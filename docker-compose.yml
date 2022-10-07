@@ -37,20 +37,13 @@ services:
     depends_on:
     - elasticsearch
 
-#  frontend:
-#    build: ./quotes-fe/
-#    ports:
-#    - "8080:8080"
-#    links:
-#    - backend
-#    depends_on:
-#    - backend
 
-#  frontend2:
-#    build: ./quotesfe2/
-#    ports:
-#    - "8000:8000"
-#    links:
-#    - backend
-#    depends_on:
-#    - backend
+  # frontend:
+  #   build: ./quotesfe2/
+  #   ports:
+  #   - "8000:8000"
+  #   links:
+  #   - backend
+  #   depends_on:
+  #   - backend
+
