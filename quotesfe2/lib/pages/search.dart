@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:quotesfe2/pages/widgets/author/list_entry.dart';
 import 'package:quotesfe2/pages/widgets/author/page_entry.dart';
 
-import 'package:quotesfe2/pages/widgets/book.dart';
+import 'package:quotesfe2/pages/widgets/book/list_entry.dart';
+import 'package:quotesfe2/pages/widgets/book/page_entry.dart';
 import 'package:quotesfe2/pages/widgets/quote.dart';
 import 'package:quotesfe2/domain/author/model.dart';
 import 'package:quotesfe2/domain/book/model.dart';
@@ -13,6 +14,7 @@ import 'package:quotesfe2/domain/author/service.dart';
 import 'package:quotesfe2/domain/book/service.dart';
 import 'package:quotesfe2/domain/quote/service.dart';
 import 'package:quotesfe2/domain/common/page.dart';
+import 'package:quotesfe2/pages/widgets/quote/list_entry.dart';
 
 class SearchPage extends StatefulWidget {
   static String routePattern = r'^/search/?(&[\w-=]+)?$';
@@ -63,12 +65,20 @@ class _SearchPageState extends State<SearchPage> {
 
   void newBookWidget() {
     booksWidgets = BookPageEntry(
-        UniqueKey(), changeBooksPage, (Book b) => BookEntry(null, b));
+        UniqueKey(),
+        changeBooksPage,
+        (Book b) => BookEntry(
+              null,
+              b,
+              false,
+              true,
+              true,
+            ));
   }
 
   void newQuotesWidget() {
-    quotesWidgets = QuotePageEntry(
-        UniqueKey(), changeQuotesPage, (Quote q) => QuoteEntry(null, q));
+    quotesWidgets = QuotePageEntry(UniqueKey(), changeQuotesPage,
+        (Quote q) => QuoteEntry(null, q, false, true, true));
   }
 
   Future<AuthorsPage> changeAuthorsPage(PageRequest pageReq) {
@@ -91,31 +101,34 @@ class _SearchPageState extends State<SearchPage> {
     developer.log("building search page");
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            textField,
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                  child: const Text('Search'),
-                  onPressed: () => _search(textField.controller?.value.text)),
-            ),
-            const SizedBox(height: 10),
-            authorsWidget,
-            const SizedBox(height: 10),
-            booksWidgets,
-            const SizedBox(height: 10),
-            quotesWidgets,
-          ],
+        appBar: AppBar(
+          title: Text(widget.title),
         ),
-      ),
-    );
+        body: SingleChildScrollView(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                textField,
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: ElevatedButton(
+                      child: const Text('Search'),
+                      onPressed: () =>
+                          _search(textField.controller?.value.text)),
+                ),
+                const SizedBox(height: 20),
+                authorsWidget,
+                const SizedBox(height: 20),
+                booksWidgets,
+                const SizedBox(height: 20),
+                quotesWidgets,
+                const SizedBox(height: 30)
+              ],
+            ),
+          ),
+        ));
   }
 }

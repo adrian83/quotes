@@ -7,6 +7,12 @@ const bookTitleLabel = 'title';
 const bookDescLabel = 'description';
 const bookIdLabel = 'bookId';
 
+DateTime temporary(dynamic json, String field) {
+  var v = json[field];
+  return v == null ? DateTime.now() : DateTime.parse(v);
+}
+
+
 class Book extends Entity {
   final String title, description, authorId;
 
@@ -30,8 +36,8 @@ class Book extends Entity {
             json[bookTitleLabel],
             json[bookDescLabel],
             json[bookAuthorIdLabel],
-            DateTime.parse(json[modifiedUtcLabel]),
-            DateTime.parse(json[createdUtcLabel]),);
+            temporary(json, modifiedUtcLabel),
+            temporary(json, createdUtcLabel),);
 
   @override
   String getId() => id;
@@ -76,6 +82,15 @@ class BookEvent extends Event<Book> {
             Book.fromJson(json[entityLabel]),
             DateTime.parse(json[modifiedUtcLabel]),
             DateTime.parse(json[createdUtcLabel]),);
+
+  @override
+  Map<dynamic, dynamic> toJson() => {
+        idLabel: id,
+        operationLabel: operation,
+        modifiedUtcLabel: modifiedUtc.toIso8601String(),
+        createdUtcLabel: createdUtc.toIso8601String(),
+        entityLabel: entity.toJson()
+      };
 
   @override
   String getId() => id;

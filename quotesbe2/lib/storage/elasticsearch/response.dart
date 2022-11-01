@@ -102,6 +102,12 @@ class HitsTotal {
   String toString() => "HitsTotal [value: $value, relation: $relation]";
 }
 
+List extractList(dynamic json, String name) {
+  var l = json[hitsF];
+  return l != null ? l as List : [];
+}
+
+
 class SearchHits {
   HitsTotal total;
   double maxScore;
@@ -112,7 +118,7 @@ class SearchHits {
   factory SearchHits.fromJson(Map<String, dynamic>? json) {
     if (json == null) return SearchHits(HitsTotal(0, ""), 0, List.empty());
     var total = HitsTotal.fromJson(json[totalF]);
-    return SearchHits(total, json[maxScoreF] ??= 0.0, (json[hitsF] as List).map((d) => SearchHit.fromJson(d)).toList());
+    return SearchHits(total, json[maxScoreF] ??= 0.0, extractList(json, hitsF).map((d) => SearchHit.fromJson(d)).toList());
   }
 
   @override

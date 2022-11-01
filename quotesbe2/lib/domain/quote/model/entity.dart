@@ -83,6 +83,15 @@ class QuoteEvent extends Event<Quote> {
         );
 
   @override
+  Map<dynamic, dynamic> toJson() => {
+        idLabel: id,
+        operationLabel: operation,
+        modifiedUtcLabel: modifiedUtc.toIso8601String(),
+        createdUtcLabel: createdUtc.toIso8601String(),
+        entityLabel: entity.toJson()
+      };
+
+  @override
   String getId() => id;
 
   @override

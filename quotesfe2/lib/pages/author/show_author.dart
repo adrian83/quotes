@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:quotesfe2/domain/author/model.dart';
 import 'package:quotesfe2/domain/author/service.dart';
-import 'package:quotesfe2/pages/common.dart';
+import 'package:quotesfe2/pages/common/show.dart';
 import 'package:quotesfe2/pages/widgets/author/list_entry.dart';
 
 AuthorEntry authorToWidget(Author a) => AuthorEntry(null, a, true, false, true);
 
-class ShowAuthorPage extends ShowEntityPage<Author> {
+class ShowAuthorPage extends ShowPage<Author> {
   static String routePattern =
       r'^/authors/show/([a-zA-Z0-9_.-]*)/?(&[\w-=]+)?$';
 

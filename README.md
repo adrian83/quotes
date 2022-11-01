@@ -20,7 +20,6 @@ Simple CRUD application written in: Dart 2.17, Flutter 3 and Elasticsearch 7.12.
 #### Prerequisites
 - Docker
 - Dart
-- Webdev
 
 #### Steps
 1. Start infrastructure (Elasticsearch): `make deps`
@@ -32,8 +31,4 @@ Simple CRUD application written in: Dart 2.17, Flutter 3 and Elasticsearch 7.12.
 
 ### Misc
 1. In case of problem with running Elsticsearch docker image please run: `sudo sysctl -w vm.max_map_count=262144`
-2. Working with webdev
-- install (activate): `dart pub global activate webdev`
-- add webdev to path `export PATH="$PATH":"$HOME/.pub-cache/bin"`
-- upgrade webdev - just activate again
 

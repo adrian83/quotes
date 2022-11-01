@@ -6,12 +6,20 @@ import 'package:flutter/material.dart';
 import 'package:quotesfe2/domain/author/service.dart';
 import 'package:quotesfe2/domain/book/service.dart';
 import 'package:quotesfe2/domain/quote/service.dart';
+import 'package:quotesfe2/pages/author/list_events.dart';
+import 'package:quotesfe2/pages/book/delete_book.dart';
+import 'package:quotesfe2/pages/book/list_events.dart';
+import 'package:quotesfe2/pages/quote/list_events.dart';
+import 'package:quotesfe2/pages/quote/update_quote.dart';
+import 'package:quotesfe2/pages/quote/delete_quote.dart';
 import 'package:quotesfe2/pages/search.dart';
-import 'package:quotesfe2/pages/author/show_author_page.dart';
-import 'package:quotesfe2/pages/author/update_author_page.dart';
-import 'package:quotesfe2/pages/author/delete_author_page.dart';
-import 'package:quotesfe2/pages/author/new_author_page.dart';
-import 'package:quotesfe2/pages/books.dart';
+import 'package:quotesfe2/pages/author/show_author.dart';
+import 'package:quotesfe2/pages/author/update_author.dart';
+import 'package:quotesfe2/pages/author/delete_author.dart';
+import 'package:quotesfe2/pages/author/new_author.dart';
+import 'package:quotesfe2/pages/book/show_book.dart';
+import 'package:quotesfe2/pages/book/new_book.dart';
+import 'package:quotesfe2/pages/book/update_book.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, String);
 
@@ -53,6 +61,10 @@ class RouteConfiguration {
           (context, match) => ShowAuthorPage(null, "show author",
               extractPathElement(match, 3), _authorService)),
       Path(
+          ListAuthorEventsPage.routePattern,
+          (context, match) => ListAuthorEventsPage(null, "author events",
+              extractPathElement(match, 3), _authorService)),
+      Path(
           NewBookPage.routePattern,
           (context, match) => NewBookPage(
               null, "new author", extractPathElement(match, 3), _bookService)),
@@ -64,6 +76,57 @@ class RouteConfiguration {
               extractPathElement(match, 3),
               extractPathElement(match, 6),
               _bookService)),
+      Path(
+          UpdateBookPage.routePattern,
+          (context, match) => UpdateBookPage(
+              null,
+              "update book",
+              extractPathElement(match, 3),
+              extractPathElement(match, 6),
+              _bookService)),
+      Path(
+          DeleteBookPage.routePattern,
+          (context, match) => DeleteBookPage(
+              null,
+              "delete book",
+              extractPathElement(match, 3),
+              extractPathElement(match, 6),
+              _bookService)),
+      Path(
+          ListBookEventsPage.routePattern,
+          (context, match) => ListBookEventsPage(
+              null,
+              "book events",
+              extractPathElement(match, 3),
+              extractPathElement(match, 6),
+              _bookService)),
+      Path(
+          DeleteQuotePage.routePattern,
+          (context, match) => DeleteQuotePage(
+              null,
+              "delete quote",
+              extractPathElement(match, 3),
+              extractPathElement(match, 6),
+              extractPathElement(match, 9),
+              _quoteService)),
+      Path(
+          UpdateQuotePage.routePattern,
+          (context, match) => UpdateQuotePage(
+              null,
+              "update quote",
+              extractPathElement(match, 3),
+              extractPathElement(match, 6),
+              extractPathElement(match, 9),
+              _quoteService)),
+      Path(
+          ListQuoteEventsPage.routePattern,
+          (context, match) => ListQuoteEventsPage(
+              null,
+              "quote events",
+              extractPathElement(match, 3),
+              extractPathElement(match, 6),
+              extractPathElement(match, 9),
+              _quoteService)),
       Path(
           r'^/',
           (context, match) => SearchPage(UniqueKey(), "search", _authorService,
@@ -103,7 +166,7 @@ class RoutePaths {
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     var name = settings.name;
-    developer.log("route name: $name");
+    //print("route name: $name");
 
     for (final path in paths()) {
       final regExpPattern = RegExp(path.pattern);
@@ -115,7 +178,9 @@ class RoutePaths {
         );
       }
 
+      //print("try match: ${path.pattern} $name");
       if (regExpPattern.hasMatch(name)) {
+        //print("match: ${path.pattern} $name");
         //final firstMatch = regExpPattern.firstMatch(name);
 
         //final match = (firstMatch?.groupCount == 1) ? firstMatch?.group(1) : null;

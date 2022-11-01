@@ -31,11 +31,6 @@ Decoder<TestEntity> testEntityDecoder =
 
 @GenerateMocks([ESStore<TestEntity>])
 void main() {
-  void assertEntity(TestEntity expected, TestEntity actual) {
-    expect(expected.id, equals(actual.id));
-    expect(expected.name, equals(actual.name));
-  }
-
   test("save should persist entity", () async {
     // given
     ESStore<TestEntity> storeMock = MockESStore<TestEntity>();
@@ -61,7 +56,7 @@ void main() {
     ESStore<TestEntity> storeMock = MockESStore<TestEntity>();
     Repository<TestEntity> repository =
         Repository(storeMock, testEntityDecoder);
-        
+
     var entity = TestEntity("abc-def", "Shakespear");
 
     when(storeMock.index(entity))

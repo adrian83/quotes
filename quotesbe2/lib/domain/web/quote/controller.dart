@@ -102,4 +102,13 @@ class QuoteController {
       _quoteService
           .delete(DeleteQuoteCommand(authorId, bookId, quoteId))
           .then((_) => emptyResponseOk());
+
+  Future<Response> listEvents(
+    Request request,
+    String authorId,
+    String bookId,
+    String quoteId,
+  ) =>
+      _quoteService.listEvents(ListEventsByQuoteQuery(authorId, bookId, quoteId, extractPageRequest(request)))
+          .then((page) => jsonResponseOk(page));
 }

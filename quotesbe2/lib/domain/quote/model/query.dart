@@ -20,17 +20,14 @@ class ListQuotesFromBookQuery {
 
 class ListEventsByQuoteQuery {
   String authorId, bookId, quoteId;
-  late PageRequest pageRequest;
+  PageRequest pageRequest;
 
   ListEventsByQuoteQuery(
     this.authorId,
     this.bookId,
     this.quoteId,
-    int offset,
-    int limit,
-  ) {
-    pageRequest = PageRequest(limit, offset);
-  }
+    this.pageRequest,
+  );
 
   @override
   String toString() =>

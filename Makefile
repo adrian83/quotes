@@ -17,21 +17,18 @@ deps:
 fe-format:
 	cd quotesfe2 && dart format -o write -l 80 --fix . && dart fix -n . && dart analyze
 
-fe-get:
-	echo "getting frontend dependencies" 
-	cd quotes-fe && dart pub upgrade && dart pub get  
-
 fe-build:
 	echo "building frontend"
-	#cd quotes-fe && dart pub run build_runner clean
-	rm quotes-fe/lib/generated_consts.dart ||:
-	cd quotes-fe && webdev build # --delete-conflicting-outputs
+	cd quotesfe2 && flutter config --enable-web && flutter build web
+
+fe-run: export CHROME_EXECUTABLE=/usr/bin/google-chrome-stable
 
 fe-run: 
 	echo "running frontend"
-	cd quotes-fe && webdev serve
+	cd quotesfe2 && flutter run -d chrome
 
-fe-all: fe-format fe-get fe-build fe-run
+fe-all: fe-format fe-build fe-run
+
 
 be-run:
 	echo "running backend V2"

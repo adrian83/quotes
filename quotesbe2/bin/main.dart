@@ -39,12 +39,14 @@ const searchBooksPath = "$findAuthorPath/books";
 const findBookPath = "$findAuthorPath/books/{bookId}";
 const updateBookPath = "$findAuthorPath/books/{bookId}";
 const deleteBookPath = "$findAuthorPath/books/{bookId}";
+const findBookEventsPath = "$findAuthorPath/books/{bookId}/events";
 
 const storeQuotePath = "$findBookPath/quotes";
 const searchQuotesPath = "$findBookPath/quotes";
-const findQuotePath = "$findBookPath/quotes/{bookId}";
-const updateQuotePath = "$findBookPath/quotes/{bookId}";
-const deleteQuotePath = "$findBookPath/quotes/{bookId}";
+const findQuotePath = "$findBookPath/quotes/{quoteId}";
+const updateQuotePath = "$findBookPath/quotes/{quoteId}";
+const deleteQuotePath = "$findBookPath/quotes/{quoteId}";
+const findQuoteEventsPath = "$findBookPath/quotes/{quoteId}/events";
 
 class Config {
   final String _defElasticsearchHost = "localhost";
@@ -199,6 +201,8 @@ Future<void> main() async {
       Mapping(HttpMethod.put, updateBookPath, bookCtrl.update);
   var deleteBookMapping =
       Mapping(HttpMethod.delete, deleteBookPath, bookCtrl.delete);
+  var findBookEventsMapping =
+      Mapping(HttpMethod.get, findBookEventsPath, bookCtrl.listEvents);
 
   var storeQuoteMapping =
       Mapping(HttpMethod.post, storeQuotePath, quoteCtrl.store);
@@ -212,31 +216,38 @@ Future<void> main() async {
       Mapping(HttpMethod.put, updateQuotePath, quoteCtrl.update);
   var deleteQuoteMapping =
       Mapping(HttpMethod.delete, deleteQuotePath, quoteCtrl.delete);
+  var findQuoteEventsMapping =
+      Mapping(HttpMethod.get, findQuoteEventsPath, quoteCtrl.listEvents);
+
+      
 
   var server = Server(
-      5050,
-      [
-        healthMapping,
-        storeAuthorMapping,
-        searchAuthorsMapping,
-        findAuthorMapping,
-        updateAuthorMapping,
-        deleteAuthorMapping,
-        findAuthorEventsMapping,
-        storeBookMapping,
-        searchAllBooksMapping,
-        searchAuthorBooksMapping,
-        updateBooksMapping,
-        findBooksMapping,
-        deleteBookMapping,
-        storeQuoteMapping,
-        searchAllQuotesMapping,
-        searchBookQuoteMapping,
-        updateQuotesMapping,
-        findQuotesMapping,
-        deleteQuoteMapping
-      ],
-      true,);
+    5050,
+    [
+      healthMapping,
+      storeAuthorMapping,
+      searchAuthorsMapping,
+      findAuthorMapping,
+      updateAuthorMapping,
+      deleteAuthorMapping,
+      findAuthorEventsMapping,
+      storeBookMapping,
+      searchAllBooksMapping,
+      searchAuthorBooksMapping,
+      updateBooksMapping,
+      findBooksMapping,
+      deleteBookMapping,
+      findBookEventsMapping,
+      storeQuoteMapping,
+      searchAllQuotesMapping,
+      searchBookQuoteMapping,
+      updateQuotesMapping,
+      findQuotesMapping,
+      deleteQuoteMapping,
+      findQuoteEventsMapping
+    ],
+    true,
+  );
 
   server.start();
 }

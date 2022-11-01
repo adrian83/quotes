@@ -91,4 +91,9 @@ class BookController {
       _bookService
           .delete(DeleteBookCommand(authorId, bookId))
           .then((_) => emptyResponseOk());
+
+
+  Future<Response> listEvents(Request request, String authorId, String bookId) =>
+      _bookService.listEvents(ListEventsByBookQuery(authorId, bookId, extractPageRequest(request)))
+          .then((page) => jsonResponseOk(page));
 }

@@ -21,10 +21,8 @@ class ListBooksByAuthorQuery {
 class ListEventsByBookQuery extends FindBookQuery {
   late PageRequest pageRequest;
 
-  ListEventsByBookQuery(String authorId, String bookId, int offset, int limit)
-      : super(authorId, bookId) {
-    pageRequest = PageRequest(limit, offset);
-  }
+  ListEventsByBookQuery(String authorId, String bookId, this.pageRequest)
+      : super(authorId, bookId);
 
   @override
   String toString() =>

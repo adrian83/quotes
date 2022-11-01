@@ -1,36 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:quotesfe2/domain/author/model.dart';
 import 'package:quotesfe2/domain/author/service.dart';
+import 'package:quotesfe2/pages/common/new.dart';
+import 'package:quotesfe2/pages/widgets/common/entity_form.dart';
 
-class NewAuthorPage extends StatefulWidget {
+class NewAuthorPage extends NewPage<Author, NewAuthorEntityForm> {
   static String routePattern = r'^/authors/new/?(&[\w-=]+)?$';
 
-  final String title;
   final AuthorService _authorService;
 
-  const NewAuthorPage(Key? key, this.title, this._authorService)
-      : super(key: key);
+  const NewAuthorPage(Key? key, String title, this._authorService)
+      : super(key, title);
 
   @override
-  State<NewAuthorPage> createState() => _NewAuthorPageState();
+  NewAuthorEntityForm createEntityForm(BuildContext context, Author? _) =>
+      NewAuthorEntityForm();
+
+  @override
+  Future<Author> persist(Author entity) => _authorService.create(entity);
+
+  @override
+  String successMessage() => "Author created";
+
+  @override
+  Future<Author?> init() => Future.value(null);
 }
 
-class _NewAuthorPageState extends State<NewAuthorPage> {
+class NewAuthorEntityForm extends EntityForm<Author> {
   final _formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final descController = TextEditingController();
 
-  void _persist() {
-    setState(() {
-      var author = Author(null, nameController.text, descController.text,
-          DateTime.now(), DateTime.now());
-      widget._authorService.create(author);
-    });
-  }
+  @override
+  Author createEntity() => Author(null, nameController.text,
+      descController.text, DateTime.now(), DateTime.now());
 
   @override
-  Widget build(BuildContext context) {
-    var form = Form(
+  Form createForm(BuildContext context, Function()? action) => Form(
       key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -40,30 +46,16 @@ class _NewAuthorPageState extends State<NewAuthorPage> {
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
-              onPressed: _persist,
+              onPressed: action,
               child: const Text('Submit'),
             ),
           ),
         ],
-      ),
-    );
-
-    return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[form],
-          ),
-        ));
-  }
+      ));
 
   @override
   void dispose() {
     nameController.dispose();
     descController.dispose();
-    super.dispose();
   }
 }
