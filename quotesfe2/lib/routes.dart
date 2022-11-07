@@ -1,5 +1,3 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -24,10 +22,10 @@ import 'package:quotesfe2/pages/book/update_book.dart';
 typedef PathWidgetBuilder = Widget Function(BuildContext, String);
 
 class Path {
-  const Path(this.pattern, this.builder);
-
   final String pattern;
   final PathWidgetBuilder builder;
+
+  const Path(this.pattern, this.builder);
 }
 
 class RouteConfiguration {
@@ -138,31 +136,6 @@ class RouteConfiguration {
     var elem = path.split("/")[no];
     return elem.split("?")[0];
   }
-
-/*
-const authorIdParam = "authorId";
-const bookIdParam = "bookId";
-const quoteIdParam = "quoteId";
-
-class RoutePaths {
-  static final newAuthorPath = 'authors/new';
-  static final showAuthorPath = 'authors/show/:$authorIdParam';
-  static final editAuthorPath = 'authors/edit/:$authorIdParam';
-  static final authorEventsPath = 'authors/events/:$authorIdParam';
-
-  static final newBookPath = 'authors/show/:$authorIdParam/books/new';
-  static final showBookPath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam';
-  static final editBookPath = 'authors/show/:$authorIdParam/books/edit/:$bookIdParam';
-  static final bookEventsPath = 'authors/show/:$authorIdParam/books/events/:$bookIdParam';
-
-  static final newQuotePath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/new';
-  static final showQuotePath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/show/:$quoteIdParam';
-  static final editQuotePath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/edit/:$quoteIdParam';
-  static final quoteEventsPath = 'authors/show/:$authorIdParam/books/show/:$bookIdParam/quotes/events/:$quoteIdParam';
-
-  static final info = RoutePath(path: 'info');
-  static final search = RoutePath(path: '');
-*/
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     var name = settings.name;

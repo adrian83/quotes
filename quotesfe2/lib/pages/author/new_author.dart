@@ -7,20 +7,22 @@ import 'package:quotesfe2/pages/widgets/common/entity_form.dart';
 class NewAuthorPage extends NewPage<Author, NewAuthorEntityForm> {
   static String routePattern = r'^/authors/new/?(&[\w-=]+)?$';
 
-  final AuthorService _authorService;
+  final AuthorService authorService;
 
-  const NewAuthorPage(Key? key, String title, this._authorService)
+  const NewAuthorPage(Key? key, String title, this.authorService)
       : super(key, title);
 
   @override
-  NewAuthorEntityForm createEntityForm(BuildContext context, Author? _) =>
-      NewAuthorEntityForm();
+  NewAuthorEntityForm createEntityForm(BuildContext context, Author? entity) =>
+      NewAuthorEntityForm(entity);
 
   @override
-  Future<Author> persist(Author entity) => _authorService.create(entity);
+  Future<Author> persist(Author entity) => entity.id == null
+      ? authorService.create(entity)
+      : authorService.update(entity);
 
   @override
-  String successMessage() => "Author created";
+  String successMessage() => "Author created / updated";
 
   @override
   Future<Author?> init() => Future.value(null);
@@ -31,8 +33,17 @@ class NewAuthorEntityForm extends EntityForm<Author> {
   final nameController = TextEditingController();
   final descController = TextEditingController();
 
+  Author? author;
+
+  NewAuthorEntityForm(this.author) {
+    if (author != null) {
+      nameController.text = author!.name;
+      descController.text = author!.description ?? "";
+    }
+  }
+
   @override
-  Author createEntity() => Author(null, nameController.text,
+  Author createEntity() => Author(author?.id, nameController.text,
       descController.text, DateTime.now(), DateTime.now());
 
   @override

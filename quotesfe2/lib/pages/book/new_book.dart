@@ -9,34 +9,42 @@ class NewBookPage extends NewPage<Book, NewBookEntityForm> {
   static String routePattern =
       r'^/authors/show/([a-zA-Z0-9_.-]*)/books/new/?(&[\w-=]+)?$';
 
-  final BookService _bookService;
+  final BookService bookService;
   final String authorId;
 
-  const NewBookPage(Key? key, String title, this.authorId, this._bookService)
+  const NewBookPage(Key? key, String title, this.authorId, this.bookService)
       : super(key, title);
 
   @override
-  NewBookEntityForm createEntityForm(BuildContext context, Book? _) =>
-      NewBookEntityForm(authorId);
+  NewBookEntityForm createEntityForm(BuildContext context, Book? entity) =>
+      NewBookEntityForm(authorId, entity);
 
   @override
-  Future<Book> persist(Book entity) => _bookService.create(entity);
+  Future<Book> persist(Book entity) => entity.id == null
+      ? bookService.create(entity)
+      : bookService.update(entity);
 
   @override
-  String successMessage() => "Book created";
+  String successMessage() => "Book created / updated";
 
   @override
   Future<Book?> init() => Future.value(null);
 }
 
 class NewBookEntityForm extends EntityForm<Book> {
-  final String authorId;
-
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final descController = TextEditingController();
 
-  NewBookEntityForm(this.authorId);
+  final String authorId;
+  Book? book;
+
+  NewBookEntityForm(this.authorId, this.book) {
+    if (book != null) {
+      titleController.text = book!.title;
+      descController.text = book!.description ?? "";
+    }
+  }
 
   @override
   Book createEntity() => Book(null, titleController.text, descController.text,

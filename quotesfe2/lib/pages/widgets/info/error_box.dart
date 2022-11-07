@@ -44,6 +44,8 @@ class _ErrorsState extends State<Errors> {
         widgets.add(Text(valError.message, style: style));
       }
       return widgets;
+    } else if (ex is NotFoundError) {
+      widgets.add(Text("Not found", style: style));
     }
 
     return <Widget>[Text("Exception: $ex (${ex.runtimeType})", style: style)];

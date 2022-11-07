@@ -9,19 +9,19 @@ class NewQuotePage extends NewPage<Quote, NewQuoteEntityForm> {
   static String routePattern =
       r'^/authors/show/([a-zA-Z0-9_.-]*)/books/new/?(&[\w-=]+)?$';
 
-  final QuoteService _quoteService;
+  final QuoteService quoteService;
   final String authorId, bookId;
 
   const NewQuotePage(
-      Key? key, String title, this.authorId, this.bookId, this._quoteService)
+      Key? key, String title, this.authorId, this.bookId, this.quoteService)
       : super(key, title);
 
   @override
-  NewQuoteEntityForm createEntityForm(BuildContext context, Quote? _) =>
-      NewQuoteEntityForm(authorId, bookId);
+  NewQuoteEntityForm createEntityForm(BuildContext context, Quote? entity) =>
+      NewQuoteEntityForm(authorId, bookId, entity);
 
   @override
-  Future<Quote> persist(Quote entity) => _quoteService.create(entity);
+  Future<Quote> persist(Quote entity) => quoteService.create(entity);
 
   @override
   String successMessage() => "Quote created";
@@ -31,12 +31,17 @@ class NewQuotePage extends NewPage<Quote, NewQuoteEntityForm> {
 }
 
 class NewQuoteEntityForm extends EntityForm<Quote> {
-  final String authorId, bookId;
-
   final _formKey = GlobalKey<FormState>();
   final textController = TextEditingController();
 
-  NewQuoteEntityForm(this.authorId, this.bookId);
+  final String authorId, bookId;
+  Quote? quote;
+
+  NewQuoteEntityForm(this.authorId, this.bookId, this.quote) {
+    if (quote != null) {
+      textController.text = quote!.text;
+    }
+  }
 
   @override
   Quote createEntity() => Quote(null, textController.text, authorId, bookId,

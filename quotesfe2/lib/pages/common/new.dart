@@ -18,7 +18,7 @@ abstract class NewPage<T extends Entity, F extends EntityForm<T>>
 
   Future<T?> init();
 
-  bool hideFormOnSuccess() => true;
+  bool hideFormOnSuccess() => false;
 }
 
 class _NewPageState<T extends Entity, F extends EntityForm<T>>
@@ -49,7 +49,12 @@ class _NewPageState<T extends Entity, F extends EntityForm<T>>
 
   @override
   List<Widget> renderWidgets(BuildContext context) {
-    return (isMessage() && widget.hideFormOnSuccess()) ? [] : [form!.createForm(context, _persist(context))];
+    if (isMessage() && widget.hideFormOnSuccess()) {
+      return [];
+    } else if (form != null) {
+      return [form!.createForm(context, _persist(context))];
+    }
+    return [];
   }
 
   @override
