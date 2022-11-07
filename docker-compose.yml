@@ -20,7 +20,7 @@ services:
 
 
   backend:
-    build: ./quotesbe2/
+    build: ./quotesbe/
     ports:
     - "5050:5050"
     environment:

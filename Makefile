@@ -32,24 +32,24 @@ fe-all: fe-format fe-build fe-run
 
 be-run:
 	echo "running backend V2"
-	dart quotesbe2/bin/main.dart 
+	dart quotesbe/bin/main.dart 
 
 #be-format:
-#	cd quotesbe2 && dart format -o write -l 120 --fix . && dart fix -n . && dart analyze
+#	cd quotesbe && dart format -o write -l 120 --fix . && dart fix -n . && dart analyze
 
 be-get: 
 	echo "getting backend dependencies" 
-	cd quotesbe2 && dart pub upgrade && dart pub get 
+	cd quotesbe && dart pub upgrade && dart pub get 
 	
 be-test:
 	echo "running backend tests" 
 
-	cd quotesbe2 && dart pub run build_runner build && dart test . --coverage=. --reporter=expanded
+	cd quotesbe && dart pub run build_runner build && dart test . --coverage=. --reporter=expanded
 #./.. --coverage=./..
 
 be-init:
 	echo "Init db"
-	./quotesbe2/init.sh
+	./quotesbe/init.sh
 
 #be-all: be-format be-get be-test be-run
 be-all: be-get be-test be-run
