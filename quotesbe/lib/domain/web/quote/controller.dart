@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:shelf/shelf.dart';
 import 'package:logging/logging.dart';
 
-import 'package:quotesbedomain/quote/service.dart';
+import 'package:quotesbe/domain/quote/service.dart';
 import 'package:quotesbe/domain/quote/model/command.dart';
 import 'package:quotesbe/domain/quote/model/query.dart';
 import 'package:quotesbe/domain/web/common/request.dart';
