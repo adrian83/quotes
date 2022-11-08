@@ -17,8 +17,11 @@ class _ErrorsState extends State<Errors> {
 
   @override
   Widget build(BuildContext context) {
-    var children =
-        widget.error is Exception ? _handleException() : _handleUnknownError();
+    var children = <Widget>[];
+    if(widget.error != null){
+      children = widget.error is Exception ? _handleException() : _handleUnknownError();
+    }
+
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -29,12 +32,14 @@ class _ErrorsState extends State<Errors> {
 
   List<Widget> _handleUnknownError() {
     return <Widget>[
-      Text("UNKNOWN ERROR: ${widget.error} (${widget.error.runtimeType})",
+      Text("UNKNOWN ERROR: ${widget.error} (${widget.error.runtimeType}), isException: ${widget.error is Exception}",
           style: style)
     ];
   }
 
   List<Widget> _handleException() {
+    
+
     var ex = widget.error as Exception;
     var widgets = <Widget>[];
 
@@ -46,6 +51,7 @@ class _ErrorsState extends State<Errors> {
       return widgets;
     } else if (ex is NotFoundError) {
       widgets.add(Text("Not found", style: style));
+      return widgets;
     }
 
     return <Widget>[Text("Exception: $ex (${ex.runtimeType})", style: style)];

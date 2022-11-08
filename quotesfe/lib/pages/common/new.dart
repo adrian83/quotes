@@ -60,6 +60,8 @@ class _NewPageState<T extends Entity, F extends EntityForm<T>>
   @override
   void dispose() {
     super.dispose();
-    form!.dispose();
+    if (form != null) {
+      form!.dispose();
+    }
   }
 }
