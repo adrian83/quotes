@@ -7,6 +7,7 @@ import 'package:quotesbe/domain/author/model/command.dart';
 import 'package:quotesbe/domain/author/model/query.dart';
 import 'package:quotesbe/domain/author/service.dart';
 import 'package:quotesbe/domain/web/common/request.dart';
+import 'package:quotesbe/domain/web/common/response.dart';
 import 'package:quotesbe/web/error.dart';
 import 'package:quotesbe/web/response.dart';
 
@@ -32,7 +33,8 @@ class AuthorController {
 
     return _authorService
         .findAuthors(query)
-        .then((page) => jsonResponseOk(page));
+        .then((page) => jsonResponseOk(page))
+        .onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> store(Request request) async {
@@ -48,7 +50,8 @@ class AuthorController {
 
     return _authorService
         .save(command)
-        .then((author) => jsonResponseOk(author));
+        .then((author) => jsonResponseOk(author))
+        .onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> update(Request request, String authorId) async {
@@ -65,22 +68,25 @@ class AuthorController {
 
     return _authorService
         .update(command)
-        .then((author) => jsonResponseOk(author));
+        .then((author) => jsonResponseOk(author))
+        .onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> find(Request request, String authorId) => _authorService
       .find(FindAuthorQuery(authorId))
       .then((author) => jsonResponseOk(author))
-      .catchError((ex) => responseNotFound("Author '$authorId' not found"));
+      .onError<Exception>((error, stackTrace) => handleError(error));
 
   Future<Response> delete(Request request, String authorId) => _authorService
       .delete(DeleteAuthorQuery(authorId))
-      .then((_) => emptyResponseOk());
+      .then((_) => emptyResponseOk())
+      .onError<Exception>((error, stackTrace) => handleError(error));
 
   Future<Response> listEvents(Request request, String authorId) async {
     var query = ListEventsByAuthorQuery(authorId, extractPageRequest(request));
     return await _authorService
         .listEvents(query)
-        .then((page) => jsonResponseOk(page));
+        .then((page) => jsonResponseOk(page))
+        .onError<Exception>((error, stackTrace) => handleError(error));
   }
 }

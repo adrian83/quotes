@@ -5,7 +5,6 @@ import 'package:quotesbe/web/response.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart' as shelf_router;
-//import 'package:shelf_static/shelf_static.dart' as shelf_static;
 
 class Server {
   final int _port;
@@ -19,8 +18,9 @@ class Server {
 
     for (var mapping in _mappings) {
       _addMapping(router, mapping);
-      if(_enableCors) {
-        var optionsMapping = Mapping(HttpMethod.options, mapping.path, (Request request) => emptyResponseOk());
+      if (_enableCors) {
+        var optionsMapping =
+            Mapping(HttpMethod.options, mapping.path, _optionsHandler);
         _addMapping(router, optionsMapping);
       }
     }
@@ -35,6 +35,8 @@ class Server {
 
     print('Serving at http://${server.address.host}:${server.port}');
   }
+
+  Response _optionsHandler(Request request) => emptyResponseOk();
 
   void _addMapping(shelf_router.Router router, Mapping mapping) {
     switch (mapping.method) {

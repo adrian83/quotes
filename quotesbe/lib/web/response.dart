@@ -25,9 +25,15 @@ Response responseBadRequest(List<Violation> violations) => Response(
       headers: _allHeaders,
     );
 
-Response responseNotFound(String msg) => Response(
+Response responseNotFound() => Response(
       404,
-      body: jsonEncode({"message": msg}),
+      body: jsonEncode({"message": "not found"}),
+      headers: _allHeaders,
+    );
+
+Response responseInternalError() => Response(
+      500,
+      body: jsonEncode({"message": "internal server error"}),
       headers: _allHeaders,
     );
 
