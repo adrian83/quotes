@@ -38,12 +38,12 @@ services:
     - elasticsearch
 
 
-  # frontend:
-  #   build: ./quotesfe2/
-  #   ports:
-  #   - "8000:8000"
-  #   links:
-  #   - backend
-  #   depends_on:
-  #   - backend
+  frontend:
+    build: ./quotesfe/
+    ports:
+    - "8000:8000"
+    links:
+    - backend
+    depends_on:
+    - backend
 

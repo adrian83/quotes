@@ -15,17 +15,17 @@ deps:
 
 
 fe-format:
-	cd quotesfe2 && dart format -o write -l 80 --fix . && dart fix -n . && dart analyze
+	cd quotesfe && dart format -o write -l 80 --fix . && dart fix -n . && dart analyze
 
 fe-build:
 	echo "building frontend"
-	cd quotesfe2 && flutter config --enable-web && flutter build web
+	cd quotesfe && flutter config --enable-web && flutter build web
 
 fe-run: export CHROME_EXECUTABLE=/usr/bin/google-chrome-stable
 
 fe-run: 
 	echo "running frontend"
-	cd quotesfe2 && flutter run -d chrome
+	cd quotesfe && flutter run -d chrome
 
 fe-all: fe-format fe-build fe-run
 
