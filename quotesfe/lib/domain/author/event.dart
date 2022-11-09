@@ -1,5 +1,4 @@
-import 'model.dart';
-
+import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/domain/common/page.dart';
 
 class AuthorEvent extends Author {

@@ -1,5 +1,5 @@
 class Config {
-  String beHost = "test";
+  final String beHost;
 
   Config(this.beHost);
 }

@@ -1,12 +1,23 @@
 import 'dart:convert';
 
+const fieldPageInfoLimit = "limit";
+const fieldPageInfoOffset = "offset";
+const fieldPageInfoTotal = "total";
+
+const fieldPageElements = "elements";
+const fieldPageInfo = "info";
+
+const defPageSize = 3;
+
 class PageInfo {
-  int limit, offset, total;
+  final int limit, offset, total;
 
   PageInfo(this.limit, this.offset, this.total);
 
-  factory PageInfo.fromJson(Map<String, dynamic> json) =>
-      PageInfo(json['limit'], json['offset'], json['total']);
+  factory PageInfo.fromJson(Map<String, dynamic> json) => PageInfo(
+      json[fieldPageInfoLimit],
+      json[fieldPageInfoOffset],
+      json[fieldPageInfoTotal]);
 
   int get curent {
     var current = offset / limit;
@@ -19,9 +30,9 @@ class PageInfo {
   }
 
   Map toJson() => {
-        "limit": limit,
-        "offset": offset,
-        "total": total,
+        fieldPageInfoLimit: limit,
+        fieldPageInfoOffset: offset,
+        fieldPageInfoTotal: total,
       };
 
   @override
@@ -37,30 +48,20 @@ class Page<T> {
   Page(this.info, this.elements);
 
   Page.fromJson(JsonDecoder<T> decoder, Map<String, dynamic> json) {
-    var jsonElems = json['elements'] as List;
+    var jsonElems = json[fieldPageElements] as List;
     elements = jsonElems.map((j) => decoder(j)).toList();
-    info = PageInfo.fromJson(json['info']);
+    info = PageInfo.fromJson(json[fieldPageInfo]);
   }
 
   bool get empty => elements.isEmpty;
   T? get first => empty ? null : elements[0];
 
-  set last(T? elem) {
-    if (elem == null) {
-      return;
-    }
-
-    elements.add(elem);
-  }
-
   @override
   String toString() => jsonEncode(this);
 }
 
-const defPageSize = 3;
-
 class PageRequest {
-  int limit, offset;
+  final int limit, offset;
 
   PageRequest(this.limit, this.offset);
 

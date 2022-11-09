@@ -1,5 +1,9 @@
 DateTime nowUtc() => DateTime.now().toUtc();
 
+const fieldEntityId = "id";
+const fieldModifiedUtc = "modifiedUtc";
+const fieldCreatedUtc = "createdUtc";
+
 class Entity {
   String? id;
   DateTime modifiedUtc, createdUtc;
@@ -9,8 +13,8 @@ class Entity {
   Entity.empty() : this(null, nowUtc(), nowUtc());
 
   Map toJson() => {
-        "id": id,
-        "modifiedUtc": modifiedUtc.toIso8601String(),
-        "createdUtc": createdUtc.toIso8601String()
+        fieldEntityId: id,
+        fieldModifiedUtc: modifiedUtc.toIso8601String(),
+        fieldCreatedUtc: createdUtc.toIso8601String()
       };
 }

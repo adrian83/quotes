@@ -1,15 +1,18 @@
+const fieldValidationErrorField = "field";
+const fieldValidationErrorMessage = "message";
+
 class ValidationError {
   String field, message;
 
   ValidationError(this.field, this.message);
 
   factory ValidationError.fromJson(Map<String, dynamic> json) =>
-      ValidationError(json['field'], json['message']);
+      ValidationError(
+          json[fieldValidationErrorField], json[fieldValidationErrorMessage]);
 
   @override
-  String toString() {
-    return "ValidationError { field=$field, message=$message }";
-  }
+  String toString() =>
+      "ValidationError { $fieldValidationErrorField=$field, $fieldValidationErrorMessage=$message }";
 }
 
 class ValidationErrors implements Exception {
@@ -23,9 +26,8 @@ class ValidationErrors implements Exception {
       ValidationErrors(json);
 
   @override
-  String toString() {
-    return "ValidationErrors { validationErrors=[${validationErrors.join(",")}] }";
-  }
+  String toString() =>
+      "ValidationErrors { validationErrors=[${validationErrors.join(",")}] }";
 }
 
 class NotFoundError implements Exception {}

@@ -2,6 +2,9 @@ import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/tools/strings.dart';
 
+const fieldAuthorName = "name";
+const fieldAuthorDescription = "description";
+
 class Author extends Entity {
   String name;
   String? description;
@@ -12,18 +15,18 @@ class Author extends Entity {
 
   Author.fromJson(Map<String, dynamic> json)
       : this(
-            json["id"],
-            json["name"],
-            json["description"],
-            DateTime.parse(json["modifiedUtc"]),
-            DateTime.parse(json["createdUtc"]));
+            json[fieldEntityId],
+            json[fieldAuthorName],
+            json[fieldAuthorDescription],
+            DateTime.parse(json[fieldModifiedUtc]),
+            DateTime.parse(json[fieldCreatedUtc]));
 
   List<String> get descriptionParts => description?.split("\n") ?? [];
   String? get shortDescription => shorten(description, 250);
 
   @override
-  Map toJson() =>
-      super.toJson()..addAll({"name": name, "description": description});
+  Map toJson() => super.toJson()
+    ..addAll({fieldAuthorName: name, fieldAuthorDescription: description});
 }
 
 JsonDecoder<Author> _authorJsonDecoder =

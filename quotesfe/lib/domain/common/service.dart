@@ -1,11 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'dart:developer' as developer;
 import 'package:http/http.dart';
 
-import 'errors.dart';
-import 'page.dart';
+import 'package:quotesfe/domain/common/errors.dart';
+import 'package:quotesfe/domain/common/page.dart';
 
 class Service<T> {
   static final _headers = {'Content-Type': 'application/json'};
@@ -42,26 +41,22 @@ class Service<T> {
           response.statusCode == 200 ? {} : _handleErrors(response));
 
   Map<String, dynamic> _handleErrors(response) {
-    developer.log("statusCode ${response.statusCode}");
     if (response.statusCode == 404) {
       throw NotFoundError();
-    }
-
-    if (response.statusCode == 400) {
+    } else if (response.statusCode == 400) {
       var json = jsonDecode(response.body);
-      developer.log("json $json");
-      var ve = ValidationErrors.fromJson(json);
-      //logger.severe("ve $ve");
-      throw ve;
+      throw ValidationErrors.fromJson(json);
     } else if (response.statusCode == 500) {
       throw Exception(jsonDecode(response.body));
     }
-    //logger.info("Http request: $json");
+
     return jsonDecode(response.body);
   }
 
-  String pageRequestToUrlParams(PageRequest request) =>
-      ["limit=${request.limit}", "offset=${request.offset}"].join("&");
+  String pageRequestToUrlParams(PageRequest request) => [
+        "$fieldPageInfoLimit=${request.limit}",
+        "$fieldPageInfoOffset=${request.offset}"
+      ].join("&");
 
   String appendUrlParam(String params, String kay, String value) {
     if (value.isEmpty) {
