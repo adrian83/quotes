@@ -12,7 +12,7 @@ class AuthorService extends Service<Author> {
   final String apiHost;
 
   AuthorService(BrowserClient http, Config config)
-      : apiHost = config.beHost,
+      : apiHost = config.apiHost,
         super(http);
 
   Future<AuthorsPage> listAuthors(

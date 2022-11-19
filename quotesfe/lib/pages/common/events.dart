@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/pages/common/page.dart';
 import 'package:quotesfe/pages/widgets/paging.dart';
@@ -18,10 +19,10 @@ abstract class ListEventsPage<T> extends AbsPage {
 }
 
 class _ListEventsPageState<T> extends PageState<ListEventsPage<T>> {
-  p.Page<T>? page;
+  final int _pageSize = 2;
+  p.Page<T> _page = p.Page.empty();
   Pagination _pagination = Pagination.empty(null);
   int _currentPage = 0;
-  final int _pageSize = 2;
 
   @override
   initState() {
@@ -34,11 +35,11 @@ class _ListEventsPageState<T> extends PageState<ListEventsPage<T>> {
     var pageReq = PageRequest.pageWithSize(pageNo, _pageSize);
     widget.getPage(pageReq).then((p) {
       setState(() {
-        page = p;
+        _page = p;
         _pagination =
-            Pagination(widget.key, page!.info.pages, pageNo, loadPage);
+            Pagination(widget.key, _page.info.pages, pageNo, loadPage);
       });
-      if (page!.elements.isEmpty && pageNo > 0) {
+      if (_page.elements.isEmpty && pageNo > 0) {
         loadPage(pageNo - 1);
       }
     }).catchError((e) {
@@ -75,6 +76,5 @@ class _ListEventsPageState<T> extends PageState<ListEventsPage<T>> {
     return DataRow(cells: cells);
   }
 
-  List<DataRow> rows() =>
-      page == null ? [] : page!.elements.map((e) => generateRow(e)).toList();
+  List<DataRow> rows() => _page.elements.map((e) => generateRow(e)).toList();
 }

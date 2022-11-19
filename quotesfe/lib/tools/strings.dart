@@ -11,4 +11,4 @@ Random _rnd = Random();
 String random(int length) => String.fromCharCodes(Iterable.generate(
     length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
 
-String random12(int length) => random(12);
+String random12() => random(12);

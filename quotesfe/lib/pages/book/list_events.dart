@@ -7,14 +7,11 @@ import 'package:quotesfe/pages/common/events.dart';
 import 'package:quotesfe/domain/common/page.dart' as p;
 
 class ListBookEventsPage extends ListEventsPage<BookEvent> {
-  static String routePattern =
-      r'^/authors/show/([a-zA-Z0-9_.-]*)/books/events/([a-zA-Z0-9_.-]*)/?(&[\w-=]+)?$';
-
   final BookService _bookService;
-  final String authorId, bookId;
+  final String _authorId, _bookId;
 
   const ListBookEventsPage(
-      Key? key, String title, this.authorId, this.bookId, this._bookService)
+      Key? key, String title, this._authorId, this._bookId, this._bookService)
       : super(key, title);
 
   @override
@@ -39,5 +36,5 @@ class ListBookEventsPage extends ListEventsPage<BookEvent> {
 
   @override
   Future<p.Page<BookEvent>> getPage(PageRequest pageReq) =>
-      _bookService.listEvents(authorId, bookId, pageReq);
+      _bookService.listEvents(_authorId, _bookId, pageReq);
 }

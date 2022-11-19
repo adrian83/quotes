@@ -11,7 +11,8 @@ import 'package:quotesfe/tools/config.dart';
 void main() {
   var browserClient = BrowserClient();
 
-  var config = Config("http://localhost:5050");
+  const env = String.fromEnvironment('ENV');
+  var config = forEnvironment(env);
 
   var authorService = AuthorService(browserClient, config);
   var bookService = BookService(browserClient, config);

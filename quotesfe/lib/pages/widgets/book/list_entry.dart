@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/book/model.dart';
 import 'package:quotesfe/pages/widgets/common/list_entry.dart';
+import 'package:quotesfe/paths.dart';
 
 class BookEntry extends ListEntry {
   final Book _book;
   final bool _detailsLink, _longDescription;
 
-  const BookEntry(Key? key, this._book, bool showId, this._detailsLink,
-      this._longDescription)
-      : super(key, showId);
+  const BookEntry(Key? key, this._book, OnBackAction? onBackAction, bool showId,
+      this._detailsLink, this._longDescription)
+      : super(key, showId, onBackAction);
 
   @override
-  String deletePageUrl() =>
-      "/authors/show/${_book.authorId}/books/delete/${_book.id}";
+  String deletePageUrl() => deleteBookPath(_book);
 
   @override
-  String updatePageUrl() =>
-      "/authors/show/${_book.authorId}/books/update/${_book.id}";
+  String updatePageUrl() => updateBookPath(_book);
 
   @override
-  String eventsPageUrl() =>
-      '/authors/show/${_book.authorId}/books/events/${_book.id}';
+  String eventsPageUrl() => listBookEventsPath(_book);
 
   @override
   String getId() => _book.id!;
@@ -49,7 +47,6 @@ class BookEntry extends ListEntry {
   }
 
   Function()? gotoDetailsPage(BuildContext context) {
-    return () => Navigator.pushNamed(
-        context, "/authors/show/${_book.authorId}/books/show/${_book.id}");
+    return () => Navigator.pushNamed(context, createBookPath(_book));
   }
 }

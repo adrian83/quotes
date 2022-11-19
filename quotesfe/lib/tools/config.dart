@@ -1,5 +1,19 @@
 class Config {
-  final String beHost;
+  final String apiHost;
 
-  Config(this.beHost);
+  Config(this.apiHost);
+}
+
+final Config localConfig = Config("http://localhost:5050");
+
+final Config composeConfig = Config("http://localhost:5050");
+
+Config forEnvironment(String? env) {
+  switch (env) {
+    case 'local':
+      return localConfig;
+    case 'compose':
+      return composeConfig;
+  }
+  throw ArgumentError("unknown env $env");
 }

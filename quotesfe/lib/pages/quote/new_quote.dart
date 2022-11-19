@@ -6,11 +6,8 @@ import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/pages/widgets/common/entity_form.dart';
 
 class NewQuotePage extends NewPage<Quote, NewQuoteEntityForm> {
-  static String routePattern =
-      r'^/authors/show/([a-zA-Z0-9_.-]*)/books/new/?(&[\w-=]+)?$';
-
-  final QuoteService quoteService;
   final String authorId, bookId;
+  final QuoteService quoteService;
 
   const NewQuotePage(
       Key? key, String title, this.authorId, this.bookId, this.quoteService)
@@ -32,19 +29,18 @@ class NewQuotePage extends NewPage<Quote, NewQuoteEntityForm> {
 
 class NewQuoteEntityForm extends EntityForm<Quote> {
   final _formKey = GlobalKey<FormState>();
-  final textController = TextEditingController();
+  final _textController = TextEditingController();
+  final String _authorId, _bookId;
+  final Quote? _quote;
 
-  final String authorId, bookId;
-  Quote? quote;
-
-  NewQuoteEntityForm(this.authorId, this.bookId, this.quote) {
-    if (quote != null) {
-      textController.text = quote!.text;
+  NewQuoteEntityForm(this._authorId, this._bookId, this._quote) {
+    if (_quote != null) {
+      _textController.text = _quote!.text;
     }
   }
 
   @override
-  Quote createEntity() => Quote(null, textController.text, authorId, bookId,
+  Quote createEntity() => Quote(null, _textController.text, _authorId, _bookId,
       DateTime.now(), DateTime.now());
 
   @override
@@ -53,7 +49,7 @@ class NewQuoteEntityForm extends EntityForm<Quote> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextFormField(controller: textController),
+          TextFormField(controller: _textController),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
@@ -66,6 +62,6 @@ class NewQuoteEntityForm extends EntityForm<Quote> {
 
   @override
   void dispose() {
-    textController.dispose();
+    _textController.dispose();
   }
 }

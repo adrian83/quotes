@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+
 import 'package:quotesfe/pages/common/page.dart';
 
 typedef ToWidgetTransformer<E> = Widget Function(E);
 
-abstract class ShowPage<ENTITY> extends AbsPage {
-  final ToWidgetTransformer<ENTITY> _toWidgetTransformer;
+abstract class ShowPage<E> extends AbsPage {
+  final ToWidgetTransformer<E> _toWidgetTransformer;
 
   const ShowPage(Key? key, String title, this._toWidgetTransformer)
       : super(key, title);
 
-  Future<ENTITY> findEntity();
+  Future<E> findEntity();
 
   @override
-  State<ShowPage<ENTITY>> createState() => _ShowPageState();
+  State<ShowPage<E>> createState() => _ShowPageState();
 }
 
 class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
@@ -32,6 +33,6 @@ class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
 
   @override
   List<Widget> renderWidgets(BuildContext context) {
-    return [widget._toWidgetTransformer(_entity!)];
+    return _entity == null ? [] : [widget._toWidgetTransformer(_entity!)];
   }
 }

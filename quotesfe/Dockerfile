@@ -13,7 +13,7 @@ ENV PATH="/quotesfe/flutter/bin:${PATH}"
 
 RUN flutter doctor
 RUN flutter config --enable-web
-RUN flutter build web
+RUN flutter build web --dart-define ENV=compose
 
 EXPOSE 8000
 

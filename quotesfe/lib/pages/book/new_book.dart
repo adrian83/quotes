@@ -6,11 +6,8 @@ import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/pages/widgets/common/entity_form.dart';
 
 class NewBookPage extends NewPage<Book, NewBookEntityForm> {
-  static String routePattern =
-      r'^/authors/show/([a-zA-Z0-9_.-]*)/books/new/?(&[\w-=]+)?$';
-
-  final BookService bookService;
   final String authorId;
+  final BookService bookService;
 
   const NewBookPage(Key? key, String title, this.authorId, this.bookService)
       : super(key, title);
@@ -35,20 +32,19 @@ class NewBookEntityForm extends EntityForm<Book> {
   final _formKey = GlobalKey<FormState>();
   final titleController = TextEditingController();
   final descController = TextEditingController();
+  final String _authorId;
+  final Book? _book;
 
-  final String authorId;
-  Book? book;
-
-  NewBookEntityForm(this.authorId, this.book) {
-    if (book != null) {
-      titleController.text = book!.title;
-      descController.text = book!.description ?? "";
+  NewBookEntityForm(this._authorId, this._book) {
+    if (_book != null) {
+      titleController.text = _book!.title;
+      descController.text = _book!.description ?? "";
     }
   }
 
   @override
   Book createEntity() => Book(null, titleController.text, descController.text,
-      authorId, DateTime.now(), DateTime.now());
+      _authorId, DateTime.now(), DateTime.now());
 
   @override
   Form createForm(BuildContext context, Function()? action) => Form(

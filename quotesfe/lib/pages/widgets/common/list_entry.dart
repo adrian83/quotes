@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
+typedef OnBackAction = Function();
+
 abstract class ListEntry extends StatefulWidget {
   final bool _showId;
+  final OnBackAction? _onBackAction;
 
-  const ListEntry(Key? key, this._showId) : super(key: key);
+  const ListEntry(Key? key, this._showId, this._onBackAction) : super(key: key);
 
   @override
   State<ListEntry> createState() => _ListEntryState();
@@ -15,6 +18,10 @@ abstract class ListEntry extends StatefulWidget {
   String updatePageUrl();
   String deletePageUrl();
   String eventsPageUrl();
+
+  Function onBackAction() => () {
+        if (_onBackAction != null) _onBackAction!();
+      };
 
   Padding paddingWithText(String text) => paddingWithWidget(Text(text));
 
@@ -70,15 +77,15 @@ class _ListEntryState extends State<ListEntry> {
         ));
   }
 
-  Function()? gotoUpdatePage(BuildContext context) {
-    return () => Navigator.pushNamed(context, widget.updatePageUrl());
-  }
+  Function()? gotoUpdatePage(BuildContext context) =>
+      () => Navigator.pushNamed(context, widget.updatePageUrl())
+          .then((value) => widget.onBackAction()());
 
-  Function()? gotoDeletePage(BuildContext context) {
-    return () => Navigator.pushNamed(context, widget.deletePageUrl());
-  }
+  Function()? gotoDeletePage(BuildContext context) =>
+      () => Navigator.pushNamed(context, widget.deletePageUrl())
+          .then((value) => widget.onBackAction()());
 
-  Function()? gotoEventsPage(BuildContext context) {
-    return () => Navigator.pushNamed(context, widget.eventsPageUrl());
-  }
+  Function()? gotoEventsPage(BuildContext context) =>
+      () => Navigator.pushNamed(context, widget.eventsPageUrl())
+          .then((value) => widget.onBackAction()());
 }

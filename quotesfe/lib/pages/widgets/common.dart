@@ -11,14 +11,17 @@ typedef ToEntryTransformer<A, E> = E Function(A);
 typedef OnDeleteAction<E> = Future<void> Function(E);
 typedef EditEntityUrl<E> = String Function(E);
 
+typedef ErrorHandler = Function(Object);
+
 class PageEntry<ENTITY, PAGE extends qpage.Page<ENTITY>, ENTRY extends Widget>
     extends StatefulWidget {
   final String _label;
   final PageChangeAction<ENTITY> _pageChangeAction;
   final ToEntryTransformer<ENTITY, ENTRY> _toEntryTransformer;
+  final ErrorHandler _errorHandler;
 
-  const PageEntry(
-      Key? key, this._label, this._pageChangeAction, this._toEntryTransformer)
+  const PageEntry(Key? key, this._label, this._pageChangeAction,
+      this._toEntryTransformer, this._errorHandler)
       : super(key: key);
 
   @override
@@ -56,7 +59,7 @@ class _PageEntryState<ENTITY, PAGE extends qpage.Page<ENTITY>,
       if (_entries.isEmpty && pageNo > 0) {
         loadPage(pageNo - 1);
       }
-    });
+    }).catchError(widget._errorHandler);
   }
 
   @override

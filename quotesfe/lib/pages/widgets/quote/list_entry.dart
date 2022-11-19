@@ -2,26 +2,24 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/quote/model.dart';
 import 'package:quotesfe/pages/widgets/common/list_entry.dart';
+import 'package:quotesfe/paths.dart';
 
 class QuoteEntry extends ListEntry {
   final Quote _quote;
   final bool _detailsLink, _longDescription;
 
-  const QuoteEntry(Key? key, this._quote, bool showId, this._detailsLink,
-      this._longDescription)
-      : super(key, showId);
+  const QuoteEntry(Key? key, this._quote, OnBackAction? onBackAction,
+      bool showId, this._detailsLink, this._longDescription)
+      : super(key, showId, onBackAction);
 
   @override
-  String deletePageUrl() =>
-      "/authors/show/${_quote.authorId}/books/show/${_quote.bookId}/quotes/delete/${_quote.id}";
+  String deletePageUrl() => deleteQuotePath(_quote);
 
   @override
-  String updatePageUrl() =>
-      "/authors/show/${_quote.authorId}/books/show/${_quote.bookId}/quotes/update/${_quote.id}";
+  String updatePageUrl() => updateQuotePath(_quote);
 
   @override
-  String eventsPageUrl() =>
-      "/authors/show/${_quote.authorId}/books/show/${_quote.bookId}/quotes/events/${_quote.id}";
+  String eventsPageUrl() => listQuoteEventsPath(_quote);
 
   @override
   String getId() => _quote.id!;
@@ -43,7 +41,6 @@ class QuoteEntry extends ListEntry {
   }
 
   Function()? gotoDetailsPage(BuildContext context) {
-    return () => Navigator.pushNamed(context,
-        "/authors/show/${_quote.authorId}/books/show/${_quote.bookId}/quotes/show/${_quote.id}");
+    return () => Navigator.pushNamed(context, createQuotePath(_quote));
   }
 }

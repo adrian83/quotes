@@ -4,19 +4,16 @@ import 'package:quotesfe/domain/quote/service.dart';
 import 'package:quotesfe/pages/common/delete.dart';
 
 class DeleteQuotePage extends DeletePage {
-  static String routePattern =
-      r'^/authors/show/([a-zA-Z0-9_.-]*)/books/show/([a-zA-Z0-9_.-]*)/quotes/delete/([a-zA-Z0-9_.-]*)/?(&[\w-=]+)?$';
-
-  final String authorId, bookId, quoteId;
+  final String _authorId, _bookId, _quoteId;
   final QuoteService _quoteService;
 
-  const DeleteQuotePage(Key? key, String title, this.authorId, this.bookId,
-      this.quoteId, this._quoteService)
+  const DeleteQuotePage(Key? key, String title, this._authorId, this._bookId,
+      this._quoteId, this._quoteService)
       : super(key, title);
 
   @override
   Future<void> deleteEntity() =>
-      _quoteService.delete(authorId, bookId, quoteId);
+      _quoteService.delete(_authorId, _bookId, _quoteId);
 
   @override
   String question() => "Are you sure?";

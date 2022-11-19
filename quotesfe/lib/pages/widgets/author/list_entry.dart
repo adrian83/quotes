@@ -2,23 +2,24 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/pages/widgets/common/list_entry.dart';
+import 'package:quotesfe/paths.dart';
 
 class AuthorEntry extends ListEntry {
   final Author _author;
   final bool _detailsLink, _longDescription;
 
-  const AuthorEntry(Key? key, this._author, bool showId, this._detailsLink,
-      this._longDescription)
-      : super(key, showId);
+  const AuthorEntry(Key? key, this._author, OnBackAction? onBackAction,
+      bool showId, this._detailsLink, this._longDescription)
+      : super(key, showId, onBackAction);
 
   @override
-  String deletePageUrl() => "/authors/delete/${_author.id}";
+  String deletePageUrl() => deleteAuthorPath(_author);
 
   @override
-  String updatePageUrl() => "/authors/update/${_author.id}";
+  String updatePageUrl() => updateAuthorPath(_author);
 
   @override
-  String eventsPageUrl() => "/authors/events/${_author.id}";
+  String eventsPageUrl() => listAuthorEventsPath(_author);
 
   @override
   String getId() => _author.id!;
@@ -33,11 +34,10 @@ class AuthorEntry extends ListEntry {
         child: Text('Name: ${_author.name}'),
       );
       paddingWithWidget(button);
+
       children.add(paddingWithWidget(button));
     } else {
-      children.add(
-        paddingWithText('Name: ${_author.name}'),
-      );
+      children.add(paddingWithText('Name: ${_author.name}'));
     }
 
     var desc =
@@ -48,6 +48,6 @@ class AuthorEntry extends ListEntry {
   }
 
   Function()? gotoDetailsPage(BuildContext context) {
-    return () => Navigator.pushNamed(context, "/authors/show/${_author.id}");
+    return () => Navigator.pushNamed(context, createAuthorPath(_author));
   }
 }

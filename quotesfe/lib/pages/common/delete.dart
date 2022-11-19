@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:quotesfe/pages/common/page.dart';
 
 abstract class DeletePage extends AbsPage {

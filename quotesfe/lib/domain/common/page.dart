@@ -47,6 +47,8 @@ class Page<T> {
 
   Page(this.info, this.elements);
 
+  Page.empty() : this(PageInfo(0, 0, 0), []);
+
   Page.fromJson(JsonDecoder<T> decoder, Map<String, dynamic> json) {
     var jsonElems = json[fieldPageElements] as List;
     elements = jsonElems.map((j) => decoder(j)).toList();

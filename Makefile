@@ -25,7 +25,7 @@ fe-run: export CHROME_EXECUTABLE=/usr/bin/google-chrome-stable
 
 fe-run: 
 	echo "running frontend"
-	cd quotesfe && flutter run -d chrome
+	cd quotesfe && flutter run -d chrome --dart-define ENV=local
 
 fe-all: fe-format fe-build fe-run
 

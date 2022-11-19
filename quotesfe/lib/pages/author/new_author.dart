@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+
 import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/domain/author/service.dart';
 import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/pages/widgets/common/entity_form.dart';
 
 class NewAuthorPage extends NewPage<Author, NewAuthorEntityForm> {
-  static String routePattern = r'^/authors/new/?(&[\w-=]+)?$';
-
   final AuthorService authorService;
 
   const NewAuthorPage(Key? key, String title, this.authorService)
@@ -30,21 +29,20 @@ class NewAuthorPage extends NewPage<Author, NewAuthorEntityForm> {
 
 class NewAuthorEntityForm extends EntityForm<Author> {
   final _formKey = GlobalKey<FormState>();
-  final nameController = TextEditingController();
-  final descController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _descController = TextEditingController();
+  final Author? _author;
 
-  Author? author;
-
-  NewAuthorEntityForm(this.author) {
-    if (author != null) {
-      nameController.text = author!.name;
-      descController.text = author!.description ?? "";
+  NewAuthorEntityForm(this._author) {
+    if (_author != null) {
+      _nameController.text = _author!.name;
+      _descController.text = _author!.description ?? "";
     }
   }
 
   @override
-  Author createEntity() => Author(author?.id, nameController.text,
-      descController.text, DateTime.now(), DateTime.now());
+  Author createEntity() => Author(_author?.id, _nameController.text,
+      _descController.text, DateTime.now(), DateTime.now());
 
   @override
   Form createForm(BuildContext context, Function()? action) => Form(
@@ -52,8 +50,8 @@ class NewAuthorEntityForm extends EntityForm<Author> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextFormField(controller: nameController),
-          TextFormField(controller: descController),
+          TextFormField(controller: _nameController),
+          TextFormField(controller: _descController),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
@@ -66,7 +64,7 @@ class NewAuthorEntityForm extends EntityForm<Author> {
 
   @override
   void dispose() {
-    nameController.dispose();
-    descController.dispose();
+    _nameController.dispose();
+    _descController.dispose();
   }
 }

@@ -8,6 +8,8 @@ import 'package:quotesfe/pages/author/list_events.dart';
 import 'package:quotesfe/pages/book/delete_book.dart';
 import 'package:quotesfe/pages/book/list_events.dart';
 import 'package:quotesfe/pages/quote/list_events.dart';
+import 'package:quotesfe/pages/quote/new_quote.dart';
+import 'package:quotesfe/pages/quote/show_quote.dart';
 import 'package:quotesfe/pages/quote/update_quote.dart';
 import 'package:quotesfe/pages/quote/delete_quote.dart';
 import 'package:quotesfe/pages/search.dart';
@@ -18,6 +20,7 @@ import 'package:quotesfe/pages/author/new_author.dart';
 import 'package:quotesfe/pages/book/show_book.dart';
 import 'package:quotesfe/pages/book/new_book.dart';
 import 'package:quotesfe/pages/book/update_book.dart';
+import 'package:quotesfe/paths.dart';
 
 typedef PathWidgetBuilder = Widget Function(BuildContext, String);
 
@@ -39,35 +42,40 @@ class RouteConfiguration {
   List<Path> paths() {
     return [
       Path(
-          SearchPage.routePattern,
-          (context, match) => SearchPage(UniqueKey(), "search", _authorService,
-              _bookService, _quoteService)),
+          searchPathPattern,
+          (context, match) => SearchPage(
+              UniqueKey(),
+              "search",
+              _authorService,
+              _bookService,
+              _quoteService,
+              getParam(match, "searchPhrase", ""))),
       Path(
-          NewAuthorPage.routePattern,
+          authorCreatePathPattern,
           (context, match) =>
               NewAuthorPage(null, "new author", _authorService)),
       Path(
-          UpdateAuthorPage.routePattern,
+          authorUpdatePathPattern,
           (context, match) => UpdateAuthorPage(null, "update author",
               extractPathElement(match, 3), _authorService)),
       Path(
-          DeleteAuthorPage.routePattern,
+          authorDeletePathPattern,
           (context, match) => DeleteAuthorPage(null, "delete author",
               extractPathElement(match, 3), _authorService)),
       Path(
-          ShowAuthorPage.routePattern,
+          authorShowPathPattern,
           (context, match) => ShowAuthorPage(null, "show author",
               extractPathElement(match, 3), _authorService)),
       Path(
-          ListAuthorEventsPage.routePattern,
+          authorEventsPathPattern,
           (context, match) => ListAuthorEventsPage(null, "author events",
               extractPathElement(match, 3), _authorService)),
       Path(
-          NewBookPage.routePattern,
+          bookCreatePathPattern,
           (context, match) => NewBookPage(
               null, "new author", extractPathElement(match, 3), _bookService)),
       Path(
-          ShowBookPage.routePattern,
+          bookShowPathPattern,
           (context, match) => ShowBookPage(
               null,
               "show book",
@@ -75,7 +83,7 @@ class RouteConfiguration {
               extractPathElement(match, 6),
               _bookService)),
       Path(
-          UpdateBookPage.routePattern,
+          bookUpdatePathPattern,
           (context, match) => UpdateBookPage(
               null,
               "update book",
@@ -83,7 +91,7 @@ class RouteConfiguration {
               extractPathElement(match, 6),
               _bookService)),
       Path(
-          DeleteBookPage.routePattern,
+          bookDeletePathPattern,
           (context, match) => DeleteBookPage(
               null,
               "delete book",
@@ -91,7 +99,7 @@ class RouteConfiguration {
               extractPathElement(match, 6),
               _bookService)),
       Path(
-          ListBookEventsPage.routePattern,
+          bookEventsPathPattern,
           (context, match) => ListBookEventsPage(
               null,
               "book events",
@@ -99,7 +107,24 @@ class RouteConfiguration {
               extractPathElement(match, 6),
               _bookService)),
       Path(
-          DeleteQuotePage.routePattern,
+          quoteCreatePathPattern,
+          (context, match) => NewQuotePage(
+              null,
+              "new quote",
+              extractPathElement(match, 3),
+              extractPathElement(match, 6),
+              _quoteService)),
+      Path(
+          quoteShowPathPattern,
+          (context, match) => ShowQuotePage(
+              null,
+              "delete quote",
+              extractPathElement(match, 3),
+              extractPathElement(match, 6),
+              extractPathElement(match, 9),
+              _quoteService)),
+      Path(
+          quoteDeletePathPattern,
           (context, match) => DeleteQuotePage(
               null,
               "delete quote",
@@ -108,7 +133,7 @@ class RouteConfiguration {
               extractPathElement(match, 9),
               _quoteService)),
       Path(
-          UpdateQuotePage.routePattern,
+          quoteUpdatePathPattern,
           (context, match) => UpdateQuotePage(
               null,
               "update quote",
@@ -117,7 +142,7 @@ class RouteConfiguration {
               extractPathElement(match, 9),
               _quoteService)),
       Path(
-          ListQuoteEventsPage.routePattern,
+          quoteEventsPathPattern,
           (context, match) => ListQuoteEventsPage(
               null,
               "quote events",
@@ -127,9 +152,21 @@ class RouteConfiguration {
               _quoteService)),
       Path(
           r'^/',
-          (context, match) => SearchPage(UniqueKey(), "search", _authorService,
-              _bookService, _quoteService)),
+          (context, match) => SearchPage(
+              UniqueKey(),
+              "search",
+              _authorService,
+              _bookService,
+              _quoteService,
+              getParam(match, "searchPhrase", ""))),
     ];
+  }
+
+  String getParam(String path, String name, String def) {
+    final settingsUri = Uri.parse(path);
+//settingsUri.queryParameters is a map of all the query keys and values
+    final value = settingsUri.queryParameters[name];
+    return value ?? def;
   }
 
   String extractPathElement(String path, int no) {

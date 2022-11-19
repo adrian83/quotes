@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/pages/common/page.dart';
 import 'package:quotesfe/pages/widgets/common/entity_form.dart';
@@ -23,7 +24,7 @@ abstract class NewPage<T extends Entity, F extends EntityForm<T>>
 
 class _NewPageState<T extends Entity, F extends EntityForm<T>>
     extends PageState<NewPage<T, F>> {
-  EntityForm<T>? form;
+  EntityForm<T>? _form;
 
   @override
   initState() {
@@ -31,7 +32,7 @@ class _NewPageState<T extends Entity, F extends EntityForm<T>>
 
     widget.init().then((entity) {
       setState(() {
-        form = widget.createEntityForm(context, entity);
+        _form = widget.createEntityForm(context, entity);
       });
     }).catchError((e) {
       showError(e);
@@ -39,7 +40,7 @@ class _NewPageState<T extends Entity, F extends EntityForm<T>>
   }
 
   Function()? _persist(BuildContext context) => () {
-        var entity = form!.createEntity();
+        var entity = _form!.createEntity();
         widget.persist(entity).then((createdEntity) {
           showInfo(widget.successMessage());
         }).catchError((e) {
@@ -51,8 +52,8 @@ class _NewPageState<T extends Entity, F extends EntityForm<T>>
   List<Widget> renderWidgets(BuildContext context) {
     if (isMessage() && widget.hideFormOnSuccess()) {
       return [];
-    } else if (form != null) {
-      return [form!.createForm(context, _persist(context))];
+    } else if (_form != null) {
+      return [_form!.createForm(context, _persist(context))];
     }
     return [];
   }
@@ -60,8 +61,8 @@ class _NewPageState<T extends Entity, F extends EntityForm<T>>
   @override
   void dispose() {
     super.dispose();
-    if (form != null) {
-      form!.dispose();
+    if (_form != null) {
+      _form!.dispose();
     }
   }
 }

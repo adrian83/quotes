@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:quotesfe/domain/book/model.dart';
 import 'package:quotesfe/domain/book/service.dart';
 import 'package:quotesfe/pages/book/new_book.dart';
 
 class UpdateBookPage extends NewBookPage {
-  static String routePattern =
-      r'^/authors/show/([a-zA-Z0-9_.-]*)/books/update/([a-zA-Z0-9_.-]*)/?(&[\w-=]+)?$';
+  final String _bookId;
 
-  final String bookId;
-
-  const UpdateBookPage(Key? key, String title, String authorId, this.bookId,
+  const UpdateBookPage(Key? key, String title, String authorId, this._bookId,
       BookService bookService)
       : super(key, title, authorId, bookService);
 
@@ -21,5 +19,5 @@ class UpdateBookPage extends NewBookPage {
   String successMessage() => "Book updated";
 
   @override
-  Future<Book?> init() => bookService.find(authorId, bookId);
+  Future<Book?> init() => bookService.find(authorId, _bookId);
 }
