@@ -1,10 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quotesfe/pages/common/page.dart';
 
-import 'package:quotesfe/pages/widgets/author/list_entry.dart';
-import 'package:quotesfe/pages/widgets/author/page_entry.dart';
-import 'package:quotesfe/pages/widgets/book/list_entry.dart';
-import 'package:quotesfe/pages/widgets/book/page_entry.dart';
 import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/domain/book/model.dart';
 import 'package:quotesfe/domain/quote/model.dart';
@@ -12,9 +7,13 @@ import 'package:quotesfe/domain/author/service.dart';
 import 'package:quotesfe/domain/book/service.dart';
 import 'package:quotesfe/domain/quote/service.dart';
 import 'package:quotesfe/domain/common/page.dart';
-import 'package:quotesfe/pages/widgets/common.dart';
-import 'package:quotesfe/pages/widgets/quote/list_entry.dart';
-import 'package:quotesfe/pages/widgets/quote/page_entry.dart';
+import 'package:quotesfe/widgets/quote/list_entry.dart';
+import 'package:quotesfe/widgets/quote/page_entry.dart';
+import 'package:quotesfe/widgets/author/list_entry.dart';
+import 'package:quotesfe/widgets/author/page_entry.dart';
+import 'package:quotesfe/widgets/book/list_entry.dart';
+import 'package:quotesfe/widgets/book/page_entry.dart';
+import 'package:quotesfe/pages/common/page.dart';
 import 'package:quotesfe/paths.dart';
 
 class SearchPage extends AbsPage {
@@ -58,8 +57,6 @@ class _SearchPageState<T extends SearchPage> extends PageState<SearchPage> {
     newQuotesWidget();
   }
 
-  ErrorHandler _errorHandler() => (dynamic o) => showError(o);
-
   void refresh() {
     setState(() {
       newWidgets();
@@ -68,27 +65,27 @@ class _SearchPageState<T extends SearchPage> extends PageState<SearchPage> {
 
   void newAuthorWidget() {
     _authorsWidget = AuthorPageEntry(
-        UniqueKey(), changeAuthorsPage, _toAuthorEntry, _errorHandler());
+        UniqueKey(), changeAuthorsPage, _toAuthorEntry, errorHandler());
   }
 
   void newBookWidget() {
     _booksWidgets = BookPageEntry(
-        UniqueKey(), changeBooksPage, _toBookEntry, _errorHandler());
+        UniqueKey(), changeBooksPage, _toBookEntry, errorHandler());
   }
 
   void newQuotesWidget() {
     _quotesWidgets = QuotePageEntry(
-        UniqueKey(), changeQuotesPage, _toQuoteEntry, _errorHandler());
+        UniqueKey(), changeQuotesPage, _toQuoteEntry, errorHandler());
   }
 
   AuthorEntry _toAuthorEntry(Author a) =>
-      AuthorEntry(null, a, refresh, false, true, false);
+      AuthorEntry(null, a, refresh, false, false, true, false);
 
   BookEntry _toBookEntry(Book b) =>
-      BookEntry(null, b, refresh, false, true, true);
+      BookEntry(null, b, refresh, false, false, true, true);
 
   QuoteEntry _toQuoteEntry(Quote q) =>
-      QuoteEntry(null, q, refresh, false, true, true);
+      QuoteEntry(null, q, refresh, false, false, true, true);
 
   Future<AuthorsPage> changeAuthorsPage(PageRequest pageReq) =>
       widget._authorService.listAuthors(searchPhrase(), pageReq);
@@ -120,6 +117,13 @@ class _SearchPageState<T extends SearchPage> extends PageState<SearchPage> {
                 child: ElevatedButton(
                     child: const Text('Search'),
                     onPressed: gotoSearchPageWithNewSearchPhrase)),
+            Padding(
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
+                child: ElevatedButton(
+                    child: const Text('Create new author'),
+                    onPressed: () =>
+                        Navigator.pushNamed(context, createAuthorPath())
+                            .then((value) => refresh()))),
             const SizedBox(height: 20),
             _authorsWidget,
             const SizedBox(height: 20),

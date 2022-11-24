@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/pages/common/page.dart';
-import 'package:quotesfe/pages/widgets/common/entity_form.dart';
+import 'package:quotesfe/widgets/common/entity_form.dart';
 
 abstract class NewPage<T extends Entity, F extends EntityForm<T>>
     extends AbsPage {

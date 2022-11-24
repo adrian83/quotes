@@ -1,19 +1,24 @@
 import 'package:quotesfe/domain/author/model.dart';
+import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/domain/common/page.dart';
 
 class AuthorEvent extends Author {
-  String eventId, operation;
+  String _eventId, _operation;
 
-  AuthorEvent(this.eventId, this.operation, Author author)
+  AuthorEvent(this._eventId, this._operation, Author author)
       : super(author.id, author.name, author.description, author.modifiedUtc,
             author.createdUtc);
 
   AuthorEvent.fromJson(Map<String, dynamic> json)
-      : this(json["id"], json["operation"], Author.fromJson(json["entity"]));
+      : this(json[fieldEventId], json[fieldEventOperation],
+            Author.fromJson(json[fieldEventEntity]));
+
+  String get eventId => _eventId;
+  String get operation => _operation;
 
   @override
-  Map toJson() =>
-      super.toJson()..addAll({"eventId": eventId, "operation": operation});
+  Map toJson() => super.toJson()
+    ..addAll({fieldEventEventId: _eventId, fieldEventOperation: _operation});
 }
 
 JsonDecoder<AuthorEvent> _authorEventJsonDecoder =

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quotesfe/domain/book/model.dart';
 import 'package:quotesfe/domain/book/service.dart';
 import 'package:quotesfe/pages/common/new.dart';
-import 'package:quotesfe/pages/widgets/common/entity_form.dart';
+import 'package:quotesfe/widgets/common/entity_form.dart';
 
 class NewBookPage extends NewPage<Book, NewBookEntityForm> {
   final String authorId;

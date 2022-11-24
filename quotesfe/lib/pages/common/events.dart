@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/pages/common/page.dart';
-import 'package:quotesfe/pages/widgets/paging.dart';
+import 'package:quotesfe/widgets/paging.dart';
 import 'package:quotesfe/domain/common/page.dart' as p;
 
 abstract class ListEventsPage<T> extends AbsPage {

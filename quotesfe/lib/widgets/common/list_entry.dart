@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 typedef OnBackAction = Function();
 
 abstract class ListEntry extends StatefulWidget {
-  final bool _showId;
+  final String _label;
+  final bool _showId, _showLabel;
   final OnBackAction? _onBackAction;
 
-  const ListEntry(Key? key, this._showId, this._onBackAction) : super(key: key);
+  const ListEntry(
+      Key? key, this._label, this._showLabel, this._showId, this._onBackAction)
+      : super(key: key);
 
   @override
   State<ListEntry> createState() => _ListEntryState();
@@ -37,6 +40,12 @@ class _ListEntryState extends State<ListEntry> {
   @override
   Widget build(BuildContext context) {
     var children = <Widget>[];
+
+    if (widget._showLabel) {
+      children.add(
+          Text(widget._label, style: Theme.of(context).textTheme.headline4));
+    }
+
     if (widget._showId) {
       children.add(widget.paddingWithText('Id: ${widget.getId()}'));
     }

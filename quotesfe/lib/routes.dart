@@ -41,15 +41,7 @@ class RouteConfiguration {
 
   List<Path> paths() {
     return [
-      Path(
-          searchPathPattern,
-          (context, match) => SearchPage(
-              UniqueKey(),
-              "search",
-              _authorService,
-              _bookService,
-              _quoteService,
-              getParam(match, "searchPhrase", ""))),
+      Path(searchPathPattern, searchView),
       Path(
           authorCreatePathPattern,
           (context, match) =>
@@ -65,7 +57,7 @@ class RouteConfiguration {
       Path(
           authorShowPathPattern,
           (context, match) => ShowAuthorPage(null, "show author",
-              extractPathElement(match, 3), _authorService)),
+              extractPathElement(match, 3), _authorService, _bookService)),
       Path(
           authorEventsPathPattern,
           (context, match) => ListAuthorEventsPage(null, "author events",
@@ -81,7 +73,8 @@ class RouteConfiguration {
               "show book",
               extractPathElement(match, 3),
               extractPathElement(match, 6),
-              _bookService)),
+              _bookService,
+              _quoteService)),
       Path(
           bookUpdatePathPattern,
           (context, match) => UpdateBookPage(
@@ -90,81 +83,66 @@ class RouteConfiguration {
               extractPathElement(match, 3),
               extractPathElement(match, 6),
               _bookService)),
-      Path(
-          bookDeletePathPattern,
-          (context, match) => DeleteBookPage(
-              null,
-              "delete book",
-              extractPathElement(match, 3),
-              extractPathElement(match, 6),
-              _bookService)),
-      Path(
-          bookEventsPathPattern,
-          (context, match) => ListBookEventsPage(
-              null,
-              "book events",
-              extractPathElement(match, 3),
-              extractPathElement(match, 6),
-              _bookService)),
-      Path(
-          quoteCreatePathPattern,
-          (context, match) => NewQuotePage(
-              null,
-              "new quote",
-              extractPathElement(match, 3),
-              extractPathElement(match, 6),
-              _quoteService)),
-      Path(
-          quoteShowPathPattern,
-          (context, match) => ShowQuotePage(
-              null,
-              "delete quote",
-              extractPathElement(match, 3),
-              extractPathElement(match, 6),
-              extractPathElement(match, 9),
-              _quoteService)),
-      Path(
-          quoteDeletePathPattern,
-          (context, match) => DeleteQuotePage(
-              null,
-              "delete quote",
-              extractPathElement(match, 3),
-              extractPathElement(match, 6),
-              extractPathElement(match, 9),
-              _quoteService)),
-      Path(
-          quoteUpdatePathPattern,
-          (context, match) => UpdateQuotePage(
-              null,
-              "update quote",
-              extractPathElement(match, 3),
-              extractPathElement(match, 6),
-              extractPathElement(match, 9),
-              _quoteService)),
-      Path(
-          quoteEventsPathPattern,
-          (context, match) => ListQuoteEventsPage(
-              null,
-              "quote events",
-              extractPathElement(match, 3),
-              extractPathElement(match, 6),
-              extractPathElement(match, 9),
-              _quoteService)),
-      Path(
-          r'^/',
-          (context, match) => SearchPage(
-              UniqueKey(),
-              "search",
-              _authorService,
-              _bookService,
-              _quoteService,
-              getParam(match, "searchPhrase", ""))),
+      Path(bookDeletePathPattern, deleteBookView),
+      Path(bookEventsPathPattern, listBookEventsView),
+      Path(quoteCreatePathPattern, createQuoteView),
+      Path(quoteShowPathPattern, showQuoteView),
+      Path(quoteDeletePathPattern, deleteQuoteView),
+      Path(quoteUpdatePathPattern, updateQuoteView),
+      Path(quoteEventsPathPattern, listQuoteEventsView),
+      Path(r'^/', searchView),
     ];
   }
 
-  String getParam(String path, String name, String def) {
+  Widget deleteBookView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3, 6]);
+    return DeleteBookPage(
+        null, "delete book", pathParams[0], pathParams[1], _bookService);
+  }
+
+  Widget listBookEventsView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3, 6]);
+    return ListBookEventsPage(
+        null, "book events", pathParams[0], pathParams[1], _bookService);
+  }
+
+  Widget createQuoteView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3, 6]);
+    return NewQuotePage(
+        null, "new quote", pathParams[0], pathParams[1], _quoteService);
+  }
+
+  Widget showQuoteView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3, 6, 9]);
+    return ShowQuotePage(null, "delete quote", pathParams[0], pathParams[1],
+        pathParams[2], _quoteService);
+  }
+
+  Widget deleteQuoteView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3, 6, 9]);
+    return DeleteQuotePage(null, "delete quote", pathParams[0], pathParams[1],
+        pathParams[2], _quoteService);
+  }
+
+  Widget updateQuoteView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3, 6, 9]);
+    return UpdateQuotePage(null, "update quote", pathParams[0], pathParams[1],
+        pathParams[2], _quoteService);
+  }
+
+  Widget listQuoteEventsView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3, 6, 9]);
+    return ListQuoteEventsPage(null, "quote events", pathParams[0],
+        pathParams[1], pathParams[2], _quoteService);
+  }
+
+  Widget searchView(BuildContext ctx, String path) {
+    return SearchPage(UniqueKey(), "search", _authorService, _bookService,
+        _quoteService, getUrlParam(path, "searchPhrase", ""));
+  }
+
+  String getUrlParam(String path, String name, String def) {
     final settingsUri = Uri.parse(path);
-//settingsUri.queryParameters is a map of all the query keys and values
     final value = settingsUri.queryParameters[name];
     return value ?? def;
   }
@@ -172,6 +150,17 @@ class RouteConfiguration {
   String extractPathElement(String path, int no) {
     var elem = path.split("/")[no];
     return elem.split("?")[0];
+  }
+
+  List<String> extractPathElements(String path, List<int> indexes) {
+    var elements = path.split("?")[0].split("/");
+    var values = <String>[];
+    for (int i = 0; i < elements.length; i++) {
+      if (indexes.contains(i)) {
+        values.add(elements[i]);
+      }
+    }
+    return values;
   }
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {

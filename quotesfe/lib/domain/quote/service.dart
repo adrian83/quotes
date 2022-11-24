@@ -9,51 +9,51 @@ import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/tools/config.dart';
 
 class QuoteService extends Service<Quote> {
-  final Config _config;
+  final String apiHost;
 
-  QuoteService(BrowserClient http, this._config) : super(http);
+  QuoteService(BrowserClient http, Config config)
+      : apiHost = config.apiHost,
+        super(http);
 
   Future<QuotesPage> listBookQuotes(
       String authorId, String bookId, PageRequest request) {
-    var url =
-        "${_config.apiHost}/authors/$authorId/books/$bookId/quotes?${pageRequestToUrlParams(request)}";
+    var urlParams = pageRequestToUrlParams(request);
+    var url = "$apiHost/authors/$authorId/books/$bookId/quotes?$urlParams";
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
   }
 
   Future<QuotesPage> listQuotes(String searchPhrase, PageRequest request) {
-    var url = "${_config.apiHost}/quotes?${pageRequestToUrlParams(request)}";
+    var url = "$apiHost/quotes?${pageRequestToUrlParams(request)}";
     url = appendUrlParam(url, "searchPhrase", searchPhrase);
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
   }
 
   Future<QuoteEventsPage> listEvents(
       String authorId, String bookId, String quoteId, PageRequest request) {
+    var urlParams = pageRequestToUrlParams(request);
     var url =
-        "${_config.apiHost}/authors/$authorId/books/$bookId/quotes/$quoteId/events?${pageRequestToUrlParams(request)}";
+        "$apiHost/authors/$authorId/books/$bookId/quotes/$quoteId/events?$urlParams";
     return getEntity(url).then((json) => QuoteEventsPage.fromJson(json));
   }
 
   Future<Quote> find(String authorId, String bookId, String quoteId) {
-    var url =
-        "${_config.apiHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
+    var url = "$apiHost/authors/$authorId/books/$bookId/quotes/$quoteId";
     return getEntity(url).then((json) => Quote.fromJson(json));
   }
 
   Future<Quote> update(Quote quote) {
     var url =
-        "${_config.apiHost}/authors/${quote.authorId}/books/${quote.bookId}/quotes/${quote.id}";
+        "$apiHost/authors/${quote.authorId}/books/${quote.bookId}/quotes/${quote.id}";
     return updateEntity(url, quote).then((json) => Quote.fromJson(json));
   }
 
   Future<Quote> create(Quote quote) {
-    var url =
-        "${_config.apiHost}/authors/${quote.authorId}/books/${quote.bookId}/quotes";
+    var url = "$apiHost/authors/${quote.authorId}/books/${quote.bookId}/quotes";
     return createEntity(url, quote).then((json) => Quote.fromJson(json));
   }
 
   Future<String> delete(String authorId, String bookId, String quoteId) {
-    var url =
-        "${_config.apiHost}/authors/$authorId/books/$bookId/quotes/$quoteId";
+    var url = "$apiHost/authors/$authorId/books/$bookId/quotes/$quoteId";
     return deleteEntity(url).then((_) => quoteId);
   }
 }

@@ -14,7 +14,9 @@ const String authorDeletePathPattern =
 const String authorEventsPathPattern =
     r'^/authors/events/([a-zA-Z0-9_.-]*)/?(&[\w-=]+)?$';
 
-String createAuthorPath(Author author) => "/authors/show/${author.id}";
+String createAuthorPath() => "/authors/new/";
+
+String showAuthorPath(Author author) => "/authors/show/${author.id}";
 
 String deleteAuthorPath(Author author) => "/authors/delete/${author.id}";
 
@@ -35,7 +37,9 @@ const String bookShowPathPattern =
 const String bookUpdatePathPattern =
     r'^/authors/show/([a-zA-Z0-9_.-]*)/books/update/([a-zA-Z0-9_.-]*)/?(&[\w-=]+)?$';
 
-String createBookPath(Book book) =>
+String createBookPath(String authorId) => "/authors/show/$authorId/books/new/";
+
+String showBookPath(Book book) =>
     "/authors/show/${book.authorId}/books/show/${book.id}";
 
 String deleteBookPath(Book book) =>
@@ -60,7 +64,10 @@ const String quoteShowPathPattern =
 const String quoteUpdatePathPattern =
     r'^/authors/show/([a-zA-Z0-9_.-]*)/books/show/([a-zA-Z0-9_.-]*)/quotes/update/([a-zA-Z0-9_.-]*)/?(&[\w-=]+)?$';
 
-String createQuotePath(Quote quote) =>
+String createQuotePath(String authorId, String bookId) =>
+    "/authors/show/$authorId/books/show/$bookId/quotes/new/";
+
+String showQuotePath(Quote quote) =>
     "/authors/show/${quote.authorId}/books/show/${quote.bookId}/quotes/show/${quote.id}";
 
 String deleteQuotePath(Quote quote) =>

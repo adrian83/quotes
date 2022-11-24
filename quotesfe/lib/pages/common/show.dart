@@ -14,10 +14,17 @@ abstract class ShowPage<E> extends AbsPage {
 
   @override
   State<ShowPage<E>> createState() => _ShowPageState();
+
+  List<Widget> additionalWidgets();
+
+  String? createChildButtonLabel();
+
+  String? createChildPath();
 }
 
 class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
   ENTITY? _entity;
+  List<Widget> additionalWidgets = [];
 
   @override
   initState() {
@@ -25,14 +32,43 @@ class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
     widget.findEntity().then((a) {
       setState(() {
         _entity = a;
+        additionalWidgets = widget.additionalWidgets();
       });
     }).catchError((e) {
       showError(e);
     });
   }
 
+  void onBackAction() {
+    setState(() {
+      additionalWidgets = widget.additionalWidgets();
+    });
+  }
+
   @override
   List<Widget> renderWidgets(BuildContext context) {
-    return _entity == null ? [] : [widget._toWidgetTransformer(_entity!)];
+    var widgets = <Widget>[];
+
+    widgets.addAll(additionalWidgets);
+
+    var createChildButtonLabel = widget.createChildButtonLabel();
+    var createChildPath = widget.createChildPath();
+
+    if (createChildButtonLabel != null && createChildPath != null) {
+      var button = TextButton(
+        onPressed: () => Navigator.pushNamed(context, createChildPath)
+            .then((value) => onBackAction()),
+        child: Text(createChildButtonLabel),
+      );
+      widgets.add(const SizedBox(height: 20));
+      widgets.add(button);
+    }
+
+    if (_entity == null) {
+      return widgets;
+    } else {
+      widgets.insert(0, widget._toWidgetTransformer(_entity!));
+      return widgets;
+    }
   }
 }

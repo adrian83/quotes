@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/author/model.dart';
-import 'package:quotesfe/pages/widgets/common/list_entry.dart';
+import 'package:quotesfe/widgets/common/list_entry.dart';
 import 'package:quotesfe/paths.dart';
 
 class AuthorEntry extends ListEntry {
@@ -9,8 +9,8 @@ class AuthorEntry extends ListEntry {
   final bool _detailsLink, _longDescription;
 
   const AuthorEntry(Key? key, this._author, OnBackAction? onBackAction,
-      bool showId, this._detailsLink, this._longDescription)
-      : super(key, showId, onBackAction);
+      bool showLabel, bool showId, this._detailsLink, this._longDescription)
+      : super(key, "Author", showLabel, showId, onBackAction);
 
   @override
   String deletePageUrl() => deleteAuthorPath(_author);
@@ -48,6 +48,6 @@ class AuthorEntry extends ListEntry {
   }
 
   Function()? gotoDetailsPage(BuildContext context) {
-    return () => Navigator.pushNamed(context, createAuthorPath(_author));
+    return () => Navigator.pushNamed(context, showAuthorPath(_author));
   }
 }

@@ -1,9 +1,7 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/common/page.dart' as qpage;
-import 'package:quotesfe/pages/widgets/paging.dart';
+import 'package:quotesfe/widgets/paging.dart';
 
 typedef PageChangeAction<E> = Future<qpage.Page<E>> Function(qpage.PageRequest);
 typedef ToEntryTransformer<A, E> = E Function(A);
@@ -39,13 +37,11 @@ class _PageEntryState<ENTITY, PAGE extends qpage.Page<ENTITY>,
 
   @override
   void initState() {
-    developer.log("initializing: ${widget._label}");
     super.initState();
     loadPage(_currentPage);
   }
 
   void loadPage(int pageNo) {
-    developer.log("loading page $pageNo of ${widget._label}");
     _currentPage = pageNo;
     widget
         ._pageChangeAction(qpage.PageRequest.pageWithSize(pageNo, _pageSize))
@@ -64,17 +60,20 @@ class _PageEntryState<ENTITY, PAGE extends qpage.Page<ENTITY>,
 
   @override
   Widget build(BuildContext context) {
-    developer.log("building: ${widget._label}");
+    var widgets = _entries.isEmpty
+        ? [_searchEntityHeader(widget._label), const Text("Empty...")]
+        : [
+            _searchEntityHeader(widget._label),
+            ..._entries,
+            _pagination,
+          ];
+
     return Column(
       key: null,
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: <Widget>[
-        _searchEntityHeader(widget._label),
-        ..._entries,
-        _pagination,
-      ],
+      children: widgets,
     );
   }
 

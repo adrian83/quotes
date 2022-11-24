@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/pages/widgets/info/error_box.dart';
-import 'package:quotesfe/pages/widgets/info/info_box.dart';
+import 'package:quotesfe/widgets/common/info_state.dart';
 
 abstract class AbsPage extends StatefulWidget {
   final String _title;
@@ -9,39 +8,14 @@ abstract class AbsPage extends StatefulWidget {
   const AbsPage(Key? key, this._title) : super(key: key);
 }
 
-abstract class PageState<T extends AbsPage> extends State<T> {
-  dynamic _error;
-  String? _message;
-
-  void showError(dynamic e) {
-    setState(() {
-      _error = e;
-    });
-  }
-
-  void showInfo(String i) {
-    setState(() {
-      _message = i;
-    });
-  }
-
-  bool isError() => _error != null;
-
-  bool isMessage() => _message != null;
-
+abstract class PageState<T extends AbsPage> extends InfoState<T> {
   List<Widget> renderWidgets(BuildContext context);
 
   @override
   Widget build(BuildContext context) {
     var children = <Widget>[];
 
-    if (_error != null) {
-      children.add(Errors(null, _error!));
-    }
-
-    if (_message != null) {
-      children.add(Info(null, _message!));
-    }
+    children.add(super.build(context));
 
     children.addAll(renderWidgets(context));
 

@@ -5,11 +5,13 @@ import 'package:quotesfe/tools/strings.dart';
 const fieldAuthorName = "name";
 const fieldAuthorDescription = "description";
 
-class Author extends Entity {
-  String name;
-  String? description;
+const _shortDescriptionMaxLen = 250;
 
-  Author(String? id, this.name, this.description, DateTime modifiedUtc,
+class Author extends Entity {
+  String _name;
+  String? _description;
+
+  Author(String? id, this._name, this._description, DateTime modifiedUtc,
       DateTime createdUtc)
       : super(id, modifiedUtc, createdUtc);
 
@@ -18,15 +20,17 @@ class Author extends Entity {
             json[fieldEntityId],
             json[fieldAuthorName],
             json[fieldAuthorDescription],
-            DateTime.parse(json[fieldModifiedUtc]),
-            DateTime.parse(json[fieldCreatedUtc]));
+            DateTime.parse(json[fieldEntityModifiedUtc]),
+            DateTime.parse(json[fieldEntityCreatedUtc]));
 
+  String get name => _name;
+  String? get description => _description;
   List<String> get descriptionParts => description?.split("\n") ?? [];
-  String? get shortDescription => shorten(description, 250);
+  String? get shortDescription => shorten(description, _shortDescriptionMaxLen);
 
   @override
   Map toJson() => super.toJson()
-    ..addAll({fieldAuthorName: name, fieldAuthorDescription: description});
+    ..addAll({fieldAuthorName: _name, fieldAuthorDescription: _description});
 }
 
 JsonDecoder<Author> _authorJsonDecoder =

@@ -1,23 +1,21 @@
-import 'model.dart';
-
+import 'package:quotesfe/domain/book/model.dart';
+import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/domain/common/page.dart';
 
 class BookEvent extends Book {
-  String _eventId, _operation;
+  String eventId, operation;
 
-  BookEvent(this._eventId, this._operation, Book book)
+  BookEvent(this.eventId, this.operation, Book book)
       : super(book.id, book.title, book.description, book.authorId,
             book.modifiedUtc, book.createdUtc);
 
   BookEvent.fromJson(Map<String, dynamic> json)
-      : this(json["id"], json["operation"], Book.fromJson(json["entity"]));
-
-  String get eventId => _eventId;
-  String get operation => _operation;
+      : this(json[fieldEventId], json[fieldEventOperation],
+            Book.fromJson(json[fieldEventEntity]));
 
   @override
-  Map toJson() =>
-      super.toJson()..addAll({"eventId": _eventId, "operation": _operation});
+  Map toJson() => super.toJson()
+    ..addAll({fieldEventEventId: eventId, fieldEventOperation: operation});
 }
 
 JsonDecoder<BookEvent> _bookEventJsonDecoder =

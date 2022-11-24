@@ -2,6 +2,10 @@ import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/tools/strings.dart';
 
+const fieldQuoteText = "text";
+const fieldQuoteAuthorId = "authorId";
+const fieldQuoteBookId = "bookId";
+
 class Quote extends Entity {
   String text, authorId, bookId;
 
@@ -11,19 +15,23 @@ class Quote extends Entity {
 
   Quote.fromJson(Map<String, dynamic> json)
       : this(
-            json['id'],
-            json['text'],
-            json['authorId'],
-            json['bookId'],
-            DateTime.parse(json["modifiedUtc"]),
-            DateTime.parse(json["createdUtc"]));
+            json[fieldEntityId],
+            json[fieldQuoteText],
+            json[fieldQuoteAuthorId],
+            json[fieldQuoteBookId],
+            DateTime.parse(json[fieldEntityModifiedUtc]),
+            DateTime.parse(json[fieldEntityCreatedUtc]));
 
   List<String> get textLines => text.split("\n");
   List<String> get shortLines => shorten(text, 80)?.split("\n") ?? [];
 
   @override
   Map toJson() => super.toJson()
-    ..addAll({"text": text, "authorId": authorId, "bookId": bookId});
+    ..addAll({
+      fieldQuoteText: text,
+      fieldQuoteAuthorId: authorId,
+      fieldQuoteBookId: bookId
+    });
 }
 
 JsonDecoder<Quote> _quoteJsonDecoder =

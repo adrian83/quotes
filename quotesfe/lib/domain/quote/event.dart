@@ -1,23 +1,21 @@
-import 'model.dart';
-
+import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/domain/common/page.dart';
+import 'package:quotesfe/domain/quote/model.dart';
 
 class QuoteEvent extends Quote {
-  String _eventId, _operation;
+  String eventId, operation;
 
-  QuoteEvent(this._eventId, this._operation, Quote quote)
+  QuoteEvent(this.eventId, this.operation, Quote quote)
       : super(quote.id, quote.text, quote.authorId, quote.bookId,
             quote.modifiedUtc, quote.createdUtc);
 
   QuoteEvent.fromJson(Map<String, dynamic> json)
-      : this(json["id"], json["operation"], Quote.fromJson(json["entity"]));
-
-  String get eventId => _eventId;
-  String get operation => _operation;
+      : this(json[fieldEventId], json[fieldEventOperation],
+            Quote.fromJson(json[fieldEventEntity]));
 
   @override
-  Map toJson() =>
-      super.toJson()..addAll({"eventId": _eventId, "operation": _operation});
+  Map toJson() => super.toJson()
+    ..addAll({fieldEventEventId: eventId, fieldEventOperation: operation});
 }
 
 JsonDecoder<QuoteEvent> _quoteEventJsonDecoder =

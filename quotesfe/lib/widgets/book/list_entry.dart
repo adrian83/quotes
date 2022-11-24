@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/book/model.dart';
-import 'package:quotesfe/pages/widgets/common/list_entry.dart';
+import 'package:quotesfe/widgets/common/list_entry.dart';
 import 'package:quotesfe/paths.dart';
 
 class BookEntry extends ListEntry {
   final Book _book;
   final bool _detailsLink, _longDescription;
 
-  const BookEntry(Key? key, this._book, OnBackAction? onBackAction, bool showId,
-      this._detailsLink, this._longDescription)
-      : super(key, showId, onBackAction);
+  const BookEntry(Key? key, this._book, OnBackAction? onBackAction,
+      bool showLabel, bool showId, this._detailsLink, this._longDescription)
+      : super(key, "Book", showLabel, showId, onBackAction);
 
   @override
   String deletePageUrl() => deleteBookPath(_book);
@@ -47,6 +47,6 @@ class BookEntry extends ListEntry {
   }
 
   Function()? gotoDetailsPage(BuildContext context) {
-    return () => Navigator.pushNamed(context, createBookPath(_book));
+    return () => Navigator.pushNamed(context, showBookPath(_book));
   }
 }
