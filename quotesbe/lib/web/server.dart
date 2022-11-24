@@ -1,10 +1,11 @@
 import 'dart:io';
 
-import 'package:quotesbe/web/handler.dart';
-import 'package:quotesbe/web/response.dart';
 import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_router/shelf_router.dart' as shelf_router;
+
+import 'package:quotesbe/web/handler.dart';
+import 'package:quotesbe/web/response.dart';
 
 class Server {
   final int _port;

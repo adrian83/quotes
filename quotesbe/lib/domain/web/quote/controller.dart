@@ -36,7 +36,7 @@ class QuoteController {
   }
 
   Future<Response> searchBookQuotes(
-      Request request, String authorId, String bookId) async {
+      Request request, String authorId, String bookId,) async {
     var query =
         ListQuotesFromBookQuery(authorId, bookId, extractPageRequest(request));
 
@@ -119,7 +119,7 @@ class QuoteController {
   ) =>
       _quoteService
           .listEvents(ListEventsByQuoteQuery(
-              authorId, bookId, quoteId, extractPageRequest(request)))
+              authorId, bookId, quoteId, extractPageRequest(request),),)
           .then((page) => jsonResponseOk(page))
           .onError<Exception>((error, stackTrace) => handleError(error));
 }
