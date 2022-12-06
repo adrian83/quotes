@@ -2,7 +2,7 @@ const fieldValidationErrorField = "field";
 const fieldValidationErrorMessage = "message";
 
 class ValidationError {
-  String field, message;
+  final String field, message;
 
   ValidationError(this.field, this.message);
 
@@ -16,7 +16,7 @@ class ValidationError {
 }
 
 class ValidationErrors implements Exception {
-  List<ValidationError> validationErrors = [];
+  late final List<ValidationError> validationErrors;
 
   ValidationErrors(List<dynamic> errors) {
     validationErrors = errors.map((e) => ValidationError.fromJson(e)).toList();

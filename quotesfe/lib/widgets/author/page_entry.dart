@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/widgets/author/list_entry.dart';
-import 'package:quotesfe/widgets/common.dart';
+import 'package:quotesfe/widgets/page_entry.dart';
 
 class AuthorPageEntry extends PageEntry<Author, AuthorsPage, AuthorEntry> {
   const AuthorPageEntry(

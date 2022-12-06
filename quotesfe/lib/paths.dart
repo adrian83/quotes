@@ -1,6 +1,7 @@
 import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/domain/book/model.dart';
 import 'package:quotesfe/domain/quote/model.dart';
+import 'package:quotesfe/domain/common/service.dart';
 
 // AUTHORS
 
@@ -83,4 +84,5 @@ String listQuoteEventsPath(Quote quote) =>
 
 const String searchPathPattern = r'^/search/?(&[\w-=]+)?$';
 
-String searchPath(String searchPhrase) => "/search/?searchPhrase=$searchPhrase";
+String searchPath(String searchPhrase) =>
+    "/search/?$paramSearchPhrase=$searchPhrase";

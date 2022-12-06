@@ -98,9 +98,12 @@ class _SearchPageState<T extends SearchPage> extends PageState<SearchPage> {
 
   String searchPhrase() => _searchPhraseController.value.text;
 
-  Future gotoSearchPageWithNewSearchPhrase() {
-    return Navigator.pushNamed(context, searchPath(searchPhrase()));
-  }
+  Future _gotoSearchPageWithNewSearchPhrase() =>
+      Navigator.pushNamed(context, searchPath(searchPhrase()));
+
+  Future _gotoNewAuthorPage() =>
+      Navigator.pushNamed(context, createAuthorPath())
+          .then((value) => refresh());
 
   @override
   List<Widget> renderWidgets(BuildContext context) {
@@ -116,14 +119,12 @@ class _SearchPageState<T extends SearchPage> extends PageState<SearchPage> {
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
                     child: const Text('Search'),
-                    onPressed: gotoSearchPageWithNewSearchPhrase)),
+                    onPressed: _gotoSearchPageWithNewSearchPhrase)),
             Padding(
                 padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: ElevatedButton(
                     child: const Text('Create new author'),
-                    onPressed: () =>
-                        Navigator.pushNamed(context, createAuthorPath())
-                            .then((value) => refresh()))),
+                    onPressed: _gotoNewAuthorPage)),
             const SizedBox(height: 20),
             _authorsWidget,
             const SizedBox(height: 20),

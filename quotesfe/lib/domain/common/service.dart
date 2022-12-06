@@ -6,6 +6,8 @@ import 'package:http/http.dart';
 import 'package:quotesfe/domain/common/errors.dart';
 import 'package:quotesfe/domain/common/page.dart';
 
+const paramSearchPhrase = "searchPhrase";
+
 class Service<T> {
   static final _headers = {'Content-Type': 'application/json'};
 
@@ -20,24 +22,25 @@ class Service<T> {
     ..._corsHeaders,
   };
 
-  final Client http;
+  final Client _httpClient;
 
-  Service(this.http);
+  Service(this._httpClient);
 
-  Future<Map<String, dynamic>> createEntity(String url, T entity) => http
+  Future<Map<String, dynamic>> createEntity(String url, T entity) => _httpClient
       .post(Uri.parse(url), headers: _allHeaders, body: jsonEncode(entity))
       .then((response) => _handleErrors(response));
 
-  Future<Map<String, dynamic>> updateEntity(String url, T entity) => http
+  Future<Map<String, dynamic>> updateEntity(String url, T entity) => _httpClient
       .put(Uri.parse(url), headers: _allHeaders, body: jsonEncode(entity))
       .then((response) => _handleErrors(response));
 
-  Future<Map<String, dynamic>> getEntity(String url) => http
+  Future<Map<String, dynamic>> getEntity(String url) => _httpClient
       .get(Uri.parse(url), headers: _corsHeaders)
       .then((response) => _handleErrors(response));
 
-  Future<Map<String, dynamic>> deleteEntity(String url) =>
-      http.delete(Uri.parse(url), headers: _corsHeaders).then((response) =>
+  Future<Map<String, dynamic>> deleteEntity(String url) => _httpClient
+      .delete(Uri.parse(url), headers: _corsHeaders)
+      .then((response) =>
           response.statusCode == 200 ? {} : _handleErrors(response));
 
   Map<String, dynamic> _handleErrors(response) {

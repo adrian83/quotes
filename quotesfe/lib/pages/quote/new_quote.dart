@@ -6,19 +6,25 @@ import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
 
 class NewQuotePage extends NewPage<Quote, NewQuoteEntityForm> {
-  final String authorId, bookId;
-  final QuoteService quoteService;
+  final String _authorId, _bookId;
+  final QuoteService _quoteService;
 
   const NewQuotePage(
-      Key? key, String title, this.authorId, this.bookId, this.quoteService)
+      Key? key, String title, this._authorId, this._bookId, this._quoteService)
       : super(key, title);
+
+  String get bookId => _bookId;
+  String get authorId => _authorId;
+  QuoteService get quoteService => _quoteService;
 
   @override
   NewQuoteEntityForm createEntityForm(BuildContext context, Quote? entity) =>
-      NewQuoteEntityForm(authorId, bookId, entity);
+      NewQuoteEntityForm(_authorId, _bookId, entity);
 
   @override
-  Future<Quote> persist(Quote entity) => quoteService.create(entity);
+  Future<Quote> persist(Quote entity) => entity.id == null
+      ? _quoteService.create(entity)
+      : _quoteService.update(entity);
 
   @override
   String successMessage() => "Quote created";
@@ -40,8 +46,8 @@ class NewQuoteEntityForm extends EntityForm<Quote> {
   }
 
   @override
-  Quote createEntity() => Quote(null, _textController.text, _authorId, _bookId,
-      DateTime.now(), DateTime.now());
+  Quote createEntity() => Quote(_quote?.id, _textController.text, _authorId,
+      _bookId, DateTime.now(), DateTime.now());
 
   @override
   Form createForm(BuildContext context, Function()? action) => Form(
@@ -49,7 +55,7 @@ class NewQuoteEntityForm extends EntityForm<Quote> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextFormField(controller: _textController),
+          TextFormField(controller: _textController, maxLines: 15),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(

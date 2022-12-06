@@ -40,8 +40,6 @@ class _PaginationState extends State<Pagination> {
     var toLeft = maxPagesOnLeft + canceledOnRight;
     var toRight = maxPagesOnRight + canceledOnLeft;
 
-    //print("pages: ${widget._pages}, current: $current, toLeft $toLeft, toRight: $toRight, canceledOnRightDiff: $canceledOnRightDiff");
-
     var startWithDots = false;
     var endsWithDots = false;
 

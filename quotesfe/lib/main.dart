@@ -20,14 +20,13 @@ void main() {
 
   final routes = RouteConfiguration(authorService, bookService, quoteService);
 
-  runApp(QuotesApp(null, "", routes));
+  runApp(QuotesApp(null, routes));
 }
 
 class QuotesApp extends StatelessWidget {
   final RouteConfiguration routes;
-  final String initialRoute;
 
-  const QuotesApp(Key? key, this.initialRoute, this.routes) : super(key: key);
+  const QuotesApp(Key? key, this.routes) : super(key: key);
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     return routes.onGenerateRoute(settings);
@@ -41,7 +40,7 @@ class QuotesApp extends StatelessWidget {
       title: 'Quotes',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(primarySwatch: Colors.blue),
-      initialRoute: initialRoute,
+      //initialRoute: "",
       onGenerateRoute: onGenerateRoute,
     );
   }

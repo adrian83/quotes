@@ -15,6 +15,8 @@ abstract class PageState<T extends AbsPage> extends InfoState<T> {
   Widget build(BuildContext context) {
     var children = <Widget>[];
 
+    children.add(const SizedBox(height: 20));
+
     children.add(super.build(context));
 
     children.addAll(renderWidgets(context));

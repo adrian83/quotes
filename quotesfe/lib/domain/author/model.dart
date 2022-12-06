@@ -8,8 +8,8 @@ const fieldAuthorDescription = "description";
 const _shortDescriptionMaxLen = 250;
 
 class Author extends Entity {
-  String _name;
-  String? _description;
+  final String _name;
+  final String? _description;
 
   Author(String? id, this._name, this._description, DateTime modifiedUtc,
       DateTime createdUtc)

@@ -7,11 +7,6 @@ const bookTitleLabel = 'title';
 const bookDescLabel = 'description';
 const bookIdLabel = 'bookId';
 
-DateTime temporary(dynamic json, String field) {
-  var v = json[field];
-  return v == null ? DateTime.now() : DateTime.parse(v);
-}
-
 
 class Book extends Entity {
   final String title, description, authorId;

@@ -19,7 +19,7 @@ class AuthorService extends Service<Author> {
       String searchPhrase, PageRequest request) async {
     var urlParams = pageRequestToUrlParams(request);
     var urlParamsWithSearchPhrase =
-        appendUrlParam(urlParams, "searchPhrase", searchPhrase);
+        appendUrlParam(urlParams, paramSearchPhrase, searchPhrase);
     var url = "$_apiHost/authors?$urlParamsWithSearchPhrase";
     var jsonEntity = await getEntity(url);
     return AuthorsPage.fromJson(jsonEntity);

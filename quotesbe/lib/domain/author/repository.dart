@@ -71,7 +71,8 @@ class AuthorEventRepository extends Repository<AuthorEvent> {
       sorting: sortingByModifiedTimeDesc,
     );
     var author = page.elements.first.entity;
-    await save(AuthorEvent.delete(author));
+    var event = AuthorEvent.delete(author);
+    await save(event);
     return;
   }
 }

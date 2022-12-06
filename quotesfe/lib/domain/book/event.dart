@@ -3,9 +3,9 @@ import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/domain/common/page.dart';
 
 class BookEvent extends Book {
-  String eventId, operation;
+  final String _eventId, _operation;
 
-  BookEvent(this.eventId, this.operation, Book book)
+  BookEvent(this._eventId, this._operation, Book book)
       : super(book.id, book.title, book.description, book.authorId,
             book.modifiedUtc, book.createdUtc);
 
@@ -13,9 +13,12 @@ class BookEvent extends Book {
       : this(json[fieldEventId], json[fieldEventOperation],
             Book.fromJson(json[fieldEventEntity]));
 
+  String get eventId => _eventId;
+  String get operation => _operation;
+
   @override
   Map toJson() => super.toJson()
-    ..addAll({fieldEventEventId: eventId, fieldEventOperation: operation});
+    ..addAll({fieldEventEventId: _eventId, fieldEventOperation: _operation});
 }
 
 JsonDecoder<BookEvent> _bookEventJsonDecoder =

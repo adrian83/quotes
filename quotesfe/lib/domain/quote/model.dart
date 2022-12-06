@@ -7,10 +7,10 @@ const fieldQuoteAuthorId = "authorId";
 const fieldQuoteBookId = "bookId";
 
 class Quote extends Entity {
-  String text, authorId, bookId;
+  final String _text, _authorId, _bookId;
 
-  Quote(String? id, this.text, this.authorId, this.bookId, DateTime modifiedUtc,
-      DateTime createdUtc)
+  Quote(String? id, this._text, this._authorId, this._bookId,
+      DateTime modifiedUtc, DateTime createdUtc)
       : super(id, modifiedUtc, createdUtc);
 
   Quote.fromJson(Map<String, dynamic> json)
@@ -22,15 +22,19 @@ class Quote extends Entity {
             DateTime.parse(json[fieldEntityModifiedUtc]),
             DateTime.parse(json[fieldEntityCreatedUtc]));
 
-  List<String> get textLines => text.split("\n");
-  List<String> get shortLines => shorten(text, 80)?.split("\n") ?? [];
+  String get text => _text;
+  String get authorId => _authorId;
+  String get bookId => _bookId;
+
+  List<String> get textLines => _text.split("\n");
+  List<String> get shortLines => shorten(_text, 80)?.split("\n") ?? [];
 
   @override
   Map toJson() => super.toJson()
     ..addAll({
-      fieldQuoteText: text,
-      fieldQuoteAuthorId: authorId,
-      fieldQuoteBookId: bookId
+      fieldQuoteText: _text,
+      fieldQuoteAuthorId: _authorId,
+      fieldQuoteBookId: _bookId
     });
 }
 

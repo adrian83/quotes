@@ -6,20 +6,23 @@ import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
 
 class NewBookPage extends NewPage<Book, NewBookEntityForm> {
-  final String authorId;
-  final BookService bookService;
+  final String _authorId;
+  final BookService _bookService;
 
-  const NewBookPage(Key? key, String title, this.authorId, this.bookService)
+  const NewBookPage(Key? key, String title, this._authorId, this._bookService)
       : super(key, title);
+
+  String get authorId => _authorId;
+  BookService get bookService => _bookService;
 
   @override
   NewBookEntityForm createEntityForm(BuildContext context, Book? entity) =>
-      NewBookEntityForm(authorId, entity);
+      NewBookEntityForm(_authorId, entity);
 
   @override
   Future<Book> persist(Book entity) => entity.id == null
-      ? bookService.create(entity)
-      : bookService.update(entity);
+      ? _bookService.create(entity)
+      : _bookService.update(entity);
 
   @override
   String successMessage() => "Book created / updated";
@@ -30,20 +33,20 @@ class NewBookPage extends NewPage<Book, NewBookEntityForm> {
 
 class NewBookEntityForm extends EntityForm<Book> {
   final _formKey = GlobalKey<FormState>();
-  final titleController = TextEditingController();
-  final descController = TextEditingController();
+  final _titleController = TextEditingController();
+  final _descController = TextEditingController();
   final String _authorId;
   final Book? _book;
 
   NewBookEntityForm(this._authorId, this._book) {
     if (_book != null) {
-      titleController.text = _book!.title;
-      descController.text = _book!.description ?? "";
+      _titleController.text = _book!.title;
+      _descController.text = _book!.description ?? "";
     }
   }
 
   @override
-  Book createEntity() => Book(null, titleController.text, descController.text,
+  Book createEntity() => Book(null, _titleController.text, _descController.text,
       _authorId, DateTime.now(), DateTime.now());
 
   @override
@@ -52,8 +55,8 @@ class NewBookEntityForm extends EntityForm<Book> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          TextFormField(controller: titleController),
-          TextFormField(controller: descController),
+          TextFormField(controller: _titleController),
+          TextFormField(controller: _descController, maxLines: 10),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(
@@ -66,7 +69,7 @@ class NewBookEntityForm extends EntityForm<Book> {
 
   @override
   void dispose() {
-    titleController.dispose();
-    descController.dispose();
+    _titleController.dispose();
+    _descController.dispose();
   }
 }

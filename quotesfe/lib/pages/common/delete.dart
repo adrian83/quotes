@@ -28,6 +28,7 @@ class _DeletePageState extends PageState<DeletePage> {
   List<Widget> renderWidgets(BuildContext context) {
     if (!isMessage()) {
       return [
+        const SizedBox(height: 20),
         Text(widget.question()),
         const SizedBox(height: 20),
         ElevatedButton(

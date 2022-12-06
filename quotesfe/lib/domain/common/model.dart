@@ -10,8 +10,8 @@ const fieldEventEntity = "entity";
 const fieldEventEventId = "eventId";
 
 class Entity {
-  String? id;
-  DateTime modifiedUtc, createdUtc;
+  final String? id;
+  final DateTime modifiedUtc, createdUtc;
 
   Entity(this.id, this.modifiedUtc, this.createdUtc);
 

@@ -3,9 +3,9 @@ import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/domain/quote/model.dart';
 
 class QuoteEvent extends Quote {
-  String eventId, operation;
+  final String _eventId, _operation;
 
-  QuoteEvent(this.eventId, this.operation, Quote quote)
+  QuoteEvent(this._eventId, this._operation, Quote quote)
       : super(quote.id, quote.text, quote.authorId, quote.bookId,
             quote.modifiedUtc, quote.createdUtc);
 
@@ -13,9 +13,12 @@ class QuoteEvent extends Quote {
       : this(json[fieldEventId], json[fieldEventOperation],
             Quote.fromJson(json[fieldEventEntity]));
 
+  String get eventId => _eventId;
+  String get operation => _operation;
+
   @override
   Map toJson() => super.toJson()
-    ..addAll({fieldEventEventId: eventId, fieldEventOperation: operation});
+    ..addAll({fieldEventEventId: _eventId, fieldEventOperation: _operation});
 }
 
 JsonDecoder<QuoteEvent> _quoteEventJsonDecoder =

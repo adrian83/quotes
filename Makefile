@@ -31,7 +31,7 @@ fe-all: fe-format fe-build fe-run
 
 
 be-run:
-	echo "running backend V2"
+	echo "running backend"
 	dart quotesbe/bin/main.dart 
 
 be-format:
@@ -49,4 +49,4 @@ be-init:
 	echo "Init db"
 	./quotesbe/init.sh
 
-be-all: be-get be-test be-run
+be-all: be-format be-get be-test be-run

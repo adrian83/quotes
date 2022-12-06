@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/widgets/common.dart';
+import 'package:quotesfe/widgets/page_entry.dart';
 import 'package:quotesfe/widgets/info/error_box.dart';
 import 'package:quotesfe/widgets/info/info_box.dart';
 

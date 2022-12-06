@@ -3,7 +3,7 @@ import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/domain/common/page.dart';
 
 class AuthorEvent extends Author {
-  String _eventId, _operation;
+  final String _eventId, _operation;
 
   AuthorEvent(this._eventId, this._operation, Author author)
       : super(author.id, author.name, author.description, author.modifiedUtc,

@@ -24,7 +24,7 @@ class QuoteService extends Service<Quote> {
 
   Future<QuotesPage> listQuotes(String searchPhrase, PageRequest request) {
     var url = "$apiHost/quotes?${pageRequestToUrlParams(request)}";
-    url = appendUrlParam(url, "searchPhrase", searchPhrase);
+    url = appendUrlParam(url, paramSearchPhrase, searchPhrase);
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
   }
 

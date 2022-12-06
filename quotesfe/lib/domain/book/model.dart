@@ -9,10 +9,10 @@ const fieldBookAuthorId = "authorId";
 const _shortDescriptionMaxLen = 250;
 
 class Book extends Entity {
-  String title, authorId;
-  String? description;
+  final String _title, _authorId;
+  final String? _description;
 
-  Book(String? id, this.title, this.description, this.authorId,
+  Book(String? id, this._title, this._description, this._authorId,
       DateTime modifiedUtc, DateTime createdUtc)
       : super(id, modifiedUtc, createdUtc);
 
@@ -25,15 +25,20 @@ class Book extends Entity {
             DateTime.parse(json[fieldEntityModifiedUtc]),
             DateTime.parse(json[fieldEntityCreatedUtc]));
 
-  List<String> get descriptionParts => description?.split("\n") ?? [];
-  String? get shortDescription => shorten(description, _shortDescriptionMaxLen);
+  String get title => _title;
+  String get authorId => _authorId;
+  String? get description => _description;
+
+  List<String> get descriptionParts => _description?.split("\n") ?? [];
+  String? get shortDescription =>
+      shorten(_description, _shortDescriptionMaxLen);
 
   @override
   Map toJson() => super.toJson()
     ..addAll({
-      fieldBookTitle: title,
-      fieldBookAuthorId: authorId,
-      fieldBookDescription: description
+      fieldBookTitle: _title,
+      fieldBookAuthorId: _authorId,
+      fieldBookDescription: _description
     });
 }
 

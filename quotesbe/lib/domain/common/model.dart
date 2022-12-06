@@ -16,6 +16,11 @@ const pageRequestLabel = "pageRequest";
 
 DateTime nowUtc() => DateTime.now().toUtc();
 
+DateTime temporary(dynamic json, String field) {
+  var v = json[field];
+  return v == null ? DateTime.now() : DateTime.parse(v);
+}
+
 class Entity extends Document {
   String id;
   DateTime modifiedUtc, createdUtc;

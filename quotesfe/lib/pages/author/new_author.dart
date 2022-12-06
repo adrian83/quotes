@@ -6,10 +6,12 @@ import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
 
 class NewAuthorPage extends NewPage<Author, NewAuthorEntityForm> {
-  final AuthorService authorService;
+  final AuthorService _authorService;
 
-  const NewAuthorPage(Key? key, String title, this.authorService)
+  const NewAuthorPage(Key? key, String title, this._authorService)
       : super(key, title);
+
+  AuthorService get authorService => _authorService;
 
   @override
   NewAuthorEntityForm createEntityForm(BuildContext context, Author? entity) =>
@@ -51,7 +53,7 @@ class NewAuthorEntityForm extends EntityForm<Author> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           TextFormField(controller: _nameController),
-          TextFormField(controller: _descController),
+          TextFormField(controller: _descController, maxLines: 10),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
             child: ElevatedButton(

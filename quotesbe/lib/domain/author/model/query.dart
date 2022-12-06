@@ -16,7 +16,7 @@ class DeleteAuthorQuery extends FindAuthorQuery {
 }
 
 class ListAuthorsQuery {
-  late PageRequest pageRequest;
+  late final PageRequest pageRequest;
 
   ListAuthorsQuery(int offset, int limit) {
     pageRequest = PageRequest(limit, offset);

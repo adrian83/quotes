@@ -42,8 +42,8 @@ class PageInfo {
 typedef JsonDecoder<T> = T Function(Map<String, dynamic> json);
 
 class Page<T> {
-  late PageInfo info;
-  late List<T> elements;
+  late final PageInfo info;
+  late final List<T> elements;
 
   Page(this.info, this.elements);
 

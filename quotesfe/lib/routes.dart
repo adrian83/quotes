@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:quotesfe/domain/author/service.dart';
 import 'package:quotesfe/domain/book/service.dart';
 import 'package:quotesfe/domain/quote/service.dart';
+import 'package:quotesfe/domain/common/service.dart';
 import 'package:quotesfe/pages/author/list_events.dart';
 import 'package:quotesfe/pages/book/delete_book.dart';
 import 'package:quotesfe/pages/book/list_events.dart';
@@ -42,47 +43,14 @@ class RouteConfiguration {
   List<Path> paths() {
     return [
       Path(searchPathPattern, searchView),
-      Path(
-          authorCreatePathPattern,
-          (context, match) =>
-              NewAuthorPage(null, "new author", _authorService)),
-      Path(
-          authorUpdatePathPattern,
-          (context, match) => UpdateAuthorPage(null, "update author",
-              extractPathElement(match, 3), _authorService)),
-      Path(
-          authorDeletePathPattern,
-          (context, match) => DeleteAuthorPage(null, "delete author",
-              extractPathElement(match, 3), _authorService)),
-      Path(
-          authorShowPathPattern,
-          (context, match) => ShowAuthorPage(null, "show author",
-              extractPathElement(match, 3), _authorService, _bookService)),
-      Path(
-          authorEventsPathPattern,
-          (context, match) => ListAuthorEventsPage(null, "author events",
-              extractPathElement(match, 3), _authorService)),
-      Path(
-          bookCreatePathPattern,
-          (context, match) => NewBookPage(
-              null, "new author", extractPathElement(match, 3), _bookService)),
-      Path(
-          bookShowPathPattern,
-          (context, match) => ShowBookPage(
-              null,
-              "show book",
-              extractPathElement(match, 3),
-              extractPathElement(match, 6),
-              _bookService,
-              _quoteService)),
-      Path(
-          bookUpdatePathPattern,
-          (context, match) => UpdateBookPage(
-              null,
-              "update book",
-              extractPathElement(match, 3),
-              extractPathElement(match, 6),
-              _bookService)),
+      Path(authorCreatePathPattern, createAuthorView),
+      Path(authorUpdatePathPattern, updateAuthorView),
+      Path(authorDeletePathPattern, deleteAuthorView),
+      Path(authorShowPathPattern, showAuthorView),
+      Path(authorEventsPathPattern, listAuthorEventsView),
+      Path(bookCreatePathPattern, createBookView),
+      Path(bookShowPathPattern, showBookView),
+      Path(bookUpdatePathPattern, updateBookView),
       Path(bookDeletePathPattern, deleteBookView),
       Path(bookEventsPathPattern, listBookEventsView),
       Path(quoteCreatePathPattern, createQuoteView),
@@ -92,6 +60,51 @@ class RouteConfiguration {
       Path(quoteEventsPathPattern, listQuoteEventsView),
       Path(r'^/', searchView),
     ];
+  }
+
+  Widget createAuthorView(BuildContext ctx, String path) {
+    return NewAuthorPage(null, "new author", _authorService);
+  }
+
+  Widget updateAuthorView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3]);
+    return UpdateAuthorPage(
+        null, "update author", pathParams[0], _authorService);
+  }
+
+  Widget deleteAuthorView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3]);
+    return DeleteAuthorPage(
+        null, "delete author", pathParams[0], _authorService);
+  }
+
+  Widget showAuthorView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3]);
+    return ShowAuthorPage(
+        null, "show author", pathParams[0], _authorService, _bookService);
+  }
+
+  Widget listAuthorEventsView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3]);
+    return ListAuthorEventsPage(
+        null, "author events", pathParams[0], _authorService);
+  }
+
+  Widget createBookView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3]);
+    return NewBookPage(null, "new author", pathParams[0], _bookService);
+  }
+
+  Widget showBookView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3, 6]);
+    return ShowBookPage(null, "show book", pathParams[0], pathParams[1],
+        _bookService, _quoteService);
+  }
+
+  Widget updateBookView(BuildContext ctx, String path) {
+    var pathParams = extractPathElements(path, [3, 6]);
+    return UpdateBookPage(
+        null, "update book", pathParams[0], pathParams[1], _bookService);
   }
 
   Widget deleteBookView(BuildContext ctx, String path) {
@@ -138,18 +151,13 @@ class RouteConfiguration {
 
   Widget searchView(BuildContext ctx, String path) {
     return SearchPage(UniqueKey(), "search", _authorService, _bookService,
-        _quoteService, getUrlParam(path, "searchPhrase", ""));
+        _quoteService, getUrlParam(path, paramSearchPhrase, ""));
   }
 
   String getUrlParam(String path, String name, String def) {
     final settingsUri = Uri.parse(path);
     final value = settingsUri.queryParameters[name];
     return value ?? def;
-  }
-
-  String extractPathElement(String path, int no) {
-    var elem = path.split("/")[no];
-    return elem.split("?")[0];
   }
 
   List<String> extractPathElements(String path, List<int> indexes) {
@@ -165,7 +173,6 @@ class RouteConfiguration {
 
   Route<dynamic>? onGenerateRoute(RouteSettings settings) {
     var name = settings.name;
-    //print("route name: $name");
 
     for (final path in paths()) {
       final regExpPattern = RegExp(path.pattern);
@@ -177,12 +184,7 @@ class RouteConfiguration {
         );
       }
 
-      //print("try match: ${path.pattern} $name");
       if (regExpPattern.hasMatch(name)) {
-        //print("match: ${path.pattern} $name");
-        //final firstMatch = regExpPattern.firstMatch(name);
-
-        //final match = (firstMatch?.groupCount == 1) ? firstMatch?.group(1) : null;
         if (kIsWeb) {
           return NoAnimationMaterialPageRoute<void>(
             (context) => path.builder(context, name),
@@ -196,7 +198,6 @@ class RouteConfiguration {
       }
     }
 
-    // If no match was found, we let [WidgetsApp.onUnknownRoute] handle it.
     return null;
   }
 }

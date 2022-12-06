@@ -24,7 +24,7 @@ abstract class ShowPage<E> extends AbsPage {
 
 class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
   ENTITY? _entity;
-  List<Widget> additionalWidgets = [];
+  List<Widget> _additionalWidgets = [];
 
   @override
   initState() {
@@ -32,7 +32,7 @@ class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
     widget.findEntity().then((a) {
       setState(() {
         _entity = a;
-        additionalWidgets = widget.additionalWidgets();
+        _additionalWidgets = widget.additionalWidgets();
       });
     }).catchError((e) {
       showError(e);
@@ -41,7 +41,7 @@ class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
 
   void onBackAction() {
     setState(() {
-      additionalWidgets = widget.additionalWidgets();
+      _additionalWidgets = widget.additionalWidgets();
     });
   }
 
@@ -49,7 +49,7 @@ class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
   List<Widget> renderWidgets(BuildContext context) {
     var widgets = <Widget>[];
 
-    widgets.addAll(additionalWidgets);
+    widgets.addAll(_additionalWidgets);
 
     var createChildButtonLabel = widget.createChildButtonLabel();
     var createChildPath = widget.createChildPath();
