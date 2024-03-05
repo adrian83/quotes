@@ -1,5 +1,3 @@
-
-
 class BaseException implements Exception {
   Exception? cause;
   String msg;
@@ -11,13 +9,16 @@ class BaseException implements Exception {
 }
 
 class SaveFailedException extends BaseException {
-  SaveFailedException(String msg, {Exception? cause}) : super(msg, cause: cause);
+  SaveFailedException(String msg, {Exception? cause})
+      : super(msg, cause: cause);
 }
 
 class UpdateFailedException extends BaseException {
-  UpdateFailedException(String msg, {Exception? cause}) : super(msg, cause: cause);
+  UpdateFailedException(String msg, {Exception? cause})
+      : super(msg, cause: cause);
 }
 
 class FindFailedException extends BaseException {
-  FindFailedException(String msg, {Exception? cause}) : super(msg, cause: cause);
+  FindFailedException(String msg, {Exception? cause})
+      : super(msg, cause: cause);
 }

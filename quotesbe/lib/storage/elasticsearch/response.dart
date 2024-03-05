@@ -22,41 +22,47 @@ class BasicResult {
 
   BasicResult(this.index, this.type, this.id);
 
-  factory BasicResult.fromJson(Map<String, dynamic> json) => BasicResult(json[indexF], json[typeF], json[idF]);
+  factory BasicResult.fromJson(Map<String, dynamic> json) =>
+      BasicResult(json[indexF], json[typeF], json[idF]);
 }
 
 class IndexResult extends BasicResult {
   String result;
   int version;
 
-  IndexResult(String index, String type, String id, this.result, this.version) : super(index, type, id);
+  IndexResult(String index, String type, String id, this.result, this.version)
+      : super(index, type, id);
 
-  factory IndexResult.fromJson(Map<String, dynamic> json) =>
-      IndexResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
+  factory IndexResult.fromJson(Map<String, dynamic> json) => IndexResult(
+      json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
 
   @override
-  String toString() => "IndexResult [id: $id, type: $type, index: $index, result: $result, version: $version]";
+  String toString() =>
+      "IndexResult [id: $id, type: $type, index: $index, result: $result, version: $version]";
 }
 
 class UpdateResult extends IndexResult {
   UpdateResult(String index, String type, String id, String result, int version)
       : super(index, type, id, result, version);
 
-  factory UpdateResult.fromJson(Map<String, dynamic> json) =>
-      UpdateResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
+  factory UpdateResult.fromJson(Map<String, dynamic> json) => UpdateResult(
+      json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
 
   @override
-  String toString() => "UpdateResult [id: $id, type: $type, index: $index, result: $result, version: $version]";
+  String toString() =>
+      "UpdateResult [id: $id, type: $type, index: $index, result: $result, version: $version]";
 }
 
 class DeleteResult extends IndexResult {
   DeleteResult(String index, String type, String id, String result, int version)
       : super(index, type, id, result, version);
 
-  factory DeleteResult.fromJson(Map<String, dynamic> json) => DeleteResult(json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
+  factory DeleteResult.fromJson(Map<String, dynamic> json) => DeleteResult(
+      json[indexF], json[typeF], json[idF], json[resultF], json[versionF]);
 
   @override
-  String toString() => "DeleteResult [id: $id, type: $type, index: $index, result: $result, version: $version]";
+  String toString() =>
+      "DeleteResult [id: $id, type: $type, index: $index, result: $result, version: $version]";
 }
 
 class GetResult extends BasicResult {
@@ -64,11 +70,14 @@ class GetResult extends BasicResult {
   int? version;
   Map<String, dynamic> source;
 
-  GetResult(String index, String type, String id, this.version, this.found, this.source) : super(index, type, id);
+  GetResult(String index, String type, String id, this.version, this.found,
+      this.source)
+      : super(index, type, id);
 
   factory GetResult.fromJson(Map<String, dynamic> json) {
     print("result: $json");
-      return GetResult(json[indexF], json[typeF], json[idF], json[versionF], json[foundF], json[sourceF] ?? {});
+    return GetResult(json[indexF], json[typeF], json[idF], json[versionF],
+        json[foundF], json[sourceF] ?? {});
   }
 
   @override
@@ -80,13 +89,19 @@ class SearchHit extends BasicResult {
   double score;
   Map<String, dynamic> source;
 
-  SearchHit(String index, String type, String id, this.score, this.source) : super(index, type, id);
+  SearchHit(String index, String type, String id, this.score, this.source)
+      : super(index, type, id);
 
-  factory SearchHit.fromJson(Map<String, dynamic> json) =>
-      SearchHit(json[indexF], json[typeF], json[idF], json[scoreF] ??= 0.0, json[sourceF]);
+  factory SearchHit.fromJson(Map<String, dynamic> json) => SearchHit(
+      json[indexF],
+      json[typeF],
+      json[idF],
+      json[scoreF] ??= 0.0,
+      json[sourceF]);
 
   @override
-  String toString() => "SearchHit [id: $id, type: $type, index: $index, score: $score, source: $source]";
+  String toString() =>
+      "SearchHit [id: $id, type: $type, index: $index, score: $score, source: $source]";
 }
 
 class HitsTotal {
@@ -109,7 +124,6 @@ List extractList(dynamic json, String name) {
   return l != null ? l as List : [];
 }
 
-
 class SearchHits {
   HitsTotal total;
   double maxScore;
@@ -120,11 +134,13 @@ class SearchHits {
   factory SearchHits.fromJson(Map<String, dynamic>? json) {
     if (json == null) return SearchHits(HitsTotal(0, ""), 0, List.empty());
     var total = HitsTotal.fromJson(json[totalF]);
-    return SearchHits(total, json[maxScoreF] ??= 0.0, extractList(json, hitsF).map((d) => SearchHit.fromJson(d)).toList());
+    return SearchHits(total, json[maxScoreF] ??= 0.0,
+        extractList(json, hitsF).map((d) => SearchHit.fromJson(d)).toList());
   }
 
   @override
-  String toString() => "SearchHits [total: $total, maxScore: $maxScore, hits: $hits]";
+  String toString() =>
+      "SearchHits [total: $total, maxScore: $maxScore, hits: $hits]";
 }
 
 class SearchResult {
@@ -142,7 +158,8 @@ class SearchResult {
   }
 
   @override
-  String toString() => "SearchResult [timedOut: $timedOut, took: $took, hits: $hits]";
+  String toString() =>
+      "SearchResult [timedOut: $timedOut, took: $took, hits: $hits]";
 }
 
 class DeleteByQueryResult {
@@ -155,5 +172,6 @@ class DeleteByQueryResult {
       DeleteByQueryResult(json[timedOutF], json[tookF], json[deletedF]);
 
   @override
-  String toString() => "DeleteByQueryResult [timedOut: $timedOut, took: $took, deleted: $deleted]";
+  String toString() =>
+      "DeleteByQueryResult [timedOut: $timedOut, took: $took, deleted: $deleted]";
 }

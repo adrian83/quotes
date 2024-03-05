@@ -58,9 +58,10 @@ class BookEventRepository extends Repository<BookEvent> {
       : super(store, bookEventDecoder);
 
   Future<void> deleteByAuthor(String authorId) async {
-    _logger.info("save book events (delete) for books created by author: $authorId");
+    _logger.info(
+        "save book events (delete) for books created by author: $authorId");
     var matchQuery = MatchQuery(_authorIdProp, authorId);
-    var books = await super.findAllDocuments(matchQuery); 
+    var books = await super.findAllDocuments(matchQuery);
     var newestBooks = newestEntities(books);
     Future.wait(newestBooks.map((book) => storeDeleteBookEvent(book)));
     return;

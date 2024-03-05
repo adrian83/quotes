@@ -17,7 +17,6 @@ class ListQuotesFromBookQuery {
       "ListQuotesFromBookQuery [authorId: $authorId, bookId: $bookId, pageRequest: $pageRequest]";
 }
 
-
 class ListEventsByQuoteQuery {
   String authorId, bookId, quoteId;
   PageRequest pageRequest;

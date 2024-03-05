@@ -219,8 +219,6 @@ Future<void> main() async {
   var findQuoteEventsMapping =
       Mapping(HttpMethod.get, findQuoteEventsPath, quoteCtrl.listEvents);
 
-      
-
   var server = Server(
     5050,
     [

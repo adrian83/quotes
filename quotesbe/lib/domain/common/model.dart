@@ -58,9 +58,13 @@ abstract class Event<T extends Entity> extends Entity {
   String operation;
   T entity;
 
-  Event(String id, this.operation, this.entity, DateTime modifiedUtc,
-      DateTime createdUtc,)
-      : super.create();
+  Event(
+    String id,
+    this.operation,
+    this.entity,
+    DateTime modifiedUtc,
+    DateTime createdUtc,
+  ) : super.create();
 
   @override
   String toString() =>
@@ -119,7 +123,6 @@ class SearchQuery {
   final PageRequest pageRequest;
 
   SearchQuery(this.searchPhrase, this.pageRequest);
-
 
   @override
   String toString() =>

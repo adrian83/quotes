@@ -9,7 +9,6 @@ import 'package:quotesbe/domain/author/repository_test.mocks.dart';
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 import 'package:quotesbe/storage/elasticsearch/response.dart';
 
-
 var author1Json = {
   "id": "rwe-wer",
   "name": "John",
@@ -28,8 +27,6 @@ var author2Json = {
 
 @GenerateMocks([ESStore<Author>])
 void main() {
-
-
   test("save should find page of authors", () async {
     // given
     var authorStoreMock = MockESStore<Author>();

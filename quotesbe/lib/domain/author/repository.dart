@@ -11,6 +11,7 @@ import 'package:quotesbe/storage/elasticsearch/search.dart';
 
 Decoder<Author> authorDecoder =
     (Map<String, dynamic> json) => Author.fromJson(json);
+
 class AuthorRepository extends Repository<Author> {
   final Logger _logger = Logger('AuthorRepository');
 

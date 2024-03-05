@@ -1,5 +1,3 @@
-
-
 abstract class Document {
   String getId();
   Map<dynamic, dynamic> toSave();
@@ -13,5 +11,6 @@ class UpdateDoc {
 
   UpdateDoc(this._doc);
 
-  Map toJson() => {"doc": _doc, "doc_as_upsert": _docAsUpsert, "detect_noop": _detectNoop};
+  Map toJson() =>
+      {"doc": _doc, "doc_as_upsert": _docAsUpsert, "detect_noop": _detectNoop};
 }

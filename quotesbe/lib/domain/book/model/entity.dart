@@ -7,7 +7,6 @@ const bookTitleLabel = 'title';
 const bookDescLabel = 'description';
 const bookIdLabel = 'bookId';
 
-
 class Book extends Entity {
   final String title, description, authorId;
 
@@ -27,12 +26,13 @@ class Book extends Entity {
 
   Book.fromJson(Map<String, dynamic> json)
       : this(
-            json[idLabel],
-            json[bookTitleLabel],
-            json[bookDescLabel],
-            json[bookAuthorIdLabel],
-            temporary(json, modifiedUtcLabel),
-            temporary(json, createdUtcLabel),);
+          json[idLabel],
+          json[bookTitleLabel],
+          json[bookDescLabel],
+          json[bookAuthorIdLabel],
+          temporary(json, modifiedUtcLabel),
+          temporary(json, createdUtcLabel),
+        );
 
   @override
   String getId() => id;
@@ -57,9 +57,13 @@ class Book extends Entity {
 }
 
 class BookEvent extends Event<Book> {
-  BookEvent(String id, String operation, Book book, DateTime modified,
-      DateTime created,)
-      : super(id, operation, book, modified, created);
+  BookEvent(
+    String id,
+    String operation,
+    Book book,
+    DateTime modified,
+    DateTime created,
+  ) : super(id, operation, book, modified, created);
 
   BookEvent.create(Book book)
       : super(const Uuid().v4(), Event.created, book, nowUtc(), nowUtc());
@@ -72,11 +76,12 @@ class BookEvent extends Event<Book> {
 
   BookEvent.fromJson(Map<String, dynamic> json)
       : super(
-            json[idLabel],
-            json[operationLabel],
-            Book.fromJson(json[entityLabel]),
-            DateTime.parse(json[modifiedUtcLabel]),
-            DateTime.parse(json[createdUtcLabel]),);
+          json[idLabel],
+          json[operationLabel],
+          Book.fromJson(json[entityLabel]),
+          DateTime.parse(json[modifiedUtcLabel]),
+          DateTime.parse(json[createdUtcLabel]),
+        );
 
   @override
   Map<dynamic, dynamic> toJson() => {

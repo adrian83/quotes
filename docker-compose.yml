@@ -1,5 +1,6 @@
 version: '3'
 services:
+
   elasticsearch:
     image: elasticsearch:7.12.0
     ports:
@@ -38,12 +39,12 @@ services:
     - elasticsearch
 
 
-  # frontend:
-  #   build: ./quotesfe/
-  #   ports:
-  #   - "8000:8000"
-  #   links:
-  #   - backend
-  #   depends_on:
-  #   - backend
+  frontend:
+    build: ./quotesfe/
+    ports:
+    - "8000:8000"
+    links:
+    - backend
+    depends_on:
+    - backend
 

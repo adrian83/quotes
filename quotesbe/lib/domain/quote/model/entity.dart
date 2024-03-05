@@ -98,7 +98,3 @@ class QuoteEvent extends Event<Quote> {
   String toString() =>
       "QuoteEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
 }
-
-
-
-
