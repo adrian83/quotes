@@ -40,7 +40,7 @@ be-get:
 	
 be-test:
 	echo "running backend tests" 
-	cd quotesbe && dart pub run build_runner build && dart test . --coverage=. --reporter=expanded
+	cd quotesbe && dart run build_runner build && dart test . --coverage=. --reporter=expanded
 
 be-init:
 	echo "Init db"

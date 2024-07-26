@@ -1,5 +1,5 @@
 # QUOTES
-Simple CRUD application written in: Dart 2.17, Flutter 3 and Elasticsearch 7.12.
+Simple CRUD application written in: Dart 3.3, Flutter 3.19 and Elasticsearch 7.12.
 
 
 ## Running
