@@ -11,8 +11,7 @@ class AuthorBooks extends StatefulWidget {
   final String _authorId;
   final BookService _bookService;
 
-  const AuthorBooks(Key? key, this._authorId, this._bookService)
-      : super(key: key);
+  const AuthorBooks(Key? key, this._authorId, this._bookService) : super(key: key);
 
   @override
   State<AuthorBooks> createState() => _AuthorBooksState();
@@ -21,15 +20,12 @@ class AuthorBooks extends StatefulWidget {
 class _AuthorBooksState extends InfoState<AuthorBooks> {
   late BookPageEntry _booksWidgets = _newBookPageEntry();
 
-  Future<BooksPage> changeBooksPage(PageRequest pageReq) =>
-      widget._bookService.listAuthorBooks(widget._authorId, pageReq);
+  Future<BooksPage> changeBooksPage(PageRequest pageReq) => widget._bookService.listAuthorBooks(widget._authorId, pageReq);
 
-  BookEntry _toBookEntry(Book b) =>
-      BookEntry(null, b, refresh, false, false, true, true);
+  BookEntry _toBookEntry(Book b) => BookEntry(null, b, refresh, false, false, true, true);
 
   BookPageEntry _newBookPageEntry() {
-    return BookPageEntry(
-        UniqueKey(), changeBooksPage, _toBookEntry, errorHandler());
+    return BookPageEntry(UniqueKey(), changeBooksPage, _toBookEntry, errorHandler());
   }
 
   void refresh() {

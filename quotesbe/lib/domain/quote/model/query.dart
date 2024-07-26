@@ -13,10 +13,8 @@ class ListQuotesFromBookQuery {
   ListQuotesFromBookQuery(this.authorId, this.bookId, this.pageRequest);
 
   @override
-  String toString() =>
-      "ListQuotesFromBookQuery [authorId: $authorId, bookId: $bookId, pageRequest: $pageRequest]";
+  String toString() => "ListQuotesFromBookQuery [authorId: $authorId, bookId: $bookId, pageRequest: $pageRequest]";
 }
-
 
 class ListEventsByQuoteQuery {
   String authorId, bookId, quoteId;
@@ -30,6 +28,5 @@ class ListEventsByQuoteQuery {
   );
 
   @override
-  String toString() =>
-      "ListEventsByQuoteQuery [authorId: $authorId, bookId: $bookId, quoteId: $quoteId, pageRequest: $pageRequest]";
+  String toString() => "ListEventsByQuoteQuery [authorId: $authorId, bookId: $bookId, quoteId: $quoteId, pageRequest: $pageRequest]";
 }

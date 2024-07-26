@@ -40,8 +40,8 @@ class MatchQuery<T> extends Query {
   @override
   Map toJson() => {
         matchQ: {
-          field: {queryQ: value}
-        }
+          field: {queryQ: value},
+        },
       };
 }
 
@@ -53,8 +53,8 @@ class WildcardQuery extends Query {
   @override
   Map toJson() => {
         wildcardQ: {
-          field: {valueQ: "*$value*", boostQ: 1.0, rewriteQ: "constant_score"}
-        }
+          field: {valueQ: "*$value*", boostQ: 1.0, rewriteQ: "constant_score"},
+        },
       };
 }
 
@@ -66,7 +66,7 @@ class TermQuery<T> extends Query {
 
   @override
   Map toJson() => {
-        termQ: {field: value}
+        termQ: {field: value},
       };
 }
 
@@ -78,7 +78,7 @@ class TermsQuery<T> extends Query {
 
   @override
   Map toJson() => {
-        termsQ: {field: values}
+        termsQ: {field: values},
       };
 }
 
@@ -121,7 +121,7 @@ class SortElement {
   factory SortElement.desc(String field) => SortElement(field, desc);
 
   Map toJson() => {
-        field: {orderQ: dir}
+        field: {orderQ: dir},
       };
 }
 
@@ -132,19 +132,16 @@ class SearchRequest {
 
   SearchRequest(this.query, this.sort, this.from, this.size);
 
-  factory SearchRequest.all() =>
-      SearchRequest(MatchAllQuery(), [], defaultOffset, defaultSize);
+  factory SearchRequest.all() => SearchRequest(MatchAllQuery(), [], defaultOffset, defaultSize);
 
-  factory SearchRequest.allByQuery(Query query) =>
-      SearchRequest(query, [], defaultOffset, maxSize);
+  factory SearchRequest.allByQuery(Query query) => SearchRequest(query, [], defaultOffset, maxSize);
 
-  factory SearchRequest.oneByQuery(Query query, List<SortElement> sort) =>
-      SearchRequest(query, sort, defaultOffset, 1);
+  factory SearchRequest.oneByQuery(Query query, List<SortElement> sort) => SearchRequest(query, sort, defaultOffset, 1);
 
   Map toJson() {
     var json = {
       queryQ: query.toJson(),
-      sortQ: (sort.isNotEmpty ? sort : defaultSort)
+      sortQ: (sort.isNotEmpty ? sort : defaultSort),
     };
 
     if (from != null) {

@@ -36,8 +36,7 @@ class _ListEventsPageState<T> extends PageState<ListEventsPage<T>> {
     widget.getPage(pageReq).then((p) {
       setState(() {
         _page = p;
-        _pagination =
-            Pagination(widget.key, _page.info.pages, pageNo, loadPage);
+        _pagination = Pagination(widget.key, _page.info.pages, pageNo, loadPage);
       });
       if (_page.elements.isEmpty && pageNo > 0) {
         loadPage(pageNo - 1);
@@ -71,8 +70,7 @@ class _ListEventsPageState<T> extends PageState<ListEventsPage<T>> {
   }
 
   DataRow generateRow(T event) {
-    var cells =
-        widget.eventToData(event).map((value) => DataCell(value)).toList();
+    var cells = widget.eventToData(event).map((value) => DataCell(value)).toList();
     return DataRow(cells: cells);
   }
 

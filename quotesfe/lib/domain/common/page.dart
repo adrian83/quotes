@@ -14,10 +14,7 @@ class PageInfo {
 
   PageInfo(this.limit, this.offset, this.total);
 
-  factory PageInfo.fromJson(Map<String, dynamic> json) => PageInfo(
-      json[fieldPageInfoLimit],
-      json[fieldPageInfoOffset],
-      json[fieldPageInfoTotal]);
+  factory PageInfo.fromJson(Map<String, dynamic> json) => PageInfo(json[fieldPageInfoLimit], json[fieldPageInfoOffset], json[fieldPageInfoTotal]);
 
   int get curent {
     var current = offset / limit;
@@ -67,11 +64,9 @@ class PageRequest {
 
   PageRequest(this.limit, this.offset);
 
-  PageRequest.page(int pageNumber)
-      : this(defPageSize, defPageSize * pageNumber);
+  PageRequest.page(int pageNumber) : this(defPageSize, defPageSize * pageNumber);
 
-  PageRequest.pageWithSize(int pageNumber, int size)
-      : this(size, size * pageNumber);
+  PageRequest.pageWithSize(int pageNumber, int size) : this(size, size * pageNumber);
 
   int page() => offset ~/ limit;
 

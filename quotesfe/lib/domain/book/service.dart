@@ -26,8 +26,7 @@ class BookService extends Service<Book> {
     return getEntity(url).then((json) => BooksPage.fromJson(json));
   }
 
-  Future<BookEventsPage> listEvents(
-      String authorId, String bookId, PageRequest request) {
+  Future<BookEventsPage> listEvents(String authorId, String bookId, PageRequest request) {
     var urlParams = pageRequestToUrlParams(request);
     var url = "$_apiHost/authors/$authorId/books/$bookId/events?$urlParams";
     return getEntity(url).then((json) => BookEventsPage.fromJson(json));

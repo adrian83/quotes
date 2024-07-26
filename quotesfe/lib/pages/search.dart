@@ -22,9 +22,7 @@ class SearchPage extends AbsPage {
   final QuoteService _quoteService;
   final String searchPhrase;
 
-  const SearchPage(Key key, String title, this._authorService,
-      this._bookService, this._quoteService, this.searchPhrase)
-      : super(key, title);
+  const SearchPage(Key key, String title, this._authorService, this._bookService, this._quoteService, this.searchPhrase) : super(key, title);
 
   @override
   State<SearchPage> createState() => _SearchPageState<SearchPage>();
@@ -64,46 +62,34 @@ class _SearchPageState<T extends SearchPage> extends PageState<SearchPage> {
   }
 
   void newAuthorWidget() {
-    _authorsWidget = AuthorPageEntry(
-        UniqueKey(), changeAuthorsPage, _toAuthorEntry, errorHandler());
+    _authorsWidget = AuthorPageEntry(UniqueKey(), changeAuthorsPage, _toAuthorEntry, errorHandler());
   }
 
   void newBookWidget() {
-    _booksWidgets = BookPageEntry(
-        UniqueKey(), changeBooksPage, _toBookEntry, errorHandler());
+    _booksWidgets = BookPageEntry(UniqueKey(), changeBooksPage, _toBookEntry, errorHandler());
   }
 
   void newQuotesWidget() {
-    _quotesWidgets = QuotePageEntry(
-        UniqueKey(), changeQuotesPage, _toQuoteEntry, errorHandler());
+    _quotesWidgets = QuotePageEntry(UniqueKey(), changeQuotesPage, _toQuoteEntry, errorHandler());
   }
 
-  AuthorEntry _toAuthorEntry(Author a) =>
-      AuthorEntry(null, a, refresh, false, false, true, false);
+  AuthorEntry _toAuthorEntry(Author a) => AuthorEntry(null, a, refresh, false, false, true, false);
 
-  BookEntry _toBookEntry(Book b) =>
-      BookEntry(null, b, refresh, false, false, true, true);
+  BookEntry _toBookEntry(Book b) => BookEntry(null, b, refresh, false, false, true, true);
 
-  QuoteEntry _toQuoteEntry(Quote q) =>
-      QuoteEntry(null, q, refresh, false, false, true, true);
+  QuoteEntry _toQuoteEntry(Quote q) => QuoteEntry(null, q, refresh, false, false, true, true);
 
-  Future<AuthorsPage> changeAuthorsPage(PageRequest pageReq) =>
-      widget._authorService.listAuthors(searchPhrase(), pageReq);
+  Future<AuthorsPage> changeAuthorsPage(PageRequest pageReq) => widget._authorService.listAuthors(searchPhrase(), pageReq);
 
-  Future<BooksPage> changeBooksPage(PageRequest pageReq) =>
-      widget._bookService.listBooks(searchPhrase(), pageReq);
+  Future<BooksPage> changeBooksPage(PageRequest pageReq) => widget._bookService.listBooks(searchPhrase(), pageReq);
 
-  Future<QuotesPage> changeQuotesPage(PageRequest pageReq) =>
-      widget._quoteService.listQuotes(searchPhrase(), pageReq);
+  Future<QuotesPage> changeQuotesPage(PageRequest pageReq) => widget._quoteService.listQuotes(searchPhrase(), pageReq);
 
   String searchPhrase() => _searchPhraseController.value.text;
 
-  Future _gotoSearchPageWithNewSearchPhrase() =>
-      Navigator.pushNamed(context, searchPath(searchPhrase()));
+  Future _gotoSearchPageWithNewSearchPhrase() => Navigator.pushNamed(context, searchPath(searchPhrase()));
 
-  Future _gotoNewAuthorPage() =>
-      Navigator.pushNamed(context, createAuthorPath())
-          .then((value) => refresh());
+  Future _gotoNewAuthorPage() => Navigator.pushNamed(context, createAuthorPath()).then((value) => refresh());
 
   @override
   List<Widget> renderWidgets(BuildContext context) {
@@ -115,16 +101,8 @@ class _SearchPageState<T extends SearchPage> extends PageState<SearchPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             _searchPhraseField,
-            Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                    child: const Text('Search'),
-                    onPressed: _gotoSearchPageWithNewSearchPhrase)),
-            Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: ElevatedButton(
-                    child: const Text('Create new author'),
-                    onPressed: _gotoNewAuthorPage)),
+            Padding(padding: const EdgeInsets.symmetric(vertical: 16.0), child: ElevatedButton(onPressed: _gotoSearchPageWithNewSearchPhrase, child: const Text('Search'))),
+            Padding(padding: const EdgeInsets.symmetric(vertical: 16.0), child: ElevatedButton(onPressed: _gotoNewAuthorPage, child: const Text('Create new author'))),
             const SizedBox(height: 20),
             _authorsWidget,
             const SizedBox(height: 20),

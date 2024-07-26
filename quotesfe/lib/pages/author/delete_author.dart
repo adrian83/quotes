@@ -7,9 +7,7 @@ class DeleteAuthorPage extends DeletePage {
   final String _authorId;
   final AuthorService _authorService;
 
-  const DeleteAuthorPage(
-      Key? key, String title, this._authorId, this._authorService)
-      : super(key, title);
+  const DeleteAuthorPage(Key? key, String title, this._authorId, this._authorService) : super(key, title);
 
   @override
   Future<void> deleteEntity() => _authorService.delete(_authorId);

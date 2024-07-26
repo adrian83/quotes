@@ -8,8 +8,7 @@ class AuthorEntry extends ListEntry {
   final Author _author;
   final bool _detailsLink, _longDescription;
 
-  const AuthorEntry(Key? key, this._author, OnBackAction? onBackAction,
-      bool showLabel, bool showId, this._detailsLink, this._longDescription)
+  const AuthorEntry(Key? key, this._author, OnBackAction? onBackAction, bool showLabel, bool showId, this._detailsLink, this._longDescription)
       : super(key, "Author", showLabel, showId, onBackAction);
 
   @override
@@ -40,8 +39,7 @@ class AuthorEntry extends ListEntry {
       children.add(paddingWithText('Name: ${_author.name}'));
     }
 
-    var desc =
-        _longDescription ? _author.description : _author.shortDescription;
+    var desc = _longDescription ? _author.description : _author.shortDescription;
     children.add(paddingWithText('Description: $desc'));
 
     return children;

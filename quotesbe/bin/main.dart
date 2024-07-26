@@ -58,36 +58,23 @@ class Config {
   final String _defElasticsearchQuotesIndex = "quotes";
   final String _defElasticsearchQuoteEventsIndex = "quote_events";
 
-  String get elasticsearchHost =>
-      Platform.environment["ELASTICSEARCH_HOST"] ?? _defElasticsearchHost;
+  String get elasticsearchHost => Platform.environment["ELASTICSEARCH_HOST"] ?? _defElasticsearchHost;
 
   int get elasticsearchPort => int.parse(
         Platform.environment["ELASTICSEARCH_PORT"] ?? _defElasticsearchPort,
       );
 
-  String get elasticsearchAuthorIndex =>
-      Platform.environment["ELASTICSEARCH_AUTHOR_INDEX"] ??
-      _defElasticsearchAuthorIndex;
+  String get elasticsearchAuthorIndex => Platform.environment["ELASTICSEARCH_AUTHOR_INDEX"] ?? _defElasticsearchAuthorIndex;
 
-  String get elasticsearchAuthorEventsIndex =>
-      Platform.environment["ELASTICSEARCH_AUTHOR_EVENTS_INDEX"] ??
-      _defElasticsearchAuthorEventsIndex;
+  String get elasticsearchAuthorEventsIndex => Platform.environment["ELASTICSEARCH_AUTHOR_EVENTS_INDEX"] ?? _defElasticsearchAuthorEventsIndex;
 
-  String get elasticsearchBookIndex =>
-      Platform.environment["ELASTICSEARCH_BOOK_INDEX"] ??
-      _defElasticsearchBookIndex;
+  String get elasticsearchBookIndex => Platform.environment["ELASTICSEARCH_BOOK_INDEX"] ?? _defElasticsearchBookIndex;
 
-  String get elasticsearchBookEventsIndex =>
-      Platform.environment["ELASTICSEARCH_BOOK_EVENTS_INDEX"] ??
-      _defElasticsearchBookEventsIndex;
+  String get elasticsearchBookEventsIndex => Platform.environment["ELASTICSEARCH_BOOK_EVENTS_INDEX"] ?? _defElasticsearchBookEventsIndex;
 
-  String get elasticsearchQuotesIndex =>
-      Platform.environment["ELASTICSEARCH_QUOTE_INDEX"] ??
-      _defElasticsearchQuotesIndex;
+  String get elasticsearchQuotesIndex => Platform.environment["ELASTICSEARCH_QUOTE_INDEX"] ?? _defElasticsearchQuotesIndex;
 
-  String get elasticsearchQuoteEventsIndex =>
-      Platform.environment["ELASTICSEARCH_QUOTE_EVENTS_INDEX"] ??
-      _defElasticsearchQuoteEventsIndex;
+  String get elasticsearchQuoteEventsIndex => Platform.environment["ELASTICSEARCH_QUOTE_EVENTS_INDEX"] ?? _defElasticsearchQuoteEventsIndex;
 }
 
 Future<void> main() async {
@@ -123,8 +110,7 @@ Future<void> main() async {
     authorEventsIndex,
   );
 
-  var bookEsStore =
-      ESStore<Book>(client, elasticsearchHost, elasticsearchPort, bookIndex);
+  var bookEsStore = ESStore<Book>(client, elasticsearchHost, elasticsearchPort, bookIndex);
 
   var bookEventsEsStore = ESStore<BookEvent>(
     client,
@@ -133,8 +119,7 @@ Future<void> main() async {
     bookEventsIndex,
   );
 
-  var quoteEsStore =
-      ESStore<Quote>(client, elasticsearchHost, elasticsearchPort, quoteIndex);
+  var quoteEsStore = ESStore<Quote>(client, elasticsearchHost, elasticsearchPort, quoteIndex);
 
   var quoteEventsEsStore = ESStore<QuoteEvent>(
     client,
@@ -177,49 +162,28 @@ Future<void> main() async {
 
   var healthMapping = Mapping(HttpMethod.get, healthCheckPath, healthHandler);
 
-  var storeAuthorMapping =
-      Mapping(HttpMethod.post, storeAuthorPath, authorCtrl.store);
-  var searchAuthorsMapping =
-      Mapping(HttpMethod.get, searchAuthorsPath, authorCtrl.search);
-  var findAuthorMapping =
-      Mapping(HttpMethod.get, findAuthorPath, authorCtrl.find);
-  var updateAuthorMapping =
-      Mapping(HttpMethod.put, updateAuthorPath, authorCtrl.update);
-  var deleteAuthorMapping =
-      Mapping(HttpMethod.delete, deleteAuthorPath, authorCtrl.delete);
-  var findAuthorEventsMapping =
-      Mapping(HttpMethod.get, findAuthorEventsPath, authorCtrl.listEvents);
+  var storeAuthorMapping = Mapping(HttpMethod.post, storeAuthorPath, authorCtrl.store);
+  var searchAuthorsMapping = Mapping(HttpMethod.get, searchAuthorsPath, authorCtrl.search);
+  var findAuthorMapping = Mapping(HttpMethod.get, findAuthorPath, authorCtrl.find);
+  var updateAuthorMapping = Mapping(HttpMethod.put, updateAuthorPath, authorCtrl.update);
+  var deleteAuthorMapping = Mapping(HttpMethod.delete, deleteAuthorPath, authorCtrl.delete);
+  var findAuthorEventsMapping = Mapping(HttpMethod.get, findAuthorEventsPath, authorCtrl.listEvents);
 
-  var storeBookMapping =
-      Mapping(HttpMethod.post, storeBookPath, bookCtrl.store);
-  var searchAllBooksMapping =
-      Mapping(HttpMethod.get, searchAllBooksPath, bookCtrl.search);
-  var searchAuthorBooksMapping =
-      Mapping(HttpMethod.get, searchBooksPath, bookCtrl.searchAuthorBooks);
+  var storeBookMapping = Mapping(HttpMethod.post, storeBookPath, bookCtrl.store);
+  var searchAllBooksMapping = Mapping(HttpMethod.get, searchAllBooksPath, bookCtrl.search);
+  var searchAuthorBooksMapping = Mapping(HttpMethod.get, searchBooksPath, bookCtrl.searchAuthorBooks);
   var findBooksMapping = Mapping(HttpMethod.get, findBookPath, bookCtrl.find);
-  var updateBooksMapping =
-      Mapping(HttpMethod.put, updateBookPath, bookCtrl.update);
-  var deleteBookMapping =
-      Mapping(HttpMethod.delete, deleteBookPath, bookCtrl.delete);
-  var findBookEventsMapping =
-      Mapping(HttpMethod.get, findBookEventsPath, bookCtrl.listEvents);
+  var updateBooksMapping = Mapping(HttpMethod.put, updateBookPath, bookCtrl.update);
+  var deleteBookMapping = Mapping(HttpMethod.delete, deleteBookPath, bookCtrl.delete);
+  var findBookEventsMapping = Mapping(HttpMethod.get, findBookEventsPath, bookCtrl.listEvents);
 
-  var storeQuoteMapping =
-      Mapping(HttpMethod.post, storeQuotePath, quoteCtrl.store);
-  var searchAllQuotesMapping =
-      Mapping(HttpMethod.get, searchAllQuotesPath, quoteCtrl.search);
-  var searchBookQuoteMapping =
-      Mapping(HttpMethod.get, searchQuotesPath, quoteCtrl.searchBookQuotes);
-  var findQuotesMapping =
-      Mapping(HttpMethod.get, findQuotePath, quoteCtrl.find);
-  var updateQuotesMapping =
-      Mapping(HttpMethod.put, updateQuotePath, quoteCtrl.update);
-  var deleteQuoteMapping =
-      Mapping(HttpMethod.delete, deleteQuotePath, quoteCtrl.delete);
-  var findQuoteEventsMapping =
-      Mapping(HttpMethod.get, findQuoteEventsPath, quoteCtrl.listEvents);
-
-      
+  var storeQuoteMapping = Mapping(HttpMethod.post, storeQuotePath, quoteCtrl.store);
+  var searchAllQuotesMapping = Mapping(HttpMethod.get, searchAllQuotesPath, quoteCtrl.search);
+  var searchBookQuoteMapping = Mapping(HttpMethod.get, searchQuotesPath, quoteCtrl.searchBookQuotes);
+  var findQuotesMapping = Mapping(HttpMethod.get, findQuotePath, quoteCtrl.find);
+  var updateQuotesMapping = Mapping(HttpMethod.put, updateQuotePath, quoteCtrl.update);
+  var deleteQuoteMapping = Mapping(HttpMethod.delete, deleteQuotePath, quoteCtrl.delete);
+  var findQuoteEventsMapping = Mapping(HttpMethod.get, findQuoteEventsPath, quoteCtrl.listEvents);
 
   var server = Server(
     5050,
@@ -244,7 +208,7 @@ Future<void> main() async {
       updateQuotesMapping,
       findQuotesMapping,
       deleteQuoteMapping,
-      findQuoteEventsMapping
+      findQuoteEventsMapping,
     ],
     true,
   );

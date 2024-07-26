@@ -33,7 +33,7 @@ class Entity extends Document {
   Map<dynamic, dynamic> toJson() => {
         idLabel: id,
         createdUtcLabel: createdUtc.toIso8601String(),
-        modifiedUtcLabel: modifiedUtc.toIso8601String()
+        modifiedUtcLabel: modifiedUtc.toIso8601String(),
       };
 
   @override
@@ -46,25 +46,25 @@ class Entity extends Document {
   Map toUpdate() => toJson();
 
   @override
-  String toString() =>
-      "Entity [$idLabel: $id, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
+  String toString() => "Entity [$idLabel: $id, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
 abstract class Event<T extends Entity> extends Entity {
-  static final String created = "created",
-      modified = "modified",
-      deleted = "deleted";
+  static final String created = "created", modified = "modified", deleted = "deleted";
 
   String operation;
   T entity;
 
-  Event(String id, this.operation, this.entity, DateTime modifiedUtc,
-      DateTime createdUtc,)
-      : super.create();
+  Event(
+    String id,
+    this.operation,
+    this.entity,
+    DateTime modifiedUtc,
+    DateTime createdUtc,
+  ) : super.create();
 
   @override
-  String toString() =>
-      "Event [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: $entity]";
+  String toString() => "Event [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: $entity]";
 }
 
 class PageRequest {
@@ -82,12 +82,10 @@ class PageInfo {
 
   PageInfo(this.limit, this.offset, this.total);
 
-  Map<dynamic, dynamic> toJson() =>
-      {"limit": limit, "offset": offset, "total": total};
+  Map<dynamic, dynamic> toJson() => {"limit": limit, "offset": offset, "total": total};
 
   @override
-  String toString() =>
-      "PageInfo [limit: $limit, offset: $offset, total: $total]";
+  String toString() => "PageInfo [limit: $limit, offset: $offset, total: $total]";
 }
 
 class Page<T extends Document> {
@@ -107,7 +105,7 @@ class Page<T extends Document> {
 
   Map<dynamic, dynamic> toJson() => {
         "info": info.toJson(),
-        "elements": elements.map((e) => e.toJson()).toList()
+        "elements": elements.map((e) => e.toJson()).toList(),
       };
 
   @override
@@ -120,8 +118,6 @@ class SearchQuery {
 
   SearchQuery(this.searchPhrase, this.pageRequest);
 
-
   @override
-  String toString() =>
-      "SearchQuery [searchPhrase: $searchPhrase, pageRequest: $pageRequest]";
+  String toString() => "SearchQuery [searchPhrase: $searchPhrase, pageRequest: $pageRequest]";
 }

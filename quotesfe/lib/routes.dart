@@ -37,8 +37,7 @@ class RouteConfiguration {
   final BookService _bookService;
   final QuoteService _quoteService;
 
-  const RouteConfiguration(
-      this._authorService, this._bookService, this._quoteService);
+  const RouteConfiguration(this._authorService, this._bookService, this._quoteService);
 
   List<Path> paths() {
     return [
@@ -68,26 +67,22 @@ class RouteConfiguration {
 
   Widget updateAuthorView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3]);
-    return UpdateAuthorPage(
-        null, "update author", pathParams[0], _authorService);
+    return UpdateAuthorPage(null, "update author", pathParams[0], _authorService);
   }
 
   Widget deleteAuthorView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3]);
-    return DeleteAuthorPage(
-        null, "delete author", pathParams[0], _authorService);
+    return DeleteAuthorPage(null, "delete author", pathParams[0], _authorService);
   }
 
   Widget showAuthorView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3]);
-    return ShowAuthorPage(
-        null, "show author", pathParams[0], _authorService, _bookService);
+    return ShowAuthorPage(null, "show author", pathParams[0], _authorService, _bookService);
   }
 
   Widget listAuthorEventsView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3]);
-    return ListAuthorEventsPage(
-        null, "author events", pathParams[0], _authorService);
+    return ListAuthorEventsPage(null, "author events", pathParams[0], _authorService);
   }
 
   Widget createBookView(BuildContext ctx, String path) {
@@ -97,61 +92,51 @@ class RouteConfiguration {
 
   Widget showBookView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3, 6]);
-    return ShowBookPage(null, "show book", pathParams[0], pathParams[1],
-        _bookService, _quoteService);
+    return ShowBookPage(null, "show book", pathParams[0], pathParams[1], _bookService, _quoteService);
   }
 
   Widget updateBookView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3, 6]);
-    return UpdateBookPage(
-        null, "update book", pathParams[0], pathParams[1], _bookService);
+    return UpdateBookPage(null, "update book", pathParams[0], pathParams[1], _bookService);
   }
 
   Widget deleteBookView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3, 6]);
-    return DeleteBookPage(
-        null, "delete book", pathParams[0], pathParams[1], _bookService);
+    return DeleteBookPage(null, "delete book", pathParams[0], pathParams[1], _bookService);
   }
 
   Widget listBookEventsView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3, 6]);
-    return ListBookEventsPage(
-        null, "book events", pathParams[0], pathParams[1], _bookService);
+    return ListBookEventsPage(null, "book events", pathParams[0], pathParams[1], _bookService);
   }
 
   Widget createQuoteView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3, 6]);
-    return NewQuotePage(
-        null, "new quote", pathParams[0], pathParams[1], _quoteService);
+    return NewQuotePage(null, "new quote", pathParams[0], pathParams[1], _quoteService);
   }
 
   Widget showQuoteView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3, 6, 9]);
-    return ShowQuotePage(null, "delete quote", pathParams[0], pathParams[1],
-        pathParams[2], _quoteService);
+    return ShowQuotePage(null, "delete quote", pathParams[0], pathParams[1], pathParams[2], _quoteService);
   }
 
   Widget deleteQuoteView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3, 6, 9]);
-    return DeleteQuotePage(null, "delete quote", pathParams[0], pathParams[1],
-        pathParams[2], _quoteService);
+    return DeleteQuotePage(null, "delete quote", pathParams[0], pathParams[1], pathParams[2], _quoteService);
   }
 
   Widget updateQuoteView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3, 6, 9]);
-    return UpdateQuotePage(null, "update quote", pathParams[0], pathParams[1],
-        pathParams[2], _quoteService);
+    return UpdateQuotePage(null, "update quote", pathParams[0], pathParams[1], pathParams[2], _quoteService);
   }
 
   Widget listQuoteEventsView(BuildContext ctx, String path) {
     var pathParams = extractPathElements(path, [3, 6, 9]);
-    return ListQuoteEventsPage(null, "quote events", pathParams[0],
-        pathParams[1], pathParams[2], _quoteService);
+    return ListQuoteEventsPage(null, "quote events", pathParams[0], pathParams[1], pathParams[2], _quoteService);
   }
 
   Widget searchView(BuildContext ctx, String path) {
-    return SearchPage(UniqueKey(), "search", _authorService, _bookService,
-        _quoteService, getUrlParam(path, paramSearchPhrase, ""));
+    return SearchPage(UniqueKey(), "search", _authorService, _bookService, _quoteService, getUrlParam(path, paramSearchPhrase, ""));
   }
 
   String getUrlParam(String path, String name, String def) {

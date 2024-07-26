@@ -9,8 +9,7 @@ class Pagination extends StatefulWidget {
   final int _pages, current;
   final SelectPageAction _selectPageAction;
 
-  const Pagination(Key? key, this._pages, this.current, this._selectPageAction)
-      : super(key: key);
+  const Pagination(Key? key, this._pages, this.current, this._selectPageAction) : super(key: key);
 
   Pagination.empty(Key? key) : this(key, 0, 0, (i) => "");
 
@@ -33,9 +32,7 @@ class _PaginationState extends State<Pagination> {
     var canceledOnLeft = canceledOnLeftDiff < 0 ? canceledOnLeftDiff * -1 : 0;
 
     var canceledOnRightDiff = widget._pages - (current + 1);
-    var canceledOnRight = canceledOnRightDiff >= maxPagesOnRight
-        ? 0
-        : maxPagesOnRight - canceledOnRightDiff;
+    var canceledOnRight = canceledOnRightDiff >= maxPagesOnRight ? 0 : maxPagesOnRight - canceledOnRightDiff;
 
     var toLeft = maxPagesOnLeft + canceledOnRight;
     var toRight = maxPagesOnRight + canceledOnLeft;

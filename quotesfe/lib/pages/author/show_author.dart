@@ -8,17 +8,14 @@ import 'package:quotesfe/paths.dart';
 import 'package:quotesfe/widgets/author/author_books.dart';
 import 'package:quotesfe/widgets/author/list_entry.dart';
 
-AuthorEntry authorToWidget(Author a) =>
-    AuthorEntry(null, a, null, true, true, false, true);
+AuthorEntry authorToWidget(Author a) => AuthorEntry(null, a, null, true, true, false, true);
 
 class ShowAuthorPage extends ShowPage<Author> {
   final AuthorService _authorService;
   final BookService _bookService;
   final String _authorId;
 
-  const ShowAuthorPage(Key? key, String title, this._authorId,
-      this._authorService, this._bookService)
-      : super(key, title, authorToWidget);
+  const ShowAuthorPage(Key? key, String title, this._authorId, this._authorService, this._bookService) : super(key, title, authorToWidget);
 
   @override
   Future<Author> findEntity() => _authorService.find(_authorId);

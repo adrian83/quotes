@@ -15,11 +15,9 @@ class AuthorService extends Service<Author> {
       : _apiHost = config.apiHost,
         super(http);
 
-  Future<AuthorsPage> listAuthors(
-      String searchPhrase, PageRequest request) async {
+  Future<AuthorsPage> listAuthors(String searchPhrase, PageRequest request) async {
     var urlParams = pageRequestToUrlParams(request);
-    var urlParamsWithSearchPhrase =
-        appendUrlParam(urlParams, paramSearchPhrase, searchPhrase);
+    var urlParamsWithSearchPhrase = appendUrlParam(urlParams, paramSearchPhrase, searchPhrase);
     var url = "$_apiHost/authors?$urlParamsWithSearchPhrase";
     var jsonEntity = await getEntity(url);
     return AuthorsPage.fromJson(jsonEntity);

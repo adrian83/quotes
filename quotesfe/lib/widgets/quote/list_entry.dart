@@ -8,8 +8,7 @@ class QuoteEntry extends ListEntry {
   final Quote _quote;
   final bool _detailsLink, _longDescription;
 
-  const QuoteEntry(Key? key, this._quote, OnBackAction? onBackAction,
-      bool showLabel, bool showId, this._detailsLink, this._longDescription)
+  const QuoteEntry(Key? key, this._quote, OnBackAction? onBackAction, bool showLabel, bool showId, this._detailsLink, this._longDescription)
       : super(key, "Quote", showLabel, showId, onBackAction);
 
   @override

@@ -18,14 +18,7 @@ class ListAuthorEventsPage extends ListEventsPage<AuthorEvent> {
   ) : super(key, title);
 
   @override
-  List<String> columns() => [
-        "Event Id",
-        "Operation",
-        "Author name",
-        "Author desc",
-        "Author created",
-        "Author modified"
-      ];
+  List<String> columns() => ["Event Id", "Operation", "Author name", "Author desc", "Author created", "Author modified"];
 
   @override
   List<Widget> eventToData(AuthorEvent event) => [
@@ -38,6 +31,5 @@ class ListAuthorEventsPage extends ListEventsPage<AuthorEvent> {
       ];
 
   @override
-  Future<p.Page<AuthorEvent>> getPage(PageRequest pageReq) =>
-      _authorService.listEvents(_authorId, pageReq);
+  Future<p.Page<AuthorEvent>> getPage(PageRequest pageReq) => _authorService.listEvents(_authorId, pageReq);
 }

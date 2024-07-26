@@ -4,8 +4,7 @@ import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
 
-abstract class UpdatePage<T extends Entity, F extends EntityForm<T>>
-    extends NewPage<T, F> {
+abstract class UpdatePage<T extends Entity, F extends EntityForm<T>> extends NewPage<T, F> {
   const UpdatePage(Key? key, String title) : super(key, title);
 
   @override

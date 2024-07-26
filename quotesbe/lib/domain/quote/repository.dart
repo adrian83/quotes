@@ -9,8 +9,7 @@ import 'package:quotesbe/domain/common/repository.dart';
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 import 'package:quotesbe/storage/elasticsearch/search.dart';
 
-Decoder<Quote> quoteDecoder =
-    (Map<String, dynamic> json) => Quote.fromJson(json);
+Decoder<Quote> quoteDecoder = (Map<String, dynamic> json) => Quote.fromJson(json);
 
 class QuoteRepository extends Repository<Quote> {
   final Logger _logger = Logger('QuoteRepository');
@@ -53,8 +52,7 @@ class QuoteRepository extends Repository<Quote> {
   }
 }
 
-Decoder<QuoteEvent> quoteEventDecoder =
-    (Map<String, dynamic> json) => QuoteEvent.fromJson(json);
+Decoder<QuoteEvent> quoteEventDecoder = (Map<String, dynamic> json) => QuoteEvent.fromJson(json);
 
 class QuoteEventRepository extends Repository<QuoteEvent> {
   final Logger _logger = Logger('QuoteRepository');
@@ -63,8 +61,7 @@ class QuoteEventRepository extends Repository<QuoteEvent> {
   final String _bookIdProp = "$entityLabel.$quoteBookIdLabel";
   final String _quoteIdProp = "$entityLabel.$idLabel";
 
-  QuoteEventRepository(ESStore<QuoteEvent> store)
-      : super(store, quoteEventDecoder);
+  QuoteEventRepository(ESStore<QuoteEvent> store) : super(store, quoteEventDecoder);
 
   Future<void> storeSaveQuoteEvent(Quote quote) async {
     _logger.info("save quote event (save) for quote: $quote");
@@ -96,8 +93,7 @@ class QuoteEventRepository extends Repository<QuoteEvent> {
   }
 
   Future<void> deleteByAuthor(String authorId) async {
-    _logger
-        .info("save events (delete) for quotes created by author: $authorId");
+    _logger.info("save events (delete) for quotes created by author: $authorId");
     var matchQuery = MatchQuery(_authorIdProp, authorId);
     var quoteEvents = await super.findAllDocuments(matchQuery);
     var newestQuotes = newestEntities(quoteEvents);

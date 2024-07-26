@@ -20,8 +20,7 @@ class Quote extends Entity {
 
   Quote.create(this.text, this.authorId, this.bookId) : super.create();
 
-  Quote.update(String id, this.text, this.authorId, this.bookId)
-      : super(id, nowUtc(), nowUtc());
+  Quote.update(String id, this.text, this.authorId, this.bookId) : super(id, nowUtc(), nowUtc());
 
   Quote.fromJson(Map<String, dynamic> json)
       : this(
@@ -57,15 +56,14 @@ class Quote extends Entity {
 
 class QuoteEvent extends Event<Quote> {
   QuoteEvent(
-    String id,
-    String operation,
-    Quote quote,
-    DateTime modified,
-    DateTime created,
-  ) : super(id, operation, quote, modified, created);
+    super.id,
+    super.operation,
+    super.quote,
+    super.modified,
+    super.created,
+  );
 
-  QuoteEvent.operation(Quote quote, String operation)
-      : super(const Uuid().v4(), operation, quote, nowUtc(), nowUtc());
+  QuoteEvent.operation(Quote quote, String operation) : super(const Uuid().v4(), operation, quote, nowUtc(), nowUtc());
 
   QuoteEvent.create(Quote quote) : this.operation(quote, Event.created);
 
@@ -88,7 +86,7 @@ class QuoteEvent extends Event<Quote> {
         operationLabel: operation,
         modifiedUtcLabel: modifiedUtc.toIso8601String(),
         createdUtcLabel: createdUtc.toIso8601String(),
-        entityLabel: entity.toJson()
+        entityLabel: entity.toJson(),
       };
 
   @override
@@ -98,7 +96,3 @@ class QuoteEvent extends Event<Quote> {
   String toString() =>
       "QuoteEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
 }
-
-
-
-

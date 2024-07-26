@@ -1,5 +1,3 @@
-
-
 abstract class Document {
   String getId();
   Map<dynamic, dynamic> toSave();

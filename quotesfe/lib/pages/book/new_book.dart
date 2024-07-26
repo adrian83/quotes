@@ -9,20 +9,16 @@ class NewBookPage extends NewPage<Book, NewBookEntityForm> {
   final String _authorId;
   final BookService _bookService;
 
-  const NewBookPage(Key? key, String title, this._authorId, this._bookService)
-      : super(key, title);
+  const NewBookPage(Key? key, String title, this._authorId, this._bookService) : super(key, title);
 
   String get authorId => _authorId;
   BookService get bookService => _bookService;
 
   @override
-  NewBookEntityForm createEntityForm(BuildContext context, Book? entity) =>
-      NewBookEntityForm(_authorId, entity);
+  NewBookEntityForm createEntityForm(BuildContext context, Book? entity) => NewBookEntityForm(_authorId, entity);
 
   @override
-  Future<Book> persist(Book entity) => entity.id == null
-      ? _bookService.create(entity)
-      : _bookService.update(entity);
+  Future<Book> persist(Book entity) => entity.id == null ? _bookService.create(entity) : _bookService.update(entity);
 
   @override
   String successMessage() => "Book created / updated";
@@ -46,8 +42,7 @@ class NewBookEntityForm extends EntityForm<Book> {
   }
 
   @override
-  Book createEntity() => Book(null, _titleController.text, _descController.text,
-      _authorId, DateTime.now(), DateTime.now());
+  Book createEntity() => Book(null, _titleController.text, _descController.text, _authorId, DateTime.now(), DateTime.now());
 
   @override
   Form createForm(BuildContext context, Function()? action) => Form(

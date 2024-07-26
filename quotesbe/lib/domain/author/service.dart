@@ -32,8 +32,7 @@ class AuthorService {
     return author;
   }
 
-  Future<Author> find(FindAuthorQuery query) =>
-      _authorRepository.find(query.authorId);
+  Future<Author> find(FindAuthorQuery query) => _authorRepository.find(query.authorId);
 
   Future<Author> update(UpdateAuthorCommand command) async {
     var author = command.toAuthor();
@@ -52,9 +51,7 @@ class AuthorService {
     return;
   }
 
-  Future<Page<Author>> findAuthors(SearchQuery query) =>
-      _authorRepository.findAuthors(query);
+  Future<Page<Author>> findAuthors(SearchQuery query) => _authorRepository.findAuthors(query);
 
-  Future<Page<AuthorEvent>> listEvents(ListEventsByAuthorQuery request) =>
-      _authorEventRepository.findAuthorEvents(request);
+  Future<Page<AuthorEvent>> listEvents(ListEventsByAuthorQuery request) => _authorEventRepository.findAuthorEvents(request);
 }

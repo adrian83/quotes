@@ -15,8 +15,7 @@ class QuoteService extends Service<Quote> {
       : apiHost = config.apiHost,
         super(http);
 
-  Future<QuotesPage> listBookQuotes(
-      String authorId, String bookId, PageRequest request) {
+  Future<QuotesPage> listBookQuotes(String authorId, String bookId, PageRequest request) {
     var urlParams = pageRequestToUrlParams(request);
     var url = "$apiHost/authors/$authorId/books/$bookId/quotes?$urlParams";
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
@@ -28,11 +27,9 @@ class QuoteService extends Service<Quote> {
     return getEntity(url).then((json) => QuotesPage.fromJson(json));
   }
 
-  Future<QuoteEventsPage> listEvents(
-      String authorId, String bookId, String quoteId, PageRequest request) {
+  Future<QuoteEventsPage> listEvents(String authorId, String bookId, String quoteId, PageRequest request) {
     var urlParams = pageRequestToUrlParams(request);
-    var url =
-        "$apiHost/authors/$authorId/books/$bookId/quotes/$quoteId/events?$urlParams";
+    var url = "$apiHost/authors/$authorId/books/$bookId/quotes/$quoteId/events?$urlParams";
     return getEntity(url).then((json) => QuoteEventsPage.fromJson(json));
   }
 
@@ -42,8 +39,7 @@ class QuoteService extends Service<Quote> {
   }
 
   Future<Quote> update(Quote quote) {
-    var url =
-        "$apiHost/authors/${quote.authorId}/books/${quote.bookId}/quotes/${quote.id}";
+    var url = "$apiHost/authors/${quote.authorId}/books/${quote.bookId}/quotes/${quote.id}";
     return updateEntity(url, quote).then((json) => Quote.fromJson(json));
   }
 

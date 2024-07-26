@@ -20,30 +20,24 @@ class BookController {
 
   List<ValidationRule> newBookValidationRules = [
     ValidationRule("title", "Title cannot be empty", emptyString),
-    ValidationRule("description", "Description cannot be empty", emptyString)
+    ValidationRule("description", "Description cannot be empty", emptyString),
   ];
 
   List<ValidationRule> updateBookValidationRules = [
     ValidationRule("title", "Title cannot be empty", emptyString),
-    ValidationRule("description", "Description cannot be empty", emptyString)
+    ValidationRule("description", "Description cannot be empty", emptyString),
   ];
 
   Future<Response> search(Request request) async {
     var query = extractSearchQuery(request);
 
-    return _bookService
-        .findBooks(query)
-        .then((page) => jsonResponseOk(page))
-        .onError<Exception>((error, stackTrace) => handleError(error));
+    return _bookService.findBooks(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> searchAuthorBooks(Request request, String authorId) async {
     var query = ListBooksByAuthorQuery(authorId, extractPageRequest(request));
 
-    return _bookService
-        .findAuthorBooks(query)
-        .then((page) => jsonResponseOk(page))
-        .onError<Exception>((error, stackTrace) => handleError(error));
+    return _bookService.findAuthorBooks(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> store(Request request, String authorId) async {
@@ -57,10 +51,7 @@ class BookController {
 
     var command = NewBookCommand(authorId, json["title"], json["description"]);
 
-    return _bookService
-        .save(command)
-        .then((author) => jsonResponseOk(author))
-        .onError<Exception>((error, stackTrace) => handleError(error));
+    return _bookService.save(command).then((author) => jsonResponseOk(author)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> update(
@@ -76,37 +67,23 @@ class BookController {
       return responseBadRequest(violations);
     }
 
-    var command =
-        UpdateBookCommand(authorId, bookId, json["title"], json["description"]);
+    var command = UpdateBookCommand(authorId, bookId, json["title"], json["description"]);
 
-    return _bookService
-        .update(command)
-        .then((book) => jsonResponseOk(book))
-        .onError<Exception>((error, stackTrace) => handleError(error));
+    return _bookService.update(command).then((book) => jsonResponseOk(book)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> find(Request request, String authorId, String bookId) =>
-      _bookService
-          .find(FindBookQuery(authorId, bookId))
-          .then((book) => jsonResponseOk(book))
-          .onError<Exception>((error, stackTrace) => handleError(error));
+      _bookService.find(FindBookQuery(authorId, bookId)).then((book) => jsonResponseOk(book)).onError<Exception>((error, stackTrace) => handleError(error));
 
   Future<Response> delete(Request request, String authorId, String bookId) =>
-      _bookService
-          .delete(DeleteBookCommand(authorId, bookId))
-          .then((_) => emptyResponseOk())
-          .onError<Exception>((error, stackTrace) => handleError(error));
+      _bookService.delete(DeleteBookCommand(authorId, bookId)).then((_) => emptyResponseOk()).onError<Exception>((error, stackTrace) => handleError(error));
 
   Future<Response> listEvents(
     Request request,
     String authorId,
     String bookId,
   ) async {
-    var query =
-        ListEventsByBookQuery(authorId, bookId, extractPageRequest(request));
-    return await _bookService
-        .listEvents(query)
-        .then((page) => jsonResponseOk(page))
-        .onError<Exception>((error, stackTrace) => handleError(error));
+    var query = ListEventsByBookQuery(authorId, bookId, extractPageRequest(request));
+    return await _bookService.listEvents(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 }

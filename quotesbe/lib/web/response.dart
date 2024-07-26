@@ -10,7 +10,7 @@ const headerValueJson = 'application/json';
 const _corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Methods": "POST, GET, OPTIONS, PUT, DELETE, HEAD",
-  "Access-Control-Allow-Headers": "*"
+  "Access-Control-Allow-Headers": "*",
 };
 const _baseHeaders = {HttpHeaders.contentTypeHeader: headerValueJson};
 

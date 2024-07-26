@@ -26,8 +26,7 @@ class NewQuoteCommand {
 class UpdateQuoteCommand extends NewQuoteCommand {
   final String quoteId;
 
-  UpdateQuoteCommand(String authorId, String bookId, this.quoteId, String text)
-      : super(authorId, bookId, text);
+  UpdateQuoteCommand(String authorId, String bookId, this.quoteId, String text) : super(authorId, bookId, text);
 
   @override
   Quote toQuote() => Quote(

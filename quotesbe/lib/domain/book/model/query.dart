@@ -14,17 +14,14 @@ class ListBooksByAuthorQuery {
   ListBooksByAuthorQuery(this.authorId, this.pageRequest);
 
   @override
-  String toString() =>
-      "ListBooksByAuthorQuery [$bookAuthorIdLabel: $authorId, $pageRequestLabel: $pageRequest]";
+  String toString() => "ListBooksByAuthorQuery [$bookAuthorIdLabel: $authorId, $pageRequestLabel: $pageRequest]";
 }
 
 class ListEventsByBookQuery extends FindBookQuery {
   late PageRequest pageRequest;
 
-  ListEventsByBookQuery(String authorId, String bookId, this.pageRequest)
-      : super(authorId, bookId);
+  ListEventsByBookQuery(super.authorId, super.bookId, this.pageRequest);
 
   @override
-  String toString() =>
-      "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, $bookIdLabel: $bookId, $pageRequestLabel: $pageRequest]";
+  String toString() => "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, $bookIdLabel: $bookId, $pageRequestLabel: $pageRequest]";
 }

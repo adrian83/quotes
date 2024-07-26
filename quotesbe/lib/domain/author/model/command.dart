@@ -19,10 +19,8 @@ class NewAuthorCommand {
 class UpdateAuthorCommand extends NewAuthorCommand {
   final String id;
 
-  UpdateAuthorCommand(this.id, String name, String description)
-      : super(name, description);
+  UpdateAuthorCommand(this.id, String name, String description) : super(name, description);
 
   @override
-  Author toAuthor() =>
-      Author(id, name, description, DateTime.now(), DateTime.now());
+  Author toAuthor() => Author(id, name, description, DateTime.now(), DateTime.now());
 }

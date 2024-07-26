@@ -45,8 +45,7 @@ class BookRepository extends Repository<Book> {
   }
 }
 
-Decoder<BookEvent> bookEventDecoder =
-    (Map<String, dynamic> json) => BookEvent.fromJson(json);
+Decoder<BookEvent> bookEventDecoder = (Map<String, dynamic> json) => BookEvent.fromJson(json);
 
 class BookEventRepository extends Repository<BookEvent> {
   final Logger _logger = Logger('BookEventRepository');
@@ -54,13 +53,12 @@ class BookEventRepository extends Repository<BookEvent> {
   final String _authorIdProp = "$entityLabel.$bookAuthorIdLabel";
   final String _bookIdProp = "$entityLabel.$idLabel";
 
-  BookEventRepository(ESStore<BookEvent> store)
-      : super(store, bookEventDecoder);
+  BookEventRepository(ESStore<BookEvent> store) : super(store, bookEventDecoder);
 
   Future<void> deleteByAuthor(String authorId) async {
     _logger.info("save book events (delete) for books created by author: $authorId");
     var matchQuery = MatchQuery(_authorIdProp, authorId);
-    var books = await super.findAllDocuments(matchQuery); 
+    var books = await super.findAllDocuments(matchQuery);
     var newestBooks = newestEntities(books);
     Future.wait(newestBooks.map((book) => storeDeleteBookEvent(book)));
     return;

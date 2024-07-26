@@ -1,6 +1,5 @@
 import 'package:quotesbe/storage/elasticsearch/response.dart';
 
-
 class IndexingFailedException<T> implements Exception {
   IndexResult result;
   T document;
@@ -9,7 +8,6 @@ class IndexingFailedException<T> implements Exception {
 
   @override
   String toString() => "IndexingFailedException [document: $document, result: $result]";
-  
 }
 
 class DocUpdateFailedException<T> implements Exception {
@@ -20,7 +18,6 @@ class DocUpdateFailedException<T> implements Exception {
 
   @override
   String toString() => "DocUpdateFailedException [document: $document, result: $result]";
-  
 }
 
 class DocFindFailedException implements Exception {
@@ -31,5 +28,4 @@ class DocFindFailedException implements Exception {
 
   @override
   String toString() => "DocFindFailedException [document id: $id, result: $result]";
-  
 }

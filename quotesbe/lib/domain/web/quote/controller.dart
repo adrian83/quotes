@@ -29,21 +29,17 @@ class QuoteController {
   Future<Response> search(Request request) async {
     var query = extractSearchQuery(request);
 
-    return _quoteService
-        .findQuotes(query)
-        .then((page) => jsonResponseOk(page))
-        .onError<Exception>((error, stackTrace) => handleError(error));
+    return _quoteService.findQuotes(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> searchBookQuotes(
-      Request request, String authorId, String bookId,) async {
-    var query =
-        ListQuotesFromBookQuery(authorId, bookId, extractPageRequest(request));
+    Request request,
+    String authorId,
+    String bookId,
+  ) async {
+    var query = ListQuotesFromBookQuery(authorId, bookId, extractPageRequest(request));
 
-    return _quoteService
-        .findBookQuotes(query)
-        .then((page) => jsonResponseOk(page))
-        .onError<Exception>((error, stackTrace) => handleError(error));
+    return _quoteService.findBookQuotes(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> store(
@@ -61,10 +57,7 @@ class QuoteController {
 
     var command = NewQuoteCommand(authorId, bookId, json["text"]);
 
-    return _quoteService
-        .save(command)
-        .then((quote) => jsonResponseOk(quote))
-        .onError<Exception>((error, stackTrace) => handleError(error));
+    return _quoteService.save(command).then((quote) => jsonResponseOk(quote)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> update(
@@ -83,10 +76,7 @@ class QuoteController {
 
     var command = UpdateQuoteCommand(authorId, bookId, quoteId, json["text"]);
 
-    return _quoteService
-        .update(command)
-        .then((quote) => jsonResponseOk(quote))
-        .onError<Exception>((error, stackTrace) => handleError(error));
+    return _quoteService.update(command).then((quote) => jsonResponseOk(quote)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
   Future<Response> find(
@@ -95,10 +85,7 @@ class QuoteController {
     String bookId,
     String quoteId,
   ) =>
-      _quoteService
-          .find(FindQuoteQuery(authorId, bookId, quoteId))
-          .then((quote) => jsonResponseOk(quote))
-          .onError<Exception>((error, stackTrace) => handleError(error));
+      _quoteService.find(FindQuoteQuery(authorId, bookId, quoteId)).then((quote) => jsonResponseOk(quote)).onError<Exception>((error, stackTrace) => handleError(error));
 
   Future<Response> delete(
     Request request,
@@ -106,10 +93,7 @@ class QuoteController {
     String bookId,
     String quoteId,
   ) =>
-      _quoteService
-          .delete(DeleteQuoteCommand(authorId, bookId, quoteId))
-          .then((_) => emptyResponseOk())
-          .onError<Exception>((error, stackTrace) => handleError(error));
+      _quoteService.delete(DeleteQuoteCommand(authorId, bookId, quoteId)).then((_) => emptyResponseOk()).onError<Exception>((error, stackTrace) => handleError(error));
 
   Future<Response> listEvents(
     Request request,
@@ -118,8 +102,14 @@ class QuoteController {
     String quoteId,
   ) =>
       _quoteService
-          .listEvents(ListEventsByQuoteQuery(
-              authorId, bookId, quoteId, extractPageRequest(request),),)
+          .listEvents(
+            ListEventsByQuoteQuery(
+              authorId,
+              bookId,
+              quoteId,
+              extractPageRequest(request),
+            ),
+          )
           .then((page) => jsonResponseOk(page))
           .onError<Exception>((error, stackTrace) => handleError(error));
 }

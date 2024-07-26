@@ -7,13 +7,10 @@ import 'package:quotesfe/pages/book/new_book.dart';
 class UpdateBookPage extends NewBookPage {
   final String _bookId;
 
-  const UpdateBookPage(Key? key, String title, String authorId, this._bookId,
-      BookService bookService)
-      : super(key, title, authorId, bookService);
+  const UpdateBookPage(Key? key, String title, String authorId, this._bookId, BookService bookService) : super(key, title, authorId, bookService);
 
   @override
-  NewBookEntityForm createEntityForm(BuildContext context, Book? entity) =>
-      NewBookEntityForm(authorId, entity);
+  NewBookEntityForm createEntityForm(BuildContext context, Book? entity) => NewBookEntityForm(authorId, entity);
 
   @override
   String successMessage() => "Book updated";

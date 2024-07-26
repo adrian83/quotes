@@ -7,9 +7,7 @@ abstract class ListEntry extends StatefulWidget {
   final bool _showId, _showLabel;
   final OnBackAction? _onBackAction;
 
-  const ListEntry(
-      Key? key, this._label, this._showLabel, this._showId, this._onBackAction)
-      : super(key: key);
+  const ListEntry(Key? key, this._label, this._showLabel, this._showId, this._onBackAction) : super(key: key);
 
   @override
   State<ListEntry> createState() => _ListEntryState();
@@ -42,8 +40,7 @@ class _ListEntryState extends State<ListEntry> {
     var children = <Widget>[];
 
     if (widget._showLabel) {
-      children.add(
-          Text(widget._label, style: Theme.of(context).textTheme.headline4));
+      children.add(Text(widget._label, style: Theme.of(context).textTheme.headlineMedium));
     }
 
     if (widget._showId) {
@@ -52,23 +49,20 @@ class _ListEntryState extends State<ListEntry> {
 
     children.addAll(widget.widgets(context));
 
-    var buttons = Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          TextButton(
-            onPressed: gotoUpdatePage(context),
-            child: const Text('Update'),
-          ),
-          TextButton(
-            onPressed: gotoDeletePage(context),
-            child: const Text('Delete'),
-          ),
-          TextButton(
-            onPressed: gotoEventsPage(context),
-            child: const Text('Events'),
-          )
-        ]);
+    var buttons = Row(crossAxisAlignment: CrossAxisAlignment.center, mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      TextButton(
+        onPressed: gotoUpdatePage(context),
+        child: const Text('Update'),
+      ),
+      TextButton(
+        onPressed: gotoDeletePage(context),
+        child: const Text('Delete'),
+      ),
+      TextButton(
+        onPressed: gotoEventsPage(context),
+        child: const Text('Events'),
+      )
+    ]);
 
     children.add(widget.paddingWithWidget(buttons));
 
@@ -86,15 +80,9 @@ class _ListEntryState extends State<ListEntry> {
         ));
   }
 
-  Function()? gotoUpdatePage(BuildContext context) =>
-      () => Navigator.pushNamed(context, widget.updatePageUrl())
-          .then((value) => widget.onBackAction()());
+  Function()? gotoUpdatePage(BuildContext context) => () => Navigator.pushNamed(context, widget.updatePageUrl()).then((value) => widget.onBackAction()());
 
-  Function()? gotoDeletePage(BuildContext context) =>
-      () => Navigator.pushNamed(context, widget.deletePageUrl())
-          .then((value) => widget.onBackAction()());
+  Function()? gotoDeletePage(BuildContext context) => () => Navigator.pushNamed(context, widget.deletePageUrl()).then((value) => widget.onBackAction()());
 
-  Function()? gotoEventsPage(BuildContext context) =>
-      () => Navigator.pushNamed(context, widget.eventsPageUrl())
-          .then((value) => widget.onBackAction()());
+  Function()? gotoEventsPage(BuildContext context) => () => Navigator.pushNamed(context, widget.eventsPageUrl()).then((value) => widget.onBackAction()());
 }

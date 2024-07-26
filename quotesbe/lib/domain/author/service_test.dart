@@ -15,10 +15,9 @@ import 'package:quotesbe/domain/author/service_test.mocks.dart';
   BookRepository,
   BookEventRepository,
   QuoteRepository,
-  QuoteEventRepository
+  QuoteEventRepository,
 ])
 void main() {
-
   test("save should persist author entity and author event", () async {
     // given
     var authorRepoMock = MockAuthorRepository();
@@ -53,9 +52,8 @@ void main() {
     expect(result.description, equals(command.description));
   });
 
-
   test("exception in save method in AuthorRepository should result with failed Future", () async {
-        // given
+    // given
     var authorRepoMock = MockAuthorRepository();
     var authorEventRepoMock = MockAuthorEventRepository();
     var bookRepoMock = MockBookRepository();
@@ -82,9 +80,8 @@ void main() {
     verifyNever(authorEventRepoMock.save(any));
   });
 
-
   test("exception in save method in AuthorEventRepository should result with failed Future", () async {
-        // given
+    // given
     var authorRepoMock = MockAuthorRepository();
     var authorEventRepoMock = MockAuthorEventRepository();
     var bookRepoMock = MockBookRepository();

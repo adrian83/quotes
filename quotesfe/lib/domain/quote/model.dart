@@ -9,17 +9,10 @@ const fieldQuoteBookId = "bookId";
 class Quote extends Entity {
   final String _text, _authorId, _bookId;
 
-  Quote(String? id, this._text, this._authorId, this._bookId,
-      DateTime modifiedUtc, DateTime createdUtc)
-      : super(id, modifiedUtc, createdUtc);
+  Quote(String? id, this._text, this._authorId, this._bookId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
 
   Quote.fromJson(Map<String, dynamic> json)
-      : this(
-            json[fieldEntityId],
-            json[fieldQuoteText],
-            json[fieldQuoteAuthorId],
-            json[fieldQuoteBookId],
-            DateTime.parse(json[fieldEntityModifiedUtc]),
+      : this(json[fieldEntityId], json[fieldQuoteText], json[fieldQuoteAuthorId], json[fieldQuoteBookId], DateTime.parse(json[fieldEntityModifiedUtc]),
             DateTime.parse(json[fieldEntityCreatedUtc]));
 
   String get text => _text;
@@ -30,22 +23,15 @@ class Quote extends Entity {
   List<String> get shortLines => shorten(_text, 80)?.split("\n") ?? [];
 
   @override
-  Map toJson() => super.toJson()
-    ..addAll({
-      fieldQuoteText: _text,
-      fieldQuoteAuthorId: _authorId,
-      fieldQuoteBookId: _bookId
-    });
+  Map toJson() => super.toJson()..addAll({fieldQuoteText: _text, fieldQuoteAuthorId: _authorId, fieldQuoteBookId: _bookId});
 }
 
-JsonDecoder<Quote> _quoteJsonDecoder =
-    (Map<String, dynamic> json) => Quote.fromJson(json);
+JsonDecoder<Quote> _quoteJsonDecoder = (Map<String, dynamic> json) => Quote.fromJson(json);
 
 class QuotesPage extends Page<Quote> {
   QuotesPage(PageInfo info, List<Quote> elements) : super(info, elements);
 
   QuotesPage.empty() : super(PageInfo(0, 0, 0), []);
 
-  QuotesPage.fromJson(Map<String, dynamic> json)
-      : super.fromJson(_quoteJsonDecoder, json);
+  QuotesPage.fromJson(Map<String, dynamic> json) : super.fromJson(_quoteJsonDecoder, json);
 }

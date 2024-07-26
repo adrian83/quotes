@@ -9,8 +9,8 @@ import 'package:quotesbe/domain/common/repository.dart';
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 import 'package:quotesbe/storage/elasticsearch/search.dart';
 
-Decoder<Author> authorDecoder =
-    (Map<String, dynamic> json) => Author.fromJson(json);
+Decoder<Author> authorDecoder = (Map<String, dynamic> json) => Author.fromJson(json);
+
 class AuthorRepository extends Repository<Author> {
   final Logger _logger = Logger('AuthorRepository');
 
@@ -27,16 +27,14 @@ class AuthorRepository extends Repository<Author> {
   }
 }
 
-Decoder<AuthorEvent> authorEventDecoder =
-    (Map<String, dynamic> json) => AuthorEvent.fromJson(json);
+Decoder<AuthorEvent> authorEventDecoder = (Map<String, dynamic> json) => AuthorEvent.fromJson(json);
 
 class AuthorEventRepository extends Repository<AuthorEvent> {
   final Logger _logger = Logger('AuthorEventRepository');
 
   final String _authorIdProp = "$entityLabel.$idLabel";
 
-  AuthorEventRepository(ESStore<AuthorEvent> store)
-      : super(store, authorEventDecoder);
+  AuthorEventRepository(ESStore<AuthorEvent> store) : super(store, authorEventDecoder);
 
   Future<Page<AuthorEvent>> findAuthorEvents(
     ListEventsByAuthorQuery request,

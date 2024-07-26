@@ -9,13 +9,12 @@ import 'package:quotesbe/domain/author/repository_test.mocks.dart';
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 import 'package:quotesbe/storage/elasticsearch/response.dart';
 
-
 var author1Json = {
   "id": "rwe-wer",
   "name": "John",
   "description": "this is John",
   "modifiedUtc": "2011-10-05T14:48:00.000Z",
-  "createdUtc": "2011-10-05T14:48:00.000Z"
+  "createdUtc": "2011-10-05T14:48:00.000Z",
 };
 
 var author2Json = {
@@ -23,13 +22,11 @@ var author2Json = {
   "name": "Paul",
   "description": "this is Paul",
   "modifiedUtc": "2011-10-05T14:48:00.000Z",
-  "createdUtc": "2011-10-05T14:48:00.000Z"
+  "createdUtc": "2011-10-05T14:48:00.000Z",
 };
 
 @GenerateMocks([ESStore<Author>])
 void main() {
-
-
   test("save should find page of authors", () async {
     // given
     var authorStoreMock = MockESStore<Author>();

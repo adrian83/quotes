@@ -4,8 +4,7 @@ import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/pages/common/page.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
 
-abstract class NewPage<T extends Entity, F extends EntityForm<T>>
-    extends AbsPage {
+abstract class NewPage<T extends Entity, F extends EntityForm<T>> extends AbsPage {
   const NewPage(Key? key, String title) : super(key, title);
 
   @override
@@ -22,8 +21,7 @@ abstract class NewPage<T extends Entity, F extends EntityForm<T>>
   bool hideFormOnSuccess() => false;
 }
 
-class _NewPageState<T extends Entity, F extends EntityForm<T>>
-    extends PageState<NewPage<T, F>> {
+class _NewPageState<T extends Entity, F extends EntityForm<T>> extends PageState<NewPage<T, F>> {
   EntityForm<T>? _form;
 
   @override

@@ -12,16 +12,13 @@ class Errors extends StatefulWidget {
 }
 
 class _ErrorsState extends State<Errors> {
-  final TextStyle style =
-      TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade700);
+  final TextStyle style = TextStyle(fontWeight: FontWeight.bold, color: Colors.red.shade700);
 
   @override
   Widget build(BuildContext context) {
     var children = <Widget>[];
     if (widget.error != null) {
-      children = widget.error is Exception
-          ? _handleException()
-          : _handleUnknownError();
+      children = widget.error is Exception ? _handleException() : _handleUnknownError();
     }
 
     return Column(
@@ -32,11 +29,7 @@ class _ErrorsState extends State<Errors> {
   }
 
   List<Widget> _handleUnknownError() {
-    return <Widget>[
-      Text(
-          "UNKNOWN ERROR: ${widget.error} (${widget.error.runtimeType}), isException: ${widget.error is Exception}",
-          style: style)
-    ];
+    return <Widget>[Text("UNKNOWN ERROR: ${widget.error} (${widget.error.runtimeType}), isException: ${widget.error is Exception}", style: style)];
   }
 
   List<Widget> _handleException() {

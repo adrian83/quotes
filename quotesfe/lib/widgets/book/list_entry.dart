@@ -8,8 +8,7 @@ class BookEntry extends ListEntry {
   final Book _book;
   final bool _detailsLink, _longDescription;
 
-  const BookEntry(Key? key, this._book, OnBackAction? onBackAction,
-      bool showLabel, bool showId, this._detailsLink, this._longDescription)
+  const BookEntry(Key? key, this._book, OnBackAction? onBackAction, bool showLabel, bool showId, this._detailsLink, this._longDescription)
       : super(key, "Book", showLabel, showId, onBackAction);
 
   @override

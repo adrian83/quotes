@@ -20,13 +20,12 @@ class Server {
     for (var mapping in _mappings) {
       _addMapping(router, mapping);
       if (_enableCors) {
-        var optionsMapping =
-            Mapping(HttpMethod.options, mapping.path, _optionsHandler);
+        var optionsMapping = Mapping(HttpMethod.options, mapping.path, _optionsHandler);
         _addMapping(router, optionsMapping);
       }
     }
 
-    final cascade = Cascade().add(router);
+    final cascade = Cascade().add(router.call);
 
     final server = await shelf_io.serve(
       logRequests().addHandler(cascade.handler),

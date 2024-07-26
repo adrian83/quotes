@@ -18,8 +18,7 @@ class Author extends Entity {
 
   Author.create(this.name, this.description) : super.create();
 
-  Author.update(String id, this.name, this.description)
-      : super(id, nowUtc(), nowUtc());
+  Author.update(String id, this.name, this.description) : super(id, nowUtc(), nowUtc());
 
   Author.fromJson(Map<String, dynamic> json)
       : this(
@@ -31,8 +30,7 @@ class Author extends Entity {
         );
 
   @override
-  Map<dynamic, dynamic> toJson() => super.toJson()
-    ..addAll({authorNameLabel: name, authorDescLabel: description});
+  Map<dynamic, dynamic> toJson() => super.toJson()..addAll({authorNameLabel: name, authorDescLabel: description});
 
   @override
   Map<dynamic, dynamic> toSave() => toJson();
@@ -41,21 +39,19 @@ class Author extends Entity {
   Map<dynamic, dynamic> toUpdate() => toJson()..remove(createdUtcLabel);
 
   @override
-  String toString() =>
-      "Author [$idLabel: $id, $authorNameLabel: $name, $authorDescLabel: $description, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
+  String toString() => "Author [$idLabel: $id, $authorNameLabel: $name, $authorDescLabel: $description, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
 }
 
 class AuthorEvent extends Event<Author> {
   AuthorEvent(
-    String id,
-    String operation,
-    Author author,
-    DateTime modified,
-    DateTime created,
-  ) : super(id, operation, author, modified, created);
+    super.id,
+    super.operation,
+    super.author,
+    super.modified,
+    super.created,
+  );
 
-  AuthorEvent.operation(Author author, String operation)
-      : super(const Uuid().v4(), operation, author, nowUtc(), nowUtc());
+  AuthorEvent.operation(Author author, String operation) : super(const Uuid().v4(), operation, author, nowUtc(), nowUtc());
 
   AuthorEvent.create(Author author) : this.operation(author, Event.created);
 
@@ -78,7 +74,7 @@ class AuthorEvent extends Event<Author> {
         operationLabel: operation,
         modifiedUtcLabel: modifiedUtc.toIso8601String(),
         createdUtcLabel: createdUtc.toIso8601String(),
-        entityLabel: entity.toJson()
+        entityLabel: entity.toJson(),
       };
 
   @override

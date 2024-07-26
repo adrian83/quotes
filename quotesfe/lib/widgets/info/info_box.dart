@@ -10,8 +10,7 @@ class Info extends StatefulWidget {
 }
 
 class _InfoState extends State<Info> {
-  final TextStyle style =
-      TextStyle(fontWeight: FontWeight.bold, color: Colors.green.shade700);
+  final TextStyle style = TextStyle(fontWeight: FontWeight.bold, color: Colors.green.shade700);
 
   @override
   Widget build(BuildContext context) {

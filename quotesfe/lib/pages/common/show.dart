@@ -7,8 +7,7 @@ typedef ToWidgetTransformer<E> = Widget Function(E);
 abstract class ShowPage<E> extends AbsPage {
   final ToWidgetTransformer<E> _toWidgetTransformer;
 
-  const ShowPage(Key? key, String title, this._toWidgetTransformer)
-      : super(key, title);
+  const ShowPage(Key? key, String title, this._toWidgetTransformer) : super(key, title);
 
   Future<E> findEntity();
 
@@ -56,8 +55,7 @@ class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
 
     if (createChildButtonLabel != null && createChildPath != null) {
       var button = TextButton(
-        onPressed: () => Navigator.pushNamed(context, createChildPath)
-            .then((value) => onBackAction()),
+        onPressed: () => Navigator.pushNamed(context, createChildPath).then((value) => onBackAction()),
         child: Text(createChildButtonLabel),
       );
       widgets.add(const SizedBox(height: 20));

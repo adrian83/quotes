@@ -10,19 +10,10 @@ class ListBookEventsPage extends ListEventsPage<BookEvent> {
   final BookService _bookService;
   final String _authorId, _bookId;
 
-  const ListBookEventsPage(
-      Key? key, String title, this._authorId, this._bookId, this._bookService)
-      : super(key, title);
+  const ListBookEventsPage(Key? key, String title, this._authorId, this._bookId, this._bookService) : super(key, title);
 
   @override
-  List<String> columns() => [
-        "Event Id",
-        "Operation",
-        "Book title",
-        "Book desc",
-        "Book created",
-        "Book modified"
-      ];
+  List<String> columns() => ["Event Id", "Operation", "Book title", "Book desc", "Book created", "Book modified"];
 
   @override
   List<Widget> eventToData(BookEvent event) => [
@@ -35,6 +26,5 @@ class ListBookEventsPage extends ListEventsPage<BookEvent> {
       ];
 
   @override
-  Future<p.Page<BookEvent>> getPage(PageRequest pageReq) =>
-      _bookService.listEvents(_authorId, _bookId, pageReq);
+  Future<p.Page<BookEvent>> getPage(PageRequest pageReq) => _bookService.listEvents(_authorId, _bookId, pageReq);
 }

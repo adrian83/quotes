@@ -9,7 +9,7 @@ class FindAuthorQuery {
 }
 
 class DeleteAuthorQuery extends FindAuthorQuery {
-  DeleteAuthorQuery(String authorId) : super(authorId);
+  DeleteAuthorQuery(super.authorId);
 
   @override
   String toString() => "DeleteAuthorQuery [authorId: $authorId]";
@@ -29,9 +29,8 @@ class ListAuthorsQuery {
 class ListEventsByAuthorQuery extends FindAuthorQuery {
   final PageRequest pageRequest;
 
-  ListEventsByAuthorQuery(String authorId, this.pageRequest) : super(authorId);
+  ListEventsByAuthorQuery(super.authorId, this.pageRequest);
 
   @override
-  String toString() =>
-      "ListEventsByAuthorQuery [authorId: $authorId, $pageRequestLabel: $pageRequest]";
+  String toString() => "ListEventsByAuthorQuery [authorId: $authorId, $pageRequestLabel: $pageRequest]";
 }

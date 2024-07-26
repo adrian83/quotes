@@ -32,3 +32,5 @@ Simple CRUD application written in: Dart 2.17, Flutter 3 and Elasticsearch 7.12.
 ### Misc
 1. In case of problem with running Elsticsearch docker image please run: `sudo sysctl -w vm.max_map_count=262144`
 
+#### TODO
+1. Searching with empty (null) search phrase throws exception on backend.

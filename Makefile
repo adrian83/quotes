@@ -2,11 +2,8 @@
 docker:
 	sudo systemctl start docker
 
-compose-build:
-	sudo docker-compose build
-
 compose-up:
-	sudo docker-compose up
+	sudo docker-compose up --build
 
 
 deps:
@@ -15,7 +12,7 @@ deps:
 
 
 fe-format:
-	cd quotesfe && dart format -o write -l 80 --fix . && dart fix -n . && dart analyze
+	cd quotesfe && dart format -o write -l 180 --fix . && dart fix -n . && dart analyze
 
 fe-build:
 	echo "building frontend"
@@ -35,7 +32,7 @@ be-run:
 	dart quotesbe/bin/main.dart 
 
 be-format:
-	cd quotesbe && dart format -o write -l 80 --fix . && dart fix -n . && dart analyze
+	cd quotesbe && dart format -o write -l 180 --fix . && dart fix -n . && dart analyze
 
 be-get: 
 	echo "getting backend dependencies" 
