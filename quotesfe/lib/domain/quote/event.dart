@@ -1,6 +1,6 @@
-import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/domain/quote/model.dart';
+import 'package:quotes_common/domain/entity.dart';
 
 class QuoteEvent extends Quote {
   final String _eventId, _operation;
@@ -19,7 +19,7 @@ class QuoteEvent extends Quote {
 JsonDecoder<QuoteEvent> _quoteEventJsonDecoder = (Map<String, dynamic> json) => QuoteEvent.fromJson(json);
 
 class QuoteEventsPage extends Page<QuoteEvent> {
-  QuoteEventsPage(PageInfo info, List<QuoteEvent> elements) : super(info, elements);
+  QuoteEventsPage(super.info, super.elements);
 
   QuoteEventsPage.empty() : super(PageInfo(0, 0, 0), []);
 

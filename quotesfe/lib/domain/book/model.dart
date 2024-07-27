@@ -1,6 +1,6 @@
 import 'package:quotesfe/domain/common/page.dart';
-import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/tools/strings.dart';
+import 'package:quotes_common/domain/entity.dart';
 
 const fieldBookTitle = "title";
 const fieldBookDescription = "description";
@@ -32,7 +32,7 @@ class Book extends Entity {
 JsonDecoder<Book> _bookJsonDecoder = (Map<String, dynamic> json) => Book.fromJson(json);
 
 class BooksPage extends Page<Book> {
-  BooksPage(PageInfo info, List<Book> elements) : super(info, elements);
+  BooksPage(super.info, super.elements);
 
   BooksPage.empty() : super(PageInfo(0, 0, 0), []);
 

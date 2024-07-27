@@ -1,21 +1,21 @@
-DateTime nowUtc() => DateTime.now().toUtc();
+// DateTime nowUtc() => DateTime.now().toUtc();
 
-const fieldEntityId = "id";
-const fieldEntityModifiedUtc = "modifiedUtc";
-const fieldEntityCreatedUtc = "createdUtc";
+// const fieldEntityId = "id";
+// const fieldEntityModifiedUtc = "modifiedUtc";
+// const fieldEntityCreatedUtc = "createdUtc";
 
-const fieldEventId = "id";
-const fieldEventOperation = "operation";
-const fieldEventEntity = "entity";
-const fieldEventEventId = "eventId";
+// const fieldEventId = "id";
+// const fieldEventOperation = "operation";
+// const fieldEventEntity = "entity";
+// const fieldEventEventId = "eventId";
 
-class Entity {
-  final String? id;
-  final DateTime modifiedUtc, createdUtc;
+// class Entity {
+//   final String? id;
+//   final DateTime modifiedUtc, createdUtc;
 
-  Entity(this.id, this.modifiedUtc, this.createdUtc);
+//   Entity(this.id, this.modifiedUtc, this.createdUtc);
 
-  Entity.empty() : this(null, nowUtc(), nowUtc());
+//   Entity.empty() : this(null, nowUtc(), nowUtc());
 
-  Map toJson() => {fieldEntityId: id, fieldEntityModifiedUtc: modifiedUtc.toIso8601String(), fieldEntityCreatedUtc: createdUtc.toIso8601String()};
-}
+//   Map toJson() => {fieldEntityId: id, fieldEntityModifiedUtc: modifiedUtc.toIso8601String(), fieldEntityCreatedUtc: createdUtc.toIso8601String()};
+// }

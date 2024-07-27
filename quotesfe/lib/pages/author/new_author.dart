@@ -8,7 +8,7 @@ import 'package:quotesfe/widgets/common/entity_form.dart';
 class NewAuthorPage extends NewPage<Author, NewAuthorEntityForm> {
   final AuthorService _authorService;
 
-  const NewAuthorPage(Key? key, String title, this._authorService) : super(key, title);
+  const NewAuthorPage(super.key, super.title, this._authorService);
 
   AuthorService get authorService => _authorService;
 

@@ -1,6 +1,6 @@
 import 'package:quotesfe/domain/common/page.dart';
-import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/tools/strings.dart';
+import 'package:quotes_common/domain/entity.dart';
 
 const fieldAuthorName = "name";
 const fieldAuthorDescription = "description";
@@ -28,7 +28,7 @@ class Author extends Entity {
 JsonDecoder<Author> _authorJsonDecoder = (Map<String, dynamic> json) => Author.fromJson(json);
 
 class AuthorsPage extends Page<Author> {
-  AuthorsPage(PageInfo info, List<Author> elements) : super(info, elements);
+  AuthorsPage(super.info, super.elements);
 
   AuthorsPage.empty() : super(PageInfo(0, 0, 0), []);
 

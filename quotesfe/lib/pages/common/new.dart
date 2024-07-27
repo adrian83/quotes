@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/common/model.dart';
 import 'package:quotesfe/pages/common/page.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
+import 'package:quotes_common/domain/entity.dart';
 
 abstract class NewPage<T extends Entity, F extends EntityForm<T>> extends AbsPage {
-  const NewPage(Key? key, String title) : super(key, title);
+  const NewPage(super.key, super.title);
 
   @override
   State<NewPage<T, F>> createState() => _NewPageState<T, F>();

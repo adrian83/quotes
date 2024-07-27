@@ -30,6 +30,8 @@ dependencies:
   http: ^1.2.1
   uuid: ^4.3.3
   cupertino_icons: ^1.0.6
+  quotes_common:
+    path: ../quotes_common
 
 dev_dependencies:
   flutter_test:
