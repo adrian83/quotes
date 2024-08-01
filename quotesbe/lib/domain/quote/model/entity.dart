@@ -1,35 +1,25 @@
 import 'package:uuid/uuid.dart';
 
 import 'package:quotesbe/domain/common/model.dart';
+import 'package:quotesbe/domain/common/exception.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/quote.dart';
+import 'package:quotes_common/util/time.dart';
 
-var quoteTextLabel = "text";
-var quoteAuthorIdLabel = "authorId";
-var quoteBookIdLabel = "bookId";
 
-class Quote extends Entity {
-  String text, authorId, bookId;
+class QuoteDocument extends Quote implements EntityDocument {
+  QuoteDocument(super.id, super.text, super.authorId, super.bookId, super.modifiedUtc, super.createdUtc);
 
-  Quote(
-    String id,
-    this.text,
-    this.authorId,
-    this.bookId,
-    DateTime modifiedUtc,
-    DateTime createdUtc,
-  ) : super(id, modifiedUtc, createdUtc);
+  QuoteDocument.fromModel(Quote quote) : this(quote.id, quote.text, quote.authorId, quote.bookId, quote.modifiedUtc, quote.createdUtc);
 
-  Quote.create(this.text, this.authorId, this.bookId) : super.create();
-
-  Quote.update(String id, this.text, this.authorId, this.bookId) : super(id, nowUtc(), nowUtc());
-
-  Quote.fromJson(Map<String, dynamic> json)
+  QuoteDocument.fromJson(Map<String, dynamic> json)
       : this(
-          json[idLabel],
-          json[quoteTextLabel],
-          json[quoteAuthorIdLabel],
-          json[quoteBookIdLabel],
-          DateTime.parse(json[modifiedUtcLabel]),
-          DateTime.parse(json[createdUtcLabel]),
+          json[fieldEntityId],
+          json[fieldQuoteText],
+          json[fieldQuoteAuthorId],
+          json[fieldQuoteBookId],
+          DateTime.parse(json[fieldEntityModifiedUtc]),
+          DateTime.parse(json[fieldEntityCreatedUtc]),
         );
 
   @override
@@ -39,22 +29,22 @@ class Quote extends Entity {
   Map<dynamic, dynamic> toSave() => toJson();
 
   @override
-  Map<dynamic, dynamic> toUpdate() => toJson()..remove(createdUtcLabel);
+  Map<dynamic, dynamic> toUpdate() => toJson()..remove(fieldEntityCreatedUtc);
 
   @override
   Map<dynamic, dynamic> toJson() => super.toJson()
     ..addAll({
-      quoteTextLabel: text,
-      quoteAuthorIdLabel: authorId,
-      quoteBookIdLabel: bookId,
+      fieldQuoteText: text,
+      fieldQuoteAuthorId: authorId,
+      fieldQuoteBookId: bookId,
     });
 
   @override
   String toString() =>
-      "Quote [$idLabel: $id, $quoteTextLabel: $text, $quoteAuthorIdLabel: $authorId, $quoteBookIdLabel: $bookId, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
+      "Quote [$fieldEntityId: $id, $fieldQuoteText: $text, $fieldQuoteAuthorId: $authorId, $fieldQuoteBookId: $bookId, $fieldEntityModifiedUtc: $modifiedUtc, $fieldEntityCreatedUtc: $createdUtc]";
 }
 
-class QuoteEvent extends Event<Quote> {
+class QuoteEvent extends Event<QuoteDocument> implements EntityDocument {
   QuoteEvent(
     super.id,
     super.operation,
@@ -63,29 +53,29 @@ class QuoteEvent extends Event<Quote> {
     super.created,
   );
 
-  QuoteEvent.operation(Quote quote, String operation) : super(const Uuid().v4(), operation, quote, nowUtc(), nowUtc());
+  QuoteEvent.operation(QuoteDocument quote, String operation) : super(const Uuid().v4(), operation, quote, nowUtc(), nowUtc());
 
-  QuoteEvent.create(Quote quote) : this.operation(quote, Event.created);
+  QuoteEvent.create(QuoteDocument quote) : this.operation(quote, Event.created);
 
-  QuoteEvent.update(Quote quote) : this.operation(quote, Event.modified);
+  QuoteEvent.update(QuoteDocument quote) : this.operation(quote, Event.modified);
 
-  QuoteEvent.delete(Quote quote) : this.operation(quote, Event.deleted);
+  QuoteEvent.delete(QuoteDocument quote) : this.operation(quote, Event.deleted);
 
   QuoteEvent.fromJson(Map<String, dynamic> json)
       : super(
-          json[idLabel],
+          json[fieldEntityId],
           json[operationLabel],
-          Quote.fromJson(json[entityLabel]),
-          DateTime.parse(json[modifiedUtcLabel]),
-          DateTime.parse(json[createdUtcLabel]),
+          QuoteDocument.fromJson(json[entityLabel]),
+          DateTime.parse(json[fieldEntityModifiedUtc]),
+          DateTime.parse(json[fieldEntityCreatedUtc]),
         );
 
   @override
   Map<dynamic, dynamic> toJson() => {
-        idLabel: id,
+        fieldEntityId: id,
         operationLabel: operation,
-        modifiedUtcLabel: modifiedUtc.toIso8601String(),
-        createdUtcLabel: createdUtc.toIso8601String(),
+        fieldEntityModifiedUtc: modifiedUtc.toIso8601String(),
+        fieldEntityCreatedUtc: createdUtc.toIso8601String(),
         entityLabel: entity.toJson(),
       };
 
@@ -94,5 +84,11 @@ class QuoteEvent extends Event<Quote> {
 
   @override
   String toString() =>
-      "QuoteEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
+      "QuoteEvent [$fieldEntityId: $id, $operationLabel: $operation, $fieldEntityModifiedUtc: $modifiedUtc, $fieldEntityCreatedUtc: $createdUtc, $entityLabel: ${entity.toString()}]";
+
+  @override
+  Map toSave() => toJson();
+
+  @override
+  Map toUpdate() => throw EventModificationException();
 }

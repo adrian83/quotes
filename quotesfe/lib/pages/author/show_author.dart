@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/domain/author/service.dart';
 import 'package:quotesfe/domain/book/service.dart';
 import 'package:quotesfe/pages/common/show.dart';
 import 'package:quotesfe/paths.dart';
 import 'package:quotesfe/widgets/author/author_books.dart';
 import 'package:quotesfe/widgets/author/list_entry.dart';
+import 'package:quotes_common/domain/author.dart';
 
 AuthorEntry authorToWidget(Author a) => AuthorEntry(null, a, null, true, true, false, true);
 

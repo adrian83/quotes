@@ -54,11 +54,7 @@ class BookController {
     return _bookService.save(command).then((author) => jsonResponseOk(author)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
-  Future<Response> update(
-    Request request,
-    String authorId,
-    String bookId,
-  ) async {
+  Future<Response> update(Request request, String authorId, String bookId) async {
     var json = jsonDecode(await request.readAsString()) as Map;
 
     var violations = validate(updateBookValidationRules, json);
@@ -78,11 +74,7 @@ class BookController {
   Future<Response> delete(Request request, String authorId, String bookId) =>
       _bookService.delete(DeleteBookCommand(authorId, bookId)).then((_) => emptyResponseOk()).onError<Exception>((error, stackTrace) => handleError(error));
 
-  Future<Response> listEvents(
-    Request request,
-    String authorId,
-    String bookId,
-  ) async {
+  Future<Response> listEvents(Request request, String authorId, String bookId) async {
     var query = ListEventsByBookQuery(authorId, bookId, extractPageRequest(request));
     return await _bookService.listEvents(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
   }

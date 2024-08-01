@@ -2,11 +2,11 @@ import 'dart:async';
 
 import 'package:http/browser_client.dart';
 
-import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/domain/author/event.dart';
 import 'package:quotesfe/domain/common/service.dart';
-import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/tools/config.dart';
+import 'package:quotes_common/domain/author.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class AuthorService extends Service<Author> {
   final String _apiHost;

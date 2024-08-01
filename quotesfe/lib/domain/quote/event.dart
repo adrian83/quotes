@@ -1,6 +1,6 @@
-import 'package:quotesfe/domain/common/page.dart';
-import 'package:quotesfe/domain/quote/model.dart';
 import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/quote.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class QuoteEvent extends Quote {
   final String _eventId, _operation;

@@ -1,6 +1,7 @@
 import 'package:shelf/shelf.dart';
 
 import 'package:quotesbe/domain/common/model.dart';
+import 'package:quotes_common/domain/page.dart';
 
 const defaultLimit = 2;
 const defaultOffset = 0;

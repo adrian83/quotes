@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/quote/model.dart';
 import 'package:quotesfe/domain/quote/service.dart';
 import 'package:quotesfe/pages/common/show.dart';
 import 'package:quotesfe/widgets/quote/list_entry.dart';
+import 'package:quotes_common/domain/quote.dart';
 
 QuoteEntry quoteToWidget(Quote q) => QuoteEntry(null, q, null, true, true, false, true);
 

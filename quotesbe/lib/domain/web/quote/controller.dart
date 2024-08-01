@@ -32,21 +32,13 @@ class QuoteController {
     return _quoteService.findQuotes(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
-  Future<Response> searchBookQuotes(
-    Request request,
-    String authorId,
-    String bookId,
-  ) async {
+  Future<Response> searchBookQuotes(Request request, String authorId, String bookId) async {
     var query = ListQuotesFromBookQuery(authorId, bookId, extractPageRequest(request));
 
     return _quoteService.findBookQuotes(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
   }
 
-  Future<Response> store(
-    Request request,
-    String authorId,
-    String bookId,
-  ) async {
+  Future<Response> store(Request request, String authorId, String bookId) async {
     var json = jsonDecode(await request.readAsString()) as Map;
 
     var violations = validate(newQuoteValidationRules, json);
@@ -95,21 +87,15 @@ class QuoteController {
   ) =>
       _quoteService.delete(DeleteQuoteCommand(authorId, bookId, quoteId)).then((_) => emptyResponseOk()).onError<Exception>((error, stackTrace) => handleError(error));
 
-  Future<Response> listEvents(
-    Request request,
-    String authorId,
-    String bookId,
-    String quoteId,
-  ) =>
-      _quoteService
-          .listEvents(
-            ListEventsByQuoteQuery(
-              authorId,
-              bookId,
-              quoteId,
-              extractPageRequest(request),
-            ),
-          )
-          .then((page) => jsonResponseOk(page))
-          .onError<Exception>((error, stackTrace) => handleError(error));
+  Future<Response> listEvents(Request request, String authorId, String bookId, String quoteId) => _quoteService
+      .listEvents(
+        ListEventsByQuoteQuery(
+          authorId,
+          bookId,
+          quoteId,
+          extractPageRequest(request),
+        ),
+      )
+      .then((page) => jsonResponseOk(page))
+      .onError<Exception>((error, stackTrace) => handleError(error));
 }

@@ -2,18 +2,17 @@ import 'dart:async';
 
 import 'package:http/browser_client.dart';
 
-import 'package:quotesfe/domain/quote/model.dart';
 import 'package:quotesfe/domain/quote/event.dart';
 import 'package:quotesfe/domain/common/service.dart';
-import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/tools/config.dart';
+import 'package:quotes_common/domain/quote.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class QuoteService extends Service<Quote> {
   final String apiHost;
 
-  QuoteService(BrowserClient http, Config config)
-      : apiHost = config.apiHost,
-        super(http);
+  QuoteService(BrowserClient super.http, Config config)
+      : apiHost = config.apiHost;
 
   Future<QuotesPage> listBookQuotes(String authorId, String bookId, PageRequest request) {
     var urlParams = pageRequestToUrlParams(request);

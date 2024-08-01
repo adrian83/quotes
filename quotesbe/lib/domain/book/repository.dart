@@ -8,38 +8,33 @@ import 'package:quotesbe/domain/book/model/query.dart';
 import 'package:quotesbe/domain/common/repository.dart';
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 import 'package:quotesbe/storage/elasticsearch/search.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/book.dart';
+import 'package:quotes_common/domain/page.dart';
 
-Decoder<Book> bookDecoder = (Map<String, dynamic> json) => Book.fromJson(json);
+Decoder<BookDocument> bookDecoder = (Map<String, dynamic> json) => BookDocument.fromJson(json);
 
-class BookRepository extends Repository<Book> {
+class BookRepository extends Repository<BookDocument> {
   final Logger _logger = Logger('BookRepository');
 
-  BookRepository(ESStore<Book> store) : super(store, bookDecoder);
+  BookRepository(ESStore<BookDocument> store) : super(store, bookDecoder);
 
-  Future<Page<Book>> findAuthorBooks(ListBooksByAuthorQuery query) async {
+  Future<Page<BookDocument>> findAuthorBooks(ListBooksByAuthorQuery query) async {
     _logger.info("find author books by query: $query");
-    var matchQuery = MatchQuery(bookAuthorIdLabel, query.authorId);
-    return await findDocuments(
-      matchQuery,
-      query.pageRequest,
-      sorting: sortingByModifiedTimeDesc,
-    );
+    var matchQuery = MatchQuery(fieldBookAuthorId, query.authorId);
+    return await findDocuments(matchQuery, query.pageRequest, sorting: sortingByModifiedTimeDesc);
   }
 
   Future<Page<Book>> findBooks(SearchQuery query) async {
     _logger.info("find books by query: $query");
     var searchPhrase = query.searchPhrase ?? "";
-    var wildcardQuery = WildcardQuery(bookTitleLabel, searchPhrase);
-    return findDocuments(
-      wildcardQuery,
-      query.pageRequest,
-      sorting: sortingByModifiedTimeDesc,
-    );
+    var wildcardQuery = WildcardQuery(fieldBookTitle, searchPhrase);
+    return findDocuments(wildcardQuery, query.pageRequest, sorting: sortingByModifiedTimeDesc);
   }
 
   Future<void> deleteByAuthor(String authorId) async {
     _logger.info("delete books by author with id: $authorId");
-    var query = JustQuery(MatchQuery(bookAuthorIdLabel, authorId));
+    var query = JustQuery(MatchQuery(fieldBookAuthorId, authorId));
     await deleteDocuments(query);
     return;
   }
@@ -50,8 +45,8 @@ Decoder<BookEvent> bookEventDecoder = (Map<String, dynamic> json) => BookEvent.f
 class BookEventRepository extends Repository<BookEvent> {
   final Logger _logger = Logger('BookEventRepository');
 
-  final String _authorIdProp = "$entityLabel.$bookAuthorIdLabel";
-  final String _bookIdProp = "$entityLabel.$idLabel";
+  final String _authorIdProp = "$entityLabel.$fieldBookAuthorId";
+  final String _bookIdProp = "$entityLabel.$fieldEntityId";
 
   BookEventRepository(ESStore<BookEvent> store) : super(store, bookEventDecoder);
 
@@ -86,19 +81,19 @@ class BookEventRepository extends Repository<BookEvent> {
     );
   }
 
-  Future<void> storeSaveBookEvent(Book book) async {
+  Future<void> storeSaveBookEvent(BookDocument book) async {
     _logger.info("save book event (save) for book: $book");
     await save(BookEvent.create(book));
     return;
   }
 
-  Future<void> storeUpdateBookEvent(Book book) async {
+  Future<void> storeUpdateBookEvent(BookDocument book) async {
     _logger.info("save book event (update) for book: $book");
     await save(BookEvent.update(book));
     return;
   }
 
-  Future<void> storeDeleteBookEvent(Book book) async {
+  Future<void> storeDeleteBookEvent(BookDocument book) async {
     _logger.info("save book event (delete) for book: $book");
     await save(BookEvent.delete(book));
     return;

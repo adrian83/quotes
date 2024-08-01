@@ -32,6 +32,7 @@ be-run:
 	dart quotesbe/bin/main.dart 
 
 be-format:
+	cd quotes_common && dart format -o write -l 180 --fix . && dart fix -n . && dart analyze
 	cd quotesbe && dart format -o write -l 180 --fix . && dart fix -n . && dart analyze
 
 be-get: 

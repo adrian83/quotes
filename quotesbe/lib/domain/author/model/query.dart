@@ -1,4 +1,5 @@
 import 'package:quotesbe/domain/common/model.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class FindAuthorQuery {
   final String authorId;

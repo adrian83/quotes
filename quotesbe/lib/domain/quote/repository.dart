@@ -8,17 +8,20 @@ import 'package:quotesbe/domain/quote/model/query.dart';
 import 'package:quotesbe/domain/common/repository.dart';
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 import 'package:quotesbe/storage/elasticsearch/search.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/quote.dart';
+import 'package:quotes_common/domain/page.dart';
 
-Decoder<Quote> quoteDecoder = (Map<String, dynamic> json) => Quote.fromJson(json);
+Decoder<QuoteDocument> quoteDecoder = (Map<String, dynamic> json) => QuoteDocument.fromJson(json);
 
-class QuoteRepository extends Repository<Quote> {
+class QuoteRepository extends Repository<QuoteDocument> {
   final Logger _logger = Logger('QuoteRepository');
 
-  QuoteRepository(ESStore<Quote> store) : super(store, quoteDecoder);
+  QuoteRepository(ESStore<QuoteDocument> store) : super(store, quoteDecoder);
 
   Future<Page<Quote>> findBookQuotes(ListQuotesFromBookQuery query) async {
     _logger.info("find quotes from book by query: $query");
-    var matchQuery = MatchQuery(quoteBookIdLabel, query.bookId);
+    var matchQuery = MatchQuery(fieldQuoteBookId, query.bookId);
     return await findDocuments(
       matchQuery,
       query.pageRequest,
@@ -29,7 +32,7 @@ class QuoteRepository extends Repository<Quote> {
   Future<Page<Quote>> findQuotes(SearchQuery request) async {
     _logger.info("find quotes by request: $request");
     var searchPhrase = request.searchPhrase ?? "";
-    var wildcardQuery = WildcardQuery(quoteTextLabel, searchPhrase);
+    var wildcardQuery = WildcardQuery(fieldQuoteText, searchPhrase);
     return await findDocuments(
       wildcardQuery,
       request.pageRequest,
@@ -39,14 +42,14 @@ class QuoteRepository extends Repository<Quote> {
 
   Future<void> deleteByAuthor(String authorId) async {
     _logger.info("delete books by author with id: $authorId");
-    var query = JustQuery(MatchQuery(quoteAuthorIdLabel, authorId));
+    var query = JustQuery(MatchQuery(fieldQuoteAuthorId, authorId));
     await deleteDocuments(query);
     return;
   }
 
   Future<void> deleteByBook(String bookId) async {
     _logger.info("delete quotes by book with id: $bookId");
-    var query = JustQuery(MatchQuery(quoteBookIdLabel, bookId));
+    var query = JustQuery(MatchQuery(fieldQuoteBookId, bookId));
     await deleteDocuments(query);
     return;
   }
@@ -57,25 +60,25 @@ Decoder<QuoteEvent> quoteEventDecoder = (Map<String, dynamic> json) => QuoteEven
 class QuoteEventRepository extends Repository<QuoteEvent> {
   final Logger _logger = Logger('QuoteRepository');
 
-  final String _authorIdProp = "$entityLabel.$quoteAuthorIdLabel";
-  final String _bookIdProp = "$entityLabel.$quoteBookIdLabel";
-  final String _quoteIdProp = "$entityLabel.$idLabel";
+  final String _authorIdProp = "$entityLabel.$fieldQuoteAuthorId";
+  final String _bookIdProp = "$entityLabel.$fieldQuoteBookId";
+  final String _quoteIdProp = "$entityLabel.$fieldEntityId";
 
   QuoteEventRepository(ESStore<QuoteEvent> store) : super(store, quoteEventDecoder);
 
-  Future<void> storeSaveQuoteEvent(Quote quote) async {
+  Future<void> storeSaveQuoteEvent(QuoteDocument quote) async {
     _logger.info("save quote event (save) for quote: $quote");
     await save(QuoteEvent.create(quote));
     return;
   }
 
-  Future<void> storeUpdateQuoteEvent(Quote quote) async {
+  Future<void> storeUpdateQuoteEvent(QuoteDocument quote) async {
     _logger.info("save quote event (update) for book: $quote");
     await save(QuoteEvent.update(quote));
     return;
   }
 
-  Future<void> storeDeleteQuoteEvent(Quote quote) async {
+  Future<void> storeDeleteQuoteEvent(QuoteDocument quote) async {
     _logger.info("save quote event (delete) for book: $quote");
     await save(QuoteEvent.delete(quote));
     return;
@@ -87,7 +90,7 @@ class QuoteEventRepository extends Repository<QuoteEvent> {
     var page = await super.findDocuments(
       matchQuery,
       PageRequest.first(),
-      sorting: SortElement.desc(modifiedUtcLabel),
+      sorting: SortElement.desc(fieldEntityModifiedUtc),
     );
     return storeDeleteQuoteEvent(page.elements.first.entity);
   }
@@ -116,7 +119,7 @@ class QuoteEventRepository extends Repository<QuoteEvent> {
     return await super.findDocuments(
       matchQuery,
       query.pageRequest,
-      sorting: SortElement.asc(createdUtcLabel),
+      sorting: SortElement.asc(fieldEntityCreatedUtc),
     );
   }
 }

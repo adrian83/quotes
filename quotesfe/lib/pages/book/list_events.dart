@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/book/event.dart';
 import 'package:quotesfe/domain/book/service.dart';
-import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/pages/common/events.dart';
-import 'package:quotesfe/domain/common/page.dart' as p;
+import 'package:quotes_common/domain/page.dart' as pg;
 
 class ListBookEventsPage extends ListEventsPage<BookEvent> {
   final BookService _bookService;
   final String _authorId, _bookId;
 
-  const ListBookEventsPage(Key? key, String title, this._authorId, this._bookId, this._bookService) : super(key, title);
+  const ListBookEventsPage(super.key, super.title, this._authorId, this._bookId, this._bookService);
 
   @override
   List<String> columns() => ["Event Id", "Operation", "Book title", "Book desc", "Book created", "Book modified"];
@@ -26,5 +25,5 @@ class ListBookEventsPage extends ListEventsPage<BookEvent> {
       ];
 
   @override
-  Future<p.Page<BookEvent>> getPage(PageRequest pageReq) => _bookService.listEvents(_authorId, _bookId, pageReq);
+  Future<pg.Page<BookEvent>> getPage(pg.PageRequest pageReq) => _bookService.listEvents(_authorId, _bookId, pageReq);
 }

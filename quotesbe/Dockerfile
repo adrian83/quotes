@@ -1,8 +1,12 @@
 FROM dart:3.3
 
-ADD . /quotesbe/
-WORKDIR /quotesbe
 
+COPY ./quotes_common /quotes_common
+WORKDIR /quotes_common
+RUN dart pub get
+
+COPY ./quotesbe /quotesbe
+WORKDIR /quotesbe
 RUN dart pub get
 RUN dart compile exe bin/main.dart -o bin/server
 

@@ -8,6 +8,7 @@ import 'package:quotesbe/domain/author/repository.dart';
 import 'package:quotesbe/domain/author/repository_test.mocks.dart';
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 import 'package:quotesbe/storage/elasticsearch/response.dart';
+import 'package:quotes_common/domain/page.dart';
 
 var author1Json = {
   "id": "rwe-wer",
@@ -25,11 +26,11 @@ var author2Json = {
   "createdUtc": "2011-10-05T14:48:00.000Z",
 };
 
-@GenerateMocks([ESStore<Author>])
+@GenerateMocks([ESStore<AuthorDocument>])
 void main() {
-  test("save should find page of authors", () async {
+  test("should find page of authors", () async {
     // given
-    var authorStoreMock = MockESStore<Author>();
+    var authorStoreMock = MockESStore<AuthorDocument>();
     var authorRepository = AuthorRepository(authorStoreMock);
 
     var request = SearchQuery("test", PageRequest(0, 5));

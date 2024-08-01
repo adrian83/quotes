@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/quote/model.dart';
 import 'package:quotesfe/widgets/common/list_entry.dart';
 import 'package:quotesfe/paths.dart';
+import 'package:quotes_common/domain/quote.dart';
 
 class QuoteEntry extends ListEntry {
   final Quote _quote;
@@ -21,7 +21,7 @@ class QuoteEntry extends ListEntry {
   String eventsPageUrl() => listQuoteEventsPath(_quote);
 
   @override
-  String getId() => _quote.id!;
+  String getId() => _quote.id;
 
   @override
   List<Widget> widgets(BuildContext context) {

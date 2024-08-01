@@ -5,7 +5,6 @@ import 'package:logging/logging.dart';
 
 import 'package:quotesbe/web/server.dart';
 import 'package:quotesbe/web/handler.dart';
-
 import 'package:quotesbe/domain/author/model/entity.dart';
 import 'package:quotesbe/domain/author/repository.dart';
 import 'package:quotesbe/domain/author/service.dart';
@@ -18,7 +17,6 @@ import 'package:quotesbe/domain/quote/service.dart';
 import 'package:quotesbe/domain/web/author/controller.dart';
 import 'package:quotesbe/domain/web/book/controller.dart';
 import 'package:quotesbe/domain/web/quote/controller.dart';
-
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 
 const healthCheckPath = "/health";
@@ -60,9 +58,7 @@ class Config {
 
   String get elasticsearchHost => Platform.environment["ELASTICSEARCH_HOST"] ?? _defElasticsearchHost;
 
-  int get elasticsearchPort => int.parse(
-        Platform.environment["ELASTICSEARCH_PORT"] ?? _defElasticsearchPort,
-      );
+  int get elasticsearchPort => int.parse(Platform.environment["ELASTICSEARCH_PORT"] ?? _defElasticsearchPort);
 
   String get elasticsearchAuthorIndex => Platform.environment["ELASTICSEARCH_AUTHOR_INDEX"] ?? _defElasticsearchAuthorIndex;
 
@@ -96,48 +92,18 @@ Future<void> main() async {
 
   HttpClient client = HttpClient();
 
-  var authorEsStore = ESStore<Author>(
-    client,
-    elasticsearchHost,
-    elasticsearchPort,
-    authorIndex,
-  );
-
-  var authorEventsEsStore = ESStore<AuthorEvent>(
-    client,
-    elasticsearchHost,
-    elasticsearchPort,
-    authorEventsIndex,
-  );
-
-  var bookEsStore = ESStore<Book>(client, elasticsearchHost, elasticsearchPort, bookIndex);
-
-  var bookEventsEsStore = ESStore<BookEvent>(
-    client,
-    elasticsearchHost,
-    elasticsearchPort,
-    bookEventsIndex,
-  );
-
-  var quoteEsStore = ESStore<Quote>(client, elasticsearchHost, elasticsearchPort, quoteIndex);
-
-  var quoteEventsEsStore = ESStore<QuoteEvent>(
-    client,
-    elasticsearchHost,
-    elasticsearchPort,
-    quoteEventsIndex,
-  );
+  var authorEsStore = ESStore<AuthorDocument>(client, elasticsearchHost, elasticsearchPort, authorIndex);
+  var authorEventsEsStore = ESStore<AuthorEvent>(client, elasticsearchHost, elasticsearchPort, authorEventsIndex);
+  var bookEsStore = ESStore<BookDocument>(client, elasticsearchHost, elasticsearchPort, bookIndex);
+  var bookEventsEsStore = ESStore<BookEvent>(client, elasticsearchHost, elasticsearchPort, bookEventsIndex);
+  var quoteEsStore = ESStore<QuoteDocument>(client, elasticsearchHost, elasticsearchPort, quoteIndex);
+  var quoteEventsEsStore = ESStore<QuoteEvent>(client, elasticsearchHost, elasticsearchPort, quoteEventsIndex);
 
   var authorRepository = AuthorRepository(authorEsStore);
-
   var authorEventsRepository = AuthorEventRepository(authorEventsEsStore);
-
   var bookRepository = BookRepository(bookEsStore);
-
   var bookEventsRepository = BookEventRepository(bookEventsEsStore);
-
   var quoteRepository = QuoteRepository(quoteEsStore);
-
   var quoteEventsRepository = QuoteEventRepository(quoteEventsEsStore);
 
   var authorService = AuthorService(

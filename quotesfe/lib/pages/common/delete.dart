@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:quotesfe/pages/common/page.dart';
 
 abstract class DeletePage extends AbsPage {
-  const DeletePage(Key? key, String title) : super(key, title);
+  const DeletePage(super.key, super.title);
 
   @override
   State<DeletePage> createState() => _DeletePageState();

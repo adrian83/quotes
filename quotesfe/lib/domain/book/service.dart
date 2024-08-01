@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:http/browser_client.dart';
 import 'package:quotesfe/domain/book/event.dart';
-import 'package:quotesfe/domain/book/model.dart';
-import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/domain/common/service.dart';
 import 'package:quotesfe/tools/config.dart';
+import 'package:quotes_common/domain/book.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class BookService extends Service<Book> {
   final String _apiHost;
 
-  BookService(BrowserClient http, Config config)
-      : _apiHost = config.apiHost,
-        super(http);
+  BookService(BrowserClient super.http, Config config)
+      : _apiHost = config.apiHost;
 
   Future<BooksPage> listAuthorBooks(String authorId, PageRequest request) {
     var urlParams = pageRequestToUrlParams(request);

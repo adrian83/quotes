@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/common/page.dart' as qpage;
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/page.dart' as qpage;
 import 'package:quotesfe/widgets/paging.dart';
 
-typedef PageChangeAction<E> = Future<qpage.Page<E>> Function(qpage.PageRequest);
+typedef PageChangeAction<E extends Entity> = Future<qpage.Page<E>> Function(qpage.PageRequest);
 typedef ToEntryTransformer<A, E> = E Function(A);
 
 typedef OnDeleteAction<E> = Future<void> Function(E);
@@ -11,7 +12,7 @@ typedef EditEntityUrl<E> = String Function(E);
 
 typedef ErrorHandler = Function(Object);
 
-class PageEntry<ENTITY, PAGE extends qpage.Page<ENTITY>, ENTRY extends Widget> extends StatefulWidget {
+class PageEntry<ENTITY extends Entity, PAGE extends qpage.Page<ENTITY>, ENTRY extends Widget> extends StatefulWidget {
   final String _label;
   final PageChangeAction<ENTITY> _pageChangeAction;
   final ToEntryTransformer<ENTITY, ENTRY> _toEntryTransformer;
@@ -23,7 +24,7 @@ class PageEntry<ENTITY, PAGE extends qpage.Page<ENTITY>, ENTRY extends Widget> e
   State<PageEntry<ENTITY, PAGE, ENTRY>> createState() => _PageEntryState<ENTITY, PAGE, ENTRY>();
 }
 
-class _PageEntryState<ENTITY, PAGE extends qpage.Page<ENTITY>, ENTRY extends Widget> extends State<PageEntry<ENTITY, PAGE, ENTRY>> {
+class _PageEntryState<ENTITY extends Entity, PAGE extends qpage.Page<ENTITY>, ENTRY extends Widget> extends State<PageEntry<ENTITY, PAGE, ENTRY>> {
   final int _pageSize = 2;
 
   Pagination _pagination = Pagination.empty(null);

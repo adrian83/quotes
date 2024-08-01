@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/quote/model.dart';
 import 'package:quotesfe/domain/quote/service.dart';
 import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/quote.dart';
 
 class NewQuotePage extends NewPage<Quote, NewQuoteEntityForm> {
   final String _authorId, _bookId;
   final QuoteService _quoteService;
 
-  const NewQuotePage(Key? key, String title, this._authorId, this._bookId, this._quoteService) : super(key, title);
+  const NewQuotePage(super.key, super.title, this._authorId, this._bookId, this._quoteService);
 
   String get bookId => _bookId;
   String get authorId => _authorId;
@@ -19,7 +20,7 @@ class NewQuotePage extends NewPage<Quote, NewQuoteEntityForm> {
   NewQuoteEntityForm createEntityForm(BuildContext context, Quote? entity) => NewQuoteEntityForm(_authorId, _bookId, entity);
 
   @override
-  Future<Quote> persist(Quote entity) => entity.id == null ? _quoteService.create(entity) : _quoteService.update(entity);
+  Future<Quote> persist(Quote entity) => entity.id == emptyId ? _quoteService.create(entity) : _quoteService.update(entity);
 
   @override
   String successMessage() => "Quote created";
@@ -41,7 +42,7 @@ class NewQuoteEntityForm extends EntityForm<Quote> {
   }
 
   @override
-  Quote createEntity() => Quote(_quote?.id, _textController.text, _authorId, _bookId, DateTime.now(), DateTime.now());
+  Quote createEntity() => Quote(_quote?.id ?? emptyId, _textController.text, _authorId, _bookId, DateTime.now(), DateTime.now());
 
   @override
   Form createForm(BuildContext context, Function()? action) => Form(

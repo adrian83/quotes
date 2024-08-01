@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/author/model.dart';
-import 'package:quotesfe/domain/book/model.dart';
-import 'package:quotesfe/domain/quote/model.dart';
 import 'package:quotesfe/domain/author/service.dart';
 import 'package:quotesfe/domain/book/service.dart';
 import 'package:quotesfe/domain/quote/service.dart';
-import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/widgets/quote/list_entry.dart';
 import 'package:quotesfe/widgets/quote/page_entry.dart';
 import 'package:quotesfe/widgets/author/list_entry.dart';
@@ -15,6 +11,10 @@ import 'package:quotesfe/widgets/book/list_entry.dart';
 import 'package:quotesfe/widgets/book/page_entry.dart';
 import 'package:quotesfe/pages/common/page.dart';
 import 'package:quotesfe/paths.dart';
+import 'package:quotes_common/domain/page.dart';
+import 'package:quotes_common/domain/author.dart';
+import 'package:quotes_common/domain/book.dart';
+import 'package:quotes_common/domain/quote.dart';
 
 class SearchPage extends AbsPage {
   final AuthorService _authorService;
@@ -22,7 +22,7 @@ class SearchPage extends AbsPage {
   final QuoteService _quoteService;
   final String searchPhrase;
 
-  const SearchPage(Key key, String title, this._authorService, this._bookService, this._quoteService, this.searchPhrase) : super(key, title);
+  const SearchPage(Key super.key, super.title, this._authorService, this._bookService, this._quoteService, this.searchPhrase);
 
   @override
   State<SearchPage> createState() => _SearchPageState<SearchPage>();

@@ -1,7 +1,7 @@
-import 'package:quotesfe/domain/author/model.dart';
-import 'package:quotesfe/domain/book/model.dart';
-import 'package:quotesfe/domain/quote/model.dart';
 import 'package:quotesfe/domain/common/service.dart';
+import 'package:quotes_common/domain/author.dart';
+import 'package:quotes_common/domain/book.dart';
+import 'package:quotes_common/domain/quote.dart';
 
 // AUTHORS
 

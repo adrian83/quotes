@@ -1,6 +1,7 @@
 import 'package:uuid/uuid.dart';
 
-import 'package:quotesbe/domain/book/model/entity.dart';
+import 'package:quotes_common/domain/book.dart';
+import 'package:quotes_common/util/time.dart';
 
 class DeleteBookCommand {
   final String authorId, bookId;
@@ -13,14 +14,7 @@ class NewBookCommand {
 
   NewBookCommand(this.authorId, this.title, this.description);
 
-  Book toBook() => Book(
-        const Uuid().v4(),
-        title,
-        description,
-        authorId,
-        DateTime.now(),
-        DateTime.now(),
-      );
+  Book toBook() => Book(const Uuid().v4(), title, description, authorId, nowUtc(), nowUtc());
 }
 
 class UpdateBookCommand extends NewBookCommand {
@@ -34,12 +28,5 @@ class UpdateBookCommand extends NewBookCommand {
   ) : super(authorId, title, description);
 
   @override
-  Book toBook() => Book(
-        bookId,
-        title,
-        description,
-        authorId,
-        DateTime.now(),
-        DateTime.now(),
-      );
+  Book toBook() => Book(bookId, title, description, authorId, nowUtc(), nowUtc());
 }

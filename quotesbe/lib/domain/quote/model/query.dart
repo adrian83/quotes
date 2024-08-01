@@ -1,4 +1,4 @@
-import 'package:quotesbe/domain/common/model.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class FindQuoteQuery {
   final String authorId, bookId, quoteId;

@@ -1,6 +1,6 @@
-import 'package:quotesfe/domain/author/model.dart';
-import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/author.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class AuthorEvent extends Author {
   final String _eventId, _operation;
