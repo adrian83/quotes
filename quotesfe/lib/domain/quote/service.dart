@@ -11,8 +11,7 @@ import 'package:quotes_common/domain/page.dart';
 class QuoteService extends Service<Quote> {
   final String apiHost;
 
-  QuoteService(BrowserClient super.http, Config config)
-      : apiHost = config.apiHost;
+  QuoteService(BrowserClient super.http, Config config) : apiHost = config.apiHost;
 
   Future<QuotesPage> listBookQuotes(String authorId, String bookId, PageRequest request) {
     var urlParams = pageRequestToUrlParams(request);

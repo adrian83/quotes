@@ -1,4 +1,5 @@
 import 'package:quotes_common/util/strings.dart';
+import 'package:quotes_common/util/time.dart';
 import 'package:quotes_common/domain/entity.dart';
 import 'package:quotes_common/domain/page.dart';
 
@@ -15,8 +16,8 @@ class Book extends Entity {
   Book(String id, this._title, this._description, this._authorId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
 
   Book.fromJson(Map<String, dynamic> json)
-      : this(json[fieldEntityId], json[fieldBookTitle], json[fieldBookDescription], json[fieldBookAuthorId], DateTime.parse(json[fieldEntityModifiedUtc]),
-            DateTime.parse(json[fieldEntityCreatedUtc]));
+      : this(json[fieldEntityId], json[fieldBookTitle], json[fieldBookDescription], json[fieldBookAuthorId], fromString(json[fieldEntityModifiedUtc]),
+            fromString(json[fieldEntityCreatedUtc]));
 
   String get title => _title;
   String get authorId => _authorId;

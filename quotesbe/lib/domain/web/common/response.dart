@@ -1,3 +1,4 @@
+import 'package:quotesbe/web/error.dart';
 import 'package:shelf/shelf.dart';
 
 import 'package:logging/logging.dart';
@@ -16,6 +17,9 @@ Response handleError(Exception ex) {
     return responseInternalError();
   } else if (ex is DocFindFailedException) {
     return responseNotFound();
+  } else if (ex is ValidationException) {
+    return responseBadRequest(ex.violations);
   }
+
   return responseInternalError();
 }

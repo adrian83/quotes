@@ -10,8 +10,7 @@ import 'package:quotes_common/domain/page.dart';
 class BookService extends Service<Book> {
   final String _apiHost;
 
-  BookService(BrowserClient super.http, Config config)
-      : _apiHost = config.apiHost;
+  BookService(BrowserClient super.http, Config config) : _apiHost = config.apiHost;
 
   Future<BooksPage> listAuthorBooks(String authorId, PageRequest request) {
     var urlParams = pageRequestToUrlParams(request);

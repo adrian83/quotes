@@ -4,7 +4,6 @@ import 'package:quotesfe/domain/quote/service.dart';
 import 'package:quotesfe/pages/quote/new_quote.dart';
 import 'package:quotes_common/domain/quote.dart';
 
-
 class UpdateQuotePage extends NewQuotePage {
   final String _quoteId;
 

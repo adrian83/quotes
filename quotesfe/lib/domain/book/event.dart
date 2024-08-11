@@ -2,7 +2,6 @@ import 'package:quotes_common/domain/entity.dart';
 import 'package:quotes_common/domain/book.dart';
 import 'package:quotes_common/domain/page.dart';
 
-
 class BookEvent extends Book {
   final String _eventId, _operation;
 

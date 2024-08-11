@@ -1,7 +1,7 @@
 import 'package:quotesbe/storage/elasticsearch/document.dart';
 import 'package:quotes_common/domain/entity.dart';
 import 'package:quotes_common/domain/page.dart';
-
+import 'package:quotes_common/util/time.dart';
 
 const eventIdLabel = 'eventId';
 const operationLabel = 'operation';
@@ -16,7 +16,7 @@ const fieldEventEventId = "eventId";
 
 DateTime temporary(dynamic json, String field) {
   var v = json[field];
-  return v == null ? DateTime.now() : DateTime.parse(v);
+  return v == null ? DateTime.now() : fromString(v);
 }
 
 abstract class EntityDocument extends Entity implements Document {
@@ -38,7 +38,8 @@ abstract class Event<T extends EntityDocument> extends EntityDocument {
   ) : super(id, modifiedUtc, createdUtc);
 
   @override
-  String toString() => "Event [$fieldEntityId: $id, $operationLabel: $operation, $fieldEntityModifiedUtc: $modifiedUtc, $fieldEntityCreatedUtc: $createdUtc, $entityLabel: $entity]";
+  String toString() =>
+      "Event [$fieldEntityId: $id, $operationLabel: $operation, $fieldEntityModifiedUtc: $modifiedUtc, $fieldEntityCreatedUtc: $createdUtc, $entityLabel: $entity]";
 }
 
 class SearchQuery {

@@ -63,8 +63,8 @@ class BookEvent extends Event<BookDocument> implements EntityDocument {
           json[fieldEntityId],
           json[operationLabel],
           BookDocument.fromJson(json[entityLabel]),
-          DateTime.parse(json[fieldEntityModifiedUtc]),
-          DateTime.parse(json[fieldEntityCreatedUtc]),
+          fromString(json[fieldEntityModifiedUtc]),
+          fromString(json[fieldEntityCreatedUtc]),
         );
 
   @override

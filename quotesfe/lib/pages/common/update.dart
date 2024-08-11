@@ -4,7 +4,6 @@ import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
 import 'package:quotes_common/domain/entity.dart';
 
-
 abstract class UpdatePage<T extends Entity, F extends EntityForm<T>> extends NewPage<T, F> {
   const UpdatePage(super.key, super.title);
 

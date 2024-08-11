@@ -1,4 +1,5 @@
 import 'package:quotes_common/util/strings.dart';
+import 'package:quotes_common/util/time.dart';
 import 'package:quotes_common/domain/entity.dart';
 import 'package:quotes_common/domain/page.dart';
 
@@ -12,8 +13,8 @@ class Quote extends Entity {
   Quote(String id, this._text, this._authorId, this._bookId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
 
   Quote.fromJson(Map<String, dynamic> json)
-      : this(json[fieldEntityId], json[fieldQuoteText], json[fieldQuoteAuthorId], json[fieldQuoteBookId], DateTime.parse(json[fieldEntityModifiedUtc]),
-            DateTime.parse(json[fieldEntityCreatedUtc]));
+      : this(json[fieldEntityId], json[fieldQuoteText], json[fieldQuoteAuthorId], json[fieldQuoteBookId], fromString(json[fieldEntityModifiedUtc]),
+            fromString(json[fieldEntityCreatedUtc]));
 
   String get text => _text;
   String get authorId => _authorId;
@@ -26,12 +27,10 @@ class Quote extends Entity {
   Map toJson() => super.toJson()..addAll({fieldQuoteText: _text, fieldQuoteAuthorId: _authorId, fieldQuoteBookId: _bookId});
 }
 
-JsonDecoder<Quote> _quoteJsonDecoder = (Map<String, dynamic> json) => Quote.fromJson(json);
-
 class QuotesPage extends Page<Quote> {
   QuotesPage(super.info, super.elements);
 
   QuotesPage.empty() : super(PageInfo(0, 0, 0), []);
 
-  QuotesPage.fromJson(Map<String, dynamic> json) : super.fromJson(_quoteJsonDecoder, json);
+  QuotesPage.fromJson(Map<String, dynamic> json) : super.fromJson(Quote.fromJson, json);
 }

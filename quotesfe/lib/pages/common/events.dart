@@ -5,7 +5,6 @@ import 'package:quotesfe/widgets/paging.dart';
 import 'package:quotes_common/domain/page.dart' as pg;
 import 'package:quotes_common/domain/entity.dart';
 
-
 abstract class ListEventsPage<T extends Entity> extends AbsPage {
   const ListEventsPage(super.key, super.title);
 
@@ -34,19 +33,17 @@ class _ListEventsPageState<T extends Entity> extends PageState<ListEventsPage<T>
   void loadPage(int pageNo) {
     _currentPage = pageNo;
     var pageReq = pg.PageRequest.pageWithSize(pageNo, _pageSize);
-    widget.getPage(pageReq)
-      .then((p) {
-        setState(() {
-          _page = p;
-          _pagination = Pagination(widget.key, _page.info.pages, pageNo, loadPage);
-        });
-        if (_page.elements.isEmpty && pageNo > 0) {
-          loadPage(pageNo - 1);
-        }
-      })
-      .catchError((e) {
-        showError(e);
+    widget.getPage(pageReq).then((p) {
+      setState(() {
+        _page = p;
+        _pagination = Pagination(widget.key, _page.info.pages, pageNo, loadPage);
       });
+      if (_page.elements.isEmpty && pageNo > 0) {
+        loadPage(pageNo - 1);
+      }
+    }).catchError((e) {
+      showError(e);
+    });
   }
 
   @override

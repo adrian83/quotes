@@ -62,10 +62,10 @@ class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
       widgets.add(button);
     }
 
-    if(_entity != null){
+    if (_entity != null) {
       widgets.insert(0, widget._toWidgetTransformer(_entity!));
     }
 
-      return widgets;
+    return widgets;
   }
 }

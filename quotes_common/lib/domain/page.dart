@@ -3,7 +3,6 @@ import 'package:quotes_common/domain/entity.dart';
 const fieldPageInfoLimit = "limit";
 const fieldPageInfoOffset = "offset";
 const fieldPageInfoTotal = "total";
-
 const fieldPageElements = "elements";
 const fieldPageInfo = "info";
 

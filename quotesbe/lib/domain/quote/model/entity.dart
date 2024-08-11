@@ -6,7 +6,6 @@ import 'package:quotes_common/domain/entity.dart';
 import 'package:quotes_common/domain/quote.dart';
 import 'package:quotes_common/util/time.dart';
 
-
 class QuoteDocument extends Quote implements EntityDocument {
   QuoteDocument(super.id, super.text, super.authorId, super.bookId, super.modifiedUtc, super.createdUtc);
 
@@ -18,8 +17,8 @@ class QuoteDocument extends Quote implements EntityDocument {
           json[fieldQuoteText],
           json[fieldQuoteAuthorId],
           json[fieldQuoteBookId],
-          DateTime.parse(json[fieldEntityModifiedUtc]),
-          DateTime.parse(json[fieldEntityCreatedUtc]),
+          fromString(json[fieldEntityModifiedUtc]),
+          fromString(json[fieldEntityCreatedUtc]),
         );
 
   @override
@@ -66,8 +65,8 @@ class QuoteEvent extends Event<QuoteDocument> implements EntityDocument {
           json[fieldEntityId],
           json[operationLabel],
           QuoteDocument.fromJson(json[entityLabel]),
-          DateTime.parse(json[fieldEntityModifiedUtc]),
-          DateTime.parse(json[fieldEntityCreatedUtc]),
+          fromString(json[fieldEntityModifiedUtc]),
+          fromString(json[fieldEntityCreatedUtc]),
         );
 
   @override

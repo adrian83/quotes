@@ -1,4 +1,5 @@
 import 'package:quotes_common/util/strings.dart';
+import 'package:quotes_common/util/time.dart';
 import 'package:quotes_common/domain/entity.dart';
 import 'package:quotes_common/domain/page.dart';
 
@@ -16,7 +17,7 @@ class Author extends Entity {
   Author.create(this._name, this._description) : super.create();
 
   Author.fromJson(Map<String, dynamic> json)
-      : this(json[fieldEntityId], json[fieldAuthorName], json[fieldAuthorDescription], DateTime.parse(json[fieldEntityModifiedUtc]), DateTime.parse(json[fieldEntityCreatedUtc]));
+      : this(json[fieldEntityId], json[fieldAuthorName], json[fieldAuthorDescription], fromString(json[fieldEntityModifiedUtc]), fromString(json[fieldEntityCreatedUtc]));
 
   String get name => _name;
 

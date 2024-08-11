@@ -6,7 +6,6 @@ import 'package:http/http.dart';
 import 'package:quotesfe/domain/common/errors.dart';
 import 'package:quotes_common/domain/page.dart';
 
-
 const paramSearchPhrase = "searchPhrase";
 
 class Service<T> {

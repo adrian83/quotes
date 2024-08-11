@@ -11,8 +11,7 @@ import 'package:quotes_common/domain/page.dart';
 class AuthorService extends Service<Author> {
   final String _apiHost;
 
-  AuthorService(BrowserClient super.http, Config config)
-      : _apiHost = config.apiHost;
+  AuthorService(BrowserClient super.http, Config config) : _apiHost = config.apiHost;
 
   Future<AuthorsPage> listAuthors(String searchPhrase, PageRequest request) async {
     var urlParams = pageRequestToUrlParams(request);

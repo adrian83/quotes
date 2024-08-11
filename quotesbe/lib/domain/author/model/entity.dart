@@ -20,8 +20,8 @@ class AuthorDocument extends Author implements EntityDocument {
           json[fieldEntityId],
           json[fieldAuthorName],
           json[fieldAuthorDescription],
-          DateTime.parse(json[fieldEntityModifiedUtc]),
-          DateTime.parse(json[fieldEntityCreatedUtc]),
+          fromString(json[fieldEntityModifiedUtc]),
+          fromString(json[fieldEntityCreatedUtc]),
         );
 
   @override
@@ -54,8 +54,8 @@ class AuthorEvent extends Event<AuthorDocument> implements EntityDocument {
           json[fieldEntityId],
           json[operationLabel],
           AuthorDocument.fromJson(json[entityLabel]),
-          DateTime.parse(json[fieldEntityModifiedUtc]),
-          DateTime.parse(json[fieldEntityCreatedUtc]),
+          fromString(json[fieldEntityModifiedUtc]),
+          fromString(json[fieldEntityCreatedUtc]),
         );
 
   @override

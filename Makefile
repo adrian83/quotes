@@ -2,7 +2,7 @@
 docker:
 	sudo systemctl start docker
 
-compose-up:
+compose:
 	sudo docker-compose up --build
 
 
