@@ -1,5 +1,5 @@
 import 'package:quotesbe/domain/common/model.dart';
-import 'package:quotesbe/domain/book/model/entity.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class FindBookQuery {
   final String authorId, bookId;
@@ -14,7 +14,7 @@ class ListBooksByAuthorQuery {
   ListBooksByAuthorQuery(this.authorId, this.pageRequest);
 
   @override
-  String toString() => "ListBooksByAuthorQuery [$bookAuthorIdLabel: $authorId, $pageRequestLabel: $pageRequest]";
+  String toString() => "ListBooksByAuthorQuery [authorId: $authorId, $pageRequestLabel: $pageRequest]";
 }
 
 class ListEventsByBookQuery extends FindBookQuery {
@@ -23,5 +23,5 @@ class ListEventsByBookQuery extends FindBookQuery {
   ListEventsByBookQuery(super.authorId, super.bookId, this.pageRequest);
 
   @override
-  String toString() => "ListBooksByAuthorRequest [$bookAuthorIdLabel: $authorId, $bookIdLabel: $bookId, $pageRequestLabel: $pageRequest]";
+  String toString() => "ListBooksByAuthorRequest [authorId: $authorId, bookId: $bookId, $pageRequestLabel: $pageRequest]";
 }

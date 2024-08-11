@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/book/model.dart';
 import 'package:quotesfe/domain/book/service.dart';
 import 'package:quotesfe/domain/quote/service.dart';
 import 'package:quotesfe/pages/common/show.dart';
 import 'package:quotesfe/paths.dart';
 import 'package:quotesfe/widgets/book/book_quotes.dart';
 import 'package:quotesfe/widgets/book/list_entry.dart';
+import 'package:quotes_common/domain/book.dart';
 
 BookEntry _bookToWidget(Book b) => BookEntry(null, b, null, true, true, false, true);
 

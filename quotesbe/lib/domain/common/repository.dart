@@ -1,19 +1,20 @@
 import 'dart:async';
 
-import 'package:quotesbe/common/function.dart';
 import 'package:quotesbe/domain/common/model.dart';
-import 'package:quotesbe/storage/elasticsearch/document.dart';
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 import 'package:quotesbe/storage/elasticsearch/search.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/page.dart';
+import 'package:quotes_common/util/function.dart';
 
-var sortingByModifiedTimeDesc = SortElement.desc(modifiedUtcLabel);
-var sortingByCreatedTimeAsc = SortElement.asc(createdUtcLabel);
+var sortingByModifiedTimeDesc = SortElement.desc(fieldEntityModifiedUtc);
+var sortingByCreatedTimeAsc = SortElement.asc(fieldEntityCreatedUtc);
 
 typedef Decoder<T> = T Function(Map<String, dynamic> json);
 
 const maxPageSize = 1000;
 
-class Repository<T extends Document> {
+class Repository<T extends EntityDocument> {
   final ESStore<T> _store;
   final Decoder<T> _fromJson;
 
@@ -60,11 +61,11 @@ class Repository<T extends Document> {
     return docs;
   }
 
-  String _extractEntityIdFromEvent(Event e) => e.entity.id;
+  String? _extractEntityIdFromEvent(Event e) => e.entity.id;
 
   int _compareEventsEntityCreationTimes(Event a, Event b) => a.entity.createdUtc.compareTo(b.entity.createdUtc);
 
-  List<N> newestEntities<N extends Entity, K>(List<Event<N>> elements) => groupBy(elements, _extractEntityIdFromEvent)
+  List<N> newestEntities<N extends EntityDocument, K>(List<Event<N>> elements) => groupBy(elements, _extractEntityIdFromEvent)
       .map((key, value) {
         value.sort(_compareEventsEntityCreationTimes);
         return MapEntry(key, value.first.entity);

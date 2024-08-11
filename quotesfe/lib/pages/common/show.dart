@@ -7,7 +7,7 @@ typedef ToWidgetTransformer<E> = Widget Function(E);
 abstract class ShowPage<E> extends AbsPage {
   final ToWidgetTransformer<E> _toWidgetTransformer;
 
-  const ShowPage(Key? key, String title, this._toWidgetTransformer) : super(key, title);
+  const ShowPage(super.key, super.title, this._toWidgetTransformer);
 
   Future<E> findEntity();
 
@@ -62,11 +62,10 @@ class _ShowPageState<ENTITY> extends PageState<ShowPage<ENTITY>> {
       widgets.add(button);
     }
 
-    if (_entity == null) {
-      return widgets;
-    } else {
+    if (_entity != null) {
       widgets.insert(0, widget._toWidgetTransformer(_entity!));
-      return widgets;
     }
+
+    return widgets;
   }
 }

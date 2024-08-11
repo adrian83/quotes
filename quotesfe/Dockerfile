@@ -16,11 +16,14 @@ RUN git config --global --add safe.directory '*'
 
 ENV PATH="/flutter/bin:${PATH}"
 
-ADD . /quotesfe/
-WORKDIR /quotesfe
 
+COPY ./quotes_common /quotes_common
+WORKDIR /quotes_common
 RUN dart pub get
 
+COPY ./quotesfe /quotesfe
+WORKDIR /quotesfe
+RUN dart pub get
 RUN flutter doctor
 RUN flutter config --enable-web
 RUN flutter build web --dart-define ENV=compose

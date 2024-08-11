@@ -141,7 +141,7 @@ class SearchRequest {
   Map toJson() {
     var json = {
       queryQ: query.toJson(),
-      sortQ: (sort.isNotEmpty ? sort : defaultSort),
+      sortQ: (sort.isNotEmpty ? sort.map((e) => e.toJson()).toList() : defaultSort),
     };
 
     if (from != null) {

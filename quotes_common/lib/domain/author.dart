@@ -1,6 +1,7 @@
-import 'package:quotesfe/domain/common/page.dart';
-import 'package:quotesfe/domain/common/model.dart';
-import 'package:quotesfe/tools/strings.dart';
+import 'package:quotes_common/util/strings.dart';
+import 'package:quotes_common/util/time.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/page.dart';
 
 const fieldAuthorName = "name";
 const fieldAuthorDescription = "description";
@@ -11,14 +12,19 @@ class Author extends Entity {
   final String _name;
   final String? _description;
 
-  Author(String? id, this._name, this._description, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
+  Author(String id, this._name, this._description, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
+
+  Author.create(this._name, this._description) : super.create();
 
   Author.fromJson(Map<String, dynamic> json)
-      : this(json[fieldEntityId], json[fieldAuthorName], json[fieldAuthorDescription], DateTime.parse(json[fieldEntityModifiedUtc]), DateTime.parse(json[fieldEntityCreatedUtc]));
+      : this(json[fieldEntityId], json[fieldAuthorName], json[fieldAuthorDescription], fromString(json[fieldEntityModifiedUtc]), fromString(json[fieldEntityCreatedUtc]));
 
   String get name => _name;
+
   String? get description => _description;
+
   List<String> get descriptionParts => description?.split("\n") ?? [];
+
   String? get shortDescription => shorten(description, _shortDescriptionMaxLen);
 
   @override
@@ -28,7 +34,7 @@ class Author extends Entity {
 JsonDecoder<Author> _authorJsonDecoder = (Map<String, dynamic> json) => Author.fromJson(json);
 
 class AuthorsPage extends Page<Author> {
-  AuthorsPage(PageInfo info, List<Author> elements) : super(info, elements);
+  AuthorsPage(super.info, super.elements);
 
   AuthorsPage.empty() : super(PageInfo(0, 0, 0), []);
 

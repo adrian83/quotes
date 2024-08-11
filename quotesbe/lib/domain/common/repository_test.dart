@@ -2,19 +2,20 @@ import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import "package:test/test.dart";
 
+import 'package:quotesbe/domain/common/model.dart';
 import 'package:quotesbe/domain/common/repository.dart';
-import 'package:quotesbe/storage/elasticsearch/document.dart';
 import 'package:quotesbe/storage/elasticsearch/store.dart';
 import 'package:quotesbe/storage/elasticsearch/response.dart';
 import 'package:quotesbe/domain/common/repository_test.mocks.dart';
+import 'package:quotes_common/util/time.dart';
 
-class TestEntity extends Document {
-  String id, name;
+class TestEntity extends EntityDocument {
+  String name;
 
-  TestEntity(this.id, this.name);
+  TestEntity(String id, this.name) : super('abc', nowUtc(), nowUtc());
 
   @override
-  String getId() => id;
+  String getId() => super.id;
 
   @override
   Map toSave() => {"id": id, "name": name};

@@ -1,83 +1,82 @@
 import 'package:uuid/uuid.dart';
 
 import 'package:quotesbe/domain/common/model.dart';
+import 'package:quotesbe/domain/common/exception.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/author.dart';
+import 'package:quotes_common/util/time.dart';
 
-const authorNameLabel = 'name';
-const authorDescLabel = 'description';
+class AuthorDocument extends Author implements EntityDocument {
+  AuthorDocument(super.id, super.name, super.description, super.modifiedUtc, super.createdUtc);
 
-class Author extends Entity {
-  final String name, description;
+  AuthorDocument.fromModel(Author author) : this(author.id, author.name, author.description, author.modifiedUtc, author.createdUtc);
 
-  Author(
-    String id,
-    this.name,
-    this.description,
-    DateTime modifiedUtc,
-    DateTime createdUtc,
-  ) : super(id, modifiedUtc, createdUtc);
+  AuthorDocument.create(super.name, String super.description) : super.create();
 
-  Author.create(this.name, this.description) : super.create();
+  AuthorDocument.update(String id, String name, String description) : super(id, name, description, nowUtc(), nowUtc());
 
-  Author.update(String id, this.name, this.description) : super(id, nowUtc(), nowUtc());
-
-  Author.fromJson(Map<String, dynamic> json)
+  AuthorDocument.fromJson(Map<String, dynamic> json)
       : this(
-          json[idLabel],
-          json[authorNameLabel],
-          json[authorDescLabel],
-          DateTime.parse(json[modifiedUtcLabel]),
-          DateTime.parse(json[createdUtcLabel]),
+          json[fieldEntityId],
+          json[fieldAuthorName],
+          json[fieldAuthorDescription],
+          fromString(json[fieldEntityModifiedUtc]),
+          fromString(json[fieldEntityCreatedUtc]),
         );
-
-  @override
-  Map<dynamic, dynamic> toJson() => super.toJson()..addAll({authorNameLabel: name, authorDescLabel: description});
 
   @override
   Map<dynamic, dynamic> toSave() => toJson();
 
   @override
-  Map<dynamic, dynamic> toUpdate() => toJson()..remove(createdUtcLabel);
+  Map<dynamic, dynamic> toUpdate() => toJson()..remove(fieldEntityCreatedUtc);
 
   @override
-  String toString() => "Author [$idLabel: $id, $authorNameLabel: $name, $authorDescLabel: $description, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc]";
+  String toString() =>
+      "Author [$fieldEntityId: $id, $fieldAuthorName: $name, $fieldAuthorDescription: $description, $fieldEntityModifiedUtc: $modifiedUtc, $fieldEntityCreatedUtc: $createdUtc]";
+
+  @override
+  String getId() => super.id;
 }
 
-class AuthorEvent extends Event<Author> {
-  AuthorEvent(
-    super.id,
-    super.operation,
-    super.author,
-    super.modified,
-    super.created,
-  );
+class AuthorEvent extends Event<AuthorDocument> implements EntityDocument {
+  AuthorEvent(super.id, super.operation, super.author, super.modified, super.created);
 
-  AuthorEvent.operation(Author author, String operation) : super(const Uuid().v4(), operation, author, nowUtc(), nowUtc());
+  AuthorEvent.operation(AuthorDocument author, String operation) : super(const Uuid().v4(), operation, author, nowUtc(), nowUtc());
 
-  AuthorEvent.create(Author author) : this.operation(author, Event.created);
+  AuthorEvent.create(AuthorDocument author) : this.operation(author, Event.created);
 
-  AuthorEvent.update(Author author) : this.operation(author, Event.modified);
+  AuthorEvent.update(AuthorDocument author) : this.operation(author, Event.modified);
 
-  AuthorEvent.delete(Author author) : this.operation(author, Event.deleted);
+  AuthorEvent.delete(AuthorDocument author) : this.operation(author, Event.deleted);
 
   AuthorEvent.fromJson(Map<String, dynamic> json)
       : super(
-          json[idLabel],
+          json[fieldEntityId],
           json[operationLabel],
-          Author.fromJson(json[entityLabel]),
-          DateTime.parse(json[modifiedUtcLabel]),
-          DateTime.parse(json[createdUtcLabel]),
+          AuthorDocument.fromJson(json[entityLabel]),
+          fromString(json[fieldEntityModifiedUtc]),
+          fromString(json[fieldEntityCreatedUtc]),
         );
 
   @override
   Map<dynamic, dynamic> toJson() => {
-        idLabel: id,
+        fieldEntityId: id,
         operationLabel: operation,
-        modifiedUtcLabel: modifiedUtc.toIso8601String(),
-        createdUtcLabel: createdUtc.toIso8601String(),
+        fieldEntityModifiedUtc: modifiedUtc.toIso8601String(),
+        fieldEntityCreatedUtc: createdUtc.toIso8601String(),
         entityLabel: entity.toJson(),
       };
 
   @override
   String toString() =>
-      "AuthorEvent [$idLabel: $id, $operationLabel: $operation, $modifiedUtcLabel: $modifiedUtc, $createdUtcLabel: $createdUtc, $entityLabel: ${entity.toString()}]";
+      "AuthorEvent [$fieldEntityId: $id, $operationLabel: $operation, $fieldEntityModifiedUtc: $modifiedUtc, $fieldEntityCreatedUtc: $createdUtc, $entityLabel: ${entity.toString()}]";
+
+  @override
+  String getId() => id;
+
+  @override
+  Map toSave() => toJson();
+
+  @override
+  Map toUpdate() => throw EventModificationException();
 }

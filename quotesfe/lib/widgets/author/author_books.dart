@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/book/model.dart';
 import 'package:quotesfe/domain/book/service.dart';
-import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/widgets/book/list_entry.dart';
 import 'package:quotesfe/widgets/book/page_entry.dart';
 import 'package:quotesfe/widgets/common/info_state.dart';
+import 'package:quotes_common/domain/book.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class AuthorBooks extends StatefulWidget {
   final String _authorId;

@@ -8,10 +8,11 @@ import 'package:quotesbe/storage/elasticsearch/document.dart';
 import 'package:quotesbe/storage/elasticsearch/response.dart';
 import 'package:quotesbe/storage/elasticsearch/search.dart';
 import 'package:quotesbe/storage/elasticsearch/exception.dart';
+import 'package:quotesbe/domain/common/model.dart';
 
 typedef Decode<T> = T Function(Map<String, dynamic> json);
 
-class ESStore<T extends Document> {
+class ESStore<T extends EntityDocument> {
   final HttpClient _client;
   final String _host;
   final String _index;

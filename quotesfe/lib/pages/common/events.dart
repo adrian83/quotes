@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/pages/common/page.dart';
 import 'package:quotesfe/widgets/paging.dart';
-import 'package:quotesfe/domain/common/page.dart' as p;
+import 'package:quotes_common/domain/page.dart' as pg;
+import 'package:quotes_common/domain/entity.dart';
 
-abstract class ListEventsPage<T> extends AbsPage {
-  const ListEventsPage(Key? key, String title) : super(key, title);
+abstract class ListEventsPage<T extends Entity> extends AbsPage {
+  const ListEventsPage(super.key, super.title);
 
   @override
   State<ListEventsPage<T>> createState() => _ListEventsPageState<T>();
 
-  Future<p.Page<T>> getPage(PageRequest pageReq);
+  Future<pg.Page<T>> getPage(pg.PageRequest pageReq);
 
   List<Widget> eventToData(T event);
 
   List<String> columns();
 }
 
-class _ListEventsPageState<T> extends PageState<ListEventsPage<T>> {
+class _ListEventsPageState<T extends Entity> extends PageState<ListEventsPage<T>> {
   final int _pageSize = 2;
-  p.Page<T> _page = p.Page.empty();
+  pg.Page<T> _page = pg.Page.empty();
   Pagination _pagination = Pagination.empty(null);
   int _currentPage = 0;
 
@@ -32,7 +32,7 @@ class _ListEventsPageState<T> extends PageState<ListEventsPage<T>> {
 
   void loadPage(int pageNo) {
     _currentPage = pageNo;
-    var pageReq = PageRequest.pageWithSize(pageNo, _pageSize);
+    var pageReq = pg.PageRequest.pageWithSize(pageNo, _pageSize);
     widget.getPage(pageReq).then((p) {
       setState(() {
         _page = p;

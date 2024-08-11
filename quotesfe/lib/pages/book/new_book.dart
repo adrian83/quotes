@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/book/model.dart';
 import 'package:quotesfe/domain/book/service.dart';
 import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/book.dart';
 
 class NewBookPage extends NewPage<Book, NewBookEntityForm> {
   final String _authorId;
   final BookService _bookService;
 
-  const NewBookPage(Key? key, String title, this._authorId, this._bookService) : super(key, title);
+  const NewBookPage(super.key, super.title, this._authorId, this._bookService);
 
   String get authorId => _authorId;
   BookService get bookService => _bookService;
@@ -18,7 +19,7 @@ class NewBookPage extends NewPage<Book, NewBookEntityForm> {
   NewBookEntityForm createEntityForm(BuildContext context, Book? entity) => NewBookEntityForm(_authorId, entity);
 
   @override
-  Future<Book> persist(Book entity) => entity.id == null ? _bookService.create(entity) : _bookService.update(entity);
+  Future<Book> persist(Book entity) => entity.id == emptyId ? _bookService.create(entity) : _bookService.update(entity);
 
   @override
   String successMessage() => "Book created / updated";
@@ -42,7 +43,7 @@ class NewBookEntityForm extends EntityForm<Book> {
   }
 
   @override
-  Book createEntity() => Book(null, _titleController.text, _descController.text, _authorId, DateTime.now(), DateTime.now());
+  Book createEntity() => Book(_book?.id ?? emptyId, _titleController.text, _descController.text, _authorId, DateTime.now(), DateTime.now());
 
   @override
   Form createForm(BuildContext context, Function()? action) => Form(

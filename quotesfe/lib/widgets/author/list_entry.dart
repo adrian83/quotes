@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/widgets/common/list_entry.dart';
 import 'package:quotesfe/paths.dart';
+import 'package:quotes_common/domain/author.dart';
 
 class AuthorEntry extends ListEntry {
   final Author _author;
@@ -21,7 +21,7 @@ class AuthorEntry extends ListEntry {
   String eventsPageUrl() => listAuthorEventsPath(_author);
 
   @override
-  String getId() => _author.id!;
+  String getId() => _author.id;
 
   @override
   List<Widget> widgets(BuildContext context) {

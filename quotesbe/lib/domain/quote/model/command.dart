@@ -1,6 +1,6 @@
 import 'package:uuid/uuid.dart';
 
-import 'package:quotesbe/domain/quote/model/entity.dart';
+import 'package:quotes_common/domain/quote.dart';
 
 class DeleteQuoteCommand {
   final String authorId, bookId, quoteId;

@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:logging/logging.dart';
+
 import 'package:quotesbe/domain/common/model.dart';
 import 'package:quotesbe/domain/author/model/entity.dart';
 import 'package:quotesbe/domain/author/model/command.dart';
@@ -7,8 +9,12 @@ import 'package:quotesbe/domain/author/model/query.dart';
 import 'package:quotesbe/domain/author/repository.dart';
 import 'package:quotesbe/domain/book/repository.dart';
 import 'package:quotesbe/domain/quote/repository.dart';
+import 'package:quotes_common/domain/author.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class AuthorService {
+  final Logger _logger = Logger('AuthorService');
+
   final AuthorRepository _authorRepository;
   final AuthorEventRepository _authorEventRepository;
   final BookRepository _bookRepository;
@@ -27,8 +33,13 @@ class AuthorService {
 
   Future<Author> save(NewAuthorCommand command) async {
     var author = command.toAuthor();
-    await _authorRepository.save(author);
-    await _authorEventRepository.storeSaveAuthorEvent(author);
+    _logger.info("Received new author command. Author: $author");
+
+    var authorDocument = AuthorDocument.fromModel(author);
+    _logger.info("Saving author document: $author");
+
+    await _authorRepository.save(authorDocument);
+    await _authorEventRepository.storeSaveAuthorEvent(authorDocument);
     return author;
   }
 
@@ -36,8 +47,9 @@ class AuthorService {
 
   Future<Author> update(UpdateAuthorCommand command) async {
     var author = command.toAuthor();
-    await _authorRepository.update(author);
-    await _authorEventRepository.storeUpdateAuthorEvent(author);
+    var authorDocument = AuthorDocument.fromModel(author);
+    await _authorRepository.update(authorDocument);
+    await _authorEventRepository.storeUpdateAuthorEvent(authorDocument);
     return author;
   }
 

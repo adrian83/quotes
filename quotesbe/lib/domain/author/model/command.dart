@@ -1,19 +1,11 @@
-import 'package:uuid/uuid.dart';
-
-import 'package:quotesbe/domain/author/model/entity.dart';
+import 'package:quotes_common/domain/author.dart';
 
 class NewAuthorCommand {
   final String name, description;
 
   NewAuthorCommand(this.name, this.description);
 
-  Author toAuthor() => Author(
-        const Uuid().v4(),
-        name,
-        description,
-        DateTime.now(),
-        DateTime.now(),
-      );
+  Author toAuthor() => Author.create(name, description);
 }
 
 class UpdateAuthorCommand extends NewAuthorCommand {

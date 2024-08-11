@@ -2,20 +2,19 @@ import 'package:flutter/material.dart';
 
 import 'package:quotesfe/domain/author/event.dart';
 import 'package:quotesfe/domain/author/service.dart';
-import 'package:quotesfe/domain/common/page.dart';
 import 'package:quotesfe/pages/common/events.dart';
-import 'package:quotesfe/domain/common/page.dart' as p;
+import 'package:quotes_common/domain/page.dart' as pg;
 
 class ListAuthorEventsPage extends ListEventsPage<AuthorEvent> {
   final AuthorService _authorService;
   final String _authorId;
 
   const ListAuthorEventsPage(
-    Key? key,
-    String title,
+    super.key,
+    super.title,
     this._authorId,
     this._authorService,
-  ) : super(key, title);
+  );
 
   @override
   List<String> columns() => ["Event Id", "Operation", "Author name", "Author desc", "Author created", "Author modified"];
@@ -31,5 +30,5 @@ class ListAuthorEventsPage extends ListEventsPage<AuthorEvent> {
       ];
 
   @override
-  Future<p.Page<AuthorEvent>> getPage(PageRequest pageReq) => _authorService.listEvents(_authorId, pageReq);
+  Future<pg.Page<AuthorEvent>> getPage(pg.PageRequest pageReq) => _authorService.listEvents(_authorId, pageReq);
 }

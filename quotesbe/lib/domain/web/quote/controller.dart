@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:shelf/shelf.dart';
-import 'package:logging/logging.dart';
 
 import 'package:quotesbe/domain/quote/service.dart';
 import 'package:quotesbe/domain/quote/model/command.dart';
@@ -12,8 +11,6 @@ import 'package:quotesbe/web/error.dart';
 import 'package:quotesbe/web/response.dart';
 
 class QuoteController {
-  final Logger _logger = Logger('QuoteController');
-
   final QuoteService _quoteService;
 
   QuoteController(this._quoteService);
@@ -26,90 +23,51 @@ class QuoteController {
     ValidationRule("text", "Text cannot be empty", emptyString),
   ];
 
-  Future<Response> search(Request request) async {
-    var query = extractSearchQuery(request);
+  Future<Response> search(Request request) async => Future.value(request)
+      .then((req) => extractSearchQuery(req))
+      .then((query) => _quoteService.findQuotes(query))
+      .then((page) => jsonResponseOk(page))
+      .onError<Exception>((error, stackTrace) => handleError(error));
 
-    return _quoteService.findQuotes(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
-  }
+  Future<Response> searchBookQuotes(Request request, String authorId, String bookId) async => Future.value(request)
+      .then((req) => extractPageRequest(req))
+      .then((page) => ListQuotesFromBookQuery(authorId, bookId, page))
+      .then((query) => _quoteService.findBookQuotes(query))
+      .then((page) => jsonResponseOk(page))
+      .onError<Exception>((error, stackTrace) => handleError(error));
 
-  Future<Response> searchBookQuotes(
-    Request request,
-    String authorId,
-    String bookId,
-  ) async {
-    var query = ListQuotesFromBookQuery(authorId, bookId, extractPageRequest(request));
+  Future<Response> store(Request request, String authorId, String bookId) async => Future.value(request)
+      .then((req) => req.readAsString())
+      .then((body) => jsonDecode(body) as Map)
+      .then((json) => validate(newQuoteValidationRules, json))
+      .then((json) => NewQuoteCommand(authorId, bookId, json["text"]))
+      .then((command) => _quoteService.save(command))
+      .then((quote) => jsonResponseOk(quote))
+      .onError<Exception>((error, stackTrace) => handleError(error));
 
-    return _quoteService.findBookQuotes(query).then((page) => jsonResponseOk(page)).onError<Exception>((error, stackTrace) => handleError(error));
-  }
+  Future<Response> update(Request request, String authorId, String bookId, String quoteId) async => Future.value(request)
+      .then((req) => req.readAsString())
+      .then((body) => jsonDecode(body) as Map)
+      .then((json) => validate(updateQuoteValidationRules, json))
+      .then((json) => UpdateQuoteCommand(authorId, bookId, quoteId, json["text"]))
+      .then((command) => _quoteService.update(command))
+      .then((quote) => jsonResponseOk(quote))
+      .onError<Exception>((error, stackTrace) => handleError(error));
 
-  Future<Response> store(
-    Request request,
-    String authorId,
-    String bookId,
-  ) async {
-    var json = jsonDecode(await request.readAsString()) as Map;
+  Future<Response> find(Request request, String authorId, String bookId, String quoteId) => Future.value(FindQuoteQuery(authorId, bookId, quoteId))
+      .then((query) => _quoteService.find(query))
+      .then((quote) => jsonResponseOk(quote))
+      .onError<Exception>((error, stackTrace) => handleError(error));
 
-    var violations = validate(newQuoteValidationRules, json);
-    if (violations.isNotEmpty) {
-      _logger.warning("[save quote] validation error: $violations");
-      return responseBadRequest(violations);
-    }
+  Future<Response> delete(Request request, String authorId, String bookId, String quoteId) => Future.value(DeleteQuoteCommand(authorId, bookId, quoteId))
+      .then((command) => _quoteService.delete(command))
+      .then((_) => emptyResponseOk())
+      .onError<Exception>((error, stackTrace) => handleError(error));
 
-    var command = NewQuoteCommand(authorId, bookId, json["text"]);
-
-    return _quoteService.save(command).then((quote) => jsonResponseOk(quote)).onError<Exception>((error, stackTrace) => handleError(error));
-  }
-
-  Future<Response> update(
-    Request request,
-    String authorId,
-    String bookId,
-    String quoteId,
-  ) async {
-    var json = jsonDecode(await request.readAsString()) as Map;
-
-    var violations = validate(updateQuoteValidationRules, json);
-    if (violations.isNotEmpty) {
-      _logger.warning("[update quote] validation error: $violations");
-      return responseBadRequest(violations);
-    }
-
-    var command = UpdateQuoteCommand(authorId, bookId, quoteId, json["text"]);
-
-    return _quoteService.update(command).then((quote) => jsonResponseOk(quote)).onError<Exception>((error, stackTrace) => handleError(error));
-  }
-
-  Future<Response> find(
-    Request request,
-    String authorId,
-    String bookId,
-    String quoteId,
-  ) =>
-      _quoteService.find(FindQuoteQuery(authorId, bookId, quoteId)).then((quote) => jsonResponseOk(quote)).onError<Exception>((error, stackTrace) => handleError(error));
-
-  Future<Response> delete(
-    Request request,
-    String authorId,
-    String bookId,
-    String quoteId,
-  ) =>
-      _quoteService.delete(DeleteQuoteCommand(authorId, bookId, quoteId)).then((_) => emptyResponseOk()).onError<Exception>((error, stackTrace) => handleError(error));
-
-  Future<Response> listEvents(
-    Request request,
-    String authorId,
-    String bookId,
-    String quoteId,
-  ) =>
-      _quoteService
-          .listEvents(
-            ListEventsByQuoteQuery(
-              authorId,
-              bookId,
-              quoteId,
-              extractPageRequest(request),
-            ),
-          )
-          .then((page) => jsonResponseOk(page))
-          .onError<Exception>((error, stackTrace) => handleError(error));
+  Future<Response> listEvents(Request request, String authorId, String bookId, String quoteId) => Future.value(request)
+      .then((req) => extractPageRequest(req))
+      .then((page) => ListEventsByQuoteQuery(authorId, bookId, quoteId, page))
+      .then((query) => _quoteService.listEvents(query))
+      .then((page) => jsonResponseOk(page))
+      .onError<Exception>((error, stackTrace) => handleError(error));
 }

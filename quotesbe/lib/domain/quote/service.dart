@@ -7,6 +7,8 @@ import 'package:quotesbe/domain/quote/model/command.dart';
 import 'package:quotesbe/domain/quote/model/entity.dart';
 import 'package:quotesbe/domain/quote/model/query.dart';
 import 'package:quotesbe/domain/quote/repository.dart';
+import 'package:quotes_common/domain/quote.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class QuoteService {
   final Logger _logger = Logger('QuoteService');
@@ -18,10 +20,11 @@ class QuoteService {
 
   Future<Quote> save(NewQuoteCommand command) async {
     var quote = command.toQuote();
+    var quoteDocument = QuoteDocument.fromModel(quote);
     _logger.info("save quote: $quote");
-    await _quotesRepository.save(quote);
+    await _quotesRepository.save(quoteDocument);
     _logger.info("store quote event (create) for quote: $quote");
-    await _quoteEventRepository.storeSaveQuoteEvent(quote);
+    await _quoteEventRepository.storeSaveQuoteEvent(quoteDocument);
     return quote;
   }
 
@@ -32,10 +35,11 @@ class QuoteService {
 
   Future<Quote> update(UpdateQuoteCommand command) async {
     var quote = command.toQuote();
+    var quoteDocument = QuoteDocument.fromModel(quote);
     _logger.info("update quote: $quote");
-    await _quotesRepository.update(quote);
+    await _quotesRepository.update(quoteDocument);
     _logger.info("store quote event (update) for quote: $quote");
-    await _quoteEventRepository.storeUpdateQuoteEvent(quote);
+    await _quoteEventRepository.storeUpdateQuoteEvent(quoteDocument);
     return quote;
   }
 

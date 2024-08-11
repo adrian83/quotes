@@ -74,6 +74,7 @@ void main() {
 
     when(authorRepoMock.save(any)).thenAnswer((_) => Future.error(StateError("exception")));
 
+    // when, then
     expect(authorService.save(command), throwsStateError);
 
     verify(authorRepoMock.save(any));
@@ -103,6 +104,7 @@ void main() {
     when(authorRepoMock.save(any)).thenAnswer((_) => Future.value());
     when(authorEventRepoMock.storeSaveAuthorEvent(any)).thenAnswer((_) => Future.error(StateError("exception")));
 
+    // when, then
     expect(authorService.save(command), throwsStateError);
 
     verify(authorRepoMock.save(any));

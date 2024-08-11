@@ -1,9 +1,8 @@
-import 'dart:convert';
+import 'package:quotes_common/domain/entity.dart';
 
 const fieldPageInfoLimit = "limit";
 const fieldPageInfoOffset = "offset";
 const fieldPageInfoTotal = "total";
-
 const fieldPageElements = "elements";
 const fieldPageInfo = "info";
 
@@ -33,12 +32,12 @@ class PageInfo {
       };
 
   @override
-  String toString() => jsonEncode(this);
+  String toString() => "PageInfo [limit: $limit, offset: $offset, total: $total]";
 }
 
 typedef JsonDecoder<T> = T Function(Map<String, dynamic> json);
 
-class Page<T> {
+class Page<T extends Entity> {
   late final PageInfo info;
   late final List<T> elements;
 
@@ -56,7 +55,9 @@ class Page<T> {
   T? get first => empty ? null : elements[0];
 
   @override
-  String toString() => jsonEncode(this);
+  String toString() => "Page [info: $info, elements: ${elements.length}]";
+
+  Map<String, dynamic> toJson() => {"info": info.toJson(), "elements": elements.map((e) => e.toJson()).toList()};
 }
 
 class PageRequest {
@@ -68,8 +69,12 @@ class PageRequest {
 
   PageRequest.pageWithSize(int pageNumber, int size) : this(size, size * pageNumber);
 
+  PageRequest.first() : this(1, 0);
+
   int page() => offset ~/ limit;
 
   @override
-  String toString() => jsonEncode(this);
+  String toString() => "PageRequest [limit: $limit, offset: $offset]";
+
+  Map toJson() => {"limit": limit, "offset": offset};
 }

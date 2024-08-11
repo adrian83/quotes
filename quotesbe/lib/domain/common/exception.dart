@@ -19,3 +19,8 @@ class UpdateFailedException extends BaseException {
 class FindFailedException extends BaseException {
   FindFailedException(super.msg, {super.cause});
 }
+
+class EventModificationException implements Exception {
+  @override
+  String toString() => "Event modification forbidden";
+}

@@ -4,7 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 
 import 'package:quotesfe/domain/common/errors.dart';
-import 'package:quotesfe/domain/common/page.dart';
+import 'package:quotes_common/domain/page.dart';
 
 const paramSearchPhrase = "searchPhrase";
 

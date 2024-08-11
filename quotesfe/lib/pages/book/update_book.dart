@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/book/model.dart';
 import 'package:quotesfe/domain/book/service.dart';
 import 'package:quotesfe/pages/book/new_book.dart';
+import 'package:quotes_common/domain/book.dart';
 
 class UpdateBookPage extends NewBookPage {
   final String _bookId;

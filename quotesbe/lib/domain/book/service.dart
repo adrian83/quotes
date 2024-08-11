@@ -8,6 +8,8 @@ import 'package:quotesbe/domain/book/model/entity.dart';
 import 'package:quotesbe/domain/book/model/query.dart';
 import 'package:quotesbe/domain/book/repository.dart';
 import 'package:quotesbe/domain/quote/repository.dart';
+import 'package:quotes_common/domain/book.dart';
+import 'package:quotes_common/domain/page.dart';
 
 class BookService {
   final Logger _logger = Logger('BookService');
@@ -26,10 +28,11 @@ class BookService {
 
   Future<Book> save(NewBookCommand command) async {
     var book = command.toBook();
+    var bookDocument = BookDocument.fromModel(book);
     _logger.info("save book: $book");
-    await _bookRepository.save(book);
+    await _bookRepository.save(bookDocument);
     _logger.info("store book event (create) for book: $book");
-    await _bookEventRepository.storeSaveBookEvent(book);
+    await _bookEventRepository.storeSaveBookEvent(bookDocument);
     return book;
   }
 
@@ -40,10 +43,11 @@ class BookService {
 
   Future<Book> update(UpdateBookCommand command) async {
     var book = command.toBook();
+    var bookDocument = BookDocument.fromModel(book);
     _logger.info("update book: $book");
-    await _bookRepository.update(book);
+    await _bookRepository.update(bookDocument);
     _logger.info("store book event (update) for book: $book");
-    await _bookEventRepository.storeUpdateBookEvent(book);
+    await _bookEventRepository.storeUpdateBookEvent(bookDocument);
     return book;
   }
 

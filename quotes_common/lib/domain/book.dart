@@ -1,6 +1,7 @@
-import 'package:quotesfe/domain/common/page.dart';
-import 'package:quotesfe/domain/common/model.dart';
-import 'package:quotesfe/tools/strings.dart';
+import 'package:quotes_common/util/strings.dart';
+import 'package:quotes_common/util/time.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/page.dart';
 
 const fieldBookTitle = "title";
 const fieldBookDescription = "description";
@@ -12,11 +13,11 @@ class Book extends Entity {
   final String _title, _authorId;
   final String? _description;
 
-  Book(String? id, this._title, this._description, this._authorId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
+  Book(String id, this._title, this._description, this._authorId, DateTime modifiedUtc, DateTime createdUtc) : super(id, modifiedUtc, createdUtc);
 
   Book.fromJson(Map<String, dynamic> json)
-      : this(json[fieldEntityId], json[fieldBookTitle], json[fieldBookDescription], json[fieldBookAuthorId], DateTime.parse(json[fieldEntityModifiedUtc]),
-            DateTime.parse(json[fieldEntityCreatedUtc]));
+      : this(json[fieldEntityId], json[fieldBookTitle], json[fieldBookDescription], json[fieldBookAuthorId], fromString(json[fieldEntityModifiedUtc]),
+            fromString(json[fieldEntityCreatedUtc]));
 
   String get title => _title;
   String get authorId => _authorId;
@@ -32,7 +33,7 @@ class Book extends Entity {
 JsonDecoder<Book> _bookJsonDecoder = (Map<String, dynamic> json) => Book.fromJson(json);
 
 class BooksPage extends Page<Book> {
-  BooksPage(PageInfo info, List<Book> elements) : super(info, elements);
+  BooksPage(super.info, super.elements);
 
   BooksPage.empty() : super(PageInfo(0, 0, 0), []);
 

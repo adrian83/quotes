@@ -1,5 +1,14 @@
 bool emptyString(String? text) => text == null || text.isEmpty;
 
+class ValidationException implements Exception {
+  List<Violation> violations;
+
+  ValidationException(this.violations);
+
+  @override
+  String toString() => "ValidationException [violations: $violations]";
+}
+
 class Violation {
   final String field, message;
 
@@ -15,7 +24,7 @@ class ValidationRule {
   ValidationRule(this.field, this.errorMessage, this.validator);
 }
 
-List<Violation> validate(List<ValidationRule> rules, Map json) {
+Map validate(List<ValidationRule> rules, Map json) {
   var violations = <Violation>[];
 
   for (var rule in rules) {
@@ -26,5 +35,9 @@ List<Violation> validate(List<ValidationRule> rules, Map json) {
     }
   }
 
-  return violations;
+  if (violations.isNotEmpty) {
+    throw ValidationException(violations);
+  }
+
+  return json;
 }

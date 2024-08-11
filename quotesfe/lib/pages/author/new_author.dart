@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:quotesfe/domain/author/model.dart';
 import 'package:quotesfe/domain/author/service.dart';
 import 'package:quotesfe/pages/common/new.dart';
 import 'package:quotesfe/widgets/common/entity_form.dart';
+import 'package:quotes_common/domain/entity.dart';
+import 'package:quotes_common/domain/author.dart';
 
 class NewAuthorPage extends NewPage<Author, NewAuthorEntityForm> {
   final AuthorService _authorService;
 
-  const NewAuthorPage(Key? key, String title, this._authorService) : super(key, title);
+  const NewAuthorPage(super.key, super.title, this._authorService);
 
   AuthorService get authorService => _authorService;
 
@@ -16,7 +17,7 @@ class NewAuthorPage extends NewPage<Author, NewAuthorEntityForm> {
   NewAuthorEntityForm createEntityForm(BuildContext context, Author? entity) => NewAuthorEntityForm(entity);
 
   @override
-  Future<Author> persist(Author entity) => entity.id == null ? authorService.create(entity) : authorService.update(entity);
+  Future<Author> persist(Author entity) => entity.id == emptyId ? authorService.create(entity) : authorService.update(entity);
 
   @override
   String successMessage() => "Author created / updated";
@@ -39,7 +40,7 @@ class NewAuthorEntityForm extends EntityForm<Author> {
   }
 
   @override
-  Author createEntity() => Author(_author?.id, _nameController.text, _descController.text, DateTime.now(), DateTime.now());
+  Author createEntity() => Author(_author?.id ?? emptyId, _nameController.text, _descController.text, DateTime.now(), DateTime.now());
 
   @override
   Form createForm(BuildContext context, Function()? action) => Form(
