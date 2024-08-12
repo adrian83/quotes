@@ -23,7 +23,7 @@ services:
   backend:
     build:
       context: ./
-      dockerfile: ./quotesbe/Dockerfile
+      dockerfile: ./quotes_backend/Dockerfile
     ports:
     - "5050:5050"
     environment:
@@ -44,7 +44,7 @@ services:
   frontend:
     build:
       context: ./
-      dockerfile: ./quotesfe/Dockerfile
+      dockerfile: ./quotes_frontend/Dockerfile
     ports:
     - "8000:8000"
     links:
