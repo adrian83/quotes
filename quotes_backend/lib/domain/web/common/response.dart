@@ -4,7 +4,7 @@ import 'package:shelf/shelf.dart';
 import 'package:logging/logging.dart';
 
 import 'package:quotes_backend/web/response.dart';
-import 'package:quotes_backend/storage/elasticsearch/exception.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/exception.dart';
 
 final Logger _logger = Logger('ExceptionHandler');
 

@@ -1,4 +1,4 @@
-import 'package:quotes_backend/storage/elasticsearch/document.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/document.dart';
 import 'package:quotes_common/domain/entity.dart';
 import 'package:quotes_common/domain/page.dart';
 import 'package:quotes_common/util/time.dart';

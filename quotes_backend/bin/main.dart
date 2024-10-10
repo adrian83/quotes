@@ -17,7 +17,7 @@ import 'package:quotes_backend/domain/quote/service.dart';
 import 'package:quotes_backend/domain/web/author/controller.dart';
 import 'package:quotes_backend/domain/web/book/controller.dart';
 import 'package:quotes_backend/domain/web/quote/controller.dart';
-import 'package:quotes_backend/storage/elasticsearch/store.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/store.dart';
 
 const healthCheckPath = "/health";
 

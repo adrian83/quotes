@@ -6,8 +6,8 @@ import 'package:quotes_backend/domain/author/model/entity.dart';
 import 'package:quotes_backend/domain/common/model.dart';
 import 'package:quotes_backend/domain/author/repository.dart';
 import 'package:quotes_backend/domain/author/repository_test.mocks.dart';
-import 'package:quotes_backend/storage/elasticsearch/store.dart';
-import 'package:quotes_backend/storage/elasticsearch/response.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/store.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/response.dart';
 import 'package:quotes_common/domain/page.dart';
 
 var author1Json = {

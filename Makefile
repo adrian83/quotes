@@ -32,6 +32,7 @@ be-run:
 	dart quotes_backend/bin/main.dart 
 
 be-format:
+	cd quotes_elasticsearch && dart format -o write -l 180 --fix . && dart fix -n . && dart analyze
 	cd quotes_common && dart format -o write -l 180 --fix . && dart fix -n . && dart analyze
 	cd quotes_backend && dart format -o write -l 180 --fix . && dart fix -n . && dart analyze
 

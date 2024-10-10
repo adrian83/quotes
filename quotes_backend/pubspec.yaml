@@ -1,5 +1,4 @@
 name: quotes_backend
-publish_to: none 
 
 environment:
   sdk: ">=3.3.0 <4.0.0"
@@ -14,6 +13,8 @@ dependencies:
   test: ^1.25.2
   quotes_common:
     path: ../quotes_common
+  quotes_elasticsearch:
+    path: ../quotes_elasticsearch
 
 dev_dependencies:
   http: ^1.2.1

@@ -1,4 +1,4 @@
-import 'package:quotes_backend/storage/elasticsearch/response.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/response.dart';
 
 class IndexingFailedException<T> implements Exception {
   IndexResult result;

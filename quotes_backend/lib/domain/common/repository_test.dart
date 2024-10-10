@@ -4,9 +4,9 @@ import "package:test/test.dart";
 
 import 'package:quotes_backend/domain/common/model.dart';
 import 'package:quotes_backend/domain/common/repository.dart';
-import 'package:quotes_backend/storage/elasticsearch/store.dart';
-import 'package:quotes_backend/storage/elasticsearch/response.dart';
 import 'package:quotes_backend/domain/common/repository_test.mocks.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/store.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/response.dart';
 import 'package:quotes_common/util/time.dart';
 
 class TestEntity extends EntityDocument {

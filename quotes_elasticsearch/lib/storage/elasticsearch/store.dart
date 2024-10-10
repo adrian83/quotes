@@ -4,10 +4,10 @@ import 'dart:convert';
 
 import 'package:logging/logging.dart';
 
-import 'package:quotes_backend/storage/elasticsearch/document.dart';
-import 'package:quotes_backend/storage/elasticsearch/response.dart';
-import 'package:quotes_backend/storage/elasticsearch/search.dart';
-import 'package:quotes_backend/storage/elasticsearch/exception.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/document.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/response.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/search.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/exception.dart';
 
 typedef Decode<T> = T Function(Map<String, dynamic> json);
 

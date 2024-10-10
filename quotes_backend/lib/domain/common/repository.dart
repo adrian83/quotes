@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:quotes_backend/domain/common/model.dart';
-import 'package:quotes_backend/storage/elasticsearch/store.dart';
-import 'package:quotes_backend/storage/elasticsearch/search.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/store.dart';
+import 'package:quotes_elasticsearch/storage/elasticsearch/search.dart';
 import 'package:quotes_common/domain/entity.dart';
 import 'package:quotes_common/domain/page.dart';
 import 'package:quotes_common/util/function.dart';

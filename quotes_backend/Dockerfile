@@ -1,5 +1,8 @@
 FROM dart:3.3
 
+COPY ./quotes_elasticsearch /quotes_elasticsearch
+WORKDIR /quotes_elasticsearch
+RUN dart pub get
 
 COPY ./quotes_common /quotes_common
 WORKDIR /quotes_common
